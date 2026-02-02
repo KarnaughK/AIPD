@@ -69,9 +69,32 @@ AIPD/
 
 ## Installation
 
-1. Place this directory at `~/.claude/skills/AIPD/`
-2. Type `/adoc` in any project
-3. AI will detect project status and guide you through
+Place all contents of this project into a folder named `AIPD/` under your skills directory (the folder name must be `AIPD`).
+
+**Common skills paths:**
+
+```bash
+# Claude Code global skills
+~/.claude/skills/AIPD/
+
+# Project-level Claude skills
+your-project/.claude/skills/AIPD/
+
+# Project-level Agent skills (used by some tools)
+your-project/.agent/skills/AIPD/
+```
+
+**Installation methods:**
+
+```bash
+# Option 1: Git Clone (recommended for easy updates)
+git clone https://github.com/your-username/AIPD.git ~/.claude/skills/AIPD
+
+# Option 2: Direct download
+# Extract to any of the paths above
+```
+
+**Usage:** Type `/adoc` in any project. AI will detect project status and guide you through.
 
 ## Use Cases
 
