@@ -2,19 +2,21 @@
 
 English | **[中文](./README.md)**
 
-> Let AI manage your project documentation, driving the entire process from requirements to delivery.
+**You talk, AI codes.**
 
-## Philosophy
+Discuss requirements and solutions with AI. AI writes everything into docs, then generates code from those docs. Between you and the code sits a layer of documentation—fully managed by AI.
 
-In traditional development, documentation is often an afterthought. AIPD flips this: **docs first, code second**.
+Just remember one command: `/adoc`. The AI detects your project status and suggests the next action.
 
-With a structured documentation system, AI can:
-- Understand project direction and boundaries
-- Track design intent of feature modules
-- Manage iteration plan execution
-- Maintain consistency in technical constraints
+---
 
-Just remember one command: `/adoc`. The AI will detect your project status and suggest the next action.
+## What Problem Does It Solve
+
+Traditional dev: Requirements → Human writes code → Docs maybe later
+
+AIPD: Requirements → **Docs** → AI writes code
+
+Documentation is no longer an afterthought—it drives everything. You focus on "what to build", AI handles the rest.
 
 ## Workflow
 
@@ -23,7 +25,7 @@ Just remember one command: `/adoc`. The AI will detect your project status and s
 2. Design  → Break down feature modules (spec/)
 3. Constrain → Set technical guidelines (system/)
 4. Plan    → Create iteration tasks (plan/)
-5. Execute → Complete tasks one by one
+5. Execute → AI completes tasks one by one
 6. Archive → Iteration done, start next round
 ```
 
