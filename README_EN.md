@@ -2,21 +2,34 @@
 
 English | **[中文](./README.md)**
 
-**You talk, AI codes.**
+**You just say it, AI gets it done.**
 
-Discuss requirements and solutions with AI. AI writes everything into docs, then generates code from those docs. Between you and the code sits a layer of documentation—fully managed by AI.
+No commands to memorize. No workflows to remember. No execution details to worry about.
 
-Just remember one command: `/adoc`. The AI detects your project status and suggests the next action.
+You say "add a button", it adds one. You say "change this part", it changes it. It follows the agreed process step by step, finishes one task then moves to the next—no going off track, no chaos.
+
+It's like having a project butler—you just make requests, it handles the work.
 
 ---
 
-## What Problem Does It Solve
+## What It Changes
 
-Traditional dev: Requirements → Human writes code → Docs maybe later
+**Before**: You execute the workflow. Requirements come in, you remember how to do it, you do it yourself step by step.
 
-AIPD: Requirements → **Docs** → AI writes code
+**Now**: You assign tasks. Requirements come in, you say the word, AI follows the workflow, you review the results.
 
-Documentation is no longer an afterthought—it drives everything. You focus on "what to build", AI handles the rest.
+This isn't "AI-assisted development"—it's "AI does the development". Your role shifts from executor to decision-maker.
+
+## How It Works
+
+**AI doesn't just dive in—it makes a plan first.**
+
+You say "I want to add a search feature", it lists out what needs to be done and in what order. You take a look, if it's good, it executes step by step.
+
+- **You focus on**: Is the direction right? Is the plan right? Is the result right?
+- **AI handles**: Code writing, document management
+
+The plan is written in files. AI reads it before every task. So it won't forget, won't drift, won't go off track.
 
 ## Workflow
 
@@ -38,13 +51,16 @@ _adoc/
 │   ├── 01_feature_a.md
 │   └── 02_feature_b.md
 ├── system/            # Technical constraints
-│   ├── index.md
 │   └── ...
 ├── plan/              # Iteration plans
-│   ├── v0.3-xxx.md           # In progress
-│   └── archived-v0.2-xxx.md  # Completed
+│   ├── index.md       # Categorized index (by module)
+│   ├── v0.3-xxx.md    # In progress
+│   └── archive/       # Completed
+│       └── v0.2-xxx.md
 └── runbook/           # Operation guides
 ```
+
+**Plan is the only thing you need to watch**: Want to do three things at once? Create three Plans. Each Plan is an independent task line.
 
 ## Directory Overview
 
