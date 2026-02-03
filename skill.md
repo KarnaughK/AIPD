@@ -42,11 +42,14 @@ allowed-tools:
    # 检查 spec/ 目录
    ls _adoc/spec/ 2>/dev/null | wc -l
 
-   # 检查 plan/ 目录，找进行中的计划
-   ls _adoc/plan/ 2>/dev/null | grep -v "^archived-"
+   # 检查 plan/ 目录，找进行中的计划（排除 archive/ 目录和 index.md）
+   ls _adoc/plan/*.md 2>/dev/null | grep -v "index.md" | xargs -I {} basename {}
 
-   # 检查已归档的计划
-   ls _adoc/plan/ 2>/dev/null | grep "^archived-"
+   # 检查已归档的计划（扫描 archive/ 目录）
+   ls _adoc/plan/archive/ 2>/dev/null | wc -l
+
+   # 检查 plan 索引
+   cat _adoc/plan/index.md 2>/dev/null | head -30
 
    # 检查 runbook/ 目录
    ls _adoc/runbook/ 2>/dev/null | wc -l
@@ -63,7 +66,8 @@ allowed-tools:
    system/ 文件数:  X 个
    runbook/ 文件数: X 个
    当前计划:        v0.2-xxx.md / ❌ 无
-   已归档计划:      X 个
+   已归档计划:      X 个（见 archive/ 目录）
+   plan 索引:       ✅ 存在 / ❌ 缺失
 
    ---
    推荐操作: [根据状态给出建议]
@@ -76,8 +80,8 @@ allowed-tools:
    | 新项目 | `_adoc/` 不存在 | → 阶段 1: 初始化 |
    | 方向未定 | `intent.md` 不存在或内容不完整 | → 阶段 1: 初始化 |
    | 需要设计功能 | `intent.md` 完整但 `spec/` 空或很少 | → 阶段 2: 设计功能 |
-   | 需要创建计划 | 有 `spec/` 但无进行中的 plan | → 阶段 3: 创建计划 |
-   | 有进行中计划 | `plan/` 下有非 archived 文件 | → 阶段 4: 继续执行 |
+   | 需要创建计划 | 有 `spec/` 但 `plan/` 根目录下无 .md 文件（排除 index.md） | → 阶段 3: 创建计划 |
+   | 有进行中计划 | `plan/` 根目录下有 .md 文件（排除 index.md） | → 阶段 4: 继续执行 |
 
 5. 向用户展示状态后，询问是否按推荐操作，或选择其他操作
 
@@ -192,7 +196,7 @@ allowed-tools:
 
 6. 用户确认后，创建文档结构：
    ```bash
-   mkdir -p _adoc/spec _adoc/system _adoc/plan _adoc/runbook
+   mkdir -p _adoc/spec _adoc/system _adoc/plan/archive _adoc/runbook
    ```
 
 7. 使用 `@templates/intent.md` 模板生成 `_adoc/intent.md`
@@ -203,11 +207,13 @@ allowed-tools:
 
    📁 已创建文档结构:
       _adoc/
-      ├── intent.md ← 项目方向
-      ├── spec/     ← 功能模块（待填充）
-      ├── system/   ← 技术约束（待填充）
-      ├── plan/     ← 迭代计划（待填充）
-      └── runbook/  ← 操作手册（待填充）
+      ├── intent.md      ← 项目方向
+      ├── spec/          ← 功能模块（待填充）
+      ├── system/        ← 技术约束（待填充）
+      ├── plan/          ← 迭代计划（待填充）
+      │   ├── index.md   ← 计划索引（待创建）
+      │   └── archive/   ← 已归档计划
+      └── runbook/       ← 操作手册（待填充）
 
    下次调用 /adoc 将进入「设计功能模块」阶段。
    要现在继续吗？
@@ -326,8 +332,11 @@ allowed-tools:
    # 列出所有 system
    ls _adoc/system/ 2>/dev/null
 
-   # 列出历史 plan
-   ls _adoc/plan/ 2>/dev/null | grep "^archived-"
+   # 列出历史 plan（扫描 archive/ 目录）
+   ls _adoc/plan/archive/ 2>/dev/null
+
+   # 查看 plan 索引
+   cat _adoc/plan/index.md 2>/dev/null
    ```
 
    ```
@@ -342,8 +351,9 @@ allowed-tools:
    已有系统约束:
    - architecture.md ✓
 
-   历史计划:
-   - archived-v0.1-init.md（已完成）
+   历史计划（见 plan/index.md）:
+   - v0.1-init.md（基础设施）
+   - v0.2-xxx.md（Homepage）
 
    ---
    接下来创建新的迭代计划。
@@ -490,7 +500,7 @@ allowed-tools:
 
 ### 阶段 5: 归档计划
 
-**目标**: 计划完成后归档，准备下一轮迭代
+**目标**: 计划完成后归档，更新索引，准备下一轮迭代
 
 **触发条件**: Plan 中所有任务都标记为完成
 
@@ -539,16 +549,30 @@ allowed-tools:
    - 如果用户确认无需更新 → 继续归档流程
    - **不允许跳过此步骤**
 
-4. 所有文档同步完成后，重命名文件：
+4. **更新 Plan 索引**（新增步骤）：
+
+   询问用户：这个 Plan 属于哪个模块？
+   - 可选：Homepage / Docs / i18n / 翻译系统 / SEO / 基础设施 / 其他
+
+   然后更新 `_adoc/plan/index.md`：
    ```bash
-   mv _adoc/plan/v0.2-search.md _adoc/plan/archived-v0.2-search.md
+   # 在对应模块下添加记录
+   # 格式：- [vX.Y-xxx](archive/vX.Y-xxx.md) - {一句话描述}
    ```
 
-5. 告知下一步：
+   同时将该 Plan 从「当前进行中」部分移除（如果有的话）。
+
+5. **移动文件到 archive/**：
+   ```bash
+   mv _adoc/plan/v0.2-search.md _adoc/plan/archive/v0.2-search.md
+   ```
+
+6. 告知下一步：
    ```
    ✅ 计划已归档
 
-   文件: _adoc/plan/archived-v0.2-search.md
+   文件: _adoc/plan/archive/v0.2-search.md
+   索引: 已更新 _adoc/plan/index.md（归类到 {模块名}）
 
    文档同步状态:
    ✅ system/ 已更新
@@ -561,6 +585,7 @@ allowed-tools:
 
 **关键原则**:
 - **文档同步是归档的前置条件**，不能跳过
+- **更新索引是归档的必要步骤**，确保历史可追溯
 - 确保代码变更都反映在相关文档中
 - 保持文档与代码的一致性
 
@@ -578,9 +603,11 @@ _adoc/
 │   ├── architecture.md
 │   └── data_model.md
 ├── plan/                  # 迭代计划
-│   ├── v0.3-xxx.md        # 进行中（无前缀）
-│   ├── archived-v0.1-xxx.md
-│   └── archived-v0.2-xxx.md
+│   ├── index.md           # 分类索引（按模块组织）
+│   ├── v0.3-xxx.md        # 进行中的计划
+│   └── archive/           # 已归档计划
+│       ├── v0.1-xxx.md
+│       └── v0.2-xxx.md
 └── runbook/               # 操作手册（日常运维）
     ├── index.md           # 目录索引
     ├── sync-docs.md       # 如何同步文档
@@ -613,10 +640,11 @@ _adoc/
 
 ### Plan 生命周期
 ```
-创建 → 执行 → 完成 → 归档（加 archived- 前缀）
+创建 → 执行 → 完成 → 归档（移动到 archive/ + 更新 index.md）
 ```
-- 无 `archived-` 前缀 = 进行中
-- 有 `archived-` 前缀 = 已完成
+- `plan/` 根目录下的 .md 文件（排除 index.md）= 进行中
+- `plan/archive/` 目录下的文件 = 已完成
+- `plan/index.md` = 按模块分类的索引
 
 ### System 独立性
 - 独立于产品三层（intent/spec/plan）

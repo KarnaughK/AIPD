@@ -70,6 +70,37 @@
 - [ ] 检查是否有新的操作流程需要记录
 - [ ] 更新 `runbook/index.md` 索引（如有新增）
 
+## 8. 归档 (Archive)
+
+> **执行完所有任务后，按以下步骤归档**
+
+### 8.1 确认完成状态
+
+- [ ] 所有任务已标记为 `[x]`
+- [ ] 验收标准已全部通过
+- [ ] 文档同步已完成（第 7 节）
+
+### 8.2 更新索引
+
+1. 询问用户：这个 Plan 属于哪个模块？
+   - 可选：Homepage / Docs / i18n / 翻译系统 / SEO / 基础设施 / 其他（用户指定）
+2. 打开 `_adoc/plan/index.md`
+3. 在对应模块下添加本 Plan 的记录：
+   ```markdown
+   - [vX.Y-xxx](archive/vX.Y-xxx.md) - {一句话描述}
+   ```
+
+### 8.3 移动文件
+
+```bash
+mv _adoc/plan/vX.Y-xxx.md _adoc/plan/archive/vX.Y-xxx.md
+```
+
+### 8.4 确认归档完成
+
+- [ ] index.md 已更新
+- [ ] 文件已移动到 archive/
+
 ---
 
 **状态**：待开始

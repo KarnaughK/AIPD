@@ -131,15 +131,22 @@ v1.0-release.md       # 正式发布
 
 ## 归档规范
 
-完成后重命名文件：
+完成后移动文件到 archive/ 目录：
 
 ```bash
 # 进行中
 _adoc/plan/v0.2-search.md
 
 # 归档后
-_adoc/plan/archived-v0.2-search.md
+_adoc/plan/archive/v0.2-search.md
 ```
+
+归档步骤：
+1. 所有任务都标记为完成（`- [x]`）
+2. 文档同步检查完成
+3. 询问用户该 Plan 属于哪个模块
+4. 更新 `_adoc/plan/index.md`（在对应模块下添加记录）
+5. 移动文件到 `archive/` 目录
 
 归档条件：
 - 所有任务都标记为完成（`- [x]`）
