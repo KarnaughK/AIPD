@@ -9,9 +9,9 @@
 - **多语言支持**：同时支持中文和英文版本的首页
 - **响应式优化**：确保在桌面和移动端都有良好的体验
 
-## 2. 涉及的 Spec
+## 2. 涉及的模块
 
-- `spec/01_official-docs-translation.md` - 官方文档翻译功能（首页需要链接到文档）
+- `business/docs/spec-translation.md` - 官方文档翻译功能（首页需要链接到文档）
 
 ## 3. 约束 (Constraints)
 

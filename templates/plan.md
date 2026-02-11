@@ -8,14 +8,14 @@
 - **{目标类型 B}**：{具体目标描述}
 - **{目标类型 C}**：{具体目标描述}
 
-## 2. 涉及的 Spec
+## 2. 涉及的模块
 
-- `spec/{xx}.md` - {简要说明}
-- `spec/{yy}.md` - {简要说明}
+- `business/{xx}/` - {简要说明}
+- `tech/{yy}/` - {简要说明}
 
 ## 3. 约束 (Constraints)
 
-- **System**：严格遵循 `system/{xxx}.md` 的 {具体约束}
+- **Tech**：严格遵循 `tech/{xxx}/README.md` 的 {具体约束}
 - **Scope**：暂不实现 {明确不做的事}
 - **{其他约束}**：{描述}
 
@@ -54,21 +54,20 @@
 
 > **归档前必须完成**：确保相关文档与代码保持同步
 
-### 7.1 System 文档
+### 7.1 Tech 文档
 
-- [ ] 检查 `system/index.md` 是否需要更新
-- [ ] 检查涉及的模块文档是否需要更新（routing.md / i18n.md / content.md 等）
-- [ ] 如有新增模块，创建对应的 system 文档
+- [ ] 检查 `tech/index.md` 是否需要更新
+- [ ] 检查涉及的项目文档是否需要更新（README.md / routing.md 等）
+- [ ] 如有新增技术模块，创建对应的 tech 文档
 
-### 7.2 Spec 文档
+### 7.2 Business 文档
 
-- [ ] 检查涉及的 spec 文档是否需要更新
-- [ ] 如有新增功能模块，创建对应的 spec 文档
+- [ ] 检查涉及的业务模块 README.md 是否需要更新
+- [ ] 如有新增 Runbook/SOP，添加到对应模块
 
-### 7.3 Runbook 文档
+### 7.3 大索引
 
-- [ ] 检查是否有新的操作流程需要记录
-- [ ] 更新 `runbook/index.md` 索引（如有新增）
+- [ ] 检查 `_adoc/index.md` 是否需要更新
 
 ## 8. 归档 (Archive)
 

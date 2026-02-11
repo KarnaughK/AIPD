@@ -1,3 +1,6 @@
+> **新架构说明**：在 business/tech 架构中，System 约束下沉到 `tech/` 各项目内部，
+> 如 `tech/astro/README.md`。本示例展示技术约束的写法规范，仍然适用。
+
 # System 架构索引
 
 > 本项目的技术架构和约束文档。按需查阅具体模块。

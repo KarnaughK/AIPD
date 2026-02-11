@@ -81,7 +81,7 @@ ls _adoc/plan/ | grep "^archived-"
    - ❌ 不在 Intent 阶段问"与 Dify 如何集成"
    - ❌ 不在 Intent 阶段问"案例的数据结构"
    - ❌ 不在 Intent 阶段问"是否需要登录"
-   - ✅ 这些问题应该在 spec/system 阶段再问
+   - ✅ 这些问题应该在 business/tech 阶段再问
 
 4. **抽象检验清单**：
    生成 Intent 前必须检查：
@@ -110,7 +110,7 @@ ls _adoc/plan/ | grep "^archived-"
 
 ## 2. 文档结构问题
 
-### 问题：spec/ 的粒度如何把握
+### 问题：Spec 的粒度如何把握
 
 **经验总结**：
 
@@ -127,11 +127,11 @@ ls _adoc/plan/ | grep "^archived-"
 - 4-8 条验收标准
 - 1-2 页内容
 
-### 问题：system/ 应该包含什么
+### 问题：tech/ 应该包含什么
 
 **经验总结**：
 
-system/ 是研发层面的约束，不是功能描述。
+tech/ 是研发层面的约束，不是功能描述。
 
 **应该包含**：
 - 技术栈选型（框架、数据库、语言）
@@ -140,9 +140,9 @@ system/ 是研发层面的约束，不是功能描述。
 - 性能红线（响应时间、并发限制）
 
 **不应该包含**：
-- 功能描述（放 spec/）
+- 功能描述（放 business/ 各模块）
 - 迭代计划（放 plan/）
-- 业务逻辑（放 spec/）
+- 业务逻辑（放 business/ 各模块）
 
 ---
 
@@ -237,14 +237,13 @@ system/ 是研发层面的约束，不是功能描述。
 # Intent
 intent.md（唯一）
 
-# Spec
-01_feature_name.md
-02_another_feature.md
+# Spec → 放在 business/ 各模块内部
+business/docs/spec-translation.md
+business/search/spec-search.md
 
-# System
-architecture.md
-data_model.md
-frontend_guidelines.md
+# Tech → 放在 tech/ 各项目内部
+tech/astro/README.md
+tech/astro/routing.md
 
 # Plan
 v0.1-init.md
@@ -267,11 +266,11 @@ archived-v0.1-init.md
 | 时机 | 更新的文档 |
 |------|-----------|
 | 方向确定 | intent.md |
-| 功能设计完成 | spec/xxx.md |
+| 功能设计完成 | business/xxx/spec-xxx.md |
 | 计划创建 | plan/vX.Y-xxx.md |
 | 任务完成 | plan 中标记 [x] |
 | 计划完成 | plan 重命名 archived- |
-| 发现需要修正 | 对应的 spec 或 system |
+| 发现需要修正 | 对应的 business/ 或 tech/ 文档 |
 
 ---
 
@@ -285,7 +284,7 @@ archived-v0.1-init.md
 
 ## 8. 后续改进方向
 
-- [ ] 支持 system/ 文档的模板化创建
-- [ ] 支持 spec 之间的依赖关系可视化
+- [ ] 支持 tech/ 文档的模板化创建
+- [ ] 支持业务模块之间的依赖关系可视化
 - [ ] 支持 plan 的进度百分比展示
 - [ ] 支持从已有代码反向生成文档骨架

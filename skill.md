@@ -25,6 +25,18 @@ allowed-tools:
 
 你将按照以下 6 个阶段执行文档驱动开发任务：
 
+### 核心行为准则（重要！）
+
+**当用户提出需求或功能时，AI 必须先读取 `_adoc/index.md` 大索引，检查 `business/` 和 `tech/` 各模块中是否已有对应的操作说明（Runbook）或标准流程（SOP）。**
+
+- **如果找到** → 按已有文档执行，不要重复造轮子
+- **如果没找到，且该需求是流程性任务**（需要多步骤、可复用）→ 询问用户：
+  - 选项 A：现场定义流程，边做边记录
+  - 选项 B：先创建 SOP/Runbook 文档，再执行
+  - 选项 C：直接执行，不记录流程
+
+---
+
 ### 阶段 0: 状态检测
 
 **目标**: 扫描项目，判断当前处于哪个阶段，决定后续流程
@@ -39,8 +51,14 @@ allowed-tools:
    # 检查 intent.md
    cat _adoc/intent.md 2>/dev/null | head -20
 
-   # 检查 spec/ 目录
-   ls _adoc/spec/ 2>/dev/null | wc -l
+   # 检查大索引
+   cat _adoc/index.md 2>/dev/null | head -30
+
+   # 检查 business/ 目录（业务模块）
+   ls _adoc/business/ 2>/dev/null
+
+   # 检查 tech/ 目录（技术模块）
+   ls _adoc/tech/ 2>/dev/null
 
    # 检查 plan/ 目录，找进行中的计划（排除 archive/ 目录和 index.md）
    ls _adoc/plan/*.md 2>/dev/null | grep -v "index.md" | xargs -I {} basename {}
@@ -50,9 +68,6 @@ allowed-tools:
 
    # 检查 plan 索引
    cat _adoc/plan/index.md 2>/dev/null | head -30
-
-   # 检查 runbook/ 目录
-   ls _adoc/runbook/ 2>/dev/null | wc -l
    ```
 
 3. 根据检测结果，判断项目状态并展示：
@@ -62,9 +77,9 @@ allowed-tools:
 
    _adoc/ 目录:     ✅ 存在 / ❌ 不存在
    intent.md:       ✅ 完整 / ⚠️ 不完整 / ❌ 缺失
-   spec/ 文件数:    X 个
-   system/ 文件数:  X 个
-   runbook/ 文件数: X 个
+   index.md:        ✅ 存在 / ❌ 缺失
+   business/ 模块:  X 个（列出模块名）
+   tech/ 模块:      X 个（列出模块名）
    当前计划:        v0.2-xxx.md / ❌ 无
    已归档计划:      X 个（见 archive/ 目录）
    plan 索引:       ✅ 存在 / ❌ 缺失
@@ -79,8 +94,8 @@ allowed-tools:
    |------|---------|---------|
    | 新项目 | `_adoc/` 不存在 | → 阶段 1: 初始化 |
    | 方向未定 | `intent.md` 不存在或内容不完整 | → 阶段 1: 初始化 |
-   | 需要设计功能 | `intent.md` 完整但 `spec/` 空或很少 | → 阶段 2: 设计功能 |
-   | 需要创建计划 | 有 `spec/` 但 `plan/` 根目录下无 .md 文件（排除 index.md） | → 阶段 3: 创建计划 |
+   | 需要设计功能 | `intent.md` 完整但 `business/` 为空或很少 | → 阶段 2: 设计功能 |
+   | 需要创建计划 | 有 `business/` 模块但 `plan/` 根目录下无 .md 文件（排除 index.md） | → 阶段 3: 创建计划 |
    | 有进行中计划 | `plan/` 根目录下有 .md 文件（排除 index.md） | → 阶段 4: 继续执行 |
 
 5. 向用户展示状态后，询问是否按推荐操作，或选择其他操作
@@ -152,9 +167,9 @@ allowed-tools:
    ```
 
    **延迟具体化**：
-   - 不要在这个阶段追问"与 Dify 如何集成"（这是 spec 层）
-   - 不要在这个阶段追问"案例的数据结构"（这是 spec 层）
-   - 不要在这个阶段追问"是否需要登录"（这是 system 层）
+   - 不要在这个阶段追问"与 Dify 如何集成"（这是 business 层）
+   - 不要在这个阶段追问"案例的数据结构"（这是 business 层）
+   - 不要在这个阶段追问"是否需要登录"（这是 tech 层）
 
 4. 收集足够信息后，提炼四个要素：
    - **Why**: 核心动机，为什么做（抽象痛点，不绑定具体工具）
@@ -196,24 +211,26 @@ allowed-tools:
 
 6. 用户确认后，创建文档结构：
    ```bash
-   mkdir -p _adoc/spec _adoc/system _adoc/plan/archive _adoc/runbook
+   mkdir -p _adoc/business _adoc/tech _adoc/plan/archive
    ```
 
 7. 使用 `@templates/intent.md` 模板生成 `_adoc/intent.md`
 
-8. 告知下一步：
+8. 创建 `_adoc/index.md` 大索引（初始版本，后续随模块增加而更新）
+
+9. 告知下一步：
    ```
    ✅ 项目方向已确定
 
    📁 已创建文档结构:
       _adoc/
       ├── intent.md      ← 项目方向
-      ├── spec/          ← 功能模块（待填充）
-      ├── system/        ← 技术约束（待填充）
-      ├── plan/          ← 迭代计划（待填充）
-      │   ├── index.md   ← 计划索引（待创建）
-      │   └── archive/   ← 已归档计划
-      └── runbook/       ← 操作手册（待填充）
+      ├── index.md       ← 大索引（入口文件）
+      ├── business/      ← 业务模块（按业务价值划分）
+      ├── tech/          ← 技术模块（按技术实现划分）
+      └── plan/          ← 迭代计划
+          ├── index.md   ← 计划索引（待创建）
+          └── archive/   ← 已归档计划
 
    下次调用 /adoc 将进入「设计功能模块」阶段。
    要现在继续吗？
@@ -222,9 +239,9 @@ allowed-tools:
 **关键原则**:
 
 **Intent 的"三不"原则**（避免过度具体化）:
-- ❌ **不描述具体功能**：功能放 spec/（如"一键验证"是功能）
-- ❌ **不描述技术实现**：实现放 system/（如"SQLite 存储"是实现）
-- ❌ **不描述操作流程**：流程放 spec/（如"先标记再验证"是流程）
+- ❌ **不描述具体功能**：功能放 business/ 各模块（如"一键验证"是功能）
+- ❌ **不描述技术实现**：实现放 tech/ 各模块（如"SQLite 存储"是实现）
+- ❌ **不描述操作流程**：流程放 business/ 各模块的 SOP/Runbook（如"先标记再验证"是流程）
 
 **抽象层级检验**：
 - 提到具体工具名称（如 Dify） → 太具体，改为"现有工作流工具"
@@ -241,9 +258,9 @@ allowed-tools:
 
 ### 阶段 2: 设计功能模块
 
-**目标**: 基于项目方向，设计具体的功能模块，产出 `spec/` 文档
+**目标**: 基于项目方向，设计具体的业务模块和技术模块，产出 `business/` 和 `tech/` 文档
 
-**触发条件**: `intent.md` 完整，但 `spec/` 为空或文件很少
+**触发条件**: `intent.md` 完整，但 `business/` 为空或文件很少
 
 **执行步骤**:
 
@@ -260,16 +277,16 @@ allowed-tools:
    核心目标: xxx
 
    ---
-   基于这个方向，我们来设计需要哪些功能模块。
+   基于这个方向，我们来设计需要哪些业务模块和技术模块。
    ```
 
-2. 引导用户思考功能拆分：
-   - "要实现这个愿景，用户需要完成哪些核心任务？"
-   - "这些任务可以分成哪几个独立的功能模块？"
+2. 引导用户思考模块拆分：
+   - "要实现这个愿景，用户需要完成哪些核心任务？"（→ 业务模块）
+   - "技术上需要哪些项目/服务来支撑？"（→ 技术模块）
    - "有没有优先级？哪些是 MVP 必须的？"
 
 3. **主动提供建议**（基于 intent 分析）：
-   - 推测可能需要的模块
+   - 推测可能需要的业务模块和技术模块
    - 画出模块之间的依赖关系
    - 区分"核心功能"和"增强功能"
 
@@ -279,30 +296,43 @@ allowed-tools:
    - 验收标准（怎么算做完了）
    - 依赖关系（依赖/被依赖）
 
-5. 使用 `@templates/spec.md` 为每个模块创建文档：
+5. 为每个模块创建目录和 README.md：
    ```
-   _adoc/spec/
-   ├── 01_模块A.md
-   ├── 02_模块B.md
-   └── 03_模块C.md
+   _adoc/business/
+   ├── 模块A/
+   │   ├── README.md          # 模块说明 + Spec
+   │   ├── runbook-xxx.md     # 操作手册（按需）
+   │   └── sop-xxx.md         # 标准流程（按需）
+   └── 模块B/
+       └── README.md
+
+   _adoc/tech/
+   ├── index.md               # 技术模块索引 + 环境说明
+   ├── 项目A/
+   │   └── README.md          # 项目概述 + 技术栈
+   └── 项目B/
+       └── README.md
    ```
 
-   **命名规则**: 数字前缀表示建议实现顺序
+6. 更新 `_adoc/index.md` 大索引，添加新模块
 
-6. 完成后展示全景：
+7. 完成后展示全景：
    ```
-   【功能模块总览】
+   【模块总览】
 
-   01_prompt_assets    - Prompt 资产管理
-   02_test_framework   - 测试框架
-   03_data_loop        - 数据闭环
+   业务模块:
+   - docs     - 文档系统
+   - landing  - 落地页
+
+   技术模块:
+   - astro    - Astro 站点
+   - web      - Next.js 主站
 
    依赖关系:
-   02 依赖 01
-   03 依赖 01, 02
+   docs 依赖 astro（当前）→ 迁移到 web
 
    ---
-   功能模块设计完成。
+   模块设计完成。
    下次调用 /adoc 将进入「创建迭代计划」阶段。
    ```
 
@@ -317,7 +347,7 @@ allowed-tools:
 
 **目标**: 确定本次迭代范围，产出可执行的 Plan 文档
 
-**触发条件**: 有 `spec/` 文件，但 `plan/` 下无进行中的计划
+**触发条件**: 有 `business/` 模块，但 `plan/` 下无进行中的计划
 
 **执行步骤**:
 
@@ -326,11 +356,14 @@ allowed-tools:
    # 读取 intent 摘要
    head -20 _adoc/intent.md
 
-   # 列出所有 spec
-   ls _adoc/spec/
+   # 读取大索引
+   cat _adoc/index.md
 
-   # 列出所有 system
-   ls _adoc/system/ 2>/dev/null
+   # 列出业务模块
+   ls _adoc/business/
+
+   # 列出技术模块
+   ls _adoc/tech/
 
    # 列出历史 plan（扫描 archive/ 目录）
    ls _adoc/plan/archive/ 2>/dev/null
@@ -344,12 +377,13 @@ allowed-tools:
 
    方向: xxx
 
-   已设计的功能模块:
-   - 01_xxx.md ✓
-   - 02_xxx.md ✓
+   业务模块:
+   - docs/ ✓
+   - landing/ ✓
 
-   已有系统约束:
-   - architecture.md ✓
+   技术模块:
+   - astro/ ✓
+   - web/ ✓
 
    历史计划（见 plan/index.md）:
    - v0.1-init.md（基础设施）
@@ -370,7 +404,7 @@ allowed-tools:
    - 给这次迭代起个名字（如 `v0.2-search`）
 
 4. 明确约束：
-   - 引用已有的 `system/` 文档
+   - 引用已有的 `tech/` 文档
    - 本次特有的约束（如"UI 暂不追求美观"）
 
 5. 拆解任务清单：
@@ -411,7 +445,7 @@ allowed-tools:
 
 **关键原则**:
 - 每个任务应该是明确可完成的
-- 建议在开始前先定义 system 约束
+- 建议在开始前先定义 tech 约束
 - 如果任务太多，建议拆分成多个 plan
 
 ---
@@ -422,21 +456,31 @@ allowed-tools:
 
 **触发条件**: `plan/` 下存在进行中的计划（无 `archived-` 前缀）
 
+**执行前检查（重要！）**:
+
+**当用户提出需求或功能时，AI 必须先读取 `_adoc/index.md` 大索引，检查 `business/` 和 `tech/` 各模块中是否已有对应的操作说明（Runbook）或标准流程（SOP）。**
+
+- **如果找到** → 按已有文档执行，不要重复造轮子
+- **如果没找到，且该需求是流程性任务**（需要多步骤、可复用）→ 询问用户：
+  - 选项 A：现场定义流程，边做边记录
+  - 选项 B：先创建 SOP/Runbook 文档，再执行
+  - 选项 C：直接执行，不记录流程
+
 **执行步骤**:
 
 1. 加载完整上下文：
    ```bash
-   # 读取 intent
-   cat _adoc/intent.md
+   # 读取大索引（获取全局上下文）
+   cat _adoc/index.md
 
    # 读取当前 plan
    cat _adoc/plan/v0.x-xxx.md
 
-   # 读取 plan 中引用的 spec
-   cat _adoc/spec/相关模块.md
+   # 读取 plan 中引用的业务模块文档
+   cat _adoc/business/相关模块/README.md
 
-   # 读取 plan 中引用的 system
-   cat _adoc/system/相关约束.md
+   # 读取 plan 中引用的技术模块文档
+   cat _adoc/tech/相关项目/README.md
    ```
 
 2. **检查代码进度**（核心步骤）：
@@ -485,7 +529,7 @@ allowed-tools:
    ```
 
 5. 用户选择任务后，进入开发模式：
-   - 读取相关 spec 和 system
+   - 读取相关 business/ 和 tech/ 文档
    - 按要求实现功能
    - 完成后更新 plan 中的任务状态（`- [ ]` → `- [x]`）
 
@@ -494,7 +538,7 @@ allowed-tools:
 **关键原则**:
 - 只做 plan 中定义的任务，不要"顺手"做额外的事
 - 如果发现需要额外工作，先讨论是否加入 plan
-- 遵循 system 约束，如果约束不合理先讨论修改
+- 遵循 tech 约束，如果约束不合理先讨论修改
 
 ---
 
@@ -527,18 +571,17 @@ allowed-tools:
    ```
    【文档同步检查】
 
-   📁 System 文档:
-   - [ ] system/index.md - 是否需要更新？
-   - [ ] 涉及的模块文档 - routing.md / i18n.md / content.md 等
-   - [ ] 是否有新增模块需要创建文档？
+   📁 Tech 文档:
+   - [ ] tech/index.md - 是否需要更新？
+   - [ ] 涉及的项目文档 - astro/README.md / web/README.md 等
+   - [ ] 是否有新增技术模块需要创建文档？
 
-   📁 Spec 文档:
-   - [ ] 涉及的 spec 文档是否需要更新？
-   - [ ] 是否有新增功能模块需要创建 spec？
+   📁 Business 文档:
+   - [ ] 涉及的业务模块 README.md 是否需要更新？
+   - [ ] 是否有新增 Runbook/SOP 需要记录？
 
-   📁 Runbook 文档:
-   - [ ] 是否有新的操作流程需要记录？
-   - [ ] runbook/index.md 是否需要更新？
+   📁 大索引:
+   - [ ] _adoc/index.md 是否需要更新？
 
    ---
    请确认以上文档是否都已同步，或标记为"无需更新"。
@@ -575,9 +618,9 @@ allowed-tools:
    索引: 已更新 _adoc/plan/index.md（归类到 {模块名}）
 
    文档同步状态:
-   ✅ system/ 已更新
-   ✅ spec/ 无需更新
-   ✅ runbook/ 无需更新
+   ✅ tech/ 已更新
+   ✅ business/ 无需更新
+   ✅ index.md 无需更新
 
    ---
    下次调用 /adoc 将引导创建新的迭代计划。
@@ -596,38 +639,67 @@ allowed-tools:
 ```
 _adoc/
 ├── intent.md              # 唯一，项目方向
-├── spec/                  # 产品能力层（多个功能模块）
-│   ├── 01_feature_a.md
-│   └── 02_feature_b.md
-├── system/                # 研发约束层（独立于产品层）
-│   ├── architecture.md
-│   └── data_model.md
-├── plan/                  # 迭代计划
-│   ├── index.md           # 分类索引（按模块组织）
-│   ├── v0.3-xxx.md        # 进行中的计划
-│   └── archive/           # 已归档计划
-│       ├── v0.1-xxx.md
-│       └── v0.2-xxx.md
-└── runbook/               # 操作手册（日常运维）
-    ├── index.md           # 目录索引
-    ├── sync-docs.md       # 如何同步文档
-    ├── deploy.md          # 如何部署
-    └── dev.md             # 如何本地开发
+├── index.md               # 大索引（入口文件，串联一切）
+│
+├── business/              # 业务模块（按业务价值划分）
+│   ├── 模块A/
+│   │   ├── README.md      # 模块说明 + Spec
+│   │   ├── runbook-xxx.md # 操作手册（下沉到模块内部）
+│   │   └── sop-xxx.md     # 标准流程（下沉到模块内部）
+│   └── 模块B/
+│       └── README.md
+│
+├── tech/                  # 技术模块/项目（按技术实现划分）
+│   ├── index.md           # 技术模块索引 + 环境说明
+│   ├── 项目A/
+│   │   ├── README.md      # 项目概述 + 技术栈
+│   │   ├── deploy.md      # 部署说明（下沉到项目内部）
+│   │   └── sop-deploy.md  # 部署 SOP（下沉到项目内部）
+│   └── i18n/              # 横切技术（如有）
+│       └── README.md
+│
+└── plan/                  # 迭代计划
+    ├── index.md           # 分类索引（按模块组织）
+    ├── v0.3-xxx.md        # 进行中的计划
+    └── archive/           # 已归档计划
+        ├── v0.1-xxx.md
+        └── v0.2-xxx.md
 ```
 
-### 三个平行维度
+### 两大维度
 
 | 维度 | 文档 | 关注点 |
 |------|------|--------|
-| **产品/项目** | intent → spec → plan | 做什么、为什么做、这次做哪些 |
-| **研发/工程** | system | 怎么做、技术约束、架构规范 |
-| **运维/操作** | runbook | 日常怎么操作、脚本怎么用 |
+| **业务** | business/ 各模块 | 做什么、为什么做、怎么操作（Spec + Runbook + SOP 聚合在模块内） |
+| **技术** | tech/ 各项目 | 怎么实现、技术约束、部署运维（架构 + 部署 + 横切技术） |
 
-### Runbook 使用场景
+### Runbook / SOP / Spec 的归属
 
-- **忘了某个操作怎么做** → 来 runbook 找
-- **新人接手项目** → 先看 runbook 了解日常操作
-- **AI Agent 执行任务** → 参考 runbook 中的步骤
+在新架构中，Runbook、SOP、Spec 不再是顶层目录，而是下沉到各自所属的模块内部：
+
+| 文档类型 | 用途 | 归属 |
+|---------|------|------|
+| **Spec** | 功能规格说明 | 写在模块的 README.md 中，或独立为 spec-xxx.md |
+| **Runbook** | 单个操作怎么做 | 归属到对应的 business/ 或 tech/ 模块 |
+| **SOP** | 一整套流程怎么走 | 归属到对应的 business/ 或 tech/ 模块 |
+| **Plan** | 本次迭代做什么 | 保持在 plan/ 顶层，独立于模块 |
+
+简单说：
+- Runbook 是「怎么翻译一个文件」→ 放在 `business/docs/i18n-translate.md`
+- SOP 是「怎么翻译一个新语言（从调研到上线）」→ 放在 `business/docs/sop-new-language.md`
+- 部署 SOP 是「怎么上线」→ 放在 `tech/astro/sop-deploy.md`
+- Plan 是「这次我们翻译德语」→ 放在 `plan/v0.x-xxx.md`
+
+### 大索引（index.md）
+
+`_adoc/index.md` 是 AI 每次进入项目时的入口文件，采用标题层级结构：
+
+- 引用 intent.md 和 plan/index.md
+- 按标题层级列出所有业务模块及其 Runbook/SOP/Spec
+- 按标题层级列出所有技术模块及其文档
+- 包含环境信息（本地/预发/生产）
+
+AI 读取 index.md 即可获取全局上下文，按需深入具体模块。
 
 ---
 
@@ -646,13 +718,13 @@ _adoc/
 - `plan/archive/` 目录下的文件 = 已完成
 - `plan/index.md` = 按模块分类的索引
 
-### System 独立性
-- 独立于产品三层（intent/spec/plan）
+### Tech 独立性
+- 独立于业务层（intent/business/plan）
 - 可在任何阶段补充或修改
 - 遵循: 先文档 → 开发 → 回写文档
 
-### Runbook 渐进式
-- 随项目演进逐步补充
+### Runbook/SOP 渐进式
+- 随项目演进逐步补充，下沉到各模块内部
 - 记录"怎么操作"而非"为什么这样设计"
 - 每个操作一个文件，保持简洁
 - 包含：快速使用、详细步骤、常见问题

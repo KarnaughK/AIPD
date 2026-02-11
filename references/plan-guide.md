@@ -43,15 +43,15 @@ Plan 中的任务应该是明确可执行的。
 - **Feature**: 实现基础的 RunLog 记录与展示
 ```
 
-### 2. 涉及的 Spec（必须）
+### 2. 涉及的模块（必须）
 
 本次迭代涉及哪些功能模块。
 
 ```markdown
-## 2. 涉及的 Spec
+## 2. 涉及的模块
 
-- `spec/01_prompt_assets.md` - 实现 1.1 和 1.2 部分
-- `spec/02_test_framework.md` - 实现基础运行功能
+- `business/prompt/spec-prompt-assets.md` - 实现 1.1 和 1.2 部分
+- `business/test/spec-test-framework.md` - 实现基础运行功能
 ```
 
 ### 3. 约束（必须）
@@ -61,7 +61,7 @@ Plan 中的任务应该是明确可执行的。
 ```markdown
 ## 3. 约束 (Constraints)
 
-- **System**: 严格遵循 `system/architecture.md` 的分层规范
+- **System**: 严格遵循 `tech/xxx/README.md` 的技术规范
 - **UI**: 暂不追求极致美观，优先保证功能可用性
 - **Scope**: 暂不实现 1ToN 测试和 Workflow 集成
 ```
@@ -189,16 +189,16 @@ _adoc/plan/archive/v0.2-search.md
 
 ---
 
-## 与 Spec 的关系
+## 与业务模块的关系
 
-### Plan 引用 Spec
+### Plan 引用业务模块
 
-Plan 中的任务应该对应 Spec 中的能力：
+Plan 中的任务应该对应业务模块中的能力：
 
 ```markdown
-## 涉及的 Spec
+## 涉及的模块
 
-- `spec/01_prompt_assets.md`
+- `business/prompt/spec-prompt-assets.md`
   - 实现 "1. 提示词定义" 部分
   - 实现 "2.1 分组" 功能
 ```

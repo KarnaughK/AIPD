@@ -1,5 +1,9 @@
 # Spec 编写指南
 
+> **新架构说明**：在 business/tech 架构中，Spec 不再放在顶层 `spec/` 目录，
+> 而是下沉到各业务模块内部（如 `business/docs/spec-translation.md`）。
+> 本指南的写法规范仍然适用。
+
 Spec 是功能模块文档，描述"产品具备什么能力"。
 
 ## 核心原则
@@ -104,17 +108,17 @@ Spec 描述的是"用户能做什么"，不是"系统怎么实现"。
 ### 文件命名
 
 ```
-{序号}_{功能名}.md
+spec-{功能名}.md
 ```
 
-- 序号：两位数字，表示建议实现顺序
-- 功能名：小写字母，下划线分隔
+- 放在对应业务模块目录内
+- 功能名：小写字母，短横线分隔
 
 **示例**：
 ```
-01_prompt_assets.md
-02_test_framework.md
-03_data_loop.md
+business/prompt/spec-prompt-assets.md
+business/test/spec-test-framework.md
+business/data/spec-data-loop.md
 ```
 
 ### 标题命名
@@ -161,7 +165,7 @@ Spec 描述的是"用户能做什么"，不是"系统怎么实现"。
 
 ### Q: Spec 需要写技术方案吗？
 
-A: 不需要。技术方案放到 `system/` 里。Spec 只描述"用户能做什么"。
+A: 不需要。技术方案放到 `tech/` 对应项目里。Spec 只描述"用户能做什么"。
 
 ### Q: 如何处理跨模块的功能？
 

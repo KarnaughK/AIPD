@@ -1,3 +1,6 @@
+> **新架构说明**：在 business/tech 架构中，Spec 内容下沉到各业务模块内部，
+> 如 `business/docs/spec-translation.md`。本示例展示 Spec 的写法规范，仍然适用。
+
 # Product Spec: 官方文档翻译
 
 > **核心能力**：将 OpenClaw 官方英文文档翻译成多语言版本，解决非英语用户的"怎么用"问题

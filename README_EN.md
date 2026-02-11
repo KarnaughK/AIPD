@@ -35,11 +35,10 @@ The plan is written in files. AI reads it before every task. So it won't forget,
 
 ```
 1. Init    → Define project direction (intent.md)
-2. Design  → Break down feature modules (spec/)
-3. Constrain → Set technical guidelines (system/)
-4. Plan    → Create iteration tasks (plan/)
-5. Execute → AI completes tasks one by one
-6. Archive → Iteration done, start next round
+2. Design  → Break down business & tech modules (business/ + tech/)
+3. Plan    → Create iteration tasks (plan/)
+4. Execute → AI completes tasks one by one
+5. Archive → Iteration done, start next round
 ```
 
 ## Documentation Structure
@@ -47,17 +46,24 @@ The plan is written in files. AI reads it before every task. So it won't forget,
 ```
 _adoc/
 ├── intent.md          # Project direction (single file)
-├── spec/              # Feature module specs
-│   ├── 01_feature_a.md
-│   └── 02_feature_b.md
-├── system/            # Technical constraints
-│   └── ...
-├── plan/              # Iteration plans
-│   ├── index.md       # Categorized index (by module)
-│   ├── v0.3-xxx.md    # In progress
-│   └── archive/       # Completed
-│       └── v0.2-xxx.md
-└── runbook/           # Operation guides
+├── index.md           # Master index (entry point)
+├── business/          # Business modules (Spec + Runbook + SOP within each module)
+│   ├── module_a/
+│   │   ├── README.md
+│   │   └── ...
+│   └── module_b/
+│       └── README.md
+├── tech/              # Tech modules/projects
+│   ├── index.md       # Tech index + environment info
+│   ├── project_a/
+│   │   └── README.md
+│   └── project_b/
+│       └── README.md
+└── plan/              # Iteration plans
+    ├── index.md       # Categorized index (by module)
+    ├── v0.3-xxx.md    # In progress
+    └── archive/       # Completed
+        └── v0.2-xxx.md
 ```
 
 **Plan is the only thing you need to watch**: Want to do three things at once? Create three Plans. Each Plan is an independent task line.
