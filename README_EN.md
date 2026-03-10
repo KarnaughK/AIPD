@@ -47,7 +47,7 @@ The plan is written in files. AI reads it before every task. So it won't forget,
 _adoc/
 ├── intent.md          # Project direction (single file)
 ├── index.md           # Master index (entry point)
-├── business/          # Business modules (Spec + Runbook + SOP within each module)
+├── business/          # Business modules (Spec + SOP within each module)
 │   ├── module_a/
 │   │   ├── README.md
 │   │   └── ...

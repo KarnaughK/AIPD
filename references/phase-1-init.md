@@ -149,7 +149,7 @@ mkdir -p _adoc/business _adoc/tech _adoc/plan/archive
 **Intent 的"三不"原则**（避免过度具体化）:
 - ❌ **不描述具体功能**：功能放 business/ 各模块（如"一键验证"是功能）
 - ❌ **不描述技术实现**：实现放 tech/ 各模块（如"SQLite 存储"是实现）
-- ❌ **不描述操作流程**：流程放 business/ 各模块的 SOP/Runbook（如"先标记再验证"是流程）
+- ❌ **不描述操作流程**：流程放 business/ 各模块的 SOP（如"先标记再验证"是流程）
 
 **抽象层级检验**：
 - 提到具体工具名称（如 Dify） → 太具体，改为"现有工作流工具"

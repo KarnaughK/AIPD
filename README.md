@@ -47,7 +47,7 @@
 _adoc/
 ├── intent.md          # 项目方向（唯一）
 ├── index.md           # 大索引（入口文件）
-├── business/          # 业务模块（Spec + Runbook + SOP 聚合在模块内）
+├── business/          # 业务模块（Spec + SOP 聚合在模块内）
 │   ├── 模块A/
 │   │   ├── README.md
 │   │   └── ...

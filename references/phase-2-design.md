@@ -50,7 +50,6 @@ cat _adoc/intent.md
 _adoc/business/
 ├── 模块A/
 │   ├── README.md          # 模块说明 + Spec
-│   ├── runbook-xxx.md     # 操作手册（按需）
 │   └── sop-xxx.md         # 标准流程（按需）
 └── 模块B/
     └── README.md

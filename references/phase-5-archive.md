@@ -35,7 +35,7 @@ v0.2-search 的所有任务已完成:
 
 📁 Business 文档:
 - [ ] 涉及的业务模块 README.md 是否需要更新？
-- [ ] 是否有新增 Runbook/SOP 需要记录？
+- [ ] 是否有新增 SOP 需要记录？
 
 📁 大索引:
 - [ ] _adoc/index.md 是否需要更新？
