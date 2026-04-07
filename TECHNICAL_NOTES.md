@@ -288,3 +288,42 @@ archived-v0.1-init.md
 - [ ] 支持业务模块之间的依赖关系可视化
 - [ ] 支持 plan 的进度百分比展示
 - [ ] 支持从已有代码反向生成文档骨架
+
+---
+
+## 9. 多 Agent 调度融合设计（2026-03-22）
+
+### 背景
+
+原始 AIPD 是单 Agent 串行模式，主 Agent 自己执行所有任务。问题：
+1. 主 Agent 执行任务时用户无法交互
+2. 用户被迫开多窗口，上下文分裂
+3. 主 Agent 上下文被执行细节污染
+
+### 设计决策
+
+**核心理念**：不是为了并发加速，而是为了主 Agent 上下文干净 + 随时响应用户。
+
+**融合方式**：从 Team Agent Skill 提取多 Agent 调度的核心逻辑，适配到 AIPD 的 Plan 执行阶段。
+
+**与 Team Agent Skill 的区别**：
+- Team Agent 面向批量任务（100 个变量 × 同一模板），AIPD 面向串行迭代步骤
+- Team Agent 有独立的 task-spec / validation-spec / variables.jsonl，AIPD 用步骤文件（step.md）
+- Team Agent 的 worker 返回 JSON 结果，AIPD 的 worker 直接改代码
+- AIPD 的步骤文件引用 `_adoc/` 文档体系，子 Agent 自己读上下文
+
+**版本号设计**：
+- A.B.C 三级：A 大版本、B 功能版本（用户讨论产出）、C 迭代步骤（子 Agent 执行）
+- B 级 Plan 文件 = 功能全貌 + 步骤索引表格
+- C 级 Step 文件 = 子 Agent 的执行合同（自包含所有上下文引用）
+
+**降级策略**：
+- 简单任务不需要子 Agent，主 Agent 直接执行
+- 触发降级：用户明确要求、只有 1-2 个任务、紧急修复
+
+### 不做的事
+
+- 不做并行执行（步骤之间有依赖）
+- 不做自动重试无限次（失败后问用户）
+- 不做独立的验收 Agent（子 Agent 自检即可，主 Agent 快速审查）
+- 不保留 Team Agent 的 variables.jsonl 格式（步骤文件已包含所有信息）
