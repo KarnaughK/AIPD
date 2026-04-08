@@ -9,7 +9,9 @@
       "Bash(mv /Users/yangzongru/.claude/skills/AIPD/references/planning/template-step.md /Users/yangzongru/.claude/skills/AIPD/references/planning/create-plan/template-step.md)",
       "Bash(mv /Users/yangzongru/.claude/skills/AIPD/references/planning/example-plan.md /Users/yangzongru/.claude/skills/AIPD/references/planning/create-plan/example-plan.md)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git config:*)"
     ]
   }
 }
