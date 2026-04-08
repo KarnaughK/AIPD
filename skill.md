@@ -45,8 +45,9 @@ AIPD 把软件项目从构想到交付过程中产生的经验和决策，按领
 核心价值：主 Agent 上下文保持干净，随时响应用户。子 Agent 的执行细节不污染主 Agent。
 
 子 Agent 指南：
-- 开发执行者: `@references/planning/execute-plan/worker-guide.md`
-- 调研执行者: `@references/planning/execute-plan/researcher-guide.md`
+- 开发执行者: `@references/planning/worker-dev.md`
+- 调研执行者: `@references/planning/worker-research.md`
+- 归档执行者: `@references/planning/worker-archive.md`
 - Agent Team 使用: `@references/agent-team-guide.md`
 
 ---
@@ -121,10 +122,7 @@ AIPD 将项目认知组织为从抽象到具象的五个层级。每一层都可
 
 具体任务的执行载体。可以是开发、调研、设计——不限于写代码。
 
-- Plan 体系说明: `@references/planning/index.md`
-- 创建计划: `@references/planning/create-plan/main-agent.md`
-- 执行计划: `@references/planning/execute-plan/main-agent.md`
-- 归档计划: `@references/planning/execute-plan/archive-guide.md`
+- 主 Agent 完整指引: `@references/planning/index.md`（创建、执行、验收、归档全流程）
 
 ### OKR（目标管理）
 

@@ -47,7 +47,7 @@
 ### 产出要求
 
 - 结果文件路径：`{path}`
-- 格式：参考 `@references/agent-researcher-guide.md` 中的报告格式
+- 格式：参考 `@references/planning/worker-research.md` 中的报告格式
 
 ---
 

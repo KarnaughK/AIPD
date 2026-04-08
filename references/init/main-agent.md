@@ -22,7 +22,7 @@
 
 ## 你的任务
 
-1. 读取指南：{aipd_root}/references/phase-0-scan/sub-agent.md
+1. 读取指南：{aipd_root}/references/init/sub-agent.md
 2. 按指南扫描项目状态
 3. 写入结果到：{result_file}
 4. 返回：「项目状态扫描完成」

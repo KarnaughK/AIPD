@@ -6,6 +6,13 @@
 
 **核心理念**: business/ 描述功能模块（做什么），不是产品项目。一个功能模块可以被多个技术项目实现。
 
+## 命名规范
+
+用功能描述命名，不用产品项目名：
+
+- ✅ `keyword-discovery`、`keyword-validation`、`rule-check`
+- ❌ `keyword-research-backend`、`seo-dashboard`（技术项目名，放 dev/）
+
 ## 执行步骤
 
 ### 步骤 1: 复述项目方向

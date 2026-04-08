@@ -2,6 +2,19 @@
 
 > 状态：未经实践验证的初始文档。方向性参考，非 SOP。
 
+## 命名规范
+
+dev/ 下技术项目命名，第一个词体现核心技术栈：
+
+| 示例 | 含义 |
+|------|------|
+| `express-keyword-research` | Node/Express 后端 |
+| `next-seo-dashboard` | Next.js 前端 |
+| `chrome-plugin` | 浏览器插件 |
+| `spring-xxx` | Java Spring 后端 |
+
+框架不明显时用平台描述（`web-xxx`、`chrome-xxx`）。
+
 ## 这一层在做什么
 
 基于产品架构，确定技术选型、系统结构、工程规范。

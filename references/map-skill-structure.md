@@ -25,18 +25,13 @@ AIPD/                              # Skill 根目录
     │   ├── template.md            # 模板
     │   └── example.md             # 示例
     ├── planning/                  # Plan 执行体系
-    │   ├── index.md               # Plan 体系入口（规则、版本号、生命周期）
-    │   ├── create-plan/
-    │   │   ├── main-agent.md
-    │   │   └── plan-guide.md
-    │   ├── execute-plan/
-    │   │   ├── main-agent.md
-    │   │   ├── archive-guide.md
-    │   │   ├── worker-guide.md
-    │   │   └── researcher-guide.md
-    │   ├── template-plan.md       # Plan 模板
-    │   ├── template-step.md       # Step 模板
-    │   └── example-plan.md        # Plan 示例
+    │   ├── index.md               # 主 Agent 完整指引（创建、执行、验收、归档全流程）
+    │   ├── worker-dev.md          # 开发执行者指南
+    │   ├── worker-research.md     # 调研执行者指南
+    │   ├── worker-archive.md      # 归档执行者指南
+    │   └── templates/
+    │       ├── plan.md            # Plan 模板
+    │       └── step.md            # Step 模板
     ├── okr/                       # OKR 目标管理
     │   └── index.md               # OKR 入口
     ├── agent-team-guide.md        # 多 Agent 架构指南

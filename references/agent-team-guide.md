@@ -260,8 +260,10 @@ createAgent({
 
 本文档是 AIPD 流程构建的技术指南，与其他文档的关系：
 
-- **phase-4-execute.md**：描述主 Agent 如何调度子 Agent（流程层面）
-- **agent-worker-guide.md**：描述子 Agent 如何执行任务（执行层面）
+- **planning/index.md**：描述主 Agent 如何调度子 Agent（流程层面）
+- **planning/worker-dev.md**：描述开发执行者如何执行任务（执行层面）
+- **planning/worker-research.md**：描述调研执行者如何执行任务（执行层面）
+- **planning/worker-archive.md**：描述归档执行者如何执行任务（执行层面）
 - **本文档**：描述如何使用 Agent Team 机制（技术层面）
 
 当你需要为 AIPD 添加新模块或优化流程时，参考本文档了解：

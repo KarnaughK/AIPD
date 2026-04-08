@@ -11,7 +11,14 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(cp create-plan/template-plan.md templates/plan.md)",
+      "Bash(cp create-plan/template-step.md templates/step.md)",
+      "Bash(cp execute-plan/worker-guide.md worker-dev.md)",
+      "Bash(cp execute-plan/researcher-guide.md worker-research.md)",
+      "Bash(rm -rf create-plan execute-plan)",
+      "Bash(rm sediment-guide.md)",
+      "Bash(rm -f sediment-guide.md)"
     ]
   }
 }

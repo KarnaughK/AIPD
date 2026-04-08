@@ -2,30 +2,6 @@
 
 项目的认知沉淀，由用户和 AI 共同维护。
 
-## 命名规范
-
-**business/ — 功能模块命名**
-
-用功能描述命名，不用产品项目名。同一个功能模块可能被多个技术项目实现。
-
-- ✅ `keyword-discovery`、`keyword-validation`、`rule-check`
-- ❌ `keyword-research-backend`、`seo-dashboard`（这是技术项目名，放 dev/）
-
-**dev/ — 技术项目命名**
-
-第一个词体现核心技术栈，一眼看出平台/框架：
-
-| 示例 | 含义 |
-|------|------|
-| `express-keyword-research` | Node/Express 后端 |
-| `next-seo-dashboard` | Next.js 前端 |
-| `nuxt-xxx` | Nuxt 前端 |
-| `chrome-plugin` | 浏览器插件 |
-| `spring-xxx` | Java Spring 后端 |
-
-框架不明显时用平台描述（`web-xxx`、`chrome-xxx`）。
-
----
 
 ```
 _adoc/
