@@ -174,7 +174,7 @@ plan/
 | v0.1.3 API 骨架 | v0.1.3-API路由.md | v0.1.2 | 待执行 |
 ```
 
-每个步骤文件与 `plan.md` 同目录（同一个功能版本目录内），格式见 `@templates/step.md`。
+每个步骤文件与 `plan.md` 同目录（同一个功能版本目录内），格式见 `@references/planning/create-plan/template-step.md`。
 
 ---
 
@@ -319,5 +319,5 @@ A: 当使用子 Agent 执行时必须拆分。如果主 Agent 自己执行（简
 
 ## 模板参考
 
-- Plan 主文档模板：`@templates/plan.md`
-- Step 步骤文件模板：`@templates/step.md`
+- Plan 主文档模板：`@references/planning/template-plan.md`
+- Step 步骤文件模板：`@references/planning/template-step.md`

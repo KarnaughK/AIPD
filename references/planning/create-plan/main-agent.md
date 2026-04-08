@@ -55,7 +55,7 @@ cat _adoc/plan/index.md 2>/dev/null
 - 扫描 `plan/` 下已有文件，推算下一个版本号
 - 如无历史，建议 `v0.1`
 - 允许用户自定义
-- 版本号规范见 `@references/plan-guide.md`（三级 A.B.C）
+- 版本号规范见 `@references/planning/create-plan/plan-guide.md`（三级 A.B.C）
 
 ### 步骤 3: 确定 Plan 类型
 
@@ -100,12 +100,12 @@ cat _adoc/plan/index.md 2>/dev/null
 1. 每个步骤对应一个独立的功能点
 2. 步骤之间标注依赖关系
 3. 每个步骤必须有明确的验收标准
-4. 步骤粒度参考 `@references/plan-guide.md` 的 C 级步骤拆分规范
+4. 步骤粒度参考 `@references/planning/create-plan/plan-guide.md` 的 C 级步骤拆分规范
 
 **操作**：
 1. 在 Plan 主文档中添加"迭代步骤"表格
 2. 为每个步骤在 `_adoc/plan/steps/` 下创建独立文件
-3. 步骤文件格式参考 `@templates/step.md`
+3. 步骤文件格式参考 `@references/planning/create-plan/template-step.md`
 
 **示例**：
 ```markdown
@@ -130,7 +130,7 @@ cat _adoc/plan/index.md 2>/dev/null
 
 ### 步骤 9: 生成计划文档
 
-使用 `@templates/plan.md` 生成：`_adoc/plan/v0.x-xxx.md`
+使用 `@references/planning/create-plan/template-plan.md` 生成：`_adoc/plan/v0.x-xxx.md`
 
 同时确保 `_adoc/plan/steps/` 目录存在，并生成所有步骤文件。
 
@@ -158,4 +158,4 @@ cat _adoc/plan/index.md 2>/dev/null
 - 建议在开始前先定义 tech 约束
 - 如果任务太多，建议拆分成多个 plan
 - C 级步骤是子 Agent 执行的基本单位，必须足够精确
-- 参考 `@references/plan-guide.md` 了解任务拆分和版本号规范
+- 参考 `@references/planning/create-plan/plan-guide.md` 了解任务拆分和版本号规范

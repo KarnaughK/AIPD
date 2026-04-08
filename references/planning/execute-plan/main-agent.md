@@ -70,7 +70,7 @@ cat _adoc/plan/v0.x-xxx.md
 - 下一个待执行的步骤是什么？
 - 检查 `plan/steps/` 目录下的步骤文件是否存在
 
-如果步骤文件缺失，先创建（参考 `@templates/step.md`）。
+如果步骤文件缺失，先创建（参考 `@references/planning/template-step.md`）。
 
 ### 步骤 3: 展示进度状态
 

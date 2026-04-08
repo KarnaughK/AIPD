@@ -31,3 +31,14 @@ mv _adoc/plan/v0.x-功能名/  _adoc/plan/archive/
 分支: 已合并到 main
 文件: archive/v0.x-功能名/
 ```
+
+### 5. 提示沉淀
+
+询问用户：
+
+```
+是否需要将本次 Plan 的产出沉淀到 _adoc/？
+（更新相关文档，供后续 AI 加载使用）
+```
+
+如需沉淀，参考：`@references/planning/sediment-guide.md`

@@ -120,7 +120,7 @@ AI 说："面向小团队协作场景"（不写具体人数）
 mkdir -p _adoc/business _adoc/tech _adoc/plan/archive
 ```
 
-- 使用 `@templates/intent.md` 模板生成 `_adoc/intent.md`
+- 使用 `@references/L1-intent/template.md` 模板生成 `_adoc/intent.md`
 - 创建 `_adoc/index.md` 大索引（初始版本）
 
 ### 步骤 7: 告知下一步
