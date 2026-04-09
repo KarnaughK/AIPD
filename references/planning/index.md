@@ -75,16 +75,16 @@ _adoc/plan/
 
 ```bash
 # 读取 intent 摘要
-head -20 _adoc/intent.md
+head -20 _adoc/L1-intent/intent.md
 
 # 读取大索引
 cat _adoc/index.md
 
 # 列出业务模块
-ls _adoc/business/
+ls _adoc/L4-product/
 
 # 列出技术模块
-ls _adoc/dev/
+ls _adoc/L5-dev/
 
 # 列出历史 plan
 ls _adoc/plan/archive/ 2>/dev/null

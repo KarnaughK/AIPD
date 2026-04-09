@@ -97,9 +97,9 @@ _adoc/plan/v0.x-功能名/
 
 ## 上下文文档
 列出子 Agent 需要读取的文档（使用绝对路径）：
-- /path/to/tech/xxx/README.md - 技术约束
-- /path/to/business/xxx/index.md - 业务规则
-- /path/to/dev/xxx/debug-map.md - 调试地图
+- /path/to/L5-dev/xxx/README.md - 技术约束
+- /path/to/L4-product/xxx/index.md - 业务规则
+- /path/to/L5-dev/xxx/debug-map.md - 调试地图
 
 ## 任务清单
 - [ ] 任务 1
@@ -191,7 +191,7 @@ createAgent({
 创建脚本，从 txt 文件批量导入网站到数据库
 
 ## 上下文文档
-- /Users/xxx/project/_adoc/dev/keyword-research/README.md - 技术架构
+- /Users/xxx/project/_adoc/L5-dev/keyword-research/README.md - 技术架构
 - /Users/xxx/project/keyword-research/db/schema.sql - 数据库结构
 
 ## 任务清单

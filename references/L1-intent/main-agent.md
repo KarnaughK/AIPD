@@ -117,10 +117,10 @@ AI 说："面向小团队协作场景"（不写具体人数）
 用户确认后：
 
 ```bash
-mkdir -p _adoc/business _adoc/tech _adoc/plan/archive
+mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core _adoc/L4-product _adoc/L5-dev _adoc/okr _adoc/plan/archive
 ```
 
-- 使用 `@references/L1-intent/template.md` 模板生成 `_adoc/intent.md`
+- 使用 `@references/L1-intent/template.md` 模板生成 `_adoc/L1-intent/intent.md`
 - 创建 `_adoc/index.md` 大索引（初始版本）
 
 ### 步骤 7: 告知下一步
@@ -130,13 +130,16 @@ mkdir -p _adoc/business _adoc/tech _adoc/plan/archive
 
 📁 已创建文档结构:
    _adoc/
-   ├── intent.md      ← 项目方向
-   ├── index.md       ← 大索引（入口文件）
-   ├── business/      ← 业务模块（按业务价值划分）
-   ├── tech/          ← 技术模块（按技术实现划分）
-   └── plan/          ← 迭代计划
-       ├── index.md   ← 计划索引（待创建）
-       └── archive/   ← 已归档计划
+   ├── index.md           ← 大索引（入口文件）
+   ├── L1-intent/         ← 方向层
+   │   └── intent.md      ← 项目方向
+   ├── L2-research/       ← 需求调研层
+   ├── L3-core/           ← 核心层
+   ├── L4-product/        ← 产品功能模块层
+   ├── L5-dev/            ← 技术实现层
+   ├── okr/               ← 目标管理
+   └── plan/              ← 迭代计划
+       └── archive/       ← 已归档计划
 
 下次调用 /adoc 将进入「设计功能模块」阶段。
 要现在继续吗？
@@ -147,9 +150,9 @@ mkdir -p _adoc/business _adoc/tech _adoc/plan/archive
 ## 关键原则
 
 **Intent 的"三不"原则**（避免过度具体化）:
-- ❌ **不描述具体功能**：功能放 business/ 各模块（如"一键验证"是功能）
-- ❌ **不描述技术实现**：实现放 tech/ 各模块（如"SQLite 存储"是实现）
-- ❌ **不描述操作流程**：流程放 business/ 各模块的 SOP（如"先标记再验证"是流程）
+- ❌ **不描述具体功能**：功能放 L4-product/ 各模块（如"一键验证"是功能）
+- ❌ **不描述技术实现**：实现放 L5-dev/ 各模块（如"SQLite 存储"是实现）
+- ❌ **不描述操作流程**：流程放 L4-product/ 各模块的 SOP（如"先标记再验证"是流程）
 
 **抽象层级检验**：
 - 提到具体工具名称（如 Dify） → 太具体，改为"现有工作流工具"

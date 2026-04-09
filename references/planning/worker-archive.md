@@ -46,15 +46,15 @@ git diff main
 
 根据改动内容，判断哪些 `_adoc/` 文档需要更新：
 
-**技术文档（`_adoc/dev/`）**：
-- 新增了技术项目 → 创建对应的 `dev/{项目名}/index.md`
-- 修改了技术架构 → 更新 `dev/{项目名}/index.md`
-- 新增了部署流程 → 创建/更新 `dev/{项目名}/sop-deploy.md`
-- 修改了技术栈 → 更新 `dev/index.md`
+**技术文档（`_adoc/L5-dev/`）**：
+- 新增了技术项目 → 创建对应的 `L5-dev/{项目名}/index.md`
+- 修改了技术架构 → 更新 `L5-dev/{项目名}/index.md`
+- 新增了部署流程 → 创建/更新 `L5-dev/{项目名}/sop-deploy.md`
+- 修改了技术栈 → 更新 `L5-dev/index.md`
 
-**业务文档（`_adoc/business/`）**：
-- 实现了新功能 → 更新 `business/{模块名}/index.md`
-- 新增了业务流程 → 创建 `business/{模块名}/sop-xxx.md`
+**业务文档（`_adoc/L4-product/`）**：
+- 实现了新功能 → 更新 `L4-product/{模块名}/index.md`
+- 新增了业务流程 → 创建 `L4-product/{模块名}/sop-xxx.md`
 - 修改了业务逻辑 → 更新对应的 Spec 文档
 
 **大索引（`_adoc/index.md`）**：
@@ -73,7 +73,7 @@ git diff main
 
 **示例**：
 
-如果本次 Plan 新增了 API 路由，更新 `dev/{项目名}/index.md`：
+如果本次 Plan 新增了 API 路由，更新 `L5-dev/{项目名}/index.md`：
 
 ```markdown
 ## API 路由

@@ -18,7 +18,7 @@
 ### 步骤 1: 复述项目方向
 
 ```bash
-cat _adoc/intent.md
+cat _adoc/L1-intent/intent.md
 ```
 
 ```
@@ -56,14 +56,14 @@ cat _adoc/intent.md
 ### 步骤 5: 创建模块文档
 
 ```
-_adoc/business/
+_adoc/L4-product/
 ├── 模块A/
 │   ├── README.md          # 模块说明 + Spec
 │   └── sop-xxx.md         # 标准流程（按需）
 └── 模块B/
     └── README.md
 
-_adoc/tech/
+_adoc/L5-dev/
 ├── index.md               # 技术模块索引 + 环境说明
 ├── 项目A/
 │   └── README.md          # 项目概述 + 技术栈
