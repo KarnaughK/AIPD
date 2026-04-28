@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+DIST_DIR="$PROJECT_ROOT/dist/claude/skills"
+TARGET_DIR="$HOME/.claude/skills"
+
+"$SCRIPT_DIR/build" claude
+
+mkdir -p "$TARGET_DIR"
+
+for skill_dir in "$DIST_DIR"/*/; do
+    name=$(basename "$skill_dir")
+    target="$TARGET_DIR/$name"
+    rm -rf "$target"
+    cp -r "$skill_dir" "$target"
+    echo "安装: $target"
+done
+
+echo ""
+echo "安装完成。skill 已复制到 $TARGET_DIR/"

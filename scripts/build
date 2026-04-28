@@ -1,0 +1,120 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+SRC_DIR="$PROJECT_ROOT/src"
+DIST_ROOT="$PROJECT_ROOT/dist"
+
+build_platform() {
+    local platform="$1"
+    local dist_dir="$DIST_ROOT/$platform/skills"
+    local platform_core_dir="$SRC_DIR/platforms/$platform/core"
+
+    rm -rf "$dist_dir"
+    mkdir -p "$dist_dir"
+
+    for skill_dir in "$SRC_DIR/skills"/*/; do
+        local skill_name
+        local dest
+        skill_name=$(basename "$skill_dir")
+        dest="$dist_dir/$skill_name"
+
+        echo "构建 [$platform] $skill_name ..."
+        cp -r "$skill_dir" "$dest"
+        mkdir -p "$dest/references"
+
+        local in_inject=false
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^inject-from-core: ]]; then
+                in_inject=true
+                continue
+            fi
+
+            if $in_inject; then
+                if [[ "$line" =~ ^[[:space:]]*-[[:space:]] ]]; then
+                    local src_path
+                    src_path=$(echo "$line" | sed 's/^[[:space:]]*-[[:space:]]*//')
+                    inject_core_path "$platform_core_dir" "$SRC_DIR/core" "$src_path" "$dest/references"
+                elif [[ "$line" =~ ^--- ]] || [[ ! "$line" =~ ^[[:space:]] ]]; then
+                    in_inject=false
+                fi
+            fi
+        done < "$dest/SKILL.md"
+
+        echo "  完成 → $dest"
+    done
+
+    echo ""
+    echo "[$platform] 构建完成。产物在 $dist_dir/"
+    echo "共 $(ls -d "$dist_dir"/*/ 2>/dev/null | wc -l | xargs) 个 skill"
+    echo ""
+}
+
+inject_core_path() {
+    local platform_core_dir="$1"
+    local common_core_dir="$2"
+    local src_path="$3"
+    local references_dir="$4"
+
+    if [[ "$src_path" == *"/*" ]]; then
+        local dir_path="${src_path%/*}"
+        local platform_dir="$platform_core_dir/$dir_path"
+        local common_dir="$common_core_dir/$dir_path"
+        local source_dir
+
+        if [ -d "$platform_dir" ]; then
+            source_dir="$platform_dir"
+        else
+            source_dir="$common_dir"
+        fi
+
+        mkdir -p "$references_dir/$dir_path"
+        cp -r "$source_dir"/* "$references_dir/$dir_path/"
+    elif [[ "$src_path" == *"/"* ]]; then
+        local target_dir
+        local platform_file="$platform_core_dir/$src_path"
+        local common_file="$common_core_dir/$src_path"
+        local source_file
+        target_dir=$(dirname "$src_path")
+
+        if [ -f "$platform_file" ]; then
+            source_file="$platform_file"
+        else
+            source_file="$common_file"
+        fi
+
+        mkdir -p "$references_dir/$target_dir"
+        cp "$source_file" "$references_dir/$target_dir/"
+    else
+        local platform_file="$platform_core_dir/$src_path"
+        local common_file="$common_core_dir/$src_path"
+        local source_file
+
+        if [ -f "$platform_file" ]; then
+            source_file="$platform_file"
+        else
+            source_file="$common_file"
+        fi
+
+        cp "$source_file" "$references_dir/"
+    fi
+}
+
+case "${1:-all}" in
+    claude)
+        build_platform "claude"
+        ;;
+    codex)
+        build_platform "codex"
+        ;;
+    all)
+        rm -rf "$DIST_ROOT/skills" "$DIST_ROOT/claude" "$DIST_ROOT/codex"
+        build_platform "claude"
+        build_platform "codex"
+        ;;
+    *)
+        echo "用法: scripts/build [claude|codex|all]"
+        exit 1
+        ;;
+esac

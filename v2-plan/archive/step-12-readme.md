@@ -54,5 +54,5 @@ git clone ... && cd AIPD
 ## 验收
 
 - README 结构清晰，新用户能看懂怎么安装和使用
-- 不包含旧的 `references/` 目录结构
+- 不包含旧的 `v1/references/` 目录结构
 - 安装命令可直接复制执行

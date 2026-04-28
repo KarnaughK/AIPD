@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+if [ -z "$1" ]; then
+    echo "用法: scripts/install-project-codex <项目路径>"
+    echo "示例: scripts/install-project-codex /Users/xxx/my-project"
+    exit 1
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+DIST_DIR="$PROJECT_ROOT/dist/codex/skills"
+TARGET_DIR="$1/.codex/skills"
+
+"$SCRIPT_DIR/build" codex
+
+mkdir -p "$TARGET_DIR"
+
+for skill_dir in "$DIST_DIR"/*/; do
+    name=$(basename "$skill_dir")
+    target="$TARGET_DIR/$name"
+    rm -rf "$target"
+    cp -r "$skill_dir" "$target"
+    echo "安装: $target"
+done
+
+echo ""
+echo "Codex 项目级安装完成。skill 已复制到 $TARGET_DIR/"

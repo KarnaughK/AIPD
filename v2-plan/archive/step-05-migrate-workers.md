@@ -21,4 +21,4 @@ git mv references/planning/worker-archive.md src/skills/aipd-plan-archive/refere
 
 - `src/skills/aipd-plan-run/references/` 下有 `worker-dev.md` 和 `worker-research.md`
 - `src/skills/aipd-plan-archive/references/` 下有 `worker-archive.md`
-- 原 `references/planning/` 下这三个文件已不存在
+- 原 `v1/references/planning/` 下这三个文件已不存在

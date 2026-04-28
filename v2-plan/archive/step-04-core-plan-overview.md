@@ -2,7 +2,7 @@
 
 ## 任务
 
-从现有 `references/planning/index.md` 提取 Plan 机制的知识说明部分，不含具体阶段的执行步骤。
+从现有 `v1/references/planning/index.md` 提取 Plan 机制的知识说明部分，不含具体阶段的执行步骤。
 
 ## 要写入的文件
 
@@ -10,7 +10,7 @@
 
 ## 内容要求
 
-从 `references/planning/index.md` 提取以下部分：
+从 `v1/references/planning/index.md` 提取以下部分：
 
 1. **Plan 是什么**：一句话定位
 2. **三级版本号（A.B.C）**：表格，含含义、谁定、示例
@@ -26,4 +26,4 @@
 
 ## 参考源文件
 
-- `references/planning/index.md`（第 1-63 行的机制说明 + 第 556-564 行的关键原则）
+- `v1/references/planning/index.md`（第 1-63 行的机制说明 + 第 556-564 行的关键原则）

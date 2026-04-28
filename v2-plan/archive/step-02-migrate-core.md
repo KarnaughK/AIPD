@@ -2,7 +2,7 @@
 
 ## 任务
 
-将现有 `references/` 下的知识类文件迁移到 `src/core/`，部分文件需要改名。
+将现有 `v1/references/` 下的知识类文件迁移到 `src/core/`，部分文件需要改名。
 
 ## 执行命令
 
@@ -45,4 +45,4 @@ git mv references/okr/index.md src/core/okr/guide.md
 
 - `src/core/` 下有 15 个文件
 - 所有文件内容与原文件一致（git mv 保留历史）
-- `references/` 下对应的原文件已不存在
+- `v1/references/` 下对应的原文件已不存在

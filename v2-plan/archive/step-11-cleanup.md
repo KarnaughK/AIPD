@@ -19,7 +19,7 @@
 git rm SKILL.md
 
 # 删除历史文件
-git rm skill-old.md
+git rm v1/skill-old.md
 
 # 删除已被 README 替代的目录地图
 git rm references/map-skill-structure.md
@@ -29,15 +29,15 @@ git rm references/planning/index.md
 
 # 清理空目录（git 不跟踪空目录，但本地可能残留）
 # 检查 references/ 下是否还有文件
-find references/ -type f 2>/dev/null
+find v1/references/ -type f 2>/dev/null
 
 # 如果 references/ 已完全清空，删除整个目录
-rm -rf references/
+rm -rf v1/references/
 ```
 
 ## 验收
 
-- `references/` 目录不存在
+- `v1/references/` 目录不存在
 - 根目录下没有 `SKILL.md` 和 `skill-old.md`
 - `git status` 显示这些文件为 deleted
 - 所有内容都已在 `src/` 下有对应的新位置

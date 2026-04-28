@@ -14,7 +14,7 @@ git mv references/init/sub-agent.md src/skills/aipd-init/references/scan-agent.m
 
 ### 6.2 基于 init/main-agent.md 创建总入口的扫描逻辑
 
-读取 `references/init/main-agent.md`，将其中的扫描调度逻辑（创建子 Agent、等待结果、展示面板）
+读取 `v1/references/init/main-agent.md`，将其中的扫描调度逻辑（创建子 Agent、等待结果、展示面板）
 提取到 `src/skills/aipd/references/scan-agent.md`。
 
 这个文件的内容是：
@@ -38,4 +38,4 @@ git rm references/init/main-agent.md
 
 - `src/skills/aipd/references/scan-agent.md` 存在，包含扫描调度逻辑
 - `src/skills/aipd-init/references/scan-agent.md` 存在，包含子 Agent 扫描脚本
-- `references/init/` 目录已清空或删除
+- `v1/references/init/` 目录已清空或删除

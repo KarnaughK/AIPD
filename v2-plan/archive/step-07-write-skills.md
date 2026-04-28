@@ -31,8 +31,8 @@ inject-from-core:
 
 1. 一句话说明：你是 AIPD 总入口，职责是扫描和分流
 2. 触发后的行为：
-   - 使用子 Agent 扫描项目 `_adoc/` 目录（参考 `references/scan-agent.md`）
-   - 展示状态面板（格式参考现有 `references/init/main-agent.md` 第 43 行起的面板格式）
+   - 使用子 Agent 扫描项目 `_adoc/` 目录（参考 `v1/references/scan-agent.md`）
+   - 展示状态面板（格式参考现有 `v1/references/init/main-agent.md` 第 43 行起的面板格式）
    - 根据状态推荐下一步，引导用户调用具体 skill：
      - 没有 `_adoc/` → 推荐 `/aipd-init`
      - 有 `_adoc/` 但没有 plan → 推荐 `/aipd-plan-create`
@@ -43,7 +43,7 @@ inject-from-core:
 ### 内容来源
 
 - 现有 `SKILL.md` 的"初始化"部分（第 66-75 行）
-- `references/init/main-agent.md` 的面板展示逻辑
+- `v1/references/init/main-agent.md` 的面板展示逻辑
 
 ---
 
@@ -75,7 +75,7 @@ inject-from-core:
 ### 内容要求
 
 1. 触发后的行为：
-   - 扫描项目状态（参考 `references/scan-agent.md`）
+   - 扫描项目状态（参考 `v1/references/scan-agent.md`）
    - 如果 `_adoc/` 不存在 → 创建完整目录结构（参考 `@references/adoc-structure.md`）
    - 如果 `intent.md` 不存在 → 引导用户定义方向（参考 `@references/L1-intent/guide.md`）
    - 如果都存在 → 告知用户已初始化，推荐 `/aipd-plan-create`
@@ -84,7 +84,7 @@ inject-from-core:
 
 ### 内容来源
 
-- `references/init/main-agent.md` 的初始化流程
+- `v1/references/init/main-agent.md` 的初始化流程
 - 现有 `SKILL.md` 的 L1 部分（第 86-89 行）
 
 ---
@@ -117,7 +117,7 @@ inject-from-core:
 
 ### 内容要求
 
-将 `references/planning/index.md` 的"阶段 1：创建 Plan"（第 66-245 行）完整搬入，包括：
+将 `v1/references/planning/index.md` 的"阶段 1：创建 Plan"（第 66-245 行）完整搬入，包括：
 
 1. 扫描项目全貌（1.1）
 2. 确定版本号（1.2）
@@ -139,7 +139,7 @@ inject-from-core:
 
 ### 内容来源
 
-- `references/planning/index.md` 第 66-245 行
+- `v1/references/planning/index.md` 第 66-245 行
 
 ---
 
@@ -170,7 +170,7 @@ inject-from-core:
 
 ### 内容要求
 
-将 `references/planning/index.md` 的"阶段 2：执行 Plan"和"阶段 3：用户验收"（第 249-465 行）搬入，包括：
+将 `v1/references/planning/index.md` 的"阶段 2：执行 Plan"和"阶段 3：用户验收"（第 249-465 行）搬入，包括：
 
 **执行部分**：
 1. 加载上下文（2.1）— 只读 plan.md 和大索引，不读 L1-L5 详细文档
@@ -191,7 +191,7 @@ inject-from-core:
 
 ### 内容来源
 
-- `references/planning/index.md` 第 249-465 行
+- `v1/references/planning/index.md` 第 249-465 行
 
 ---
 
@@ -221,7 +221,7 @@ inject-from-core:
 
 ### 内容要求
 
-将 `references/planning/index.md` 的"阶段 4：归档"和"阶段 5：合并分支"（第 470-553 行）搬入，包括：
+将 `v1/references/planning/index.md` 的"阶段 4：归档"和"阶段 5：合并分支"（第 470-553 行）搬入，包括：
 
 **归档部分**：
 1. 派发归档任务给子 Agent（4.1）— prompt 引用 `@references/worker-archive.md`
@@ -235,7 +235,7 @@ inject-from-core:
 
 ### 内容来源
 
-- `references/planning/index.md` 第 470-553 行
+- `v1/references/planning/index.md` 第 470-553 行
 
 ---
 

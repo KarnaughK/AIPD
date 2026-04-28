@@ -18,7 +18,11 @@
       "Bash(cp execute-plan/researcher-guide.md worker-research.md)",
       "Bash(rm -rf create-plan execute-plan)",
       "Bash(rm sediment-guide.md)",
-      "Bash(rm -f sediment-guide.md)"
+      "Bash(rm -f sediment-guide.md)",
+      "Bash(rm -rf ~/.claude/skills/aipd22 ~/.claude/skills/aipd2-plan-create2 ~/.claude/skills/aipd2-plan-run2 ~/.claude/skills/aipd2-plan-archive2)",
+      "Bash(/Users/yangzongru/Desktop/CodeKKK/AIPD-2/scripts/build)",
+      "Bash(rm -rf ~/.claude/skills/aipd-plan-archive2 ~/.claude/skills/aipd-plan-create2 ~/.claude/skills/aipd-plan-run2)",
+      "Read(//Users/yangzongru/.claude/skills/**)"
     ]
   }
 }
