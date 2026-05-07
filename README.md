@@ -19,7 +19,7 @@ AIPD 关注的是另一层：**项目认知**。
 因此，AIPD 更像是项目的长期记忆层：
 
 - Agent 执行任务前，读取项目认知，避免从零猜测业务背景。
-- Agent 执行任务时，按 Workspace / Plan 限定上下文边界。
+- Agent 执行任务时，按 Case 的上下文索引限定读取边界。
 - Agent 执行任务后，把新的判断、踩坑和决策回写到项目认知。
 - 下一个 Agent 不需要继承上一段聊天，但可以继承项目记忆。
 
@@ -41,7 +41,7 @@ AIPD 关注的是另一层：**项目认知**。
 ```
 AIPD/
 ├── src/
-│   ├── core/          # 共享知识层（五层认知结构、Plan 机制、Agent 协作）
+│   ├── core/          # 共享知识层（五层认知结构、Case 机制、Agent 协作）
 │   ├── platforms/     # 平台覆盖文件（Claude Code / Codex）
 │   └── skills/        # 5 个 skill 源码，每个含 SKILL.md
 ├── scripts/
@@ -63,10 +63,10 @@ AIPD/
 | skill | 命令 | 职责 |
 |-------|------|------|
 | aipd2 | `/aipd2` | 总入口：扫描状态，引导下一步 |
-| aipd2-plan-create | `/aipd2-plan-create` | 创建迭代计划 |
-| aipd2-plan-run | `/aipd2-plan-run` | 执行计划，派发子 Agent |
-| aipd2-plan-learn | `/aipd2-plan-learn` | 总结经验，回写项目认知或 AIPD2 框架 |
-| aipd2-plan-archive | `/aipd2-plan-archive` | 归档计划，合并分支 |
+| aipd2-case-create | `/aipd2-case-create` | 创建 case，整理上下文索引和步骤 |
+| aipd2-case-run | `/aipd2-case-run` | 执行 case，加载上下文并派发子 Agent |
+| aipd2-learn | `/aipd2-learn` | 生成经验回流包，回写项目认知或 AIPD2 框架 |
+| aipd2-case-archive | `/aipd2-case-archive` | 归档 case，合并分支 |
 
 ---
 
@@ -120,7 +120,7 @@ git clone <repo> && cd AIPD
 | L2 | Scenario | AI 知道用户痛点，设计有的放矢 |
 | L3 | Engine | AI 理解核心数据模型，不破坏架构 |
 | L4 | Product | AI 知道功能边界，不越界实现 |
-| L5 | Tech | AI 遵守技术规范，代码风格一致 |
+| L5 | Dev | AI 遵守研发规范，代码风格一致 |
 
 ### 多 Agent 执行体系
 

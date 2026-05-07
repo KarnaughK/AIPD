@@ -18,20 +18,22 @@ _adoc/
 │   └── keyword-discovery/      # 用功能名，不用技术项目名
 │       ├── index.md            # 模块索引
 │       └── sop-xxx.md          # 标准流程
-├── L5-dev/                     # 技术实现层（命名带技术标识，如 express-xxx、next-xxx）
-│   ├── index.md                # 技术模块总索引
+├── L5-dev/                     # 研发实现层（命名带技术标识，如 express-xxx、next-xxx）
+│   ├── index.md                # 研发模块总索引
 │   └── express-keyword-research/
-│       ├── README.md           # 技术架构说明
+│       ├── README.md           # 研发实现说明
 │       └── debug-map.md        # 调试地图
 ├── okr/                        # 目标管理
 │   ├── index.md                # 目标索引
 │   └── O1-目标名/
 │       ├── index.md            # O + KR 定义
 │       └── YYYY-MM-DD.md       # 每日进展
-└── plan/                       # 迭代计划
-    ├── v0.1-功能名/
-    │   ├── plan.md
-    │   └── v0.1.1-步骤名.md
+└── case/                       # 事项执行记录
+    ├── c0.1-功能名/
+    │   ├── case.md
+    │   ├── steps/
+    │   │   └── c0.1.1-步骤名.md
+    │   └── doc/
     └── archive/
-        └── v0.1-功能名/        # 已归档计划
+        └── c0.1-功能名/        # 已归档 case
 ```

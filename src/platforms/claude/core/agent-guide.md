@@ -13,12 +13,12 @@ Agent Team 创建的是独立 Claude Code 实例：
 
 ## 主 Agent 流程
 
-1. 读取 `_adoc/plan/{plan目录}/plan.md`。
-2. 找到下一个未完成 step。
+1. 读取 `_adoc/case/{case目录}/case.md`，按上下文索引加载必要文档。
+2. 找到下一个未完成 step；如果没有 step，回到用户讨论或补充 step。
 3. 生成完整 prompt，包含角色、step 文件绝对路径、约束和返回格式。
 4. 创建 Agent Team 子 Agent。
 5. 等待子 Agent 返回简洁结果。
-6. 成功则更新 step 和 plan 状态，继续派发下一步。
+6. 成功则更新 step 和 case 状态，继续派发下一步。
 7. 失败则告知用户，询问重试、跳过或手动处理。
 
 ## 子 Agent Prompt 模板
@@ -29,7 +29,7 @@ Agent Team 创建的是独立 Claude Code 实例：
 你的任务：
 1. 读取 worker 指南：@references/worker-dev.md
 2. 读取步骤文件：{step_file_abs_path}
-3. 按步骤文件中的「上下文文档」逐一读取
+3. 按步骤文件中的「上下文文档」逐一读取，遵守 case 的上下文边界
 4. 按步骤文件中的「任务清单」逐项执行
 5. 按步骤文件中的「验收标准」自检
 6. 完成后返回简洁结果
@@ -72,5 +72,6 @@ step 文件必须包含：
 ## 关键约束
 
 - 使用 Agent Team，不使用 Claude Code 内置 Sub Agent。
+- prompt 必须包含 step 文件绝对路径和 case 上下文边界。
 - 主 Agent 不把自己读过的上下文当作子 Agent 已知信息。
 - 子 Agent 的返回必须节制，避免污染主 Agent 上下文。

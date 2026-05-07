@@ -7,7 +7,7 @@ Codex 版本使用 Codex 子 agent 执行 AIPD2 的 step。
 - **worker**：执行开发、修复、文件修改、验证等生产任务。
 - **explorer**：执行只读调研、代码定位、方案分析等探索任务。
 
-Plan Run 默认使用 `worker` 执行开发 step；遇到调研型 step 时使用 `explorer` 或让 `worker` 先写调研结果文件。
+Case Run 默认使用 `worker` 执行开发 step；遇到调研型 step 时使用 `explorer` 或让 `worker` 先写调研结果文件。
 
 ## 上下文机制
 
@@ -20,12 +20,12 @@ AIPD2 推荐 `fork_context: false`，因为 step 文件应该是子 Agent 的主
 
 ## 主 Agent 流程
 
-1. 读取 `_adoc/plan/{plan目录}/plan.md`。
-2. 找到下一个未完成 step。
+1. 读取 `_adoc/case/{case目录}/case.md`，按上下文索引加载必要文档。
+2. 找到下一个未完成 step；如果没有 step，回到用户讨论或补充 step。
 3. 根据 step 类型选择 `worker` 或 `explorer`。
 4. 派发子 Agent，明确说明它不是唯一操作者，不要回滚他人改动。
 5. 子 Agent 完成后，主 Agent 读取返回摘要。
-6. 成功则更新 step 和 plan 状态，继续派发下一步。
+6. 成功则更新 step 和 case 状态，继续派发下一步。
 7. 失败则告知用户，询问重试、跳过或手动处理。
 
 ## Worker Prompt 模板
@@ -38,7 +38,7 @@ AIPD2 推荐 `fork_context: false`，因为 step 文件应该是子 Agent 的主
 你的任务：
 1. 读取 worker 指南：{skill_dir}/references/worker-dev.md
 2. 读取步骤文件：{step_file_abs_path}
-3. 按步骤文件中的「上下文文档」逐一读取
+3. 按步骤文件中的「上下文文档」逐一读取，遵守 case 的上下文边界
 4. 按步骤文件中的「任务清单」逐项执行
 5. 按步骤文件中的「验收标准」自检
 6. 完成后返回简洁结果
@@ -91,5 +91,6 @@ AIPD2 推荐 `fork_context: false`，因为 step 文件应该是子 Agent 的主
 
 - 默认不 fork 主 Agent 上下文。
 - prompt 必须包含 step 文件绝对路径。
+- prompt 必须包含 case 目录或 case.md 路径，以及本 step 需要遵守的上下文边界。
 - 子 Agent 必须自己读取 step 文件和上下文文档。
 - 主 Agent 不重复执行子 Agent 已承担的任务，只负责验收、状态更新和下一步调度。

@@ -117,7 +117,7 @@ AI 说："面向小团队协作场景"（不写具体人数）
 用户确认后：
 
 ```bash
-mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core _adoc/L4-product _adoc/L5-dev _adoc/okr _adoc/plan/archive
+mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core _adoc/L4-product _adoc/L5-dev _adoc/okr _adoc/case/archive
 ```
 
 - 使用 `@references/L1-intent/template.md` 模板生成 `_adoc/L1-intent/intent.md`
@@ -136,12 +136,12 @@ mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core _adoc/L4-product _adoc/
    ├── L2-research/       ← 需求调研层
    ├── L3-core/           ← 核心层
    ├── L4-product/        ← 产品功能模块层
-   ├── L5-dev/            ← 技术实现层
+   ├── L5-dev/            ← 研发实现层
    ├── okr/               ← 目标管理
-   └── plan/              ← 迭代计划
-       └── archive/       ← 已归档计划
+   └── case/              ← 事项执行记录
+       └── archive/       ← 已归档 case
 
-下次调用 /adoc 将进入「设计功能模块」阶段。
+下次调用 /aipd2 将进入「设计功能模块」阶段。
 要现在继续吗？
 ```
 
