@@ -11,10 +11,11 @@ _adoc/
 │   └── history/                # 历史版本
 │       └── v1-2026-01.md
 ├── L2-research/                # 需求调研层
-│   └── index.md
+│   └── index.md                # 调研索引
 ├── L3-core/                    # 核心层
-│   └── index.md
+│   └── index.md                # 核心对象 / 流程索引
 ├── L4-product/                 # 产品功能模块层（描述"做什么"，不绑定技术实现）
+│   ├── index.md                # 产品模块总索引
 │   └── keyword-discovery/      # 用功能名，不用技术项目名
 │       ├── index.md            # 模块索引
 │       └── sop-xxx.md          # 标准流程
@@ -29,6 +30,7 @@ _adoc/
 │       ├── index.md            # O + KR 定义
 │       └── YYYY-MM-DD.md       # 每日进展
 └── case/                       # 事项执行记录
+    ├── index.md                # Case 索引
     ├── c0.1-功能名/
     │   ├── case.md
     │   ├── steps/

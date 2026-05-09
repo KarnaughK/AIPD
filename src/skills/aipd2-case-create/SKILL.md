@@ -59,10 +59,21 @@ mkdir -p _adoc/case/c{X.Y}-{名称}/doc
 - 目标：这个 case 要完成什么
 - 上下文索引：执行时优先读哪些 `_adoc` 文档、页面 README、代码入口、设计/原型/调研资料
 - 本次边界：明确做什么和不做什么
-- steps 列表：每个 step 的文件名和一句话描述
+- steps 列表：每个 step 的文件名、一句话描述和推荐 Agent
 - 验收标准和经验沉淀位置
 
 步骤文件写入 `steps/`，格式参考 `@references/case/templates/step.md`。
+
+### Step 推荐 Agent 规则
+
+创建 step 时尽量声明 `推荐 Agent`：
+
+- 调研、只读定位、资料整理：`explorer`
+- 普通开发、修复、脚本和文档修改：`worker`
+- Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织：`aipd_vue_architect`
+- 不确定时留空，并在 step 目标和上下文文档里写清楚判断依据
+
+推荐 Agent 是派发建议，不替代 step 的上下文文档。子 Agent 仍必须读取 step 文件和 step 明确列出的上下文。
 
 ### 第五步：告知下一步
 

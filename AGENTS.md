@@ -1,3 +1,4 @@
+<!-- AIPD:START -->
 # AIPD Project Entry
 
 本项目使用 AIPD 维护项目认知。
@@ -80,3 +81,4 @@ Sub Agent：
 用户当前指令定义本次任务目标。AIPD 提供项目默认认知和历史判断。
 
 当用户指令与 AIPD 认知冲突时，先指出冲突和风险，再继续。
+<!-- AIPD:END -->

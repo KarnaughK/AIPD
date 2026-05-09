@@ -60,8 +60,8 @@ _adoc/case/c{X.Y}-{case-name}/
 
 ## 5. Step 列表
 
-- [ ] `steps/c{X.Y.1}-{步骤名}.md` - {一句话描述}
-- [ ] `steps/c{X.Y.2}-{步骤名}.md` - {一句话描述}
+- [ ] `steps/c{X.Y.1}-{步骤名}.md` - {一句话描述}（推荐 Agent：{agent 或留空}）
+- [ ] `steps/c{X.Y.2}-{步骤名}.md` - {一句话描述}（推荐 Agent：{agent 或留空}）
 
 > 如果本 case 暂时没有可执行 step，保留本节为空，并在讨论清楚后再补充 step。
 

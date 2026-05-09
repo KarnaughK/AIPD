@@ -16,6 +16,9 @@ inject-from-core:
   - overview.md
   - adoc-structure.md
   - agent-entry/template.md
+  - adoc/templates/index.md
+  - case/templates/index.md
+  - okr/templates/index.md
   - L1-intent/*
 ---
 
@@ -141,12 +144,24 @@ $aipd2 看一下合同创建页面
 **没有 `_adoc/`** → 直接执行初始化：
 
 ```bash
-mkdir -p _adoc/L1-intent _adoc/L2-scenario _adoc/L3-engine
+mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core
 mkdir -p _adoc/L4-product _adoc/L5-dev
 mkdir -p _adoc/case/archive _adoc/okr
 ```
 
-创建 `_adoc/index.md`，安装项目根目录 Agent Entry，然后引导用户定义 intent.md（参考 `@references/L1-intent/guide.md`、`@references/L1-intent/intent-writing.md`、`@references/L1-intent/template.md`）。
+创建默认文档壳子：
+
+- 将 `@references/adoc/templates/index.md` 写入 `_adoc/index.md`
+- 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
+- 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
+
+然后安装项目根目录 Agent Entry，并引导用户定义 intent.md（参考 `@references/L1-intent/guide.md`、`@references/L1-intent/intent-writing.md`、`@references/L1-intent/template.md`）。
+
+默认壳子写入规则：
+
+1. 如果目标文件不存在，直接写入模板。
+2. 如果目标文件已存在，不覆盖；先提示用户该文件已存在，并基于现有内容继续。
+3. 默认壳子只是入口索引，不代表对应认知已经完成。
 
 #### 安装 Agent Entry
 

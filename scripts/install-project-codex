@@ -10,17 +10,28 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 DIST_DIR="$PROJECT_ROOT/dist/codex/skills"
+AGENTS_DIST_DIR="$PROJECT_ROOT/dist/codex/agents"
 TARGET_DIR="$1/.codex/skills"
+AGENTS_TARGET_DIR="$1/.codex/agents"
 
 "$SCRIPT_DIR/build" codex
 
 mkdir -p "$TARGET_DIR"
+mkdir -p "$AGENTS_TARGET_DIR"
 
 for legacy in aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-learn; do
     target="$TARGET_DIR/$legacy"
     if [ -e "$target" ] || [ -L "$target" ]; then
         rm -rf "$target"
         echo "移除旧 skill: $target"
+    fi
+done
+
+for legacy in frontend-architect aipd-frontend-architect; do
+    target="$AGENTS_TARGET_DIR/$legacy.toml"
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        rm -rf "$target"
+        echo "移除旧 agent: $target"
     fi
 done
 
@@ -32,5 +43,16 @@ for skill_dir in "$DIST_DIR"/*/; do
     echo "安装: $target"
 done
 
+if [ -d "$AGENTS_DIST_DIR" ]; then
+    for agent_file in "$AGENTS_DIST_DIR"/*.toml; do
+        [ -e "$agent_file" ] || continue
+        name=$(basename "$agent_file")
+        target="$AGENTS_TARGET_DIR/$name"
+        rm -rf "$target"
+        cp "$agent_file" "$target"
+        echo "安装 agent: $target"
+    done
+fi
+
 echo ""
-echo "Codex 项目级安装完成。skill 已复制到 $TARGET_DIR/"
+echo "Codex 项目级安装完成。skill 已复制到 $TARGET_DIR/，agent 已复制到 $AGENTS_TARGET_DIR/"

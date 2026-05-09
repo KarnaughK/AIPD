@@ -2,6 +2,7 @@
 
 > **所属 Case**: cA.B-{name}
 > **类型**: dev / research / review
+> **推荐 Agent**: worker / explorer / aipd_vue_architect / 留空
 > **依赖**: 无 / cA.B.{C-1}
 
 ## 目标

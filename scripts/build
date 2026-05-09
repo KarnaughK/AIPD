@@ -9,6 +9,8 @@ DIST_ROOT="$PROJECT_ROOT/dist"
 build_platform() {
     local platform="$1"
     local dist_dir="$DIST_ROOT/$platform/skills"
+    local agents_src_dir="$SRC_DIR/platforms/$platform/agents"
+    local agents_dist_dir="$DIST_ROOT/$platform/agents"
     local platform_core_dir="$SRC_DIR/platforms/$platform/core"
 
     rm -rf "$dist_dir"
@@ -44,6 +46,13 @@ build_platform() {
 
         echo "  完成 → $dest"
     done
+
+    rm -rf "$agents_dist_dir"
+    if [ -d "$agents_src_dir" ]; then
+        mkdir -p "$agents_dist_dir"
+        cp -r "$agents_src_dir"/* "$agents_dist_dir/"
+        echo "[$platform] Agent 模板完成 → $agents_dist_dir"
+    fi
 
     echo ""
     echo "[$platform] 构建完成。产物在 $dist_dir/"
