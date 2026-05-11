@@ -72,12 +72,12 @@ Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git
 - 如果声明了 `worker`，用于普通开发、修复、脚本和文档修改。
 - 如果没有声明，则按 step 类型和上下文路径兜底判断：`research` 优先 `explorer`；Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织优先 `aipd_vue_architect`；其他开发任务使用 `worker`。
 
-Codex 默认使用 `fork_context: false`。主 Agent 不假设子 Agent 知道当前对话，必须把 step 文件绝对路径、case 路径、推荐 Agent 和必要约束写进派发 prompt。
+Codex 默认使用 `fork_context: true`。子 Agent 是从 Main Agent 当前认知状态 fork 出来的同源分身，继承当前对话、项目认知、任务方向和判断逻辑。派发 prompt 的作用不是重新灌入完整上下文，而是声明身份、局部目标、case / step 锚点、边界和返回格式。
 
 ```
 你是 AIPD 子 Agent。
 
-本次任务：基于当前 case 和当前 step，先设计执行方案，不要修改文件。
+你继承了 Main Agent 当前上下文。现在进入局部未来分支，基于当前 case 和当前 step 先设计执行方案，不要修改文件。
 
 Step 文件：{步骤文件绝对路径}
 Case 文件：{case.md 绝对路径}
@@ -91,14 +91,14 @@ Case 文件：{case.md 绝对路径}
 
 ```text
 方案通过，开始执行。
-完成后只返回改动摘要、验证结果、风险和需要主 Agent 处理的问题。
+完成后只返回结论、依据、风险、建议、改动文件和验证结果；不要返回完整搜索输出、长日志、长文件正文或完整 diff。
 ```
 
 执行阶段仍需遵守：
 
 1. 先读取 `@references/worker-dev.md` 了解完整职责
 2. 读取步骤文件：`{步骤文件绝对路径}`
-3. 读取 step 中列出的上下文文档
+3. 读取 step 中列出的上下文文档，用它们校准任务边界和压缩后续跑状态
 4. 遵守 `case.md` 中的上下文索引和本次边界
 
 ### 第四步：收到结果

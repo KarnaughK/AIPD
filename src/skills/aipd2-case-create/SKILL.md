@@ -40,9 +40,9 @@ inject-from-core:
 根据用户描述，精准读取相关文件：
 1. 主 Agent 读 `_adoc/index.md` 了解项目模块分布（一次，轻量）
 2. 优先寻找本次事项相关的模块文档、页面 README、设计/原型资料和代码入口
-3. 需要探索、验证、批量读取或整理 case 草案时，按 Agent Entry 中的 Main / Sub Agent Mode 派发 fork 子 Agent，主 Agent 只审阅摘要和方案
+3. 需要探索、验证、批量读取或整理 case 草案时，按 Agent Entry 中的 Main / Sub Agent Mode 派发 fork 子 Agent，主 Agent 只审阅结果回流
 
-**原则**：主 Agent 不直接消费高噪声上下文。用户说做表单，就派子 Agent 基于当前上下文调查表单相关模块，并先返回 case 草案摘要供主 Agent 审核。
+**原则**：主 Agent 不直接消费高噪声上下文。子 Agent 是从当前认知 fork 出来的同源分身，不是低上下文工人；它进入局部未来分支完成调查、比对和草案整理，然后只回流结论、依据、风险、建议和 case 草案摘要。
 
 ### 第三步：与用户确认方案
 
@@ -73,7 +73,7 @@ mkdir -p _adoc/case/c{X.Y}-{名称}/doc
 - Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织：`aipd_vue_architect`
 - 不确定时留空，并在 step 目标和上下文文档里写清楚判断依据
 
-推荐 Agent 是派发建议，不替代 step 的上下文文档。子 Agent 仍必须读取 step 文件和 step 明确列出的上下文。
+推荐 Agent 是派发建议，不替代 step 的上下文文档。子 Agent 默认继承 Main Agent 当前上下文，但仍必须读取 step 文件和 step 明确列出的上下文，用它们校准边界并保证压缩后可恢复。
 
 ### 第五步：告知下一步
 
