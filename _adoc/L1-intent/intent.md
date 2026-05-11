@@ -15,5 +15,5 @@ AIPD2 是面向 AI 协作的软件项目认知框架。它不替代具体 Coding
 ## 当前重点
 
 - 让 AIPD2 仓库自身按 AIPD 流程自举开发。
-- 统一 Codex 子 Agent 上下文策略。
+- 统一 Codex 分身 Agent 上下文策略。
 - 让 Codex custom agents 能进入 case-run 派发链路。

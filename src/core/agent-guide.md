@@ -1,20 +1,20 @@
 # 多 Agent 协作机制
 
-AIPD2 的多 Agent 设计目标是：让主 Agent 保持主线连续，把探索和执行过程放入子 Agent 的局部未来分支。
+AIPD2 的多 Agent 设计目标是：让主 Agent 保持主线连续，把探索和执行过程放入分身 Agent 的局部探索分支。
 
 ## 角色分工
 
 - **主 Agent**：与用户沟通、读取 case、选择下一个 step、派发任务、收集结果、更新状态。
-- **子 Agent**：从主 Agent 当前认知 fork 出来的同源分身，读取 step 文件和指定上下文校准边界，完成开发、调研或归档任务，返回简洁结果。
+- **分身 Agent**：从主 Agent 当前认知 fork 出来的克隆体，读取 step 文件和指定上下文校准边界，完成开发、调研或归档任务，返回简洁结果。
 
 ## 核心原则
 
-1. **同源分身优先**：子 Agent 默认继承 Main Agent 的当前认知，prompt 用于声明身份、局部目标和边界。
-2. **能力通用于 AIPD 项目**：子 Agent 不是 case-run 专属能力；普通对话、轻量修改、调研、验证和正式 case 使用同一套分身探索逻辑。
+1. **分身 Agent 优先**：分身 Agent 默认继承 Main Agent 的当前认知，prompt 用于声明身份、局部目标和边界。
+2. **能力通用于 AIPD 项目**：分身 Agent 不是 case-run 专属能力；普通对话、轻量修改、调研、验证和正式 case 使用同一套分身探索逻辑。
 3. **step 文件用于校准**：在 case 模式下，step 是分身派发节点；step 文件不是替代当前上下文的任务单，而是校准任务边界、恢复状态和沉淀经验的锚点。
 4. **主 Agent 少读过程**：主 Agent 不直接吞大量代码、日志、diff、调研过程，只读 case、摘要和结果。
-5. **子 Agent 结果回流**：默认只返回结论、依据、风险、建议、改动文件和验证结果，不返回大段代码或过程输出。
-6. **平台实现不混用**：Claude Code 和 Codex 的子 Agent 能力不同，构建时会选择对应平台的完整实现文档。
+5. **分身 Agent 结果回流**：默认只返回结论、依据、风险、建议、改动文件和验证结果，不返回大段代码或过程输出。
+6. **平台实现不混用**：Claude Code 和 Codex 的分身能力不同，构建时会选择对应平台的完整实现文档。
 
 ## 平台差异
 
@@ -23,6 +23,6 @@ AIPD2 的多 Agent 设计目标是：让主 Agent 保持主线连续，把探索
 具体调度方式由平台覆盖文件提供：
 
 - Claude Code：使用 Agent Team 机制。
-- Codex：使用 Codex 子 agent（worker / explorer / custom agent）机制。
+- Codex：使用 Codex 子 agent 技术（worker / explorer / custom agent）创建分身 Agent。
 
 构建时如果存在 `src/platforms/{platform}/core/agent-guide.md`，会使用平台文件覆盖本文件；否则才使用本文件。

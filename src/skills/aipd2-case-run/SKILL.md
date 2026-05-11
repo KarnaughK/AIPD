@@ -1,8 +1,8 @@
 ---
 name: aipd2-case-run
 description: >
-  执行 AIPD2 case。先读 case.md 的上下文索引，按需加载上下文，再检查并派发 Step 给子 Agent，收集结果，用户验收。
-  关键词：case、执行、step、验收、子 Agent
+  执行 AIPD2 case。先读 case.md 的上下文索引，按需加载上下文，再检查并把 Step 派给分身 Agent，收集结果，用户验收。
+  关键词：case、执行、step、验收、分身 Agent、克隆体
 allowed-tools:
   - Read
   - Write
@@ -59,11 +59,11 @@ Case: c{X.Y}-{名称}
 ⬚  c{X.Y.3} 步骤名
 ```
 
-### 第三步：派发 step 给子 Agent
+### 第三步：派发 step 给分身 Agent
 
-每个 step 默认创建一个新的子 Agent，遵守项目根目录 Agent Entry 中的 Main / Sub Agent Mode。
+每个 step 默认创建一个新的分身 Agent。它是主 Agent 的克隆体，继承同样的上下文；step 只是让这个分身知道自己要继续完成哪个局部节点。
 
-Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git、构建、测试、批量验证、跨文件 diff、调研和长日志分析都属于高污染任务，默认交给子 Agent。Main Agent 只负责入口读取、状态判断、派发、审查摘要、验收和状态写回。
+Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git、构建、测试、批量验证、跨文件 diff、调研和长日志分析都属于会吞噬主线的过程，默认交给分身 Agent。Main Agent 只负责入口读取、状态判断、派发、审查摘要、验收和状态写回。
 
 先读取 step 头部的 `推荐 Agent` 字段：
 
@@ -72,12 +72,12 @@ Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git
 - 如果声明了 `worker`，用于普通开发、修复、脚本和文档修改。
 - 如果没有声明，则按 step 类型和上下文路径兜底判断：`research` 优先 `explorer`；Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织优先 `aipd_vue_architect`；其他开发任务使用 `worker`。
 
-Codex 默认使用 `fork_context: true`。子 Agent 是从 Main Agent 当前认知状态 fork 出来的同源分身，继承当前对话、项目认知、任务方向和判断逻辑。派发 prompt 的作用不是重新灌入完整上下文，而是声明身份、局部目标、case / step 锚点、边界和返回格式。
+Codex 默认使用 `fork_context: true`。分身 Agent 是主 Agent 的克隆体，继承当前对话、项目认知、任务方向和判断逻辑。派发 prompt 的作用不是重新灌入完整上下文，而是声明它已经是分身、当前局部目标、case / step 锚点、边界和返回格式。
 
 ```
-你是 AIPD 子 Agent。
+你是 AIPD 分身 Agent。
 
-你继承了 Main Agent 当前上下文。现在进入局部未来分支，基于当前 case 和当前 step 先设计执行方案，不要修改文件。
+你继承了 Main Agent 当前上下文。看到这句话后，不要再继续分身；你就是被 fork 出来的克隆体。现在基于当前 case 和当前 step 先设计执行方案，不要修改文件。
 
 Step 文件：{步骤文件绝对路径}
 Case 文件：{case.md 绝对路径}
@@ -87,7 +87,7 @@ Case 文件：{case.md 绝对路径}
 等待主 Agent 确认后再执行。
 ```
 
-主 Agent 审核方案。确认通过后，向同一个子 Agent 发送：
+主 Agent 审核方案。确认通过后，向同一个分身 Agent 发送：
 
 ```text
 方案通过，开始执行。

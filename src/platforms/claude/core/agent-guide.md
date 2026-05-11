@@ -1,10 +1,10 @@
 # 多 Agent 协作机制：Claude Code
 
-Claude Code 版本使用 Agent Team 执行 AIPD2 的子 Agent 任务。
+Claude Code 版本使用 Agent Team 承载 AIPD2 的分身 Agent 任务。
 
 ## 上下文机制
 
-Agent Team 创建的是独立 Claude Code 实例：
+Agent Team 创建的是独立 Claude Code 实例。它在技术上不能像 Codex 一样继承完整当前对话，所以只能模拟分身 Agent：
 
 - 不继承主 Agent 的对话历史。
 - 不知道主 Agent 读过什么文件。
@@ -16,15 +16,15 @@ Agent Team 创建的是独立 Claude Code 实例：
 1. 读取 `_adoc/case/{case目录}/case.md`，按上下文索引加载必要文档。
 2. 找到下一个未完成 step；如果没有 step，回到用户讨论或补充 step。
 3. 生成完整 prompt，包含角色、step 文件绝对路径、约束和返回格式。
-4. 创建 Agent Team 子 Agent。
-5. 等待子 Agent 返回简洁结果。
+4. 创建 Agent Team 分身 Agent。
+5. 等待分身 Agent 返回简洁结果。
 6. 成功则更新 step 和 case 状态，继续派发下一步。
 7. 失败则告知用户，询问重试、跳过或手动处理。
 
-## 子 Agent Prompt 模板
+## 分身 Agent Prompt 模板
 
 ```text
-你是 AIPD2 开发执行者。
+你是 AIPD2 开发分身 Agent。
 
 你的任务：
 1. 读取 worker 指南：@references/worker-dev.md
@@ -51,7 +51,7 @@ step 文件必须包含：
 - 验收标准
 - 不做（可选）
 
-上下文文档建议使用绝对路径，避免子 Agent 工作目录变化导致读取失败。
+上下文文档建议使用绝对路径，避免分身 Agent 工作目录变化导致读取失败。
 
 ## 返回格式
 
@@ -71,7 +71,7 @@ step 文件必须包含：
 
 ## 关键约束
 
-- 使用 Agent Team，不使用 Claude Code 内置 Sub Agent。
+- 使用 Agent Team 承载分身 Agent，不使用 Claude Code 内置 Sub Agent 机制。
 - prompt 必须包含 step 文件绝对路径和 case 上下文边界。
-- 主 Agent 不把自己读过的上下文当作子 Agent 已知信息。
-- 子 Agent 的返回必须节制，避免污染主 Agent 上下文。
+- Claude 平台分身不能默认继承主 Agent 当前对话，prompt 必须显式补齐必要上下文。
+- 分身 Agent 的返回必须节制，避免污染主 Agent 上下文。

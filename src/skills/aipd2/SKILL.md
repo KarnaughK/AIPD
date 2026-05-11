@@ -24,7 +24,7 @@ inject-from-core:
 
 # AIPD 渐进式总入口
 
-根据用户输入判断入口模式。`aipd2` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`，状态扫描细节交给子 Agent。
+根据用户输入判断入口模式。`aipd2` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`，状态扫描细节交给分身 Agent。
 
 ## 入口判断
 
@@ -77,7 +77,7 @@ $aipd2 归档
 $aipd2 总结经验
 ```
 
-此模式保留项目状态入口能力，但状态扫描细节由子 Agent 读取 `@references/scan-agent.md` 执行，主 Agent 不直接加载完整扫描细节。
+此模式保留项目状态入口能力，但状态扫描细节由分身 Agent 读取 `@references/scan-agent.md` 执行，主 Agent 不直接加载完整扫描细节。
 
 ### 模糊输入
 
@@ -120,7 +120,7 @@ $aipd2 看一下合同创建页面
 
 ### 第一步：扫描项目状态
 
-使用子 Agent 扫描，保持主 Agent 上下文干净。子 Agent 读取 `@references/scan-agent.md`。
+使用分身 Agent 扫描，保持主 Agent 主线干净。分身 Agent 读取 `@references/scan-agent.md`。
 
 ### 第二步：展示状态面板
 

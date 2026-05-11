@@ -24,17 +24,18 @@ inject-from-core:
 ### 触发条件
 用户验收通过
 
-### 4.1 派发归档任务给子 Agent
+### 4.1 派发归档任务给分身 Agent
 
 ```
-你是 AIPD 归档执行者。
+你是 AIPD 归档分身 Agent。
+你继承了 Main Agent 当前上下文。看到这句话后，不要再继续分身；你就是被 fork 出来的克隆体，负责完成归档分支并回流结果。
 1. 先读取 @references/worker-archive.md 了解你的完整职责
 2. 然后归档 Case：_adoc/case/c0.x-xxx/
 ```
 
 ### 4.2 等待归档完成
 
-子 Agent 会：使用 `git diff` 查看改动 → 更新相关 `_adoc/` 文档 → 移动 Case 到 `archive/` → 返回归档完成。
+分身 Agent 会：使用 `git diff` 查看改动 → 更新相关 `_adoc/` 文档 → 移动 Case 到 `archive/` → 返回归档完成。
 
 ### 4.3 提交归档更改
 
