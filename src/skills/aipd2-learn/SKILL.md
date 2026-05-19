@@ -151,7 +151,15 @@ find _adoc/case/{case目录}/steps -type f
 
 内部模式读取 transcript 时，不要把它当成普通项目复盘；要把它当成 AIPD 自身的行为日志。
 
-优先关注用户发言，而不是先总结 Agent 做了什么。重点找这些信号：
+优先关注用户发言，也要审计 AIPD 设计的观察锚点是否被执行。不要只依赖“用户多次纠正”这种强信号；如果 case、context-map 或 AGENTS.md 已经声明了检索 SOP，就检查 Agent 的实际路径是否符合。
+
+先读取可用的观察锚点：
+
+- 当前 case 的 `case.md` 中是否有“自迭代观察锚点”。
+- `_adoc/context-map.md` 中是否有“自迭代观察锚点”。
+- `AGENTS.md` / `_adoc/index.md` 是否声明上下文检索链路。
+
+重点找这些信号：
 
 1. **用户反复纠正 Agent 行为**
    - 用户多次说“不是这个意思”“不要急着写代码”“先讨论”“别拆 step”“这个规则不对”。
@@ -173,6 +181,18 @@ find _adoc/case/{case目录}/steps -type f
    - 例如图里模块名、组件概览、QlmForm-update 的表达方式。
    - 这类问题优先回写 `src/core/` 下的方法论文档或模板。
 
+6. **上下文检索 SOP 没有被执行**
+   - 任务开始后没有读取 `_adoc/context-map.md`，也没有说明缺失和兜底策略。
+   - 没有形成上下文包：层级判断、必读文档、代码入口、兜底搜索、风险边界。
+   - 涉及核心概念却没有读取 L3，涉及产品功能边界却没有读取 L4，涉及跨模块工程规则却没有读取 L5。
+   - 涉及页面、弹窗、组件内部细节却没有读取就近 README。
+   - 这类问题优先判断是 Agent 忽略提示词、地图入口不够显眼、map 未覆盖任务，还是 skill 流程没有强制检索。
+
+7. **检索链路过深或地图不可用**
+   - Agent 读取了入口 map，但后续仍靠多层跳转猜测，没有找到关键模型或规则。
+   - 入口只索引第一层，缺少高频任务的扁平路径。
+   - 这类问题优先回写 `_adoc/context-map.md` 模板、L3/L4/L5 index 约定或 `aipd2` 的读取策略。
+
 诊断输出格式：
 
 ```md
@@ -188,6 +208,11 @@ find _adoc/case/{case目录}/steps -type f
 
 Agent 反应问题：
 - {过早执行 / 场景分流失败 / step 拆早 / 上下文加载不对 / 工具文档和流程规则混淆}
+
+观察锚点审计：
+- {应观察的锚点}
+- {实际是否发生；证据来自 transcript / case / context-map}
+- {偏离原因：提示词未执行 / map 缺失 / map 命中不清 / skill 流程不够硬 / 文档结构问题}
 
 可回写判断：
 - {应该改哪类规则，以及为什么}
@@ -262,6 +287,7 @@ Agent 反应问题：
 | 当前 case 的执行经验 | 当前 case 的 `doc/` 或相关 step 的执行记录 |
 | AIPD2 通用知识、结构规则 | AIPD2 仓库的 `src/core/` |
 | aipd2 总入口、ADOC 入口、经验回流方式 | AIPD2 仓库的 `src/skills/aipd2*/` |
+| 已初始化项目的 AIPD 架构升级、AGENTS.md / context-map 同步 | AIPD2 仓库的 `src/skills/aipd2-update/` |
 | case-create/run/archive 的流程经验 | AIPD2 仓库的 `src/skills/aipd2-case-*/` |
 | Codex 会话 ID、transcript、回流包生成 | AIPD2 仓库的 `src/skills/aipd2-learn/` 或 `src/platforms/codex/` |
 | Claude/Codex 平台差异 | AIPD2 仓库的 `src/platforms/` |

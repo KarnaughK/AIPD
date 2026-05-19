@@ -17,6 +17,7 @@ inject-from-core:
   - adoc-structure.md
   - agent-entry/template.md
   - adoc/templates/index.md
+  - adoc/templates/context-map.md
   - case/templates/index.md
   - okr/templates/index.md
   - L1-intent/*
@@ -46,22 +47,41 @@ $aipd2 按项目规范实现一个新表单
 
 1. 确认 `_adoc/` 是否存在。
 2. 读取 `_adoc/index.md`，判断当前项目的认知结构和裁剪模式。
-3. 根据项目索引选择默认入口。日常前端开发通常先读 `_adoc/L5-dev/index.md`。
-4. 按任务继续下钻，只读相关文档，不全量读取 `_adoc/`。
-5. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
+3. 如果存在 `_adoc/context-map.md`，优先读取它，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / case。
+4. 根据检索结果选择入口；日常前端开发不默认只读 L5，必须判断是否还涉及 L3 核心概念、L4 产品功能和局部 README。
+5. 按任务继续下钻，只读相关文档，不全量读取 `_adoc/`。
+6. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
 
 下钻参考：
 
 | 任务类型 | 优先读取 |
 |---|---|
+| 任务入口不清楚 / 用户只给一句自然语言 | `_adoc/context-map.md`，不存在则读 `_adoc/index.md` 后用 `rg` 搜索 README、核心词、页面名、接口名、权限码 |
+| 核心概念 / 领域语言 / 黑话 / 名词解释 | `_adoc/L3-core/index.md` |
 | README / map / 逻辑地图 | `_adoc/L5-dev/dev-conventions/readme-guide.md` |
 | 表单 / 字段 / 校验 / 提交映射 | `_adoc/L5-dev/dev-conventions/form-guide.md` |
 | 列表 / 搜索 / 表格 | `_adoc/L5-dev/dev-conventions/list-guide.md` |
+| 权限 / 路由 / 菜单 / 前后端约定 / 跨模块工程规则 | `_adoc/L5-dev/index.md` 及其索引到的专题文档 |
 | provide / inject / 显隐 / 禁用 / 回填 / 组件协作 | `_adoc/L5-dev/dev-conventions/component-autonomy-guide.md` 或项目索引指定文档 |
 | 页面职责 / PRD / 原型承接 / 产品边界 | `_adoc/L4-product/index.md` |
 | 业务对象 / 角色 / 主流程 | `_adoc/L3-core/index.md` |
 
 如果目标项目没有对应文档，不要臆造规则；说明缺失，并基于现有代码和用户目标继续处理。
+
+### 上下文检索包
+
+当任务涉及代码修改、case 创建、跨模块规则或用户表达较模糊时，先形成一个极简上下文检索包，再继续工作。检索包可以在回复中简短展示，也可以作为内部判断，但创建 case 时必须写入 case。
+
+```md
+【本次采用的项目认知】
+- 层级判断：L3 / L4 / L5 / 局部 README / case
+- 必读文档：...
+- 代码入口：...
+- 兜底搜索：...
+- 边界风险：...
+```
+
+检索包不是执行计划。它只回答“本次任务应该先看什么、依据是什么、找不到时怎么兜底”。
 
 ### 进入状态与流程模式
 
@@ -72,6 +92,7 @@ $aipd2
 $aipd2 看一下项目
 $aipd2 当前状态
 $aipd2 初始化
+$aipd2 更新 AIPD
 $aipd2 case
 $aipd2 归档
 $aipd2 总结经验
@@ -96,8 +117,8 @@ $aipd2 看一下合同创建页面
 ### 读取策略
 
 - 先读 `_adoc/index.md`。
-- 按 `_adoc/index.md` 指定的项目入口继续读；没有特别说明时，前端开发默认读 `_adoc/L5-dev/index.md`。
-- 只在任务需要时读取 L3 / L4 / L5 的具体文档。
+- 如果存在 `_adoc/context-map.md`，第二步读取它；没有时才按 `_adoc/index.md` 的任务入口和 `rg` 兜底。
+- 按检索结果读取 L3 / L4 / L5 / 局部 README。前端任务不等于只读 L5；涉及业务词先读 L3，涉及功能边界先读 L4，涉及跨模块工程实现先读 L5，涉及页面内部细节先读就近 README。
 - skill 不复制 `_adoc` 正文，不把项目规范写死在 skill 里。
 - 读完后直接进入用户任务，不输出大段 AIPD 解释。
 
@@ -152,6 +173,7 @@ mkdir -p _adoc/case/archive _adoc/okr
 创建默认文档壳子：
 
 - 将 `@references/adoc/templates/index.md` 写入 `_adoc/index.md`
+- 将 `@references/adoc/templates/context-map.md` 写入 `_adoc/context-map.md`
 - 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
 - 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
 
@@ -187,6 +209,8 @@ mkdir -p _adoc/case/archive _adoc/okr
 Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-case-create`、`/aipd2-case-run`、`/aipd2-learn` 等具体流程 skill。
 
 **有 `_adoc/` 但没有 intent.md** → 引导用户定义方向（同上）。
+
+**有 `_adoc/`，但用户要升级 / 同步 / 检查 AIPD 架构** → 推荐 `/aipd2-update`。`aipd2` 不直接迁移已有项目，避免初始化入口误覆盖用户文档。
 
 **有 `_adoc/` 但没有 case** → 推荐 `/aipd2-case-create`。
 

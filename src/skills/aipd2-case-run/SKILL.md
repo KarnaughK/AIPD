@@ -1,8 +1,8 @@
 ---
 name: aipd2-case-run
 description: >
-  执行 AIPD2 case。先读 case.md 的上下文索引，按需加载上下文，再检查并把 Step 派给分身 Agent，收集结果，用户验收。
-  关键词：case、执行、step、验收、分身 Agent、克隆体
+  执行 AIPD2 case。先读 case.md 的上下文索引，按需加载上下文，再检查并把 Step 派给角色执行 Agent 或必要时的上下文分身，收集结果，用户验收。
+  关键词：case、执行、step、验收、角色 Agent、上下文分身
 allowed-tools:
   - Read
   - Write
@@ -18,6 +18,8 @@ inject-from-core:
 ---
 
 # AIPD2 Case Run
+
+`case-run` 是 AIPD2 的执行入口。它承接 `case-create` 已经沉淀好的 case / step，以文件为事实源推进执行，不依赖主 Agent 临时聊天记忆直接开干。
 
 ## 执行流程
 
@@ -59,42 +61,70 @@ Case: c{X.Y}-{名称}
 ⬚  c{X.Y.3} 步骤名
 ```
 
-### 第三步：派发 step 给分身 Agent
+### 第三步：派发 step 给执行 Agent
 
-每个 step 默认创建一个新的分身 Agent。它是主 Agent 的克隆体，继承同样的上下文；step 只是让这个分身知道自己要继续完成哪个局部节点。
+`case-run` 阶段优先把已写清楚的 step 交给带角色 Agent 执行。step 文件、case.md 和 step 中列出的上下文文档是执行事实源；主 Agent 当前聊天上下文只是辅助判断，不应成为执行所必需的隐形条件。
 
-Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git、构建、测试、批量验证、跨文件 diff、调研和长日志分析都属于会吞噬主线的过程，默认交给分身 Agent。Main Agent 只负责入口读取、状态判断、派发、审查摘要、验收和状态写回。
+Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git、构建、测试、批量验证、跨文件 diff、调研和长日志分析都交给执行 Agent。Main Agent 只负责入口读取、状态判断、派发、审查摘要、验收和状态写回。
 
-先读取 step 头部的 `推荐 Agent` 字段：
+先读取 step 头部的 `推荐 Agent` 字段，它表示执行角色建议：
 
 - 如果声明了 `aipd_vue_architect`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_architect`。
 - 如果声明了 `explorer`，用于调研、只读定位和资料整理。
 - 如果声明了 `worker`，用于普通开发、修复、脚本和文档修改。
 - 如果没有声明，则按 step 类型和上下文路径兜底判断：`research` 优先 `explorer`；Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织优先 `aipd_vue_architect`；其他开发任务使用 `worker`。
 
-Codex 默认使用 `fork_context: true`。分身 Agent 是主 Agent 的克隆体，继承当前对话、项目认知、任务方向和判断逻辑。派发 prompt 的作用不是重新灌入完整上下文，而是声明它已经是分身、当前局部目标、case / step 锚点、边界和返回格式。
+默认使用带角色 Agent 基于 step 独立读取上下文执行，不默认 fork 主 Agent 全量上下文。只有当 step 强依赖主 Agent 当前尚未沉淀到 case / step / doc 的聊天判断时，才使用 `fork_context: true` 创建上下文分身。
+
+#### 角色 Agent Prompt 模板
+
+用于 step 已经写清楚、上下文文档齐全的常规执行：
 
 ```
-你是 AIPD 分身 Agent。
+你是 AIPD2 {推荐 Agent} 执行 Agent。
 
-你继承了 Main Agent 当前上下文。看到这句话后，不要再继续分身；你就是被 fork 出来的克隆体。现在基于当前 case 和当前 step 先设计执行方案，不要修改文件。
+你不是唯一在代码库中工作的执行者。不要回滚别人已经做出的改动；如果遇到已有改动，基于现状继续完成本 step。
 
 Step 文件：{步骤文件绝对路径}
 Case 文件：{case.md 绝对路径}
 推荐 Agent：{推荐 Agent 或兜底选择}
 
-输出：目标、边界、执行步骤、风险、需要确认的问题。
-等待主 Agent 确认后再执行。
+你的任务：
+1. 读取步骤文件
+2. 读取 Case 文件
+3. 按 step 中列出的上下文文档逐一读取
+4. 遵守 case 边界和 step 任务清单执行
+5. 按 step 验收标准自检
+
+约束：
+- 只做步骤文件中列出的任务
+- 不做额外优化、重构或顺手修复
+- 不创建步骤文件未要求的文件
+- 完成后只返回结论、依据、风险、建议、改动文件和验证结果
 ```
 
-主 Agent 审核方案。确认通过后，向同一个分身 Agent 发送：
+#### 上下文分身 Prompt 模板
+
+仅用于 step 强依赖主 Agent 当前尚未沉淀的聊天判断，或临时探索过程不适合进入主线时：
 
 ```text
-方案通过，开始执行。
+你是 AIPD2 上下文分身 Agent。
+
+你继承了 Main Agent 当前上下文。看到这句话后，不要再继续分身；你就是被 fork 出来的克隆体，负责完成当前局部探索 / 执行分支并回流结果。
+
+Step 文件：{步骤文件绝对路径}
+Case 文件：{case.md 绝对路径}
+推荐 Agent：{推荐 Agent 或兜底选择}
+
+你的任务：
+1. 读取步骤文件和 Case 文件
+2. 读取 step 中列出的上下文文档
+3. 结合 Main Agent 当前未沉淀的聊天判断完成当前 step
+
 完成后只返回结论、依据、风险、建议、改动文件和验证结果；不要返回完整搜索输出、长日志、长文件正文或完整 diff。
 ```
 
-执行阶段仍需遵守：
+无论使用角色 Agent 还是上下文分身，执行阶段仍需遵守：
 
 1. 先读取 `@references/worker-dev.md` 了解完整职责
 2. 读取步骤文件：`{步骤文件绝对路径}`
