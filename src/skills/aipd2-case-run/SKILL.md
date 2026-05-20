@@ -50,8 +50,17 @@ case-run 的任务状态以 `_adoc/case/index.md`、目标 `case.md` 和 `steps/
 读取 `steps/` 目录：
 
 - 有未完成 step：展示进度并派发下一个 step。
-- 没有 step：基于 case 上下文继续和用户讨论，必要时补充新 step。
+- 没有可执行 step：停止在执行前，不要在 `case-run` 中自行创建 step 后继续执行。提示用户当前 case 还没有可执行 step，需要切回 `aipd2-case-create` 回到设计阶段，先设计 case / step；如果用户只是输错了指令，也说明应改用 `aipd2-case-create`。
 - 全部完成：进入用户验收。
+
+无可执行 step 时的回复模板：
+
+```md
+【没有可执行 Step】
+当前 case 还没有可执行 step，`case-run` 不能直接开工。
+
+请切到 `aipd2-case-create` 回到设计阶段，先确认 step 拆分方案，再写详细 step 文件。
+```
 
 ```
 【当前 Case 状态】
@@ -137,7 +146,7 @@ Case 文件：{case.md 绝对路径}
 1. 更新 step 文件末尾，追加执行记录（完成时间 + 主要改动摘要）
 2. 更新 case.md 步骤状态为 ✅
 3. 确认 step / case 已写回可恢复状态
-4. 再判断是否自动派发下一步。
+4. 如果还有下一个已存在、已写清楚的 step，再判断是否自动派发下一步；不要在 case-run 中新增未来 step。
 
 **失败**：告知用户，询问：重试 / 跳过 / 手动处理。
 

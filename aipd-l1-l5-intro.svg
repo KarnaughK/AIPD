@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">AIPD L1-L5 项目认知分层介绍图</title>
+  <desc id="desc">AIPD 通过 L1 到 L5 把项目从方向、调研、核心模型、产品边界到研发实现逐层沉淀，并由 context-map 引导 AI 按需读取。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.52" stop-color="#eef7f4"/>
+      <stop offset="1" stop-color="#f7efe7"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#23313a" flood-opacity="0.14"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+      <path d="M2,2 L12,7 L2,12 Z" fill="#35515a"/>
+    </marker>
+    <style>
+      .font { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; }
+      .title { font-size: 58px; font-weight: 800; fill: #17252b; }
+      .subtitle { font-size: 24px; fill: #48616a; }
+      .small { font-size: 19px; fill: #52666d; }
+      .tiny { font-size: 16px; fill: #66777d; }
+      .layer-title { font-size: 30px; font-weight: 800; fill: #16242a; }
+      .layer-code { font-size: 20px; font-weight: 800; letter-spacing: 0; fill: #ffffff; }
+      .layer-desc { font-size: 21px; fill: #2d4148; }
+      .label { font-size: 23px; font-weight: 750; fill: #17252b; }
+      .box-title { font-size: 25px; font-weight: 800; fill: #17252b; }
+      .box-text { font-size: 20px; fill: #40565e; }
+      .path { font-size: 18px; fill: #62777f; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="1370" cy="120" r="210" fill="#d9ebe6" opacity="0.45"/>
+  <circle cx="170" cy="860" r="250" fill="#eadfcf" opacity="0.42"/>
+
+  <g class="font">
+    <text x="90" y="95" class="title">AIPD L1-L5：让 AI 先懂项目，再写代码</text>
+    <text x="94" y="140" class="subtitle">从抽象方向到具体实现，逐层沉淀可恢复、可检索、可执行的项目认知。</text>
+
+    <g transform="translate(88 215)" filter="url(#shadow)">
+      <rect x="0" y="0" width="910" height="660" rx="28" fill="#ffffff" opacity="0.96"/>
+    </g>
+
+    <g transform="translate(132 255)">
+      <text x="0" y="0" class="label">五层不是目录分类，而是决策落点</text>
+      <text x="0" y="35" class="small">越往上越回答“为什么”，越往下越约束“怎么落地”。</text>
+
+      <g transform="translate(0 78)">
+        <rect x="0" y="0" width="760" height="92" rx="16" fill="#2f6f73"/>
+        <rect x="18" y="24" width="64" height="42" rx="21" fill="#1f4f53"/>
+        <text x="39" y="53" text-anchor="middle" class="layer-code">L1</text>
+        <text x="112" y="36" class="layer-title" fill="#ffffff">Intent 方向</text>
+        <text x="112" y="68" class="layer-desc" fill="#e9f7f5">项目为什么存在；长期目标、边界和取舍。</text>
+      </g>
+
+      <g transform="translate(52 180)">
+        <rect x="0" y="0" width="760" height="92" rx="16" fill="#3d8d7a"/>
+        <rect x="18" y="24" width="64" height="42" rx="21" fill="#286350"/>
+        <text x="39" y="53" text-anchor="middle" class="layer-code">L2</text>
+        <text x="112" y="36" class="layer-title" fill="#ffffff">Research / Scenario 调研场景</text>
+        <text x="112" y="68" class="layer-desc" fill="#edf9f4">谁在什么场景下痛；需求、竞品和真实问题。</text>
+      </g>
+
+      <g transform="translate(104 282)">
+        <rect x="0" y="0" width="760" height="92" rx="16" fill="#d49a43"/>
+        <rect x="18" y="24" width="64" height="42" rx="21" fill="#9b6a28"/>
+        <text x="39" y="53" text-anchor="middle" class="layer-code">L3</text>
+        <text x="112" y="36" class="layer-title" fill="#ffffff">Core / Engine 核心模型</text>
+        <text x="112" y="68" class="layer-desc" fill="#fff7e8">核心对象、领域语言、数据模型和系统成立方式。</text>
+      </g>
+
+      <g transform="translate(156 384)">
+        <rect x="0" y="0" width="760" height="92" rx="16" fill="#c56f4c"/>
+        <rect x="18" y="24" width="64" height="42" rx="21" fill="#8f492f"/>
+        <text x="39" y="53" text-anchor="middle" class="layer-code">L4</text>
+        <text x="112" y="36" class="layer-title" fill="#ffffff">Product 产品能力</text>
+        <text x="112" y="68" class="layer-desc" fill="#fff0e9">功能模块、业务边界、交互行为和验收标准。</text>
+      </g>
+
+      <g transform="translate(208 486)">
+        <rect x="0" y="0" width="760" height="92" rx="16" fill="#4d6673"/>
+        <rect x="18" y="24" width="64" height="42" rx="21" fill="#33464f"/>
+        <text x="39" y="53" text-anchor="middle" class="layer-code">L5</text>
+        <text x="112" y="36" class="layer-title" fill="#ffffff">Dev 工程实现</text>
+        <text x="112" y="68" class="layer-desc" fill="#eef4f6">跨模块工程规则、技术约束、调试经验和 SOP。</text>
+      </g>
+
+      <path d="M875 132 C940 200 940 436 875 538" fill="none" stroke="#35515a" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <text x="905" y="322" class="small" transform="rotate(90 905 322)">逐层落地</text>
+    </g>
+
+    <g transform="translate(1060 215)" filter="url(#shadow)">
+      <rect x="0" y="0" width="450" height="660" rx="28" fill="#ffffff" opacity="0.96"/>
+    </g>
+
+    <g transform="translate(1098 260)">
+      <text x="0" y="0" class="box-title">AI 的读取链路</text>
+      <text x="0" y="34" class="box-text">不是全量读文档，而是按任务检索。</text>
+
+      <g transform="translate(0 78)">
+        <rect x="0" y="0" width="374" height="62" rx="14" fill="#eef6f3" stroke="#b8d2ca"/>
+        <text x="24" y="39" class="box-text">AGENTS.md：进入项目</text>
+      </g>
+      <path d="M187 146 L187 178" stroke="#35515a" stroke-width="3" marker-end="url(#arrow)"/>
+      <g transform="translate(0 186)">
+        <rect x="0" y="0" width="374" height="62" rx="14" fill="#eef6f3" stroke="#b8d2ca"/>
+        <text x="24" y="39" class="box-text">_adoc/index.md：看总入口</text>
+      </g>
+      <path d="M187 254 L187 286" stroke="#35515a" stroke-width="3" marker-end="url(#arrow)"/>
+      <g transform="translate(0 294)">
+        <rect x="0" y="0" width="374" height="76" rx="14" fill="#fff5e8" stroke="#e2c99e"/>
+        <text x="24" y="33" class="box-text">context-map.md：把任务</text>
+        <text x="24" y="59" class="box-text">路由到 L3 / L4 / L5</text>
+      </g>
+      <path d="M187 378 L187 410" stroke="#35515a" stroke-width="3" marker-end="url(#arrow)"/>
+      <g transform="translate(0 418)">
+        <rect x="0" y="0" width="374" height="92" rx="14" fill="#f2f5f7" stroke="#c7d3d8"/>
+        <text x="24" y="34" class="box-text">只读相关上下文：</text>
+        <text x="24" y="62" class="box-text">核心概念 / 产品边界 /</text>
+        <text x="24" y="88" class="box-text">工程规则 / 局部 README</text>
+      </g>
+      <path d="M187 520 L187 552" stroke="#35515a" stroke-width="3" marker-end="url(#arrow)"/>
+      <g transform="translate(0 560)">
+        <rect x="0" y="0" width="374" height="62" rx="14" fill="#eaf0f2" stroke="#c0ccd1"/>
+        <text x="24" y="39" class="box-text">Case / Step：执行与恢复</text>
+      </g>
+    </g>
+
+    <g transform="translate(90 920)">
+      <rect x="0" y="-32" width="1420" height="58" rx="18" fill="#17252b" opacity="0.92"/>
+      <text x="26" y="4" class="path" fill="#e9f2f4">一句话：L1 定北极星，L2 找真实问题，L3 抽出发动机，L4 设计可交付能力，L5 把能力变成长期稳定的工程约束。</text>
+    </g>
+  </g>
+</svg>
