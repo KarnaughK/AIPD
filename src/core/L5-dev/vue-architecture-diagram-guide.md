@@ -10,10 +10,12 @@
 - 组件与组件之间怎么协作
 - 数据从哪里注入，哪些组件读取
 - 事件从哪里触发，往哪里回传
-- 哪些条件会决定组件展示、切换或提交分支
+- 哪些条件会决定同层子组件分组、展示或切换
 - 哪些跨组件架构从哪里引入，例如表单 controller、搜索 controller
 
 字段内部用输入框、日期选择器还是上传组件，不放进架构图。那是组件自己的内部实现，直接看组件源码更清楚。
+
+图里不要把所有上下文都写满。描述越多，越容易在节点、连线和判断块之间互相重复甚至冲突。没有确认或没必要说明的地方可以留白；架构图优先表达稳定的文件层级、组件嵌套和少量关键分组逻辑。
 
 ## 使用阶段
 
@@ -25,128 +27,29 @@ _adoc/case/{case}/doc/{module}-component-architecture-draft.mmd
 
 这时它是讨论稿，用来和用户确认业务状态、数据所有权、架构流转和组件划分。
 
-等 case-run 真正写代码并且图稳定后，再把最终图落到对应业务目录：
+当图在设计讨论中稳定后，应在 case-run 或 case 的第一个实现 step 里，先创建对应业务目录文件，并把这张图和必要 README 一起落到开发目录：
 
 ```text
 src/views/xxx/README-component-architecture.mmd
 ```
 
+这一步发生在具体开发前，而不是代码写完后。图先稳定并落位，后续实现以代码就近目录里的图作为事实源推进。
+
 `README.md` 或 `readme.md` 里只保留入口链接，不把大段 Mermaid 源码直接塞进 README。
-
-## 图形语义
-
-默认使用 Mermaid `flowchart`。
-
-```mermaid
-flowchart LR
-    Component["方块：业务组件"]
-    Judge{"菱形：逻辑判断 / 接口分支"}
-    Store[("圆柱：数据源 / provider hook / 状态桶")]
-    Controller[["双边框：事件架构 / controller"]]
-```
-
-### 方块：业务组件
-
-方块只表示 Vue 组件或明确的业务组件。
-
-适合：
-
-- `index.vue`
-- `BlockForm.vue`
-- `BlockView.vue`
-- `FormItemDataNum.vue`
-- 业务 Header、Log、Dialog 内容组件
-
-不适合：
-
-- 接口调用
-- 状态判断
-- composable hook
-- controller 架构
-
-组件图的主结构优先表达代码文件嵌套关系。跨组件通知、事件监听、update 联动不要画成父子层级；如果组件实际在代码里是平级挂载，就在图里保持平级，再把联动写进接收方组件节点内部。
-
-### 菱形：逻辑判断
-
-菱形用于描述会影响组件展示、组件切换或提交分支的数据判断。
-
-推荐：
-
-```mermaid
-flowchart TD
-    IndexVue["index.vue"]
-    IndexVueRecordJudge{"index.vue 数据判断<br/>recordId 为空：不查详情<br/>recordId 存在：loadDetail(recordId)<br/>拿到 reviewStatus / logList"}
-    BlockFormVue["BlockForm.vue"]
-    BlockViewVue["BlockView.vue"]
-
-    IndexVue -->|进入记录判断| IndexVueRecordJudge
-    IndexVueRecordJudge -->|无 recordId / 可编辑状态| BlockFormVue
-    IndexVueRecordJudge -->|reviewStatus=0/1| BlockViewVue
-```
-
-避免：
-
-- 菱形连菱形
-- 为简单条件单独画一个菱形
-- 在菱形里写完“创建态”，线上又重复写“无 recordId”
-
-能合并的判断合进一个菱形，保持架构图是“决策摘要”，不是完整代码流程图。
-
-### 圆柱：数据源 / provider hook
-
-圆柱用于表示以数据为核心、附带基础方法的 hook 或 provider。
-
-```mermaid
-flowchart TD
-    UseNumberDeliveryRecordJs[("useNumberDeliveryRecord.js<br/>输出数据：pro_recordForm / loading<br/>输出方法：loadDetail / closeDialog")]
-    IndexVue["index.vue"]
-
-    UseNumberDeliveryRecordJs -->|provide 注入起点| IndexVue
-```
-
-规则：
-
-- 圆柱只连到注册 / provide 它的组件。
-- 其他 inject 它的组件不要继续画线，否则图会乱。
-- 其他组件在自己的方块内部用模块说明自己从这个 hook 里拿了什么。
-
-### 双边框：事件架构 / controller
-
-双边框用于表示不以存值为核心，而是协调跨组件事件、注册、校验、取值或搜索触发的 controller 架构。
-
-适合：
-
-- `QlmForm`
-- `QlmSearch`
-- 后续类似的表单、搜索、表格上层 controller
-
-示例：
-
-```mermaid
-flowchart TD
-    QlmFormController[["【QlmForm】<br/>创建 controller<br/>协调 FormItem 注册<br/>统一 validate / getSubmitValue"]]
-    BlockFormVue["BlockForm.vue"]
-
-    QlmFormController -->|controller 架构来源| BlockFormVue
-```
-
-规则：
-
-- controller 架构块只连到引入它的组件。
-- 子组件不必都连回 controller；在子组件方块内部写 `【QlmForm】` 模块即可。
-- 这样能表达“从引入组件往下都带上 QlmForm 模块”，但不把图画成满屏交叉线。
 
 ## 节点内容写法
 
-节点内部使用 HTML 标签，让模块层次清楚。
+节点内部使用 HTML 标签，让模块层次清楚。下面所有图形示例都应该按这套节点写法表达，避免前后示例口径不一致。
 
 所有 Vue 组件节点的第一个模块必须是 `组件概览`，先说明这个组件是干什么的。这样用户和 AI 先看懂组件职责，再看数据、事件和 controller 细节。
+
+节点描述只写稳定、必要、可反向定位源码的信息。不要把同一个判断同时写在父节点、菱形、连线和子节点里。没确认的细节宁可不写，避免图上看似完整但逻辑交叉。
 
 推荐格式：
 
 ```mermaid
 flowchart TD
-    BlockFormVue["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li><li>负责承载字段组件和提交动作</li></ul></fieldset><fieldset><legend>【useNumberDeliveryRecord.js】</legend><ul><li>读取详情作为只读回显源</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>创建 controller</li><li>收集 FormItem 提交值</li></ul></fieldset>"]
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li><li>负责承载字段组件和提交动作</li></ul></fieldset><fieldset><legend>【useNumberDeliveryRecord.js】</legend><ul><li>读取详情作为只读回显源</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>创建 controller</li><li>收集 FormItem 提交值</li></ul></fieldset>"]
 ```
 
 约定：
@@ -170,7 +73,7 @@ flowchart TD
 
 模块名尽量使用对应文件名或架构名。
 
-如果模块来自 hook / provider 文件，`legend` 直接写文件名，保留 `.js` 后缀。  
+如果模块来自 hook / provider 文件，`legend` 直接写文件名，保留 `.js` 后缀。
 如果模块来自跨组件 controller 架构，`legend` 写架构名，不加文件后缀。
 
 推荐：
@@ -189,6 +92,136 @@ flowchart TD
 - `【全局状态】`
 
 原因是图要能反向定位源码。看到 `【useConstruct.js】` 时，开发者可以直接去找这个文件；看到 `【QlmForm】` 时，开发者知道这是一个表单 controller 架构，而不是某个本地 hook 文件。
+
+## 图形语义
+
+默认使用 Mermaid `flowchart`。
+
+```mermaid
+flowchart LR
+    VueComponent["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>方块：Vue 组件文件</li></ul></fieldset>"]
+    Judge{"主合同？"}
+    Store[("<h2>usePageContext.js</h2><fieldset><legend>输出数据</legend><ul><li>圆柱：provider 状态桶</li></ul></fieldset>")]
+    Controller{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>六边形：controller</li></ul></fieldset>"}}
+```
+
+### 方块：Vue 组件文件
+
+方块只表示 `.vue` 文件。一个 Vue 文件必然是一个 Vue 组件；它是不是“业务组件”不需要在图形语义里判断。
+
+适合：
+
+- `index.vue`
+- `BlockForm.vue`
+- `BlockView.vue`
+- `FormItemDataNum.vue`
+- `BlockHeader.vue`
+- `DialogContent.vue`
+
+不适合：
+
+- 接口调用
+- 状态判断
+- composable hook
+- controller 架构
+
+组件图的主结构优先表达代码文件嵌套关系。跨组件通知、事件监听、update 联动不要画成父子层级；如果组件实际在代码里是平级挂载，就在图里保持平级，再把联动写进接收方组件节点内部。
+
+方块和方块之间的线可以写简单、稳定的挂载或显隐逻辑，例如：
+
+```mermaid
+flowchart TD
+    vue_Index["<h2>index.vue</h2><fieldset><legend>组件概览</legend><ul><li>页面入口组件</li></ul></fieldset>"]
+    vue_BlockAuditRecord["<h2>BlockAuditRecord.vue</h2><fieldset><legend>组件概览</legend><ul><li>审核记录展示组件</li></ul></fieldset>"]
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>填写态表单组件</li></ul></fieldset>"]
+
+    vue_Index -->|有审核记录时展示| vue_BlockAuditRecord
+    vue_Index -->|可编辑状态展示| vue_BlockForm
+```
+
+没有菱形时，线上的短文案可以承担简单条件说明；已有菱形分组时，线上的文案要更少，避免重复。
+
+### 菱形：需要分组的逻辑判断
+
+菱形不是接口分支图形，也不是所有 `v-if` 的默认图形。它只用于“同一父组件下有多组子组件，并且这些子组件需要按判断条件分组展示”的场景。
+
+菱形不会改变组件层级。它只是插在父组件和一组子组件之间，帮助读者理解这一组子组件为什么归在一起。
+
+推荐：
+
+```mermaid
+flowchart TD
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>填写态表单组件</li></ul></fieldset>"]
+    judge_isMainContract{"主合同？"}
+    judge_isSubContract{"子合同？"}
+    vue_BlockBaseInfo["<h2>BlockBaseInfo.vue</h2><fieldset><legend>组件概览</legend><ul><li>主合同基础信息组件</li></ul></fieldset>"]
+    vue_FormItemServiceTime["<h2>FormItemServiceTime.vue</h2><fieldset><legend>组件概览</legend><ul><li>主合同服务时间组件</li></ul></fieldset>"]
+    vue_BlockBaseInfoSub["<h2>BlockBaseInfoSub.vue</h2><fieldset><legend>组件概览</legend><ul><li>子合同基础信息组件</li></ul></fieldset>"]
+    vue_FormItemSubContractStartTime["<h2>FormItemSubContractStartTime.vue</h2><fieldset><legend>组件概览</legend><ul><li>子合同开始时间组件</li></ul></fieldset>"]
+
+    vue_BlockForm --> judge_isMainContract
+    judge_isMainContract --> vue_BlockBaseInfo
+    judge_isMainContract --> vue_FormItemServiceTime
+    vue_BlockForm --> judge_isSubContract
+    judge_isSubContract --> vue_BlockBaseInfoSub
+    judge_isSubContract --> vue_FormItemSubContractStartTime
+```
+
+避免：
+
+- 菱形连菱形
+- 为简单条件单独画一个菱形
+- 用菱形表达接口分支
+- 用菱形表达普通提交流程
+- 在菱形里写完“主合同”，线上又重复写“主合同展示”
+
+简单显隐条件优先写在线上，例如 `服务时间异常时展示`。只有当一组同层子组件需要被整体分组时，才加菱形。
+
+菱形里的文字要短，只写最核心的分组条件，例如 `主合同？`、`子合同？`。菱形后的线通常不写文案；如果必须写，也只写极短分支词。不要写“有”“是”这类没有信息量的线文案。
+
+### 圆柱：数据源 / provider hook
+
+圆柱用于表示以数据为核心、附带基础方法的 hook 或 provider。
+
+```mermaid
+flowchart TD
+    js_useNumberDeliveryRecord[("<h2>useNumberDeliveryRecord.js</h2><fieldset><legend>输出数据</legend><ul><li>pro_recordForm</li><li>loading</li></ul></fieldset><fieldset><legend>输出方法</legend><ul><li>loadDetail()</li><li>closeDialog()</li></ul></fieldset>")]
+    vue_Index["<h2>index.vue</h2><fieldset><legend>组件概览</legend><ul><li>页面入口组件</li></ul></fieldset>"]
+
+    js_useNumberDeliveryRecord -->|provide 注入起点| vue_Index
+```
+
+规则：
+
+- 圆柱只连到注册 / provide 它的组件。
+- 其他 inject 它的组件不要继续画线，否则图会乱。
+- 其他组件在自己的方块内部用模块说明自己从这个 hook 里拿了什么。
+
+### 六边形：controller / 事件架构
+
+六边形用于表示不以存值为核心，而是协调跨组件事件、注册、校验、取值或搜索触发的 controller 架构。
+
+适合：
+
+- `QlmForm`
+- `QlmSearch`
+- 后续类似的表单、搜索、表格上层 controller
+
+示例：
+
+```mermaid
+flowchart TD
+    controller_QlmForm{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 FormItem 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"}}
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset>"]
+
+    controller_QlmForm -->|controller 架构来源| vue_BlockForm
+```
+
+规则：
+
+- controller 架构块只连到引入它的组件。
+- 子组件不必都连回 controller；在子组件方块内部写 `【QlmForm】` 模块即可。
+- 这样能表达“从引入组件往下都带上 QlmForm 模块”，但不把图画成满屏交叉线。
 
 ## QlmForm 模块写法
 
@@ -249,7 +282,7 @@ flowchart TD
 
 ### 事件架构只画来源
 
-`QlmForm` 这类 controller 用双边框表示。
+`QlmForm` 这类 controller 用六边形表示。
 
 它只连到引入 controller 的组件，例如 `BlockForm.vue`。
 
@@ -274,7 +307,7 @@ flowchart TD
 - 父入口如何进入 `Step1`
 - `Step1` 如何渲染字段组件
 - 字段组件如何把跨字段事件回传给 `Step1`
-- `Step1` 内部如何进入提交判断
+- `Step1` 内部如何进入提交动作
 
 不要画：
 
@@ -288,14 +321,22 @@ flowchart TD
 
 Mermaid 源码里的节点名要尽量接近源码文件名，方便从图回到代码。
 
+推荐使用可读前缀：
+
+- `.vue` 文件节点：`vue_组件名`，例如 `vue_BlockForm`
+- `.js` 文件节点：`js_文件名`，例如 `js_usePageContext`
+- 判断节点：`judge_判断名`，例如 `judge_isMainContract`
+- controller 节点：`controller_架构名`，例如 `controller_QlmForm`
+
 推荐：
 
 ```mermaid
 flowchart TD
-    BlockFormVue["BlockForm.vue"]
-    FormItemDataNumVue["FormItemDataNum.vue"]
-    UseNumberDeliveryRecordJs[("useNumberDeliveryRecord.js")]
-    IndexVueRecordJudge{"index.vue 数据判断"}
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset>"]
+    vue_FormItemDataNum["<h2>FormItemDataNum.vue</h2><fieldset><legend>组件概览</legend><ul><li>数据量 FormItem 组件</li></ul></fieldset>"]
+    js_useNumberDeliveryRecord[("<h2>useNumberDeliveryRecord.js</h2><fieldset><legend>输出数据</legend><ul><li>record detail</li></ul></fieldset>")]
+    judge_isMainContract{"主合同？"}
+    controller_QlmForm{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li></ul></fieldset>"}}
 ```
 
 避免：
@@ -310,27 +351,36 @@ flowchart TD
 
 判断节点可以带所属组件前缀，例如：
 
-- `IndexVueRecordJudge`
-- `BlockFormSubmitJudge`
-- `BlockFormSaveApiFlow`
+- `judge_indexViewMode`
+- `judge_blockFormMainContract`
+- `judge_blockFormSubContract`
 
 ## 粒度控制
 
-架构图只保留会影响架构判断的信息。
+这类 Vue 架构图的核心依据是文件。它主要回答：
 
-复杂模块组件多时，图变大是可以接受的。画架构图的目的就是把复杂组件关系说明白；组件少、关系简单的模块本来就不一定需要画图。
+- 要创建或维护哪些 `.vue` / `.js` 文件
+- Vue 组件文件之间是什么嵌套和挂载关系
+- provider hook、controller 这类非 Vue 文件在哪个组件文件里引入
+- 少量分组条件如何影响同层 Vue 子组件的组织
 
-如果一个页面由多个 Tab / Step / Block 组成，优先以当前要说明的 Tab / Step / Block 为起点画局部图，而不是默认从整个页面入口画到底。只有当目标是说明完整页面流程时，才画完整页面图。
+图上的业务逻辑只保留到能解释文件关系为止。也就是说，读图后应该能看出实现时要落哪些文件、这些文件谁挂谁、哪些文件引入了额外框架；不追求把完整业务流程画出来。
+
+复杂模块文件多时，图变大是可以接受的。画架构图的目的就是把文件关系说明白；文件少、关系简单的模块本来就不一定需要画图。
+
+如果一个页面由多个 Tab / Step / Block 组成，优先以当前要说明的 Tab / Step / Block 为起点画局部文件关系图，而不是默认从整个页面入口画到底。只有当目标是说明完整页面文件组织时，才画完整页面图。
 
 应该写：
 
-- `FormItemDataNum.vue` 读取 `pro_recordForm.dataNum` 作为默认值
-- `FormItemDataNum.vue` 注册 `FormItem` 并返回字段片段
-- `BlockForm.vue` 提交前统一 `validate`，再显式拼 `params`
+- `BlockForm.vue` 下面挂载 `FormItemDataNum.vue`
+- `BlockForm.vue` 引入 `QlmForm` controller
+- `FormItemDataNum.vue` 作为 FormItem 注册并贡献字段片段
 - `FormItemAdvanceReason.vue` 接收 `FormItemServiceTime.vue` 的 QlmForm update 后自行决定显示和校验
 
 不应该写：
 
+- 完整接口参数拼装细节
+- 完整提交流程和所有异常分支
 - 交付时间用的是 `el-date-picker`
 - 上传按钮隐藏规则
 - textarea 限制 50 字
@@ -342,29 +392,29 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    PageVue["<h2>Page.vue</h2><fieldset><legend>组件概览</legend><ul><li>页面入口组件</li><li>渲染业务区块</li></ul></fieldset>"]
+    vue_Page["<h2>Page.vue</h2><fieldset><legend>组件概览</legend><ul><li>页面入口组件</li><li>按代码顺序渲染业务区块</li></ul></fieldset>"]
 
-    UsePageContextJs[("<h2>usePageContext.js</h2><fieldset><legend>输出数据</legend><ul><li>detail</li><li>loading</li></ul></fieldset><fieldset><legend>输出方法</legend><ul><li>loadDetail(id)</li><li>close(action)</li></ul></fieldset>")]
+    js_usePageContext[("<h2>usePageContext.js</h2><fieldset><legend>输出数据</legend><ul><li>detail</li><li>loading</li></ul></fieldset><fieldset><legend>输出方法</legend><ul><li>loadDetail(id)</li><li>close(action)</li></ul></fieldset>")]
 
-    PageStateJudge{"<h2>Page.vue 数据判断</h2><fieldset><legend>【usePageContext.js】</legend><ul><li>id 为空：新建</li><li>id 存在：loadDetail(id)</li><li>拿到 status / logList</li></ul></fieldset>"}
+    vue_BlockRecord["<h2>BlockRecord.vue</h2><fieldset><legend>组件概览</legend><ul><li>记录展示组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取记录列表并自行决定是否展示</li></ul></fieldset>"]
 
-    Controller[["<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 item 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"]]
+    controller_QlmForm{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 item 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"}}
 
-    BlockFormVue["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取详情作为只读回显源</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>创建 controller</li><li>收集 item 提交值</li></ul></fieldset>"]
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取详情作为回显源</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>创建 controller</li><li>收集 item 提交值</li></ul></fieldset>"]
 
-    FormItemA["<h2>FormItemA.vue</h2><fieldset><legend>组件概览</legend><ul><li>A 字段组件</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>注册 FormItem</li><li>贡献 A 字段</li></ul></fieldset>"]
+    judge_isMainGroup{"主合同？"}
 
-    FormItemB["<h2>FormItemB.vue</h2><fieldset><legend>组件概览</legend><ul><li>B 字段组件</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>注册 FormItem</li><li>贡献 B 字段</li></ul></fieldset><fieldset><legend>【QlmForm-update：FormItemA.vue】</legend><ul><li>接收 A 字段 update 后自行决定显示、隐藏或校验策略</li></ul></fieldset>"]
+    vue_FormItemA["<h2>FormItemA.vue</h2><fieldset><legend>组件概览</legend><ul><li>A 字段组件</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>注册 FormItem</li><li>贡献 A 字段</li></ul></fieldset>"]
 
-    BlockViewVue["<h2>BlockView.vue</h2><fieldset><legend>组件概览</legend><ul><li>只读展示组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取详情并只读展示</li></ul></fieldset>"]
+    vue_FormItemB["<h2>FormItemB.vue</h2><fieldset><legend>组件概览</legend><ul><li>B 字段组件</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>注册 FormItem</li><li>贡献 B 字段</li></ul></fieldset><fieldset><legend>【QlmForm-update：FormItemA.vue】</legend><ul><li>接收 A 字段 update 后自行决定显示、隐藏或校验策略</li></ul></fieldset>"]
 
-    UsePageContextJs -->|provide 注入起点| PageVue
-    PageVue -->|进入数据判断| PageStateJudge
-    PageStateJudge -->|新建 / 可编辑| BlockFormVue
-    PageStateJudge -->|只读状态| BlockViewVue
-    Controller -->|controller 架构来源| BlockFormVue
-    BlockFormVue -->|字段组件| FormItemA
-    BlockFormVue -->|字段组件| FormItemB
+    js_usePageContext -->|provide 注入起点| vue_Page
+    vue_Page -->|有记录时展示| vue_BlockRecord
+    vue_Page -->|可编辑状态展示| vue_BlockForm
+    controller_QlmForm -->|controller 架构来源| vue_BlockForm
+    vue_BlockForm --> judge_isMainGroup
+    judge_isMainGroup --> vue_FormItemA
+    judge_isMainGroup --> vue_FormItemB
 ```
 
 ## 判断清单
@@ -375,13 +425,14 @@ flowchart TD
 - 组件图主结构是不是优先表达代码文件嵌套？
 - 每个 Vue 组件节点的第一个模块是不是 `组件概览`？
 - `组件概览` 第一条有没有说清这个组件是干什么的？
-- 判断是不是合并到了少量菱形里？
+- 菱形是不是只用于同层子组件分组判断？
 - 简单条件是不是写在线上，而不是单独画菱形？
 - `useXxx.js` 是否用圆柱，并且只连到 provide 起点？
-- `QlmForm / QlmSearch` 是否用双边框，并且只连到引入 controller 的组件？
+- `QlmForm / QlmSearch` 是否用六边形，并且只连到引入 controller 的组件？
 - FormItem 自身注册逻辑是否写在 `【QlmForm】` 模块？
 - 接收其他 FormItem update 的逻辑是否单独写在 `【QlmForm-update：来源组件】` 模块？
 - 跨组件 update 有没有避免画成错误的父子层级？
 - 图里有没有提前发明未来实现变量名？
 - 图里有没有塞进本该留给组件源码的 UI 细节？
+- 图里有没有把未确认或不必要的描述写满，导致节点、连线和判断块互相重复？
 - Mermaid 节点名是否接近源码文件名？
