@@ -14,6 +14,7 @@
 | 用户意图 / 关键词 | 层级判断 | 必读上下文 | 代码 / 局部入口 | 兜底搜索 |
 |---|---|---|---|---|
 | AIPD 方向 / 分层 / 项目认知 | L1 + L3 | `_adoc/L1-intent/intent.md`、`_adoc/index.md` | `src/core/overview.md` | `rg "L3|L4|L5|认知|上下文" src _adoc` |
+| 上下文解耦 / 黑箱上移 / 决策杠杆 / AI 友好代码组织 / 扁平化检索 / 记忆存取 / AIPD 核心哲学 / AIPDR | L3 + L5 | `_adoc/L3-core/index.md`、`src/core/overview.md` | `src/core/overview.md`、`src/core/case/overview.md` | `rg "上下文解耦|黑箱上移|决策杠杆|注意力|封装|扁平化检索|记忆|局部上下文|全局规则|黑箱|输入输出|Memory Retrieval" src _adoc` |
 | 初始化 / AGENTS.md / Agent Entry | L5 | `_adoc/L5-dev/index.md`、`src/core/agent-entry/template.md` | `src/skills/aipd2/SKILL.md` | `rg "agent-entry|AGENTS|初始化" src` |
 | 更新已有项目 AIPD 架构 / aipd update | L5 | `_adoc/context-map.md`、`src/core/adoc-structure.md` | `src/skills/aipd2-update/SKILL.md`、`src/core/agent-entry/template.md`、`src/core/adoc/templates/index.md` | `rg "aipd2-update|更新 AIPD|context-map|AGENTS" src _adoc` |
 | 上下文检索 / 大地图 / context-map | L3 + L5 | `_adoc/context-map.md`、`src/core/adoc/templates/context-map.md` | `src/skills/aipd2/SKILL.md`、`src/skills/aipd2-case-create/SKILL.md`、`src/skills/aipd2-learn/SKILL.md` | `rg "context-map|上下文检索|检索包|观察锚点" src _adoc AGENTS.md` |
@@ -27,6 +28,9 @@
 | 概念 | 标准叫法 | 相关文档 | 常见误解 / 别名 |
 |---|---|---|---|
 | 项目认知 | ADOC / `_adoc` | `_adoc/index.md`、`src/core/adoc-structure.md` | 不等同于普通 README；它是 AI 长期上下文结构 |
+| 上下文解耦 | 任务上下文解耦 | `_adoc/L3-core/index.md`、`src/core/overview.md` | 不是否定知识库和上下文检索；它主要约束人与 AI 设计任务、拆 step 和写上下文索引时的目标 |
+| 黑箱上移 | 决策杠杆上移 | `_adoc/L3-core/index.md` | 不是传统封装的同义词；封装是构造黑箱的工程手段，黑箱上移是选择人类决策层级的认知策略 |
+| 扁平化检索 | Memory Retrieval / 大地图 + 细节 Map | `_adoc/L3-core/index.md`、`_adoc/context-map.md` | 不是取消分层维护；它要求 AI 高频读取路径尽量一跳命中，不依赖多层目录链 |
 | 上下文检索地图 | `context-map` | `_adoc/context-map.md`、`src/core/adoc/templates/context-map.md` | 不承载正文，不替代 L1-L5 |
 | 工程实现层 | L5 Dev | `_adoc/L5-dev/index.md`、`src/core/L5-dev/guide.md` | 不是页面代码细节全集 |
 | 分身 Agent | fork 出来的 Main Agent 克隆体 | `AGENTS.md`、`src/platforms/codex/core/agent-guide.md` | 不是低上下文工人 |

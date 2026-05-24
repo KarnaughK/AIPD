@@ -31,7 +31,7 @@ _adoc/case/c{X.Y}-{case-name}/
 
 ### 项目认知
 
-- `_adoc/context-map.md` - {本次任务如何命中上下文地图；若缺失，说明兜底方式}
+- `_adoc/map.md` - {本次任务如何命中项目记忆地图；若缺失，说明兜底方式}
 - `_adoc/L1-intent/intent.md` - {为什么需要读取}
 - `_adoc/L3-core/index.md` - {为什么需要读取}
 - `_adoc/L4-product/{module}/index.md` - {为什么需要读取}
@@ -102,7 +102,7 @@ _adoc/case/c{X.Y}-{case-name}/
 
 > 后续用 `aipd2-learn` 审计 transcript / session / step 记录时，检查 Agent 是否按这些锚点执行。锚点用于判断 AIPD SOP 是否生效，不只依赖用户反复纠正。
 
-- [ ] Agent 是否读取 `_adoc/context-map.md`，或说明其缺失并使用 `rg` / README 兜底。
+- [ ] Agent 是否读取 `_adoc/map.md`，或说明其缺失并使用 `rg` / README 兜底。
 - [ ] Agent 是否读取本 case 上下文索引中的 L3 / L4 / L5 / 局部 README。
 - [ ] 涉及核心概念时，Agent 是否先对齐 L3 术语和关系，而不是直接猜业务含义。
 - [ ] 涉及跨模块工程规则时，Agent 是否读取 L5 实现规则，而不是只看目标页面代码。

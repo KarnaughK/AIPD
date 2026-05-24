@@ -17,6 +17,7 @@ inject-from-core:
   - adoc-structure.md
   - agent-entry/template.md
   - adoc/templates/index.md
+  - adoc/templates/map.md
   - adoc/templates/context-map.md
   - case/templates/index.md
   - okr/templates/index.md
@@ -47,7 +48,7 @@ $aipd2 按项目规范实现一个新表单
 
 1. 确认 `_adoc/` 是否存在。
 2. 读取 `_adoc/index.md`，判断当前项目的认知结构和裁剪模式。
-3. 如果存在 `_adoc/context-map.md`，优先读取它，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / case。
+3. 如果存在 `_adoc/map.md`，优先读取它，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / case；旧项目兼容读取 `_adoc/context-map.md`。
 4. 根据检索结果选择入口；日常前端开发不默认只读 L5，必须判断是否还涉及 L3 核心概念、L4 产品功能和局部 README。
 5. 按任务继续下钻，只读相关文档，不全量读取 `_adoc/`。
 6. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
@@ -56,7 +57,7 @@ $aipd2 按项目规范实现一个新表单
 
 | 任务类型 | 优先读取 |
 |---|---|
-| 任务入口不清楚 / 用户只给一句自然语言 | `_adoc/context-map.md`，不存在则读 `_adoc/index.md` 后用 `rg` 搜索 README、核心词、页面名、接口名、权限码 |
+| 任务入口不清楚 / 用户只给一句自然语言 | `_adoc/map.md`，旧项目兼容 `_adoc/context-map.md`；不存在则读 `_adoc/index.md` 后用 `rg` 搜索 README、核心词、功能线名、页面名、接口名、权限码 |
 | 核心概念 / 领域语言 / 黑话 / 名词解释 | `_adoc/L3-core/index.md` |
 | README / map / 逻辑地图 | `_adoc/L5-dev/dev-conventions/readme-guide.md` |
 | 表单 / 字段 / 校验 / 提交映射 | `_adoc/L5-dev/dev-conventions/form-guide.md` |
@@ -117,7 +118,7 @@ $aipd2 看一下合同创建页面
 ### 读取策略
 
 - 先读 `_adoc/index.md`。
-- 如果存在 `_adoc/context-map.md`，第二步读取它；没有时才按 `_adoc/index.md` 的任务入口和 `rg` 兜底。
+- 如果存在 `_adoc/map.md`，第二步读取它；旧项目兼容 `_adoc/context-map.md`；没有时才按 `_adoc/index.md` 的任务入口和 `rg` 兜底。
 - 按检索结果读取 L3 / L4 / L5 / 局部 README。前端任务不等于只读 L5；涉及业务词先读 L3，涉及功能边界先读 L4，涉及跨模块工程实现先读 L5，涉及页面内部细节先读就近 README。
 - skill 不复制 `_adoc` 正文，不把项目规范写死在 skill 里。
 - 读完后直接进入用户任务，不输出大段 AIPD 解释。
@@ -173,7 +174,7 @@ mkdir -p _adoc/case/archive _adoc/okr
 创建默认文档壳子：
 
 - 将 `@references/adoc/templates/index.md` 写入 `_adoc/index.md`
-- 将 `@references/adoc/templates/context-map.md` 写入 `_adoc/context-map.md`
+- 将 `@references/adoc/templates/map.md` 写入 `_adoc/map.md`
 - 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
 - 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
 

@@ -1,6 +1,6 @@
 # AIPD 项目认知索引
 
-本文件是 `_adoc/` 的入口。Agent 进入项目后，先读这里；如果存在 `_adoc/context-map.md`，再用它做上下文检索，最后按任务层级读取对应文档。
+本文件是 `_adoc/` 的入口。Agent 进入项目后，先读这里；如果存在 `_adoc/map.md`，再用它做项目记忆检索；旧项目可兼容读取 `_adoc/context-map.md`。
 
 ## 项目当前状态
 
@@ -21,9 +21,10 @@
 
 ## 上下文检索
 
-- 项目级检索地图：`_adoc/context-map.md`
+- 项目级记忆地图：`_adoc/map.md`
+- 旧项目兼容入口：`_adoc/context-map.md`
 - 进入具体任务前，先判断任务涉及 L3 核心概念、L4 产品功能、L5 工程实现规则、局部 README、case 中的哪些上下文。
-- 如果 `context-map.md` 缺失或未覆盖本次任务，按相关核心词、页面名、接口名、权限码、组件名使用 `rg` 兜底搜索，并把新发现的稳定入口回写到合适的 map 或 index。
+- 如果 `map.md` 缺失或未覆盖本次任务，按相关核心词、功能线名、页面名、接口名、权限码、组件名使用 `rg` 兜底搜索，并把新发现的稳定入口回写到合适的 map。
 
 ## 读取原则
 
@@ -36,7 +37,7 @@
 
 ## 常用入口
 
-- 上下文检索地图：`_adoc/context-map.md`
+- 项目记忆地图：`_adoc/map.md`
 - Case 索引：`_adoc/case/index.md`
 - OKR 索引：`_adoc/okr/index.md`
 - 当前方向：`_adoc/L1-intent/intent.md`
