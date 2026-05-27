@@ -17,6 +17,10 @@ build_platform() {
     mkdir -p "$dist_dir"
 
     for skill_dir in "$SRC_DIR/skills"/*/; do
+        if [ ! -f "$skill_dir/SKILL.md" ]; then
+            continue
+        fi
+
         local skill_name
         local dest
         skill_name=$(basename "$skill_dir")

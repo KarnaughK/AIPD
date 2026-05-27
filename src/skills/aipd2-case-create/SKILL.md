@@ -2,7 +2,7 @@
 name: aipd2-case-create
 description: >
   创建 AIPD2 case。与用户讨论事项，按需扫描相关上下文，将上下文索引、边界和必要步骤写入 case。
-  关键词：case、创建事项、上下文索引、拆解任务、step、框架搭建、不要多做、mmd、Mermaid、流程图预览
+  关键词：case、创建事项、上下文索引、拆解任务、step、框架搭建、不要多做、mmd、Mermaid、aipd-mermaid
 allowed-tools:
   - Read
   - Write
@@ -17,7 +17,8 @@ inject-from-core:
   - case/overview.md
   - case/templates/case.md
   - case/templates/step.md
-  - L5-dev/vue-architecture-diagram-guide.md
+  - L5-dev/vue-case-create-guide.md
+  - L5-dev/vue-provider-guide.md
 ---
 
 # AIPD2 Case Create
@@ -62,7 +63,7 @@ inject-from-core:
 - 用户只是在描述目标时，只解释 case-create 当前要判断什么，不提前展开完整模板。
 - 用户开始讨论上下文时，再披露上下文检索包：层级判断、必读文档、代码入口、兜底搜索、风险边界。
 - 用户开始设计 step 时，再披露 step 拆分草案规则：先聊“第几步干什么”，确认后再写详细 step。
-- 用户进入 Vue 前端实现型 case 时，再加载 Vue 组件图、架构图落位、代码就近 README / `_map.md`、`aipd_vue_architect` 等 SOP。
+- 用户进入 Vue 前端实现型 case 时，再按需加载 `@references/L5-dev/vue-case-create-guide.md`；涉及 Mermaid / `.mmd` 架构图的创建、修改、评审或预览时，交给 `aipd-mermaid` 处理领域规范和预览逻辑。
 - 用户进入 React、后端、综合项目或 L2/L3/L4 目标型 case 时，只参考通用 case-create 方法，不照搬 Vue 前端实现 SOP。
 
 原则：case-create 提供的是分层判断和推荐流程，不是固定状态机。Agent 应相信自己的项目识别能力，但必须把判断依据写进 case 的“场景分流”和“上下文索引”。
@@ -90,12 +91,21 @@ inject-from-core:
 
 分流原则：
 
-- Vue 前端实现型 case：可以使用 Vue 组件图、`.mmd` 架构图、代码就近 README / `_map.md`、组件目录落位、`aipd_vue_architect` 等规则。
+- Vue 前端实现型 case：先读取 `@references/L5-dev/vue-case-create-guide.md`；需要创建、修改、评审或预览 Mermaid / `.mmd` 架构图时，使用 `aipd-mermaid`，由它按领域加载 Vue 架构图和 provider 规范。
 - React 前端实现型 case：可以参考前端流程，但不要照搬 Vue 组件、provider、SFC、`aipd_vue_architect` 等细节；按 React 项目结构重新判断组件、hooks、路由、状态和测试入口。
 - 后端实现型 case：重点通常变成接口契约、领域模型、数据表、事务、权限、队列、幂等、日志、测试和部署；不要套用前端组件图和目录落位规则。
 - 目标型 / 认知型 case：重点是问题定义、资料来源、判断框架、观察锚点和沉淀位置；step 未必对应代码修改，也未必需要架构图落到代码目录。
 
 相信大模型的判断能力，但必须把判断写进上下文索引：项目类型、case 类型、为什么选择这条流程、哪些近期经验只作为参考不能直接套用。
+
+### 场景 SOP 按需加载
+
+`case-create` 主入口只保留场景分流，不展开具体技术栈 SOP。命中具体场景后再读取对应 guide：
+
+- Vue 前端实现型 case：读取 `@references/L5-dev/vue-case-create-guide.md`。
+- Mermaid / `.mmd` 架构图：创建、修改、评审、按需预览都路由到 `aipd-mermaid`；case-create 只负责判断图是否属于本 case 设计输入，以及是否需要落位到代码就近目录。
+- Vue `useXxx.ts/js`、provide / inject、页面级 API 数据源：普通 case 方案可读取 `@references/L5-dev/vue-provider-guide.md`；如果是在图中表达这些边界，交给 `aipd-mermaid` 按领域加载。
+- React / Next / Nuxt / Express 等后续技术栈：新增对应 guide，不把细节继续塞进本文件。
 
 ### 第二步：问用户要做什么
 
@@ -162,24 +172,15 @@ mkdir -p _adoc/case/c{X.Y}-{名称}/doc
 
 已确认的步骤文件写入 `steps/`，格式参考 `@references/case/templates/step.md`。
 
-### Mermaid 按需预览规则
+### Mermaid / `.mmd` 路由规则
 
-默认不要在创建或修改 `.mmd` 文件后自动预览。Mermaid 渲染会消耗额外 token 和工具调用成本，除非用户明确要看图，否则只保留源文件路径即可。
+case-create 不直接维护 Mermaid 写法、领域图规范或预览脚本。涉及 Mermaid / `.mmd` 架构图时，统一路由到 `aipd-mermaid`：
 
-当用户说“我看一下那个 mmd 文件”“预览一下流程图”“把架构图渲染出来”“看看这张图对不对”等明确查看意图时，才执行预览：
+- 创建 / 修改图：让 `aipd-mermaid` 读取当前项目 map、目标图和对应领域规范。
+- 评审图：让 `aipd-mermaid` 检查图的边界、节点职责、线条语义和是否过度塞细节。
+- 预览图：只有用户明确说“预览、渲染、看图、生成 PNG”时，才让 `aipd-mermaid` 执行预览。
 
-1. 使用 `mermaid-preview` skill 渲染被创建/修改的 Mermaid 文件。
-2. 如果当前上下文没有加载 `mermaid-preview`，优先调用已安装脚本：
-
-```bash
-python3 ~/.codex/skills/mermaid-preview/scripts/render_mermaid.py path/to/file.mmd
-```
-
-3. 如果提示缺少 `mmdc`，用 `--allow-npx` 重跑。
-4. 读取脚本输出的 `output:` 路径，并用本地图片查看工具把 PNG 加入聊天上下文。
-5. 最终回复必须包含源 `.mmd` 路径、生成 PNG 路径和渲染结果。
-
-这个动作属于 case-create 的设计查看，不算执行业务 step。用户没有要求看图时，不要主动渲染。
+这个动作属于 case-create 的设计讨论，不算执行业务 step。用户没有要求看图时，不要主动渲染。
 
 ### 架构图落位规则
 
@@ -256,6 +257,7 @@ step 只能表示“已确认、可派发执行”的工作。正在讨论的问
 - 调研、只读定位、资料整理：`explorer`
 - 普通开发、修复、脚本和文档修改：`worker`
 - Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织：`aipd_vue_architect`
+- Vue `useXxx.ts/js`、provide / inject、页面级 API 数据源、详情数据下发、provider/controller 边界：`aipd_vue_provider`
 - 不确定时留空，并在 step 目标和上下文文档里写清楚判断依据
 
 推荐 Agent 是执行角色建议，不替代 step 的上下文文档。`case-run` 阶段会优先让带角色 Agent 基于 step / case / 上下文文档执行；只有当 step 强依赖主 Agent 当前尚未沉淀的聊天判断时，才需要 fork 上下文分身。

@@ -13,7 +13,7 @@ AGENTS_TARGET_DIR="$HOME/.codex/agents"
 mkdir -p "$TARGET_DIR"
 mkdir -p "$AGENTS_TARGET_DIR"
 
-for legacy in aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-learn; do
+for legacy in aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-learn mermaid-preview; do
     target="$TARGET_DIR/$legacy"
     if [ -e "$target" ] || [ -L "$target" ]; then
         rm -rf "$target"

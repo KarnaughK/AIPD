@@ -41,7 +41,7 @@ def read_mermaid_source(input_path: Path) -> str:
 def default_output_path(input_path: Path, source: str) -> Path:
     digest = hashlib.sha1(source.encode("utf-8")).hexdigest()[:10]
     safe_stem = re.sub(r"[^A-Za-z0-9_.-]+", "-", input_path.stem).strip("-") or "diagram"
-    out_dir = Path(tempfile.gettempdir()) / "mermaid-preview"
+    out_dir = Path(tempfile.gettempdir()) / "aipd-mermaid"
     return out_dir / f"{safe_stem}-{digest}.png"
 
 
@@ -89,7 +89,7 @@ def main() -> int:
         output_path = Path(args.out).expanduser().resolve() if args.out else default_output_path(input_path, source)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with tempfile.TemporaryDirectory(prefix="mermaid-preview-") as temp_dir:
+        with tempfile.TemporaryDirectory(prefix="aipd-mermaid-") as temp_dir:
             temp_path = Path(temp_dir)
             render_input = temp_path / "input.mmd"
             render_input.write_text(source, encoding="utf-8")

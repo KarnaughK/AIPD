@@ -16,6 +16,14 @@ TARGET_DIR="$1/.claude/skills"
 
 mkdir -p "$TARGET_DIR"
 
+for legacy in mermaid-preview; do
+    target="$TARGET_DIR/$legacy"
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        rm -rf "$target"
+        echo "移除旧 skill: $target"
+    fi
+done
+
 for skill_dir in "$DIST_DIR"/*/; do
     name=$(basename "$skill_dir")
     target="$TARGET_DIR/$name"
