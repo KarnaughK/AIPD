@@ -14,14 +14,15 @@
 | 用户意图 / 关键词 | 层级判断 | 必读上下文 | 代码 / 局部入口 | 兜底搜索 |
 |---|---|---|---|---|
 | AIPD 方向 / 分层 / 项目认知 | L1 + L3 | `_adoc/L1-intent/intent.md`、`_adoc/index.md` | `src/core/overview.md` | `rg "L3|L4|L5|认知|上下文" src _adoc` |
-| 上下文解耦 / 黑箱上移 / 决策杠杆 / AI 友好代码组织 / 扁平化检索 / 记忆存取 / AIPD 核心哲学 / AIPDR | L3 + L5 | `_adoc/L3-core/index.md`、`src/core/overview.md` | `src/core/overview.md`、`src/core/case/overview.md` | `rg "上下文解耦|黑箱上移|决策杠杆|注意力|封装|扁平化检索|记忆|局部上下文|全局规则|黑箱|输入输出|Memory Retrieval" src _adoc` |
+| 上下文解耦 / 黑箱上移 / 决策杠杆 / AI 友好代码组织 / 提示词边界 / SOP 失效 / 扁平化检索 / 记忆存取 / AIPD 核心哲学 / AIPDR | L3 + L5 | `_adoc/L3-core/index.md`、`src/core/overview.md` | `src/core/overview.md`、`src/core/case/overview.md` | `rg "上下文解耦|黑箱上移|决策杠杆|注意力|封装|提示词|SOP|边界|潜意识|模型思维|扁平化检索|记忆|局部上下文|全局规则|黑箱|输入输出|Memory Retrieval" src _adoc` |
 | 初始化 / AGENTS.md / Agent Entry | L5 | `_adoc/L5-dev/index.md`、`src/core/agent-entry/template.md` | `src/skills/aipd2/SKILL.md` | `rg "agent-entry|AGENTS|初始化" src` |
 | 更新已有项目 AIPD 架构 / aipd update | L5 | `_adoc/context-map.md`、`src/core/adoc-structure.md` | `src/skills/aipd2-update/SKILL.md`、`src/core/agent-entry/template.md`、`src/core/adoc/templates/index.md` | `rg "aipd2-update|更新 AIPD|context-map|AGENTS" src _adoc` |
 | 上下文检索 / 大地图 / context-map | L3 + L5 | `_adoc/context-map.md`、`src/core/adoc/templates/context-map.md` | `src/skills/aipd2/SKILL.md`、`src/skills/aipd2-case-create/SKILL.md`、`src/skills/aipd2-learn/SKILL.md` | `rg "context-map|上下文检索|检索包|观察锚点" src _adoc AGENTS.md` |
 | case 创建 / 上下文索引 / step 拆分 | L4 + L5 + case | `_adoc/case/index.md`、`src/core/case/overview.md` | `src/skills/aipd2-case-create/SKILL.md`、`src/core/case/templates/case.md`、`src/core/case/templates/step.md` | `rg "case-create|上下文索引|step|候选" src _adoc/case` |
 | case 执行 / 分身 Agent / fork_context | L5 + case | `_adoc/L5-dev/index.md`、相关 case `case.md` | `src/skills/aipd2-case-run/SKILL.md`、`src/platforms/codex/core/agent-guide.md` | `rg "fork_context|分身|case-run|推荐 Agent" src _adoc/case` |
 | 自迭代 / learn / transcript / 观察锚点 | L5 + case | `src/skills/aipd2-learn/SKILL.md`、当前 case 的观察锚点 | `src/platforms/codex/` | `rg "观察锚点|transcript|回流|自迭代|learn" src _adoc` |
-| Vue 页面 / 组件 / AI 友好前端架构 | L5 + 局部 README | `_adoc/L5-dev/index.md`、`src/core/L5-dev/vue-architecture-diagram-guide.md` | `src/platforms/codex/agents/aipd-vue-architect.toml` | `rg "Vue|组件|README|aipd_vue_architect" src _adoc` |
+| Vue 页面 / 组件 / AI 友好前端架构 / 纯前端 case / 前端画图 / 一个文件一个 step | L5 + 局部 README | `_adoc/L5-dev/index.md`、`src/core/L5-dev/vue-case-create-guide.md`、`src/core/L5-dev/vue-architecture-diagram-guide.md`、`src/skills/aipd2-case-create/SKILL.md` | `src/platforms/codex/agents/aipd-vue-architect.toml`、`src/platforms/codex/agents/aipd-vue-provider.toml` | `rg "Vue|组件|README|aipd_vue_architect|aipd_vue_provider|纯前端|一个文件一个 step|useXxx" src _adoc` |
+| Vue useXxx / provide inject / 页面数据源 / API 字段对齐 / 兜底字段 | L5 + 局部 README | `_adoc/L5-dev/index.md`、`src/core/L5-dev/vue-provider-guide.md`、`src/skills/aipd2-case-create/SKILL.md` | `src/platforms/codex/agents/aipd-vue-provider.toml` | `rg "useXxx|provide|inject|provider|API|字段|兜底|aipd_vue_provider" src _adoc` |
 
 ## 核心概念入口
 
@@ -30,6 +31,7 @@
 | 项目认知 | ADOC / `_adoc` | `_adoc/index.md`、`src/core/adoc-structure.md` | 不等同于普通 README；它是 AI 长期上下文结构 |
 | 上下文解耦 | 任务上下文解耦 | `_adoc/L3-core/index.md`、`src/core/overview.md` | 不是否定知识库和上下文检索；它主要约束人与 AI 设计任务、拆 step 和写上下文索引时的目标 |
 | 黑箱上移 | 决策杠杆上移 | `_adoc/L3-core/index.md` | 不是传统封装的同义词；封装是构造黑箱的工程手段，黑箱上移是选择人类决策层级的认知策略 |
+| 提示词边界 | 边界护栏 / 反例锚点 / 输出验收 | `_adoc/L3-core/index.md` | 提示词不能重训模型或稳定改写模型潜意识；更适合提供短原点、硬边界、反例和验收口径 |
 | 扁平化检索 | Memory Retrieval / 大地图 + 细节 Map | `_adoc/L3-core/index.md`、`_adoc/context-map.md` | 不是取消分层维护；它要求 AI 高频读取路径尽量一跳命中，不依赖多层目录链 |
 | 上下文检索地图 | `context-map` | `_adoc/context-map.md`、`src/core/adoc/templates/context-map.md` | 不承载正文，不替代 L1-L5 |
 | 工程实现层 | L5 Dev | `_adoc/L5-dev/index.md`、`src/core/L5-dev/guide.md` | 不是页面代码细节全集 |

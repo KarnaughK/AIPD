@@ -79,9 +79,10 @@ Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git
 先读取 step 头部的 `推荐 Agent` 字段，它表示执行角色建议：
 
 - 如果声明了 `aipd_vue_architect`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_architect`。
+- 如果声明了 `aipd_vue_provider`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_provider`。
 - 如果声明了 `explorer`，用于调研、只读定位和资料整理。
 - 如果声明了 `worker`，用于普通开发、修复、脚本和文档修改。
-- 如果没有声明，则按 step 类型和上下文路径兜底判断：`research` 优先 `explorer`；Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织优先 `aipd_vue_architect`；其他开发任务使用 `worker`。
+- 如果没有声明，则按 step 类型和上下文路径兜底判断：`research` 优先 `explorer`；Vue `useXxx.ts/js`、provide / inject、页面级 API 数据源优先 `aipd_vue_provider`；Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织优先 `aipd_vue_architect`；其他开发任务使用 `worker`。
 
 默认使用带角色 Agent 基于 step 独立读取上下文执行，不默认 fork 主 Agent 全量上下文。只有当 step 强依赖主 Agent 当前尚未沉淀到 case / step / doc 的聊天判断时，才使用 `fork_context: true` 创建上下文分身。
 
