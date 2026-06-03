@@ -91,12 +91,16 @@ _adoc/case/c{X.Y}-{case-name}/
 - [ ] {验收标准 2}
 - [ ] {验收标准 3}
 
-## 8. 经验沉淀位置
+## 8. Weave 反向编织候选
 
-- `_adoc/L4-product/{module}/` - {需要沉淀的产品经验}
-- `_adoc/L5-dev/{module}/` - {需要沉淀的研发经验}
-- `doc/{result}.md` - {本 case 内部资料}
-- 相关 step 执行记录 - {执行中产生的局部经验}
+> 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd2-weave` 先给回写方案，用户确认后再写入。
+
+- `_adoc/L3-core/{topic}.md` - {可能需要沉淀的核心概念、标准名、对象关系或常见误解}
+- `_adoc/L4-product/{module}/` - {可能需要沉淀的产品功能边界、业务规则或用户可见行为}
+- `_adoc/L5-dev/{module}/` - {可能需要沉淀的工程规则、跨模块实现逻辑或调试经验}
+- `src/{feature-or-page}/README.md` - {可能需要沉淀的局部代码入口或修改注意事项}
+- `_adoc/map.md` - {可能需要新增的高频检索入口}
+- 相关 step 执行记录 - {只对本 case 有意义的一次性过程}
 
 ## 9. 自迭代观察锚点
 

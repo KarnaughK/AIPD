@@ -1,7 +1,7 @@
 ---
 name: aipd2-case-archive
 description: >
-  归档 AIPD case。通过 git diff 识别改动，更新 _adoc/ 文档，移动 Case 到 archive/，合并分支到 main。
+  归档 AIPD case。通过 git diff 识别改动，整理 Weave Candidate，更新 case 索引，移动 Case 到 archive/，合并分支到 main。
   关键词：case、归档、archive、合并分支
 allowed-tools:
   - Read
@@ -35,7 +35,9 @@ inject-from-core:
 
 ### 4.2 等待归档完成
 
-分身 Agent 会：使用 `git diff` 查看改动 → 更新相关 `_adoc/` 文档 → 移动 Case 到 `archive/` → 返回归档完成。
+分身 Agent 会：使用 `git diff` 查看改动 → 整理 Weave Candidate → 更新 case 索引 → 移动 Case 到 `archive/` → 返回归档完成。
+
+归档前后如果发现 case / step 中有稳定知识尚未沉淀，应先整理 Weave Candidate，并建议运行 `/aipd2-weave` 判断回写到 L3 / L4 / L5 / 局部 README / map。`case-archive` 不内置完整反向编织规则，避免和 `aipd2-weave` 形成两套回写判断。
 
 ### 4.3 提交归档更改
 

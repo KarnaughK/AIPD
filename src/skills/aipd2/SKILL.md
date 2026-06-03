@@ -97,6 +97,7 @@ $aipd2 更新 AIPD
 $aipd2 case
 $aipd2 归档
 $aipd2 总结经验
+$aipd2 记一下刚才这段
 ```
 
 此模式保留项目状态入口能力，但状态扫描细节由分身 Agent 读取 `@references/scan-agent.md` 执行，主 Agent 不直接加载完整扫描细节。
@@ -207,7 +208,7 @@ mkdir -p _adoc/case/archive _adoc/okr
 4. 如果目标文件已有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换这两个标记之间的 AIPD 区块。
 5. 如果目标文件存在但没有 AIPD 标记，把 AIPD 区块追加到文件末尾，不覆盖用户原有内容。
 
-Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-case-create`、`/aipd2-case-run`、`/aipd2-learn` 等具体流程 skill。
+Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-case-create`、`/aipd2-case-run`、`/aipd2-weave`、`/aipd2-learn` 等具体流程 skill。
 
 **有 `_adoc/` 但没有 intent.md** → 引导用户定义方向（同上）。
 
@@ -219,7 +220,9 @@ Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-case-create`、`/
 
 **case 全部完成待归档** → 推荐 `/aipd2-case-archive`。
 
-**用户想总结经验、生成经验回流包或回写 AIPD2 框架** → 推荐 `/aipd2-learn`。
+**用户想把当前项目里的讨论、step 结果、case 结论、diff、错误日志或外部资料沉淀回 `_adoc/`、局部 README 或 map** → 推荐 `/aipd2-weave`。
+
+**用户想采集会话定位信息，或诊断 AIPD2 框架自身的 skill、模板、Agent 行为规则** → 推荐 `/aipd2-learn`。
 
 ## 设计原则
 

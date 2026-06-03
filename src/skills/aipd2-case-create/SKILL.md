@@ -94,7 +94,7 @@ inject-from-core:
 - Vue 前端实现型 case：先读取 `@references/L5-dev/vue-case-create-guide.md`；需要创建、修改、评审或预览 Mermaid / `.mmd` 架构图时，使用 `aipd-mermaid`，由它按领域加载 Vue 架构图和 provider 规范。
 - React 前端实现型 case：可以参考前端流程，但不要照搬 Vue 组件、provider、SFC、`aipd_vue_architect` 等细节；按 React 项目结构重新判断组件、hooks、路由、状态和测试入口。
 - 后端实现型 case：重点通常变成接口契约、领域模型、数据表、事务、权限、队列、幂等、日志、测试和部署；不要套用前端组件图和目录落位规则。
-- 目标型 / 认知型 case：重点是问题定义、资料来源、判断框架、观察锚点和沉淀位置；step 未必对应代码修改，也未必需要架构图落到代码目录。
+- 目标型 / 认知型 case：重点是问题定义、资料来源、判断框架、观察锚点和 Weave 候选位置；step 未必对应代码修改，也未必需要架构图落到代码目录。
 
 相信大模型的判断能力，但必须把判断写进上下文索引：项目类型、case 类型、为什么选择这条流程、哪些近期经验只作为参考不能直接套用。
 
@@ -167,8 +167,9 @@ mkdir -p _adoc/case/c{X.Y}-{名称}/doc
 - 本次边界：明确做什么和不做什么
 - steps 列表：只列已确认要执行的 step；框架搭建型 case 可以只有一个上下文整理 step，甚至暂时没有可执行 step
 - 后续候选事项：未确认的调整点只记录为候选，不创建 step 文件
-- 验收标准和经验沉淀位置
+- 验收标准和 Weave 反向编织候选位置
 - 自迭代观察锚点：后续审计 transcript / session 时，检查 Agent 是否按本 case 的上下文索引和 AIPD 检索流程工作
+- Weave 候选位置：只记录可能需要回写到 L3 / L4 / L5 / 局部 README / map / case 的方向；真正回写由 `aipd2-weave` 确认后执行
 
 已确认的步骤文件写入 `steps/`，格式参考 `@references/case/templates/step.md`。
 

@@ -30,7 +30,8 @@ inject-from-core:
 它不是初始化入口，也不是经验回流入口：
 
 - 初始化新项目用 `aipd2`。
-- 从会话和 transcript 提炼框架经验用 `aipd2-learn`。
+- 当前项目 ADOC 经验回写用 `aipd2-weave`。
+- 从会话和 transcript 提炼 AIPD2 框架经验用 `aipd2-learn`。
 - 已有项目同步 AIPD2 新结构、新模板、新 map 规则，用 `aipd2-update`。
 
 ## 职责边界
@@ -45,7 +46,7 @@ inject-from-core:
 
 - `AGENTS.md`：AIPD 项目入口区块是否包含最新记忆读取、L3/L5 边界和恢复链路。
 - `_adoc/index.md`：是否声明 `_adoc/map.md`、L3 核心概念、L4 功能线、L5 工程实现层和读取原则。
-- `_adoc/map.md`：是否存在，是否包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点。
+- `_adoc/map.md`：是否存在，是否包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点和 Weave 反向编织锚点。
 - `_adoc/context-map.md`：旧项目兼容入口；存在时检查是否需要迁移或合并到 `_adoc/map.md`，不默认删除。
 - `_adoc/L3-core/map.md`：是否具备核心概念图骨架；不存在时只列建议，不默认凭空生成业务概念。
 - `_adoc/L4-product/map.md`：是否具备产品功能线总图；不存在时只列建议。
@@ -89,15 +90,16 @@ find _adoc -maxdepth 3 -type f | sort
 - L5 被定义为产品功能到代码实现之间的工程实现层，负责跨模块、跨端、跨页面的稳定实现规则。
 - 明确页面、弹窗、组件内部细节放就近 `README.md`，不塞回 L5。
 - case 恢复链路包含 case / step 文件作为事实源。
+- 执行概念或项目入口中包含 Weave：讨论、step 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd2-weave` 回写项目 ADOC、局部 README、map 或 case。
 
 ### 建议项
 
-- `_adoc/map.md` 包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点。
+- `_adoc/map.md` 包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点和 Weave 反向编织锚点。
 - `_adoc/L3-core/map.md` 有核心概念图骨架。
 - `_adoc/L4-product/map.md` 有产品功能线总图骨架。
 - 用户明确指定的 L4 功能线有 `_adoc/L4-product/{feature}/map.md`，并能记录页面、接口、数据对象、权限码、相关 L3/L5。
 - `_adoc/L5-dev/index.md` 有跨模块工程规则索引。
-- 进行中 case 有“层级判断、必读文档、代码入口、兜底搜索、风险边界、自迭代观察锚点”。
+- 进行中 case 有“层级判断、必读文档、代码入口、兜底搜索、风险边界、自迭代观察锚点、Weave 候选位置”。
 
 ### 不自动改项
 
@@ -209,6 +211,7 @@ flowchart TD
 - `AGENTS.md`：{缺什么；为什么要改；计划怎么合并}
 - `_adoc/index.md`：{缺什么；为什么要改；计划怎么合并}
 - `_adoc/map.md`：{不存在 / 缺章节 / 需要补路由 / 是否需要从 context-map 迁移}
+- `AGENTS.md / _adoc/index.md / _adoc/map.md`：{是否缺 Weave 概念、反向编织锚点或 `/aipd2-weave` 路由}
 
 建议更新：
 - `_adoc/L3-core/map.md`：{建议补核心概念图骨架；如果用户指定概念，可先列候选，不擅自定稿}
@@ -242,6 +245,7 @@ flowchart TD
 3. `_adoc/map.md`
    - 不存在时使用 `@references/adoc/templates/map.md` 创建。
    - 已存在时只补缺失的标准章节，不删除用户已有路由。
+   - 如果缺少 Weave 反向编织锚点，只补锚点和 `/aipd2-weave` 路由，不写具体业务经验。
    - 如果只存在 `_adoc/context-map.md`，优先建议创建 `_adoc/map.md` 并迁移/引用其中稳定入口；不默认删除 `_adoc/context-map.md`。
 
 4. `_adoc/L3-core/map.md` / `_adoc/L4-product/map.md` / `_adoc/L5-dev/map.md`
@@ -255,7 +259,7 @@ flowchart TD
 
 6. 进行中 case
    - 默认不批量修改历史 case。
-   - 只在用户确认时，为当前进行中 case 补上下文索引缺口或自迭代观察锚点。
+   - 只在用户确认时，为当前进行中 case 补上下文索引缺口、自迭代观察锚点或 Weave 候选位置。
 
 ## 第五步：完成后说明
 
@@ -263,7 +267,7 @@ flowchart TD
 
 - 修改了哪些文件。
 - 哪些建议没有执行，为什么。
-- 是否需要重新运行 `aipd2-case-create` 或 `aipd2-learn`。
+- 是否需要重新运行 `aipd2-case-create`、`aipd2-weave` 或 `aipd2-learn`。
 - 是否建议提交当前改动。
 
 不要自动提交。
