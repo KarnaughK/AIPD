@@ -49,7 +49,7 @@ _adoc/case/
 1. 创建 Case（在 main 分支）
 2. 提交 Case 到 main（锁定版本号）
 3. 创建开发分支
-4. 读取 `_adoc/map.md` 和 case 上下文索引，加载最相关上下文；旧项目兼容 `_adoc/context-map.md`
+4. 读取 `_adoc/map.md` 和 case 上下文索引，加载最相关上下文
 5. 有已确认的未完成 Step → 派发给分身 Agent 执行
 6. 没有 Step → 基于 case 上下文继续讨论或补充 Step
 7. 所有 Step 完成 → 用户验收

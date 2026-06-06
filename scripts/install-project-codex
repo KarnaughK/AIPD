@@ -27,7 +27,7 @@ for legacy in aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-lea
     fi
 done
 
-for legacy in frontend-architect aipd-frontend-architect; do
+for legacy in frontend-architect aipd-frontend-architect aipd-vue-architect aipd-vue-provider; do
     target="$AGENTS_TARGET_DIR/$legacy.toml"
     if [ -e "$target" ] || [ -L "$target" ]; then
         rm -rf "$target"

@@ -23,7 +23,8 @@ _adoc/case/c{X.Y}-{case-name}/
 
 ### 层级判断
 
-- **L3 Core**：{是否涉及核心概念 / 领域语言 / 核心对象关系}
+- **L2 Research**：{是否涉及用户 / 场景 / 需求 / 痛点 / 竞品 / 行业或玩法范式 / 调研资料}
+- **L3 Core**：{是否涉及核心概念 / 领域语言 / 核心对象关系 / 项目成立模型}
 - **L4 Product**：{是否涉及产品功能 / 业务边界 / 交互规则}
 - **L5 Dev**：{是否涉及跨模块工程实现规则 / 前后端约定 / 调试 SOP}
 - **局部 README**：{是否涉及页面 / 弹窗 / 组件内部实现地图}
@@ -33,6 +34,7 @@ _adoc/case/c{X.Y}-{case-name}/
 
 - `_adoc/map.md` - {本次任务如何命中项目记忆地图；若缺失，说明兜底方式}
 - `_adoc/L1-intent/intent.md` - {为什么需要读取}
+- `_adoc/L2-research/index.md` - {为什么需要读取}
 - `_adoc/L3-core/index.md` - {为什么需要读取}
 - `_adoc/L4-product/{module}/index.md` - {为什么需要读取}
 - `_adoc/L5-dev/{module}/README.md` - {为什么需要读取}
@@ -95,7 +97,8 @@ _adoc/case/c{X.Y}-{case-name}/
 
 > 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd2-weave` 先给回写方案，用户确认后再写入。
 
-- `_adoc/L3-core/{topic}.md` - {可能需要沉淀的核心概念、标准名、对象关系或常见误解}
+- `_adoc/L2-research/{topic}.md` - {可能需要沉淀的外部世界资料、竞品、场景、痛点或调研结论}
+- `_adoc/L3-core/{topic}.md` - {可能需要沉淀的核心概念、标准名、对象关系、项目成立模型或常见误解}
 - `_adoc/L4-product/{module}/` - {可能需要沉淀的产品功能边界、业务规则或用户可见行为}
 - `_adoc/L5-dev/{module}/` - {可能需要沉淀的工程规则、跨模块实现逻辑或调试经验}
 - `src/{feature-or-page}/README.md` - {可能需要沉淀的局部代码入口或修改注意事项}

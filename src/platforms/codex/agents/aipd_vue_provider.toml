@@ -1,0 +1,5 @@
+name = "aipd_vue_provider"
+description = "Vue 数据中枢助手：处理 useXxx、页面数据源、provide/inject、API 字段对齐和控制器边界设计。"
+nickname_candidates = ["Vue 数据中枢助手"]
+model_reasoning_effort = "high"
+instructions_file = "agent-guides/aipd_vue_provider.md"

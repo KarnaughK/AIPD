@@ -27,7 +27,7 @@
 - `src/skills/aipd2-case-create/SKILL.md` - 创建 case 时推荐 Agent 的写入规则
 - `src/skills/aipd2-case-run/SKILL.md` - 执行 case 时推荐 Agent 的选择规则
 - `src/platforms/codex/core/agent-guide.md` - Codex 子 Agent 调度策略
-- `src/platforms/codex/agents/aipd-vue-architect.toml` - Vue custom agent 源模板
+- `src/platforms/codex/agents/aipd_vue_architect.toml` - Vue custom agent 源模板
 - `scripts/build` - Codex agent 构建输出
 - `scripts/install-codex` - 用户级 Codex 安装
 - `scripts/dev-codex` - Codex 开发模式安装
@@ -70,8 +70,8 @@
 - [x] 当前有效模板 / 指南中的 Codex 默认策略已统一为不继承 Main Agent 上下文。
 - [x] step 模板包含 `推荐 Agent` 字段。
 - [x] case-run 说明优先读取 `推荐 Agent`，再兜底判断。
-- [x] `./scripts/build codex` 生成 `dist/codex/agents/aipd-vue-architect.toml`。
-- [x] `./scripts/install-codex` 安装 `~/.codex/agents/aipd-vue-architect.toml`。
+- [x] `./scripts/build codex` 生成 `dist/codex/agents/aipd_vue_architect.toml`。
+- [x] `./scripts/install-codex` 安装 `~/.codex/agents/aipd_vue_architect.toml`。
 
 ## 7. 经验沉淀位置
 

@@ -159,7 +159,7 @@ find _adoc/case/{case目录}/steps -type f
 先读取可用的观察锚点：
 
 - 当前 case 的 `case.md` 中是否有“自迭代观察锚点”。
-- `_adoc/map.md` 中是否有“自迭代观察锚点”；旧项目兼容检查 `_adoc/context-map.md`。
+- `_adoc/map.md` 中是否有“自迭代观察锚点”。
 - `AGENTS.md` / `_adoc/index.md` 是否声明上下文检索链路。
 
 重点找这些信号：

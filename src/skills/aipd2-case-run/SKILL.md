@@ -15,6 +15,7 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - agent-guide.md
+  - agent-guides/*
 ---
 
 # AIPD2 Case Run
@@ -76,15 +77,26 @@ Case: c{X.Y}-{名称}
 
 Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git、构建、测试、批量验证、跨文件 diff、调研和长日志分析都交给执行 Agent。Main Agent 只负责入口读取、状态判断、派发、审查摘要、验收和状态写回。
 
-先读取 step 头部的 `推荐 Agent` 字段，它表示执行角色建议：
+先读取 step 头部的 `推荐 Agent` 字段。它本质上是**执行指引建议**，不是对平台 custom agent 能力的硬依赖：
 
-- 如果声明了 `aipd_vue_architect`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_architect`。
-- 如果声明了 `aipd_vue_provider`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_provider`。
+- 如果声明了 `aipd_vue_architect`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_architect`；如果不可用，派发给 `worker`，并要求它先读取 `@references/agent-guides/aipd_vue_architect.md` 作为执行指引。
+- 如果声明了 `aipd_vue_provider`，并且当前 Codex 环境可用该 custom agent，优先派发给 `aipd_vue_provider`；如果不可用，派发给 `worker`，并要求它先读取 `@references/agent-guides/aipd_vue_provider.md` 作为执行指引。
 - 如果声明了 `explorer`，用于调研、只读定位和资料整理。
 - 如果声明了 `worker`，用于普通开发、修复、脚本和文档修改。
 - 如果没有声明，则按 step 类型和上下文路径兜底判断：`research` 优先 `explorer`；Vue `useXxx.ts/js`、provide / inject、页面级 API 数据源优先 `aipd_vue_provider`；Vue 页面、Vue 组件、HTML/CSS、组件通信、前端状态组织优先 `aipd_vue_architect`；其他开发任务使用 `worker`。
 
+平台不支持 custom agent、custom agent 注册失败或 `agent_type` 被工具层拒绝时，不应阻塞 case-run。此时把推荐 Agent 降级为“必须读取的领域指引”，并在派发 prompt 中明确：
+
+```text
+当前平台未确认可用 {推荐 Agent} custom agent。本 step 使用 worker 执行，但必须先读取执行指引：
+@references/agent-guides/{推荐 Agent}.md
+```
+
+注意平台边界：如果 `agent_type` 在创建子 Agent 前就被工具层拒绝，子 Agent 不会被创建，也看不到派发 prompt；这种情况必须由 Main Agent 改派 `worker` 并注入执行指引。如果子 Agent 已创建，但角色身份没有生效或不确定是否生效，派发 prompt 必须要求它读取对应执行指引完成角色自检。
+
 默认使用带角色 Agent 基于 step 独立读取上下文执行，不默认 fork 主 Agent 全量上下文。只有当 step 强依赖主 Agent 当前尚未沉淀到 case / step / doc 的聊天判断时，才使用 `fork_context: true` 创建上下文分身。
+
+派发 prompt 要保持短，只传文件入口，不展开长任务正文。大型任务、超长任务、跨模块任务必须先进入 case / step 文件，再把 step 文件路径交给子 Agent。不要把 step 的任务清单、上下文正文、长讨论结论复制到派发 prompt 里；否则会冲散“先读规范、再读任务”的注意力顺序。
 
 #### 角色 Agent Prompt 模板
 
@@ -93,20 +105,27 @@ Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git
 ```
 你是 AIPD2 {推荐 Agent} 执行 Agent。
 
+角色自检：
+- 如果你已经具备 {推荐 Agent} 的 custom agent 身份，仍然要读取下方“执行指引”，用它校准本 step 的工作方式。
+- 如果你没有收到、无法确认或怀疑未加载 {推荐 Agent} 身份，必须把“执行指引”视为本次任务的角色来源。
+
 你不是唯一在代码库中工作的执行者。不要回滚别人已经做出的改动；如果遇到已有改动，基于现状继续完成本 step。
 
 Step 文件：{步骤文件绝对路径}
 Case 文件：{case.md 绝对路径}
 推荐 Agent：{推荐 Agent 或兜底选择}
+执行指引：{如果推荐 Agent 对应指引存在，填写 @references/agent-guides/{推荐 Agent}.md；否则填写“无”}
 
 你的任务：
-1. 读取步骤文件
-2. 读取 Case 文件
-3. 按 step 中列出的上下文文档逐一读取
-4. 遵守 case 边界和 step 任务清单执行
-5. 按 step 验收标准自检
+1. 如果执行指引不是“无”，先读取执行指引，并把它作为本 step 的领域工作方式
+2. 读取步骤文件
+3. 读取 Case 文件
+4. 按 step 中列出的上下文文档逐一读取
+5. 遵守 case 边界和 step 任务清单执行
+6. 按 step 验收标准自检
 
 约束：
+- 不要要求调用方在 prompt 里展开任务正文；任务正文以 Step 文件为准
 - 只做步骤文件中列出的任务
 - 不做额外优化、重构或顺手修复
 - 不创建步骤文件未要求的文件
@@ -125,11 +144,17 @@ Case 文件：{case.md 绝对路径}
 Step 文件：{步骤文件绝对路径}
 Case 文件：{case.md 绝对路径}
 推荐 Agent：{推荐 Agent 或兜底选择}
+执行指引：{如果推荐 Agent 对应指引存在，填写 @references/agent-guides/{推荐 Agent}.md；否则填写“无”}
 
 你的任务：
-1. 读取步骤文件和 Case 文件
-2. 读取 step 中列出的上下文文档
-3. 结合 Main Agent 当前未沉淀的聊天判断完成当前 step
+1. 如果执行指引不是“无”，先读取执行指引
+2. 读取步骤文件和 Case 文件
+3. 读取 step 中列出的上下文文档
+4. 结合 Main Agent 当前未沉淀的必要判断完成当前 step
+
+约束：
+- 派发 prompt 只提供文件入口和少量必要判断；任务正文以 Step 文件为准
+- 如果缺少必要判断，先回流缺口，不要靠猜测补全长任务
 
 完成后只返回结论、依据、风险、建议、改动文件和验证结果；不要返回完整搜索输出、长日志、长文件正文或完整 diff。
 ```

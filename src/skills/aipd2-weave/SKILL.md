@@ -16,7 +16,6 @@ inject-from-core:
   - overview.md
   - adoc-structure.md
   - adoc/templates/map.md
-  - adoc/templates/context-map.md
   - case/overview.md
 ---
 
@@ -109,7 +108,7 @@ cat _adoc/index.md
 再读取项目地图：
 
 ```bash
-cat _adoc/map.md 2>/dev/null || cat _adoc/context-map.md 2>/dev/null
+cat _adoc/map.md 2>/dev/null
 ```
 
 地图只负责引路。后续按候选信息读取相关 L3 / L4 / L5 / 局部 README，不全量扫描 `_adoc/`。
@@ -189,7 +188,7 @@ Agent 内部可以用来源分类辅助判断：
 | 产品功能、功能边界、业务规则、用户可见行为 | `_adoc/L4-product/` |
 | 权限、路由、插件、接口约定、跨模块实现逻辑、调试经验 | `_adoc/L5-dev/` |
 | 页面、弹窗、组件、模块内部的实现入口和修改注意事项 | 代码目录就近 `README.md` |
-| 用户高频说法、业务词、工程词、容易迷路的入口 | `_adoc/map.md` 或 `_adoc/context-map.md` |
+| 用户高频说法、业务词、工程词、容易迷路的入口 | `_adoc/map.md` |
 | 一次性执行过程、验收记录、临时决策 | 当前 case / step |
 | AIPD2 skill、模板、分层、Agent 行为规则 | `aipd2-learn` 生成框架回流方案，回 AIPD2 源项目处理 |
 

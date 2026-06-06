@@ -16,9 +16,10 @@ inject-from-core:
   - overview.md
   - adoc-structure.md
   - agent-entry/template.md
+  - agent-entry/interaction-style.md
   - adoc/templates/index.md
+  - adoc/templates/inbox.md
   - adoc/templates/map.md
-  - adoc/templates/context-map.md
   - case/templates/index.md
   - okr/templates/index.md
   - L1-intent/*
@@ -31,6 +32,8 @@ inject-from-core:
 ## 入口判断
 
 触发后先判断用户是否带着明确任务。
+
+如果用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd2-inbox`。这是独立 capture 入口，只负责把临时信息写入 `_adoc/inbox.md`，不要把这套判断扩散到 case-create、weave、learn 等其他 skill。
 
 ### 进入 ADOC 轻量认知模式
 
@@ -48,7 +51,7 @@ $aipd2 按项目规范实现一个新表单
 
 1. 确认 `_adoc/` 是否存在。
 2. 读取 `_adoc/index.md`，判断当前项目的认知结构和裁剪模式。
-3. 如果存在 `_adoc/map.md`，优先读取它，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / case；旧项目兼容读取 `_adoc/context-map.md`。
+3. 读取 `_adoc/map.md`，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / case。
 4. 根据检索结果选择入口；日常前端开发不默认只读 L5，必须判断是否还涉及 L3 核心概念、L4 产品功能和局部 README。
 5. 按任务继续下钻，只读相关文档，不全量读取 `_adoc/`。
 6. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
@@ -57,7 +60,7 @@ $aipd2 按项目规范实现一个新表单
 
 | 任务类型 | 优先读取 |
 |---|---|
-| 任务入口不清楚 / 用户只给一句自然语言 | `_adoc/map.md`，旧项目兼容 `_adoc/context-map.md`；不存在则读 `_adoc/index.md` 后用 `rg` 搜索 README、核心词、功能线名、页面名、接口名、权限码 |
+| 任务入口不清楚 / 用户只给一句自然语言 | `_adoc/map.md`；不存在则读 `_adoc/index.md` 后用 `rg` 搜索 README、核心词、功能线名、页面名、接口名、权限码 |
 | 核心概念 / 领域语言 / 黑话 / 名词解释 | `_adoc/L3-core/index.md` |
 | README / map / 逻辑地图 | `_adoc/L5-dev/dev-conventions/readme-guide.md` |
 | 表单 / 字段 / 校验 / 提交映射 | `_adoc/L5-dev/dev-conventions/form-guide.md` |
@@ -119,7 +122,7 @@ $aipd2 看一下合同创建页面
 ### 读取策略
 
 - 先读 `_adoc/index.md`。
-- 如果存在 `_adoc/map.md`，第二步读取它；旧项目兼容 `_adoc/context-map.md`；没有时才按 `_adoc/index.md` 的任务入口和 `rg` 兜底。
+- 第二步读取 `_adoc/map.md`；没有时才按 `_adoc/index.md` 的任务入口和 `rg` 兜底。
 - 按检索结果读取 L3 / L4 / L5 / 局部 README。前端任务不等于只读 L5；涉及业务词先读 L3，涉及功能边界先读 L4，涉及跨模块工程实现先读 L5，涉及页面内部细节先读就近 README。
 - skill 不复制 `_adoc` 正文，不把项目规范写死在 skill 里。
 - 读完后直接进入用户任务，不输出大段 AIPD 解释。
@@ -175,6 +178,7 @@ mkdir -p _adoc/case/archive _adoc/okr
 创建默认文档壳子：
 
 - 将 `@references/adoc/templates/index.md` 写入 `_adoc/index.md`
+- 将 `@references/adoc/templates/inbox.md` 写入 `_adoc/inbox.md`
 - 将 `@references/adoc/templates/map.md` 写入 `_adoc/map.md`
 - 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
 - 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
@@ -208,7 +212,45 @@ mkdir -p _adoc/case/archive _adoc/okr
 4. 如果目标文件已有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换这两个标记之间的 AIPD 区块。
 5. 如果目标文件存在但没有 AIPD 标记，把 AIPD 区块追加到文件末尾，不覆盖用户原有内容。
 
-Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-case-create`、`/aipd2-case-run`、`/aipd2-weave`、`/aipd2-learn` 等具体流程 skill。
+Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-inbox`、`/aipd2-case-create`、`/aipd2-case-run`、`/aipd2-weave`、`/aipd2-learn` 等具体流程 skill。
+
+#### 可选安装 Interaction Style
+
+Agent Entry 安装完成后，询问用户 Agent MD 模板等级。初始化默认推荐等级 1。
+
+等级说明：
+
+| 等级 | 名称 | 内容 |
+|---|---|---|
+| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` / `CLAUDE.md`；不推荐，除非用户明确不想要项目记忆入口 |
+| 1 | AIPD Project Entry | 写入 AIPD 项目入口区块；默认推荐 |
+| 2 | AIPD Project Entry + Interaction Style | 写入 AIPD 项目入口区块，并额外写入短步深入型交互风格 |
+
+Interaction Style 是交互风格，不是 AIPD 项目认知。它会影响 Agent 的回复结构、讨论 / 执行切换方式和长短答偏好，因此必须由用户明确同意后再写入。
+
+建议询问：
+
+```text
+Agent MD 使用哪个模板等级？
+0 不修改 Agent MD
+1 写入 AIPD Project Entry（推荐）
+2 写入 AIPD Project Entry + 短步深入型交互风格
+```
+
+写入规则：
+
+1. 用户选择等级 0 时，不写入 `AGENTS.md` / `CLAUDE.md`。
+2. 用户选择等级 1 时，只按上文规则写入 AIPD Project Entry。
+3. 用户选择等级 2 时，先写入 AIPD Project Entry，再读取 `@references/agent-entry/interaction-style.md`。
+4. Interaction Style 用独立标记包裹内容：
+   ```md
+   <!-- AIPD-INTERACTION-STYLE:START -->
+   {interaction-style}
+   <!-- AIPD-INTERACTION-STYLE:END -->
+   ```
+5. 如果目标文件已有该标记区块，只替换这两个标记之间的内容。
+6. 如果目标文件没有该标记区块，把区块追加到文件末尾，不改动 AIPD 区块和用户原有内容。
+7. 如果用户没有明确选择等级，默认按等级 1 继续，并说明 Interaction Style 未写入。
 
 **有 `_adoc/` 但没有 intent.md** → 引导用户定义方向（同上）。
 

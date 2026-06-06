@@ -16,6 +16,7 @@
 ### 项目认知
 
 - `_adoc/index.md` - AIPD2 项目认知入口。
+- `_adoc/map.md` - AIPD2 项目记忆地图，用于路由分身 Agent、角色 Agent、case-run 和 L5 工程规则。
 - `_adoc/L1-intent/intent.md` - AIPD2 当前方向和 Codex 优先取舍。
 - `_adoc/L5-dev/index.md` - 当前分身 Agent 与 case-run 研发约束。
 - `_adoc/case/c0.2-subagent-origin-model/case.md` - 分身 Agent / 克隆体模型的上一轮结论。
@@ -25,7 +26,7 @@
 - `src/core/agent-entry/template.md` - Agent Entry 中分身 Agent 的源头认知。
 - `src/core/agent-guide.md` - 平台无关多 Agent 协作说明。
 - `src/platforms/codex/core/agent-guide.md` - Codex 分身 Agent、角色 Agent、fork 策略的主要说明。
-- `src/platforms/codex/agents/aipd-vue-architect.toml` - custom agent 角色模板示例。
+- `src/platforms/codex/agents/aipd_vue_architect.toml` - custom agent 角色模板示例。
 - `src/skills/aipd2-case-run/SKILL.md` - case-run 当前派发 step 的规则。
 
 ## 3. 本次边界
@@ -64,14 +65,27 @@
 - [ ] 明确性能和上下文成本取舍，不把“开分身”写成无脑默认。
 - [ ] 如需改文档，更新位置和规则清楚，不推翻 c0.2 的核心认知。
 
-## 7. 经验沉淀位置
+## 7. Weave 反向编织候选
+
+> 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd2-weave` 先给回写方案，用户确认后再写入。
 
 - `_adoc/L5-dev/index.md` - Codex 分身 Agent 当前策略。
 - `src/platforms/codex/core/agent-guide.md` - 具体调度策略。
 - `src/skills/aipd2-case-run/SKILL.md` - case-run step 派发规则。
 - `src/core/agent-entry/template.md` - 只沉淀源头认知，不写过多场景状态机。
+- `_adoc/map.md` - 如果形成高频检索入口，应补充分身 Agent / 角色 Agent / Main Agent 直接执行的路由。
 
-## 8. 归档状态
+## 8. 自迭代观察锚点
+
+> 后续用 `aipd2-learn` 审计 transcript / session / step 记录时，检查 Agent 是否按这些锚点执行。锚点用于判断 AIPD SOP 是否生效，不只依赖用户反复纠正。
+
+- [ ] Agent 是否读取 `_adoc/map.md`，或说明其缺失并使用 `rg` / README 兜底。
+- [ ] Agent 是否读取本 case 上下文索引中的 L3 / L5 / 历史 case。
+- [ ] 讨论分身 Agent 时，是否区分 Main Agent 直接执行、fork 分身 Agent、带角色 Agent 基于 step 执行。
+- [ ] 讨论性能时，是否明确上下文成本、创建等待、显式上下文完备度和主线保护之间的取舍。
+- [ ] 如果修改 case-run 或 Agent Entry，是否避免推翻 c0.2 的克隆体核心认知。
+
+## 9. 归档状态
 
 - **状态**：执行中
 - **创建时间**：2026-05-12

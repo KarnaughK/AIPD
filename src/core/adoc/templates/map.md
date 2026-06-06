@@ -18,12 +18,14 @@
 |---|---|---|---|---|---|
 | {示例：合同 / 产品 / 任务 / 交付记录} | {核心概念或功能线} | L3 + L4 | `_adoc/L3-core/map.md`、`_adoc/L4-product/{feature}/map.md` | 相关页面或模块 README | `rg "合同|产品|任务|交付"` |
 | {示例：权限 / 菜单 / 按钮显隐} | {工程规则} | L5 + 局部 README | `_adoc/L5-dev/{rule}/map.md` | 目标页面 README、权限工具函数 | `rg "permission|perms|auth|hasPermi"` |
+| inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `aipd2-inbox` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc` |
 
 ## L3 核心概念总表
 
 | 用户说法 / 黑话 | 标准概念 | 概念 map | 相关 L4 功能线 | 常见误解 |
 |---|---|---|---|---|
 | {别名} | {概念名} | `_adoc/L3-core/{concept}/map.md` | `_adoc/L4-product/{feature}/map.md` | {不要混用的词} |
+| Inbox | 临时收件箱 / capture | `_adoc/inbox.md` | aipd2-inbox | 不是待办、不是候选 case、不是稳定认知；只接住未整理信息 |
 
 ## L4 产品功能线总表
 

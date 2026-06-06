@@ -51,17 +51,57 @@ build_platform() {
         echo "  完成 → $dest"
     done
 
-    rm -rf "$agents_dist_dir"
-    if [ -d "$agents_src_dir" ]; then
-        mkdir -p "$agents_dist_dir"
-        cp -r "$agents_src_dir"/* "$agents_dist_dir/"
-        echo "[$platform] Agent 模板完成 → $agents_dist_dir"
-    fi
+    build_platform_agents "$agents_src_dir" "$agents_dist_dir" "$SRC_DIR/core"
 
     echo ""
     echo "[$platform] 构建完成。产物在 $dist_dir/"
     echo "共 $(ls -d "$dist_dir"/*/ 2>/dev/null | wc -l | xargs) 个 skill"
     echo ""
+}
+
+build_platform_agents() {
+    local agents_src_dir="$1"
+    local agents_dist_dir="$2"
+    local common_core_dir="$3"
+
+    rm -rf "$agents_dist_dir"
+    if [ ! -d "$agents_src_dir" ]; then
+        return
+    fi
+
+    mkdir -p "$agents_dist_dir"
+
+    for agent_file in "$agents_src_dir"/*.toml; do
+        [ -e "$agent_file" ] || continue
+
+        local name
+        local dest
+        local instructions_file
+        local instructions_path
+        name=$(basename "$agent_file")
+        dest="$agents_dist_dir/$name"
+        instructions_file=$(sed -n 's/^instructions_file[[:space:]]*=[[:space:]]*"\(.*\)"[[:space:]]*$/\1/p' "$agent_file" | head -1)
+
+        if [ -z "$instructions_file" ]; then
+            cp "$agent_file" "$dest"
+            continue
+        fi
+
+        instructions_path="$common_core_dir/$instructions_file"
+        if [ ! -f "$instructions_path" ]; then
+            echo "缺少 Agent 指引源文件: $instructions_path"
+            exit 1
+        fi
+
+        grep -v '^instructions_file[[:space:]]*=' "$agent_file" > "$dest"
+        {
+            echo 'developer_instructions = """'
+            cat "$instructions_path"
+            echo '"""'
+        } >> "$dest"
+    done
+
+    echo "[$platform] Agent 模板完成 → $agents_dist_dir"
 }
 
 inject_core_path() {

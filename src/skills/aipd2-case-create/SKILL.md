@@ -15,8 +15,10 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - case/overview.md
+  - case/step-context-isolation.md
   - case/templates/case.md
   - case/templates/step.md
+  - agent-guides/*
   - L5-dev/vue-case-create-guide.md
   - L5-dev/vue-provider-guide.md
 ---
@@ -128,7 +130,7 @@ inject-from-core:
 
 根据用户描述，精准读取相关文件：
 1. 主 Agent 读 `_adoc/index.md` 了解项目模块分布（一次，轻量）。
-2. 如果存在 `_adoc/map.md`，读取它，判断用户意图对应的 L3 / L4 / L5 / 局部 README / case；旧项目兼容读取 `_adoc/context-map.md`。
+2. 读取 `_adoc/map.md`，判断用户意图对应的 L3 / L4 / L5 / 局部 README / case。
 3. 优先寻找本次事项相关的核心概念索引、产品功能文档、工程实现规则、页面 README、设计/原型资料和代码入口。
 4. 需要探索、验证、批量读取或整理 case 草案时，按 Agent Entry 中的分身 Agent 逻辑 fork 主 Agent 克隆体，主 Agent 只审阅结果回流。
 
@@ -208,7 +210,7 @@ case-create 生成或更新 case 时，应在 case 中留下 3-6 条可审计的
 
 观察锚点优先围绕：
 
-- Agent 是否读取 `_adoc/map.md` 或说明缺失，并用 `rg` / README 兜底；旧项目可兼容 `_adoc/context-map.md`。
+- Agent 是否读取 `_adoc/map.md` 或说明缺失，并用 `rg` / README 兜底。
 - Agent 是否读取本 case 上下文索引里的 L3 / L4 / L5 / 局部 README。
 - 涉及核心概念时，Agent 是否先对齐 L3 术语和关系，而不是直接猜业务含义。
 - 涉及跨模块工程规则时，Agent 是否读取 L5 实现规则，而不是只看目标页面代码。
@@ -251,7 +253,15 @@ case-create 生成或更新 case 时，应在 case 中留下 3-6 条可审计的
 
 step 只能表示“已确认、可派发执行”的工作。正在讨论的问题、设计阶段缺口、需要继续确认的接口或组件关系，写入 case doc 或候选区，不创建“设计确认 step”“当前讨论 step”这类把 `case-create` 自身工作包装成 step 的文件。
 
-### Step 推荐 Agent 规则
+### Step 拆分上下文隔离规则
+
+设计 step 前先读取 `@references/case/step-context-isolation.md`，用它检查拆分边界。
+
+step 的核心不是按组件、文件或人力分工机械切块，而是按**上下文是否能独立执行**切块。一个 step 应该能只凭自己的 step 文件、case.md 和列出的上下文文档完成。如果两个 step 之间必须共享上一轮未沉淀的临时判断、半成品方案或隐形状态，优先合并成一个 step，或者把共享判断先沉淀到 case 文档 / 局部 README / 架构图里，再拆分。
+
+大型任务和超长任务优先写成 case / step，不直接把长任务正文交给子 Agent。子 Agent 的派发 prompt 应只包含领域指引链接、step 文件链接、case 文件链接和返回格式；任务清单、上下文文档和验收标准都写入 step 文件。
+
+### Step 推荐 Agent / 指引规则
 
 创建 step 时尽量声明 `推荐 Agent`：
 
@@ -261,7 +271,9 @@ step 只能表示“已确认、可派发执行”的工作。正在讨论的问
 - Vue `useXxx.ts/js`、provide / inject、页面级 API 数据源、详情数据下发、provider/controller 边界：`aipd_vue_provider`
 - 不确定时留空，并在 step 目标和上下文文档里写清楚判断依据
 
-推荐 Agent 是执行角色建议，不替代 step 的上下文文档。`case-run` 阶段会优先让带角色 Agent 基于 step / case / 上下文文档执行；只有当 step 强依赖主 Agent 当前尚未沉淀的聊天判断时，才需要 fork 上下文分身。
+推荐 Agent 是执行角色建议，也是一份领域执行指引。平台支持 custom agent 时，`case-run` 优先派发对应 Agent；平台不支持或注册失败时，`case-run` 必须降级为 `worker/explorer + @references/agent-guides/{推荐 Agent}.md`，让执行 Agent 直接读取这份指引。
+
+因此，Vue 相关 step 的上下文文档不需要把整份指引复制进去；只要推荐 Agent 写对，`case-run` 会负责把对应指引纳入执行 prompt。推荐 Agent 不替代 step 的任务边界和上下文文档。只有当 step 强依赖 Main Agent 当前尚未沉淀的聊天判断时，才需要 fork 上下文分身。
 
 ### 第六步：告知下一步
 
