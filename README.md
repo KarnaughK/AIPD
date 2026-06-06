@@ -1,44 +1,150 @@
-# AIPD2 - 面向 AI 协作的软件项目认知框架
+# AIPD2
 
-AIPD2 是一套面向 AI Agent 的项目级上下文框架，把项目认知组织成 Agent 可读取、可检索、可继承、可回写的长期上下文。
+AI Agent 已经能写很多代码了。
 
-这是一个可构建的 skill 工程，通过 `scripts/build` 将源码打包为可安装的 Claude Code / Codex skill。当前优先适配 Codex。
+真正难的地方开始变成另一件事：它进入一个项目时，怎么知道这个项目为什么长成现在这样。
 
----
+代码能告诉 Agent “现在怎么做”。但它很难告诉 Agent：
 
-## 项目定位
+- 这个方向为什么值得做。
+- 哪些用户场景已经被讨论过。
+- 哪些产品边界不能随便改。
+- 哪些实现方式是历史取舍，不是偶然写法。
+- 上一次 Agent 踩过的坑，下一次 Agent 怎么继承。
 
-AIPD2 以项目为单位组织上下文。Codex、Claude Code、GA、爱马仕等 Agent 负责推理、执行、工具调用和任务调度；AIPD2 负责沉淀方向、场景、核心模型、产品边界、业务实现逻辑和代码入口，让不同 Agent 进入项目后能快速理解上下文并持续回写经验。
+聊天记录会断，Issue 和 PR 太碎，README 通常只写安装和入口。于是每次新任务都像重新入职：Agent 先猜背景，再猜边界，最后写出一批看起来能跑、但和项目长期判断不一定对齐的代码。
 
-当前上下文主要以 `_adoc/` 文档形式提供，后续也可以通过 MCP、检索工具或上下文服务提供。
+AIPD2 解决的是这个问题。
 
-代码只能告诉 Agent “现在是怎么做的”，但很难告诉 Agent “为什么当初要这么做”。聊天记录会丢失，Issue 和 PR 太碎片，README 通常只写入口信息。AIPD2 把项目方向、用户场景、产品边界、架构原因、技术取舍和执行经验沉淀成 Agent 可以稳定读取的项目认知：
+它不是另一个 Coding Agent，也不是一套替代你开发流程的重型规范。它是一套项目认知框架：把方向、场景、核心模型、产品边界、工程规则和执行经验，沉淀成 Agent 可以读取、检索、继承、回写的长期上下文。
 
-- Agent 执行任务前，读取项目认知，避免从零猜测业务背景。
-- Agent 执行任务时，按 Case 的上下文索引校准读取边界。
-- Agent 执行任务后，把新的判断、踩坑和决策回写到项目认知。
-- 下一个 Agent 不需要继承上一段聊天，但可以继承项目记忆。
+## 学习文档
 
-和常见工具的关系可以粗略理解为：
+如果你第一次了解 AIPD2，建议先读面向人的学习文档：
 
-| 工具 / 层次 | 主要解决的问题 |
-|-------------|----------------|
-| Superpowers | AI 做事流程不稳定，需要开发纪律 |
-| OpenSpec | 单次变更缺少可审查的规格和任务边界 |
-| Claude Code / Codex / GA / 爱马仕等 Agent | 具体执行、工具调用和平台能力 |
-| AIPD2 | 项目长期上下文、历史原因和经验沉淀 |
+- [docs/README.md](docs/README.md)：学习文档总入口。
+- [docs/guide/](docs/guide/)：从 AI Coding 演进讲到项目知识库和 case / step 执行闭环。
+- [docs/modules/](docs/modules/)：按能力模块理解 map、上下文解耦、case、weave、分身 Agent 和安装构建。
 
-这些东西并不冲突。AIPD2 可以给任何 Agent 提供项目上下文，也可以和 Superpowers / OpenSpec 这类流程或规格工具一起使用。
+`docs/` 面向人类读者；`_adoc/` 面向 Agent，是项目认知事实源。Agent 执行任务时仍应从 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md` 进入项目。
 
----
+## 快速开始
 
-## 分身 Agent 模型
+AIPD2 这个仓库本身不是一个“打开即用”的应用。
 
-AIPD2 的多 Agent 协作不是“主 Agent 派工给低上下文子 Agent”。
+它是 **AIPD2 Skill 的打包源码项目**：源码在本仓库里，最终使用时需要由本地 Agent 把它打包成 Skill，并放到本机对应 Agent 的 Skill 目录下。
 
-更准确的模型是：**分身 Agent 是从主 Agent 当前认知 fork 出来的克隆体**。它继承同一份项目认知、对话背景、任务方向和判断逻辑。主 Agent 只需要告诉它“你是分身 Agent / 克隆体”，并给出当前局部目标；分身看到这个身份后，不再继续分身，而是接着完成当前分支。
+这件事不应该再要求用户手工记命令。用户只需要用 Codex、Claude Code 或其他支持 Skill 的 Agent 打开本项目，然后把目标说清楚：
 
-主 Agent 留在主线，负责用户沟通、目标边界和最终判断。分身 Agent 去消化扫描代码、核对接口、运行验证、读长日志、整理 diff 等过程成本。完成后，它只把结果回流给主线：
+```text
+请阅读本仓库的项目说明和 AIPD 认知，把 AIPD2 打包并安装到我本机可用的 Skill 目录。
+```
+
+具体怎么 build、怎么 install、放到哪个目录，由 Agent 根据仓库里的执行入口自己判断和执行。当前相关入口包括：
+
+- `AGENTS.md`：Agent 进入项目后的默认协作规则。
+- `_adoc/index.md`：AIPD2 仓库自身的项目认知入口。
+- `_adoc/map.md`：把“构建 / 安装 / Codex 适配 / Skill”这类任务路由到具体上下文。
+- `scripts/`：实际构建、开发安装、用户级安装和项目级安装脚本。
+
+安装完成后，在你的目标项目里让 Agent 使用：
+
+```text
+/aipd2
+```
+
+如果目标项目还没有 AIPD 结构，`/aipd2` 会引导初始化 `_adoc/`、`AGENTS.md` 和基础索引。
+
+如果目标项目已经初始化，`/aipd2` 会读取项目认知入口，判断当前状态，并把你导向合适的下一步：创建 case、执行 case、更新 AIPD 架构、编织经验，或继续普通开发任务。
+
+## 为什么需要 AIPD2
+
+我做 AIPD2 不是因为 Agent 不会写代码。
+
+恰恰相反，是因为 Agent 写代码越来越快，项目上下文的问题被放大了。
+
+### 1. Agent 看到了代码，但看不到原因
+
+一个项目里最重要的信息，很多时候不在代码里。
+
+比如：
+
+- 为什么这个功能先做 B 端，不做 C 端。
+- 为什么这个字段展示成这个名字。
+- 为什么这个页面没有抽组件。
+- 为什么这条权限判断不能和另一个接口复用。
+- 为什么某个“看起来更优雅”的抽象以前试过，后来被放弃了。
+
+这些信息如果只留在聊天、会议、脑子或历史 PR 里，Agent 下一次进来就会重新猜。
+
+**AIPD2 的做法是把这些判断放进 `_adoc/`。**
+
+- `L1 Intent`：项目方向、目标和长期取舍。
+- `L2 Research`：外部世界，包括用户、场景、需求、痛点、竞品和玩法范式。
+- `L3 Core`：项目成立依赖的核心模型、领域语言和底层认知。
+- `L4 Product`：核心模型落成产品功能后的边界和用户可见行为。
+- `L5 Dev`：产品功能落到代码时的跨模块工程规则和实现约定。
+- `L6 Code`：真实代码，不放在 `_adoc/` 里。
+
+这套分层的重点不是“文档更整齐”，而是让 Agent 在改代码前先知道：它应该遵守什么判断。
+
+### 2. Agent 每次都在从零找上下文
+
+人类看项目时会靠经验跳转：先看 README，再看目录，再搜关键字，再打开几个核心文件。
+
+Agent 也会这么做，但它的跳转链路更脆弱。一次任务如果要靠多层目录猜入口，任何一跳没命中，它就会开始编。
+
+**AIPD2 使用 map 做第一跳检索。**
+
+`_adoc/map.md` 不是正文文档，它是给 Agent 用的路线图。用户说一句自然语言，Agent 先通过 map 把任务路由到相关的 L3 / L4 / L5 / 局部 README / 代码入口。
+
+这会让上下文读取从“在项目里乱翻”变成：
+
+```text
+用户意图 -> map 命中入口 -> 读取必要认知 -> 进入代码
+```
+
+它不追求把所有东西都塞进一个巨大的提示词。它追求的是第一跳稳定，关键路径扁平，任务需要什么就读什么。
+
+### 3. 一次开发任务太容易变成一团聊天
+
+AI 协作里最常见的问题不是任务太少，而是任务边界太糊。
+
+你和 Agent 聊了半小时，里面有需求、有猜测、有否定、有临时方案、有后续想法。真正开工时，Agent 很容易把这些内容混在一起：有些该做，有些只是讨论，有些已经被推翻。
+
+**AIPD2 用 Case 和 Step 把一次事项固定下来。**
+
+- **Case**：一次具体事项，记录目标、上下文索引、边界、步骤和归档信息。
+- **Step**：Case 内可派发给 Agent 的最小执行单元。
+
+Case 不是普通 todo。它的价值在于把“这次到底要做什么、读哪些上下文、不做什么、怎么验收”写清楚。
+
+当聊天上下文被压缩或中断时，下一次恢复不靠猜：
+
+```text
+AGENTS.md -> _adoc/index.md -> map -> case/index.md -> 当前 case -> 当前 step
+```
+
+长期任务由文件状态接住，而不是由某一段聊天记忆硬撑。
+
+### 4. 主 Agent 不该吞下所有过程成本
+
+读长日志、扫跨文件 diff、跑测试、检查接口、验证浏览器表现，这些工作很重要，但会迅速污染主线上下文。
+
+**AIPD2 的分身 Agent 模型不是“主 Agent 派工给低级工人”。**
+
+更准确地说：分身 Agent 是从主 Agent 当前认知 fork 出来的克隆体。它继承同一份项目认知、对话背景、任务方向和判断逻辑，然后进入局部探索分支。
+
+主 Agent 留在主线，负责：
+
+- 用户沟通。
+- 目标边界。
+- 分身调度。
+- 方案审核。
+- 最终判断。
+- 状态写回。
+
+分身 Agent 负责消化过程成本，完成后只回流压缩结果：
 
 - 结论
 - 依据
@@ -47,110 +153,117 @@ AIPD2 的多 Agent 协作不是“主 Agent 派工给低上下文子 Agent”。
 - 改动文件
 - 验证结果
 
-case-run 不是另一套机制，只是把分身探索的节点固化为 `step`。普通 AIPD 对话、轻量修改、调研、验证和正式 case 都使用同一套分身逻辑。
+case-run 只是把这种分身探索固化为 step。普通开发、调研、验证和正式 case 都可以使用同一套逻辑。
 
----
+### 5. 经验不回写，下一次还是会重踩坑
 
-## 项目结构
+很多团队的 AI 协作会停在“这次做完了”。
 
+但如果一个经验只存在于当前聊天里，它就没有真正成为项目能力。
+
+**AIPD2 用 Weave 把稳定信息回写到项目认知里。** 来源可以是：
+
+- 一次讨论里的明确判断。
+- 一个 step 的执行结果。
+- 一个 case 的归档总结。
+- 一段 diff 暴露出的实现规则。
+- 一次报错和修复经验。
+- 一个外部资料带来的产品或工程判断。
+
+Weave 的目标不是把所有聊天都存档，而是判断哪些信息已经稳定到值得成为项目记忆，并把它放到合适的位置：`_adoc/`、局部 README、map 或 case 记录。
+
+## AIPD2 怎么工作
+
+AIPD2 有两条主线。
+
+第一条是纵向认知结构：
+
+```text
+L1 Intent
+  -> L2 Research
+  -> L3 Core
+  -> L4 Product
+  -> L5 Dev
+  -> L6 Code
 ```
-AIPD/
-├── src/
-│   ├── core/          # 共享知识层（L1-L6 分层、Case 机制、Agent 协作）
-│   ├── platforms/     # 平台覆盖文件（Claude Code / Codex）
-│   └── skills/        # 9 个 skill 源码，每个含 SKILL.md
-├── scripts/
-│   ├── build          # 构建：src/ → dist/
-│   ├── dev            # Claude Code 开发模式安装（symlink）
-│   ├── install        # Claude Code 用户级安装（~/.claude/skills/）
-│   ├── install-project # Claude Code 项目级安装（.claude/skills/）
-│   ├── dev-codex      # Codex 开发模式安装（symlink）
-│   ├── install-codex  # Codex 用户级安装（~/.codex/skills/）
-│   └── install-project-codex # Codex 项目级安装（.codex/skills/）
-├── dist/              # 分平台构建产物（gitignore）
-└── v1/                # v1 历史归档
+
+它回答“信息应该沉淀在哪里”。
+
+第二条是横向执行能力：
+
+```text
+map 检索 -> case 创建 -> step 执行 -> 分身回流 -> weave 回写
 ```
 
----
+它回答“Agent 做事时怎么把这些认知用起来”。
+
+两条线合在一起，AIPD2 才成立：
+
+- 没有 L1-L5，Agent 只能读代码，读不到原因。
+- 没有 map，Agent 知道有文档，也不一定找得到入口。
+- 没有 case，长任务会被聊天上下文拖散。
+- 没有分身 Agent，主线会被探索过程吞掉。
+- 没有 weave，经验不会变成下一次可继承的项目记忆。
 
 ## 包含的 Skill
 
-| skill | 命令 | 职责 |
-|-------|------|------|
-| aipd2 | `/aipd2` | 总入口：扫描状态，引导下一步 |
-| aipd2-case-create | `/aipd2-case-create` | 创建 case，整理上下文索引和步骤 |
-| aipd2-case-run | `/aipd2-case-run` | 执行 case，加载上下文并派发分身 Agent |
-| aipd2-weave | `/aipd2-weave` | 把讨论、step 结果、case 归档、diff 或外部资料编织回项目 ADOC、局部 README 和 map |
-| aipd2-learn | `/aipd2-learn` | 采集会话定位信息，诊断 AIPD2 框架自身的 skill 和规则迭代点 |
-| aipd2-update | `/aipd2-update` | 更新已初始化项目中的 AIPD 架构、AGENTS 和 map |
-| aipd2-case-archive | `/aipd2-case-archive` | 归档 case，合并分支 |
-| aipd2-git-push | `/aipd2-git-push` | 检查当前分支和提交状态，并推送到远端 |
-| aipd-mermaid | `/aipd-mermaid` | 创建、修改、评审或按需渲染 Mermaid 架构图 |
+| skill | 命令 | 作用 |
+|---|---|---|
+| `aipd2` | `/aipd2` | 总入口：识别项目状态，加载轻量认知，引导下一步 |
+| `aipd2-case-create` | `/aipd2-case-create` | 创建 case，整理目标、边界、上下文索引和 steps |
+| `aipd2-case-run` | `/aipd2-case-run` | 执行 case，读取上下文并派发分身 Agent |
+| `aipd2-weave` | `/aipd2-weave` | 把稳定经验回写到 ADOC、局部 README、map 或 case |
+| `aipd2-learn` | `/aipd2-learn` | 采集会话定位信息，辅助 AIPD2 框架自迭代 |
+| `aipd2-update` | `/aipd2-update` | 更新已初始化项目中的 AIPD 架构、AGENTS 和 map |
+| `aipd2-case-archive` | `/aipd2-case-archive` | 归档 case，整理 Weave Candidate，合并分支 |
+| `aipd2-git-push` | `/aipd2-git-push` | 检查当前分支和提交状态，并推送远端 |
+| `aipd-mermaid` | `/aipd-mermaid` | 创建、修改、评审或按需渲染 Mermaid 架构图 |
 
----
+更完整的 skill 职责说明见 [docs/modules/skills-overview.md](docs/modules/skills-overview.md)。
 
-## 安装
+## 给 Agent 的执行入口
 
-```bash
-# 开发模式（symlink，build 后自动生效）
-git clone <repo> && cd AIPD
-./scripts/dev
+本仓库保留了构建和安装脚本，但 README 不把它们当成给用户背诵的操作手册。
 
-# 用户级安装（复制到 ~/.claude/skills/）
-./scripts/install
+如果你要安装、调试或更新 AIPD2，建议直接让 Agent 打开本项目，并说明目标：
 
-# 项目级安装（复制到项目 .claude/skills/）
-./scripts/install-project /path/to/your-project
-
-# Codex 开发模式（symlink，build 后自动生效）
-./scripts/dev-codex
-
-# Codex 用户级安装（复制到 ~/.codex/skills/）
-./scripts/install-codex
-
-# Codex 项目级安装（复制到项目 .codex/skills/）
-./scripts/install-project-codex /path/to/your-project
+```text
+请把这个 AIPD2 Skill 源码项目构建并安装到本机 Codex。
 ```
 
----
+或：
 
-## 开发
-
-```bash
-# 修改源码后重新构建
-./scripts/build
-
-# 只构建某个平台
-./scripts/build claude
-./scripts/build codex
-
-# dev 模式下 build 后自动生效；install 模式需重新 install
+```text
+请修改 AIPD2 源码后，按本项目规则重新构建，并告诉我是否需要重新安装。
 ```
 
----
+Agent 应先读取 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md`，再根据任务进入 `scripts/`、`src/skills/`、`src/platforms/` 等代码入口。人只需要关注目标、验收结果和风险，不需要记住具体打包命令。
 
-## _adoc 核心架构
+开发者需要查看脚本和安装细节时，读 [docs/modules/build-and-install.md](docs/modules/build-and-install.md)。
 
-### L1-L6 分层
+## 项目结构
 
-AIPD 的目标不是为了维护文档而维护文档。`_adoc/` 里的 L1-L5 一方面是项目讨论、判断和经验沉淀的文档层，另一方面也是 Agent 理解、管理和修改 L6 的上下文。L6 是项目里的真实代码实现，不在 `_adoc/` 里单独写文档，而是随项目类型分布在前端、后端、爬虫、脚本等具体代码目录中。
+```text
+AIPD-2/
+├── docs/             # 面向人的学习文档
+├── src/
+│   ├── core/          # AIPD 核心认知、模板和通用规则
+│   ├── platforms/     # Codex / Claude Code 等平台适配
+│   └── skills/        # 各个 skill 的源码
+├── scripts/           # 构建、开发安装、用户安装和项目安装脚本
+├── dist/              # 构建产物
+├── _adoc/             # AIPD2 仓库自身的项目认知
+└── v1/                # v1 历史归档
+```
 
-| 层级 | 路径 | 作用 |
-|------|------|------|
-| L1 | `_adoc/L1-intent/` | 项目方向、目标和长期取舍，让 AI 不偏离目标 |
-| L2 | `_adoc/L2-research/` | 方向所处的外部世界，包括用户、场景、需求、痛点、竞品、行业/玩法范式和调研结论 |
-| L3 | `_adoc/L3-core/` | 项目内部靠哪些核心模型成立，包括核心对象、领域语言、核心流程、数据模型、增长模型或商业模型 |
-| L4 | `_adoc/L4-product/` | 把 L3 核心模型落成产品功能、功能边界、业务规则、用户可见行为和相关实现入口 |
-| L5 | `_adoc/L5-dev/` | 产品功能落到代码时的跨模块业务实现逻辑和工程规则，如权限、路由、第三方插件、前后端约定 |
-| L6 | 具体代码实现，不在 `_adoc/` 内 | 最终产出的真实实现；前端、后端、爬虫、脚本等项目类型各自拥有不同代码入口 |
+## 适合什么时候用
 
-### 多 Agent 执行体系
+AIPD2 适合那些已经开始让 AI 深度参与开发，但发现“上下文管理”比“生成代码”更难的项目。
 
-- **主 Agent = 主线负责人**：维护用户沟通、目标边界、最终判断和状态写回
-- **分身 Agent = 主 Agent 克隆体**：继承当前认知，进入局部探索分支完成开发 / 调研 / 归档，并回流压缩结果
+如果你的项目只有几个文件，或者只是一次性原型，AIPD2 可能太重。
 
-### Case 执行体系
+如果你的项目会持续迭代，有业务语言、历史取舍、跨模块规则、多 Agent 执行、长期任务恢复和经验沉淀需求，AIPD2 会更有价值。
 
-- **Case**：一次具体事项，记录目标、上下文索引、边界、steps 和归档信息。
-- **Step**：Case 内的分身派发节点。它不是替代当前上下文的任务单，而是用于校准边界、恢复状态和沉淀经验。
-- **OKR**：阶段目标，用来判断工作是否推进了项目方向。
+一句话总结：
+
+AI Agent 负责执行，AIPD2 负责让项目记住自己。

@@ -8,6 +8,7 @@
 | `c0.2-subagent-origin-model` | 待验收 | 重写分身 Agent、克隆体和结果回流模型 |
 | `c0.3-agent-fork-role-policy` | 执行中 | 分析 fork 分身、角色 Agent 和直接执行的调配策略 |
 | `c0.4-module-interface-registry` | 待开始 | 统计 AIPD2 模块并设计模块级初始化 / update 标准接口 |
+| `c0.5-human-docs-architecture` | 待验收 | 设计面向人的 docs 学习文档体系，区分 README、docs 与 _adoc |
 
 ## 使用原则
 
