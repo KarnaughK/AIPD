@@ -59,7 +59,7 @@ README.md
 
 `modules/` 是进阶模块说明，适合在理解入门闭环后按能力系统查阅：
 
-- [上下文解耦](modules/context-decoupling.md)
+- [上下文解耦](modules/context-decoupling.md)：理解黑箱上移、纵向黑箱、牵连面和“先解耦，后抽取”。
 - [ADOC 分层](modules/adoc-layers.md)
 - [Map 与检索系统](modules/maps-and-retrieval.md)
 - [Case 与 Step](modules/case-and-step.md)

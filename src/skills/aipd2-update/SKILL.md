@@ -54,7 +54,7 @@ inject-from-core:
 
 优先检查：
 
-- `AGENTS.md`：分开检查 AIPD Project Entry 和可选 Interaction Style，不能只因 AIPD 区块符合就判定 Agent MD 整体已是最新。
+- `AGENTS.md`：分开检查 AIPD Project Entry 和已选择启用的 Interaction Protocol，不能只因 AIPD 区块符合就判定 Agent MD 整体已是最新。
 - `AGENTS.md` 的 AIPD Project Entry：AIPD 项目入口区块是否包含最新记忆读取、L3/L5 边界和恢复链路。
 - `_adoc/index.md`：是否声明 `_adoc/map.md`、L3 核心概念、L4 功能线、L5 工程实现层和读取原则。
 - `_adoc/map.md`：是否存在，是否包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点和 Weave 反向编织锚点。
@@ -68,7 +68,7 @@ inject-from-core:
 按需检查：
 
 - `CLAUDE.md`：如果项目使用 Claude Code 或已有该文件，检查其中 AIPD 区块。
-- `AGENTS.md` / `CLAUDE.md` 中的 `<!-- AIPD-INTERACTION-STYLE:START -->` 区块：这是可选交互风格，只提示，不作为 AIPD 架构必须项。
+- `AGENTS.md` / `CLAUDE.md` 中的 `<!-- AIPD-INTERACTION-STYLE:START -->` 区块：这是用户明确选择后启用的 AIPD 项目级对话协议，不作为 AIPD 架构必须项。
 - 局部 `README.md`：只检查是否存在与本次更新相关的入口，不批量改页面/组件 README。
 
 ## Agent MD 模板等级
@@ -79,14 +79,14 @@ inject-from-core:
 |---|---|---|---|
 | 0 | 不修改 Agent MD | 不写入或同步任何 Agent MD 区块 | 用户不想让项目记忆文件变化，或只想更新 `_adoc` |
 | 1 | AIPD Project Entry | 只写入 / 同步 `<!-- AIPD:START -->` AIPD 项目入口区块 | 强推荐；让 Agent 知道项目使用 AIPD、如何读取 `_adoc` |
-| 2 | AIPD Project Entry + Interaction Style | 同步 AIPD 区块，并额外写入 / 同步 `<!-- AIPD-INTERACTION-STYLE:START -->` 可选交互风格区块 | 用户希望 Agent 调整回复结构、讨论 / 执行切换和长短答偏好 |
+| 2 | AIPD Project Entry + Interaction Protocol | 同步 AIPD 区块，并额外写入 / 同步 `<!-- AIPD-INTERACTION-STYLE:START -->` 项目级对话协议区块 | 用户希望 Agent 被明确约束回复结构、讨论 / 执行切换和长短答边界 |
 
 审计规则：
 
-- 即使 AIPD Project Entry 已经符合，也要继续检查 Interaction Style 是否存在。
-- 如果 Interaction Style 不存在，不能写“AGENTS.md 已完全符合”；应写“AGENTS.md 的 AIPD Project Entry 符合；Interaction Style 未安装，可选是否升级到等级 2”。
+- 即使 AIPD Project Entry 已经符合，也要继续检查 Interaction Protocol 是否存在。
+- 如果 Interaction Protocol 不存在，不能写“AGENTS.md 已完全符合”；应写“AGENTS.md 的 AIPD Project Entry 符合；Interaction Protocol 未安装，可选是否升级到等级 2”。
 - 如果用户没有明确选择等级，默认只输出审计和建议，不修改 Agent MD。
-- 如果用户说“按你建议来 / 开搞 / 执行上述更新”，但没有提 Agent MD 等级，只能执行清单里已明确列出的 AIPD 必须更新；Interaction Style 仍需单独确认。
+- 如果用户说“按你建议来 / 开搞 / 执行上述更新”，但没有提 Agent MD 等级，只能执行清单里已明确列出的 AIPD 必须更新；Interaction Protocol 仍需单独确认。
 
 ## 第一步：判断项目状态
 
@@ -132,10 +132,10 @@ find _adoc -maxdepth 3 -type f | sort
 
 ### 可选项
 
-- `AGENTS.md` / `CLAUDE.md` 可以包含独立的 Interaction Style 区块，用于调整 Agent 的回复结构和讨论 / 执行切换方式。
+- `AGENTS.md` / `CLAUDE.md` 可以包含独立的 Interaction Protocol 区块，用于约束 Agent 的回复结构和讨论 / 执行切换方式。
 - 该区块不属于 AIPD Project Entry 必须能力；只有用户明确同意时，才使用 `@references/agent-entry/interaction-style.md` 写入。
-- 如果已有 Interaction Style 区块，检查是否需要同步到当前模板；如果没有，只在更新清单里询问用户是否需要补充。
-- 审计输出必须显示当前 Agent MD 模板等级和可选升级目标，不要把 Interaction Style 混入 AIPD 必须项。
+- 如果已有 Interaction Protocol 区块，检查是否需要同步到当前模板；如果没有，只在更新清单里询问用户是否需要补充。
+- 审计输出必须显示当前 Agent MD 模板等级和可选升级目标，不要把 Interaction Protocol 混入 AIPD 必须项。
 
 ### 不自动改项
 
@@ -255,7 +255,7 @@ flowchart TD
 需要更新：
 - `AGENTS.md`：
   - AIPD Project Entry：{符合 / 缺什么 / 为什么要改 / 计划怎么合并}
-  - Interaction Style：{未安装 / 已安装但需同步 / 已是当前模板 / 可选跳过}
+  - Interaction Protocol：{未安装 / 已安装但需同步 / 已是当前模板 / 可选跳过}
 - `_adoc/index.md`：{缺什么；为什么要改；计划怎么合并}
 - `_adoc/map.md`：{不存在 / 缺章节 / 需要补路由 / 是否需要吸收过期 context-map 的稳定入口}
 - `_adoc/context-map.md`：{不存在 / 作为过期结构存在；是否列入破坏性更新删除项}
@@ -272,8 +272,8 @@ flowchart TD
 - Agent MD 模板等级：
   - 当前等级：{0 / 1 / 2}
   - 推荐等级：{通常为 1；如果用户希望调整回复风格，推荐 2}
-  - 可选动作：{不改 Agent MD / 只同步 AIPD Project Entry / 同步 AIPD Project Entry + Interaction Style}
-  - 风险提示：Interaction Style 会影响回复风格，需用户明确同意
+  - 可选动作：{不改 Agent MD / 只同步 AIPD Project Entry / 同步 AIPD Project Entry + Interaction Protocol}
+  - 风险提示：Interaction Protocol 会约束回复结构，需用户明确同意
 
 不处理：
 - {明确不碰哪些业务文档、代码、历史 case}
@@ -281,7 +281,7 @@ flowchart TD
 待用户确认：
 - 是否执行上述更新？
 - 是否执行破坏性更新？如跳过，哪些旧结构保留？
-- Agent MD 使用哪个等级：0 不修改 / 1 只同步 AIPD Project Entry / 2 同步 AIPD Project Entry + Interaction Style？
+- Agent MD 使用哪个等级：0 不修改 / 1 只同步 AIPD Project Entry / 2 同步 AIPD Project Entry + Interaction Protocol？
 ```
 
 ## 第四步：用户确认后写入
@@ -292,9 +292,9 @@ flowchart TD
 
 1. `AGENTS.md`
    - 先按用户确认的 Agent MD 模板等级决定是否修改。
-   - 等级 0：不修改 `AGENTS.md` / `CLAUDE.md`，即使审计发现可选 Interaction Style 缺失也不写入。
-   - 等级 1：只处理 AIPD Project Entry，不处理 Interaction Style。
-   - 等级 2：先处理 AIPD Project Entry，再处理 Interaction Style。
+   - 等级 0：不修改 `AGENTS.md` / `CLAUDE.md`，即使审计发现 Interaction Protocol 缺失也不写入。
+   - 等级 1：只处理 AIPD Project Entry，不处理 Interaction Protocol。
+   - 等级 2：先处理 AIPD Project Entry，再处理 Interaction Protocol。
    - 如果有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换标记区块。
    - 如果没有标记但有 AIPD 内容，先说明风险，优先追加新标记区块，不删除原文。
    - 如果不存在，写入当前 `@references/agent-entry/template.md` 并包裹 AIPD 标记。
@@ -322,9 +322,9 @@ flowchart TD
    - 默认不批量修改历史 case。
    - 只在用户确认时，为当前进行中 case 补上下文索引缺口、自迭代观察锚点或 Weave 候选位置。
 
-7. 可选 Interaction Style
+7. Interaction Protocol
    - 不作为 AIPD update 必须项。
-   - 只有用户明确同意“写入 / 同步 Interaction Style”或选择 Agent MD 等级 2 时才处理。
+   - 只有用户明确同意“写入 / 同步 Interaction Protocol”或选择 Agent MD 等级 2 时才处理。
    - 读取 `@references/agent-entry/interaction-style.md`。
    - 用独立标记包裹：
      ```md
@@ -341,7 +341,7 @@ flowchart TD
 
 - 修改了哪些文件。
 - Agent MD 最终采用哪个等级。
-- 是否写入或跳过 Interaction Style。
+- 是否写入或跳过 Interaction Protocol。
 - 执行了哪些破坏性更新；哪些破坏性更新被用户跳过。
 - 如果用户跳过破坏性更新，说明项目还保留哪些过期结构，以及它为什么不算完全升级。
 - 哪些建议没有执行，为什么。
