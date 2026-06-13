@@ -10,6 +10,12 @@
 | `c0.4-module-interface-registry` | 待开始 | 统计 AIPD2 模块并设计模块级初始化 / update 标准接口 |
 | `c0.5-human-docs-architecture` | 待验收 | 设计面向人的 docs 学习文档体系，区分 README、docs 与 _adoc |
 
+## 已归档 Case
+
+| Case | 归档时间 | 说明 |
+|---|---|---|
+| `archive/c0.6-human-docs-three-lines` | 2026-06-14 | 将面向用户的教学文档升级为三条主线：知识库、Case / Step、AI 原生代码架构实验 |
+
 ## 使用原则
 
 - 新事项先创建 case，再拆 step。

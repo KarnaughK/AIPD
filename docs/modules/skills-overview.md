@@ -10,6 +10,7 @@ AIPD2 是一个可构建的 skill 工程。仓库中的 `src/skills/` 保存各 
 | `aipd2-case-create` | `/aipd2-case-create` | 创建 case，整理目标、边界、上下文索引和 steps |
 | `aipd2-case-run` | `/aipd2-case-run` | 执行 case，读取上下文并派发执行 Agent |
 | `aipd2-weave` | `/aipd2-weave` | 把稳定经验回写到 ADOC、局部 README、map 或 case |
+| `aipd2-inbox` | `/aipd2-inbox` | 临时接住未整理思路，后续再判断 weave、转 case 或丢弃 |
 | `aipd2-learn` | `/aipd2-learn` | 采集会话定位信息，辅助 AIPD2 框架自迭代 |
 | `aipd2-update` | `/aipd2-update` | 更新已初始化项目中的 AIPD 架构、AGENTS 和 map |
 | `aipd2-case-archive` | `/aipd2-case-archive` | 归档 case，整理 Weave Candidate，合并分支 |
@@ -47,6 +48,12 @@ AIPD2 是一个可构建的 skill 工程。仓库中的 `src/skills/` 保存各 
 
 ```text
 /aipd2-weave
+```
+
+临时记录：
+
+```text
+/aipd2-inbox
 ```
 
 框架自迭代定位：

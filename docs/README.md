@@ -1,85 +1,48 @@
 # AIPD2 学习文档
 
-这里是面向人的 AIPD2 学习文档。
+这里是面向用户的 AIPD2 学习入口。
 
-根目录 `README.md` 负责让第一次打开仓库的人快速理解 AIPD2 为什么存在、解决什么问题、是否值得继续看。`docs/` 负责把 AIPD2 的心智模型、项目知识库、任务执行组织和模块能力逐步讲清楚。
-
-`_adoc/` 不属于普通学习文档。它是面向 Agent 的项目认知事实源，用来让 Agent 检索、恢复、执行和回写上下文。人可以阅读 `_adoc/`，但学习 AIPD2 时应先读 `docs/`。
+AIPD2 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻辑、AI 原生代码架构实验。
 
 ## 推荐阅读路径
 
-第一次了解 AIPD2：
+第一次系统了解 AIPD2，建议按顺序读完这 6 篇：
 
-```text
-README.md
--> docs/README.md
--> docs/guide/01-from-vibe-coding-to-agent-coding.md
--> docs/guide/02-why-project-memory.md
--> docs/guide/03-adoc-layers-l1-l5.md
--> docs/guide/04-map-retrieval.md
--> docs/guide/05-weave-project-memory.md
--> docs/guide/06-first-case-flow.md
-```
+1. [从 Vibe Coding 到 Agent Coding](guide/01-from-vibe-coding-to-agent-coding.md)
+2. [AIPD2 的三条主线](guide/02-aipd2-three-main-lines.md)
+3. [知识库最小闭环](guide/03-knowledge-base-minimum-loop.md)
+4. [Case / Step 开发逻辑](guide/04-case-step-development.md)
+5. [AI 原生代码架构实验](guide/05-ai-native-code-architecture-experiment.md)
+6. [第一次完整路径](guide/06-first-complete-flow.md)
 
-已经理解入门闭环，想查某个能力：
+## 按主线查模块
 
-```text
-docs/modules/context-decoupling.md
-docs/modules/maps-and-retrieval.md
-docs/modules/case-and-step.md
-docs/modules/weave.md
-docs/modules/clone-agents.md
-```
+读完入门路径后，可以按问题查模块。
 
-要安装、调试或修改 AIPD2 源码：
+### 一、知识库最小闭环
 
-```text
-README.md
--> docs/modules/build-and-install.md
--> AGENTS.md
--> _adoc/index.md
--> _adoc/map.md
--> scripts/ 或 src/
-```
-
-## 目录
-
-### guide
-
-`guide/` 是新手入门流程，不按术语字典组织，而是从 AI Coding 的使用方式演进讲起：
-
-- [01 从 Vibe Coding 到 Agent Coding](guide/01-from-vibe-coding-to-agent-coding.md)
-- [02 为什么需要项目知识库](guide/02-why-project-memory.md)
-- [03 ADOC L1-L5 分层](guide/03-adoc-layers-l1-l5.md)
-- [04 map 检索](guide/04-map-retrieval.md)
-- [05 weave 项目记忆回写](guide/05-weave-project-memory.md)
-- [06 第一次 case 执行闭环](guide/06-first-case-flow.md)
-
-### modules
-
-`modules/` 是进阶模块说明，适合在理解入门闭环后按能力系统查阅：
-
-- [上下文解耦](modules/context-decoupling.md)：理解黑箱上移、纵向黑箱、牵连面和“先解耦，后抽取”。
 - [ADOC 分层](modules/adoc-layers.md)
 - [Map 与检索系统](modules/maps-and-retrieval.md)
-- [Case 与 Step](modules/case-and-step.md)
 - [Weave](modules/weave.md)
-- [Agent Entry](modules/agent-entry.md)
+
+### 二、Case / Step 开发逻辑
+
+- [OKR](modules/okr.md)
+- [Case 与 Step](modules/case-and-step.md)
 - [分身 Agent](modules/clone-agents.md)
+- [Inbox](modules/inbox.md)
+
+### 三、AI 原生代码架构实验
+
+- [上下文解耦](modules/context-decoupling.md)
+
+### 其他能力
+
+- [Agent Entry](modules/agent-entry.md)
 - [Skill 概览](modules/skills-overview.md)
 - [构建与安装](modules/build-and-install.md)
 
-## 旧 README 迁移记录
+## 其他入口
 
-旧 `README.md` 中适合展开讲解的内容没有直接丢弃，已按学习路径迁移或改写：
-
-- 项目定位、工具对比和上下文问题：迁移到 `guide/02-why-project-memory.md` 和 `modules/context-decoupling.md`。
-- `_adoc` 核心架构、L1-L6 分层：迁移到 `guide/03-adoc-layers-l1-l5.md` 和 `modules/adoc-layers.md`。
-- map / context-map 说明：统一改写为 `_adoc/map.md`，迁移到 `guide/04-map-retrieval.md` 和 `modules/maps-and-retrieval.md`。
-- 分身 Agent 模型：迁移到 `guide/06-first-case-flow.md` 和 `modules/clone-agents.md`。
-- Case / Step 执行体系：迁移到 `guide/06-first-case-flow.md` 和 `modules/case-and-step.md`。
-- Skill 表：README 保留概览，完整职责迁移到 `modules/skills-overview.md`。
-- 安装和开发命令：从首页降级到 `modules/build-and-install.md`。
-- 项目结构：README 保留短版，构建、安装和源码入口细节迁移到 `modules/build-and-install.md`。
-
-删减原则：README 首页不再承载完整手册；重复解释、命令细节和源码级说明进入 docs 或交给 Agent 按 `_adoc/map.md` 定位。
+- 想快速了解 AIPD2 为什么存在，先读根目录 [README.md](../README.md)。
+- 想安装、调试或修改 AIPD2 源码，读 [构建与安装](modules/build-and-install.md)。
