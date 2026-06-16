@@ -19,6 +19,7 @@
 | {示例：合同 / 产品 / 任务 / 交付记录} | {核心概念或功能线} | L3 + L4 | `_adoc/L3-core/map.md`、`_adoc/L4-product/{feature}/map.md` | 相关页面或模块 README | `rg "合同|产品|任务|交付"` |
 | {示例：权限 / 菜单 / 按钮显隐} | {工程规则} | L5 + 局部 README | `_adoc/L5-dev/{rule}/map.md` | 目标页面 README、权限工具函数 | `rg "permission|perms|auth|hasPermi"` |
 | inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `aipd2-inbox` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc` |
+| SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 | SOP 项目级 Agent 程序库 | SOP + L3 + case | `_adoc/sop/index.md`、`_adoc/sop/map.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure" _adoc` |
 
 ## L3 核心概念总表
 
@@ -26,6 +27,7 @@
 |---|---|---|---|---|
 | {别名} | {概念名} | `_adoc/L3-core/{concept}/map.md` | `_adoc/L4-product/{feature}/map.md` | {不要混用的词} |
 | Inbox | 临时收件箱 / capture | `_adoc/inbox.md` | aipd2-inbox | 不是待办、不是候选 case、不是稳定认知；只接住未整理信息 |
+| SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP、case-create、case-run、weave | 不是 L4/L5 知识条目，也不是单纯脚本 |
 
 ## L4 产品功能线总表
 
@@ -54,6 +56,7 @@
 - 如果任务涉及核心概念，Agent 是否读取 L3 map，而不是直接猜业务含义。
 - 如果任务涉及产品功能线，Agent 是否读取 L4 feature map，并找到稳定代码入口。
 - 如果任务涉及跨模块工程规则，Agent 是否读取 L5 rule map。
+- 如果任务涉及可重复执行的项目动作，Agent 是否检查 `_adoc/sop/` 中是否已有可复用 SOP。
 - 如果本文件缺入口，Agent 是否用 `rg` 兜底，并提出应回写到 map 的稳定入口。
 
 ## Weave 反向编织锚点
@@ -63,6 +66,7 @@
 - 新核心概念、别名、误解是否回写到 L3。
 - 新产品功能边界、业务规则是否回写到 L4。
 - 新实现逻辑、跨模块规则、调试经验是否回写到 L5。
+- 新的可复用 Agent 执行流程是否进入 `_adoc/sop/`，并更新 `_adoc/sop/map.md`。
 - 页面、弹窗、组件内部入口是否回写到就近 README。
 - 高频检索入口是否回写到本文件或细节 map。
 - 一次性执行过程是否留在 case / step，没有误写进长期知识。

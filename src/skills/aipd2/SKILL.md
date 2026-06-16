@@ -20,6 +20,8 @@ inject-from-core:
   - adoc/templates/index.md
   - adoc/templates/inbox.md
   - adoc/templates/map.md
+  - adoc/templates/sop-index.md
+  - adoc/templates/sop-map.md
   - case/templates/index.md
   - okr/templates/index.md
   - L1-intent/*
@@ -172,7 +174,7 @@ $aipd2 看一下合同创建页面
 ```bash
 mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core
 mkdir -p _adoc/L4-product _adoc/L5-dev
-mkdir -p _adoc/case/archive _adoc/okr
+mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
 ```
 
 创建默认文档壳子：
@@ -180,6 +182,8 @@ mkdir -p _adoc/case/archive _adoc/okr
 - 将 `@references/adoc/templates/index.md` 写入 `_adoc/index.md`
 - 将 `@references/adoc/templates/inbox.md` 写入 `_adoc/inbox.md`
 - 将 `@references/adoc/templates/map.md` 写入 `_adoc/map.md`
+- 将 `@references/adoc/templates/sop-index.md` 写入 `_adoc/sop/index.md`
+- 将 `@references/adoc/templates/sop-map.md` 写入 `_adoc/sop/map.md`
 - 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
 - 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
 

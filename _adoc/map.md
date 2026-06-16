@@ -23,6 +23,7 @@
 | 更新已有项目 AIPD 架构 / aipd update / 过期结构 / 破坏性更新 | AIPD2 Update | L5 + L6 | `_adoc/map.md`、`_adoc/L5-dev/index.md` | `src/skills/aipd2-update/SKILL.md`、`src/core/adoc/templates/map.md`、`src/core/adoc/templates/index.md`、`src/core/agent-entry/template.md` | `rg "aipd2-update|更新 AIPD|破坏性更新|过期结构|map.md|AGENTS" src _adoc` |
 | 上下文检索 / 大地图 / map | 项目记忆地图 | L3 + L5 | `_adoc/map.md`、`_adoc/L3-core/index.md` | `src/core/adoc/templates/map.md`、`src/skills/aipd2-case-create/SKILL.md` | `rg "map.md|上下文检索|检索包|观察锚点" src _adoc AGENTS.md` |
 | inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `src/skills/aipd2-inbox/SKILL.md`、`src/core/adoc/templates/inbox.md` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc src` |
+| SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 / 查关键词 / 日报 | SOP 项目级 Agent 程序库 | SOP + L3 + case | `_adoc/sop/index.md`、`_adoc/sop/map.md`、`_adoc/L3-core/horizontal-capabilities.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure|查关键词|日报" _adoc src docs` |
 | case 创建 / 上下文索引 / step 拆分 | Case 创建 | L4 + L5 + case | `_adoc/case/index.md`、`_adoc/L3-core/horizontal-capabilities.md` | `src/skills/aipd2-case-create/SKILL.md`、`src/core/case/templates/case.md`、`src/core/case/templates/step.md` | `rg "case-create|上下文索引|step|候选" src _adoc/case` |
 | case 执行 / 分身 Agent / fork_context / Agent 指引兜底 | Case 执行 | L5 + case | `_adoc/L5-dev/index.md`、相关 case `case.md` | `src/skills/aipd2-case-run/SKILL.md`、`src/platforms/codex/core/agent-guide.md`、`src/core/agent-guides/` | `rg "fork_context|分身|case-run|推荐 Agent|agent-guides|unknown agent_type" src _adoc/case` |
 | Weave / 反向编织 / 项目 ADOC 回写 / 更新 map / 更新局部 README | Weave 反向编织 | L3 + L5 + case | `_adoc/L3-core/horizontal-capabilities.md`、`_adoc/map.md` | `src/skills/aipd2-weave/SKILL.md`、`src/skills/aipd2-case-run/SKILL.md`、`src/skills/aipd2-case-archive/SKILL.md` | `rg "weave|反向编织|Weave Candidate|知识回写|更新 ADOC|更新 map" src _adoc README.md` |
@@ -44,6 +45,7 @@
 | Weave 反向编织 | `aipd2-weave` / 项目 ADOC 回写 | `_adoc/L3-core/horizontal-capabilities.md` | Weave | 和 `aipd2-learn` 分工不同；weave 面向当前项目知识库，learn 面向 AIPD2 框架自迭代 |
 | 分身 Agent | fork 出来的 Main Agent 克隆体 | `_adoc/L5-dev/index.md`、`src/platforms/codex/core/agent-guide.md` | case-run、角色 Agent 调度 | 不是低上下文工人 |
 | Case / Step | 事项 / 可派发执行单元 | `_adoc/case/index.md`、`src/core/case/overview.md` | case-create、case-run、case-archive | 未确认的讨论点不要包装成 step |
+| SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP、case-create、case-run、weave | 不是 L4/L5 知识条目，也不是单纯脚本；代码只是 SOP 可调用的工具之一 |
 | Inbox | 临时收件箱 / capture | `_adoc/inbox.md` | aipd2-inbox | 不是待办、不是候选 case、不是稳定认知；只接住未整理信息 |
 
 ## L4 产品功能线总表
@@ -85,6 +87,7 @@
 - 如果任务涉及核心概念，Agent 是否读取 L3 map 或相关 L3 文档，而不是直接猜含义。
 - 如果任务涉及产品功能线，Agent 是否读取 L4 map，并找到稳定源码入口。
 - 如果任务涉及跨模块工程规则，Agent 是否读取 L5 规则。
+- 如果任务涉及可重复执行的项目动作，Agent 是否检查 `_adoc/sop/` 中是否已有可复用 SOP。
 - 如果本文件缺入口，Agent 是否用 `rg` 兜底，并提出应回写到 map 的稳定入口。
 
 ## Weave 反向编织锚点
@@ -94,6 +97,7 @@
 - 新核心概念、别名、误解是否回写到 L3。
 - 新产品功能边界、业务规则是否回写到 L4。
 - 新实现逻辑、跨模块规则、调试经验是否回写到 L5。
+- 新的可复用 Agent 执行流程是否进入 `_adoc/sop/`，而不是误写成普通 L4/L5 知识条目。
 - skill、agent、脚本内部入口是否回写到就近源码或 README。
 - 高频检索入口是否回写到本文件或细节 map。
 - 一次性执行过程是否留在 case / step，没有误写进长期知识。

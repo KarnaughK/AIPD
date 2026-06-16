@@ -21,6 +21,7 @@ AIPD2 的核心工作不是只维护一组文档目录，而是基于 L1-L6、OK
 | L5 工程规则地图 | 权限、路由、插件、前后端约定等规则怎么查 | L5、L4、L6 |
 | 局部 README 地图 | 某个页面、弹窗、组件或模块内部怎么理解和修改 | L4、L5、L6 |
 | Case 系统 | 一个事项如何创建、拆 step、执行、恢复和验收 | OKR、Case、Step、L1-L6、Agent 使用方案 |
+| SOP 系统 | 项目里可重复执行的动作如何沉淀为以 Agent 为运行时的 AI 原生程序 | SOP、L1-L5、L6 工具代码、Case、Step、Agent 使用方案、Weave |
 | Weave 反向编织 | 做完后把新判断、踩坑、规则、入口和外部资料写回哪里 | Case、Step、L3、L4、L5、局部 README、map |
 | OKR 对齐 | 当前 case / step 是否推进阶段目标 | OKR、Case、L1 |
 | 构建 / 安装 | AIPD2 skill 怎么生成、安装到不同 Agent 平台 | L5、L6、Agent Entry |
@@ -59,6 +60,28 @@ Case 系统是一组重功能，可以聚合理解，但需要区分子功能。
 Case 创建会横向读取 L1-L6、OKR、map 和局部 README，把一次事项压缩成可恢复的 case。
 
 Case 执行会按 case / step 恢复任务状态，再读取 step 指定的上下文。Step 可以派发给分身 Agent 或角色 Agent，执行后只回流结论、依据、风险、建议、改动文件和验证结果。
+
+## SOP 系统
+
+SOP 是以 Agent 为运行时的可复用 AI 原生程序。它不是 L4 / L5 里的普通知识条目，也不是单纯的代码脚本；代码只是 SOP 可以调用的工具之一。
+
+SOP 更接近 program / procedure 的本义：一组按部就班、可重复、可检查的执行步骤。一个 SOP 通常会把目标、输入、上下文读取、工具调用、代码脚本、外部资料检索、Agent 二次分析、输出报告和收尾动作编排在一起。
+
+当前先采用最小壳子：
+
+- `_adoc/sop/index.md` 记录 SOP 定位和当前约定。
+- `_adoc/sop/map.md` 记录 SOP 局部地图，用用户说法、项目动作、适用范围、输入和输出索引 SOP。
+- 遇到一个可复用 SOP 时，在 `_adoc/sop/` 下创建独立目录，把相关说明、脚本入口、样例和草稿先放进去，并登记到 SOP map。
+- 高频 SOP 再回写 `_adoc/map.md`，让 Agent 能一跳命中。
+- SOP 存储不强行按业务 / 技术拆进 L4 或 L5。索引优先保证 Agent 能按场景找到需要的 SOP；存储结构后续再细化。
+
+SOP 和现有模块的关系：
+
+- L1-L5 提供项目认知和上下文。
+- L6 代码、脚本、API 和外部工具可以作为 SOP 的工具。
+- Case 可以记录某次 SOP 的执行实例。
+- Step 可以承载某次执行中的局部任务。
+- Weave 可以在 SOP 执行后判断稳定新信息是否回写到知识库、map、局部 README 或 case。
 
 ## Weave 反向编织功能
 
