@@ -1,0 +1,46 @@
+flowchart TB
+  User["User"]
+
+  subgraph Frontend["Frontend: Web UI running in WebView"]
+    UI["AIPD Desktop UI\nVue 3 / Vite / TypeScript"]
+    State["Frontend state\nselected case, chat draft, tree state"]
+    Invoke["Tauri JS API\ninvoke commands / listen events"]
+  end
+
+  subgraph TauriCore["Tauri Runtime Boundary"]
+    IPC["IPC bridge\ncommands, events, permissions"]
+    Window["Native window + system WebView\nmacOS WKWebView / Windows WebView2 / Linux WebKitGTK"]
+  end
+
+  subgraph Backend["Backend: Rust application"]
+    Commands["Rust commands\n#[tauri::command]"]
+    Services["App services\nAIPD parser, session store, AgentAdapter"]
+    Plugins["Tauri plugins\nshell, fs, dialog, updater"]
+    Sidecar["Optional sidecar\nNode / CLI / bundled binary"]
+  end
+
+  subgraph LocalSystem["Local system resources"]
+    Files["_adoc / case / mmd / project files"]
+    Codex["codex app-server\nstdio JSON-RPC"]
+    Claude["Claude Code / Agent SDK\nfuture adapter"]
+    OpenCode["OpenCode serve / API\nfuture adapter"]
+  end
+
+  User --> UI
+  UI --> State
+  UI --> Invoke
+  Invoke --> IPC
+  IPC --> Commands
+  Commands --> Services
+  Services --> Files
+  Services --> Codex
+  Services -. future .-> Claude
+  Services -. future .-> OpenCode
+  Services -. when needed .-> Sidecar
+  Plugins --> Files
+  Sidecar --> Codex
+  Sidecar -. future .-> Claude
+  Sidecar -. future .-> OpenCode
+  Commands --> IPC
+  IPC --> UI
+  Window --> UI

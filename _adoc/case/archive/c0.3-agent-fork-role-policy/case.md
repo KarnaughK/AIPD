@@ -55,15 +55,15 @@
 ## 5. Step 列表
 
 - [x] `steps/c0.3.1-research-codex-agent-layering.md` - 调研 Codex fork_context 与 custom agent 角色叠加机制（推荐 Agent：explorer）
-- [ ] `steps/c0.3.2-design-dispatch-policy.md` - 设计分身 Agent / 角色 Agent / Main Agent 直接执行的调配策略（推荐 Agent：worker）
-- [ ] `steps/c0.3.3-update-docs-if-needed.md` - 根据策略修改 agent guide、case-run 和 Agent Entry（推荐 Agent：worker）
+- [x] `steps/c0.3.2-design-dispatch-policy.md` - 设计分身 Agent / 角色 Agent / Main Agent 直接执行的调配策略（推荐 Agent：worker）
+- [x] `steps/c0.3.3-update-docs-if-needed.md` - 根据策略修改 agent guide、case-run 和 Agent Entry（推荐 Agent：worker）
 
 ## 6. 验收标准
 
-- [ ] 明确区分至少三种执行方式：Main Agent 直接执行、fork 分身 Agent、带角色 Agent 基于 step 执行。
-- [ ] 明确 case-run 中 step 已足够清楚时的默认选择。
-- [ ] 明确性能和上下文成本取舍，不把“开分身”写成无脑默认。
-- [ ] 如需改文档，更新位置和规则清楚，不推翻 c0.2 的核心认知。
+- [x] 明确区分至少三种执行方式：Main Agent 直接执行、fork 分身 Agent、带角色 Agent 基于 step 执行。
+- [x] 明确 case-run 中 step 已足够清楚时的默认选择。
+- [x] 明确性能和上下文成本取舍，不把“开分身”写成无脑默认。
+- [x] 如需改文档，更新位置和规则清楚，不推翻 c0.2 的核心认知。
 
 ## 7. Weave 反向编织候选
 
@@ -87,6 +87,6 @@
 
 ## 9. 归档状态
 
-- **状态**：执行中
+- **状态**：已归档
 - **创建时间**：2026-05-12
-- **归档时间**：
+- **归档时间**：2026-06-16
