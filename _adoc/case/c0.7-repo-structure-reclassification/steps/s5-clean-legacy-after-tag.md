@@ -31,3 +31,9 @@
 - 删除前有 Git tag 可回看旧材料。
 - 工作树不再包含 `docs/legacy/v1/` 和 `docs/legacy/v2-todo/`。
 - README / inbox 不再把已删除目录描述为当前可读路径。
+
+## 执行记录
+
+- 已确认 tag `c0.7-before-legacy-cleanup` 存在，并指向 C0.7 首轮重构提交 `2f7baa86700c82ee3e3f0293f13cec7e90310c70`。
+- 已删除 `docs/legacy/v1/` 和 `docs/legacy/v2-todo/`。
+- 已更新 `docs/legacy/README.md`、`_adoc/inbox.md`、根 `README.md` 和本 case 状态，说明旧材料通过 tag 追溯。

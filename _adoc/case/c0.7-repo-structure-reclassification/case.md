@@ -153,7 +153,7 @@ aipd-skill/dist/
 - [x] `steps/s2-move-skill-source.md` - 创建 `aipd-skill/` 并迁移 `src/`、`scripts/`、`modules/`、`dist/`。
 - [x] `steps/s3-handle-legacy-and-todo.md` - 处理 `v1/` 和 `v2-todo/`：归档、转 inbox 或转 case 候选。
 - [x] `steps/s4-update-references-and-verify.md` - 更新路径引用并验证构建 / 安装 / 文档入口。
-- [ ] `steps/s5-clean-legacy-after-tag.md` - 在当前稳定点打 tag 后，清理 `docs/legacy/v1` 与 `docs/legacy/v2-todo`。
+- [x] `steps/s5-clean-legacy-after-tag.md` - 在当前稳定点打 tag 后，清理 `docs/legacy/v1` 与 `docs/legacy/v2-todo`。
 - [ ] `steps/s6-rename-aipd2-to-aipd.md` - 将当前对外命名从 `aipd2` 收敛回 `aipd`。
 
 ## 6.1 执行结果
@@ -163,7 +163,8 @@ aipd-skill/dist/
 - `v1/`、`v2-todo/` 已迁移到 `docs/legacy/`，并在 `_adoc/inbox.md` 记录 `v2-todo` 后续待判断索引。
 - README、docs、_adoc map、L5 工程规则、skill 自迭代文档和脚本提示已同步新路径。
 - 已运行 `./aipd-skill/scripts/build`，Claude / Codex 均生成 10 个 skill，Codex agent 模板已生成。
-- 当前提交将作为清理 legacy 前的稳定保留点；清理前应创建 Git tag，便于回看 v1 / v2-todo 旧材料。
+- 已创建 Git tag `c0.7-before-legacy-cleanup` 指向清理 legacy 前的稳定提交，便于回看 v1 / v2-todo 旧材料。
+- `docs/legacy/v1/` 和 `docs/legacy/v2-todo/` 已从工作树删除；`docs/legacy/README.md` 和 `_adoc/inbox.md` 已改为通过 tag 追溯旧材料。
 
 ## 7. 后续候选事项
 
@@ -171,7 +172,6 @@ aipd-skill/dist/
 - 判断是否需要在根 README 增加“仓库分层”章节。
 - 判断 `_adoc/map.md` 是否需要新增 `aipd-skill/`、`aipd-desktop/` 的路由入口。
 - 判断 `docs/modules/build-and-install.md` 是否需要按新路径重写。
-- 清理 `docs/legacy/v1/` 和 `docs/legacy/v2-todo/` 前先打 Git tag。
 - 将 `aipd2` 命名统一改回 `aipd`，包括 skill 名、文档、命令和目录引用。
 
 ## 8. 验收标准
@@ -180,6 +180,7 @@ aipd-skill/dist/
 - [x] AIPD Skill 源码和脚本迁移到 `aipd-skill/` 后，构建 / 安装链路仍可用。
 - [x] 根目录不再保留归属不清的 `src/`、`scripts/`、`modules/`、`dist/`。
 - [x] `v1/`、`v2-todo/` 已处理为明确归档 / inbox / case 候选，不再作为根目录长期入口。
+- [x] legacy 旧材料已通过 `c0.7-before-legacy-cleanup` 保留快照，当前工作树不再保留 `docs/legacy/v1/` 和 `docs/legacy/v2-todo/`。
 - [x] README、docs、_adoc map 和相关 case 路径已同步。
 - [x] 未创建 Desktop 项目；Desktop 创建留给后续 `c0.8`。
 

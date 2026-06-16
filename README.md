@@ -141,7 +141,7 @@ AIPD-2/
 │   ├── modules/        # Skill 相关模块材料，当前为空
 │   └── dist/           # Skill 构建产物
 ├── docs/              # 面向用户的学习文档与历史材料
-│   └── legacy/         # v1、v2-todo 等历史归档
+│   └── legacy/         # 历史材料说明；旧材料通过 Git tag 回看
 └── aipd-desktop/      # 未来 AIPD Desktop，c0.8 创建
 ```
 
