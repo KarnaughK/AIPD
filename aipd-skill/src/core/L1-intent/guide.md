@@ -141,7 +141,7 @@ mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core _adoc/L4-product _adoc/
    └── case/              ← 事项执行记录
        └── archive/       ← 已归档 case
 
-下次调用 /aipd2 将进入「设计功能模块」阶段。
+下次调用 /aipd 将进入「设计功能模块」阶段。
 要现在继续吗？
 ```
 

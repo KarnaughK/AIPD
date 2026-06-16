@@ -2,7 +2,7 @@
 
 Agent Entry 是 Agent 进入项目后的第一跳规则。
 
-在 AIPD2 项目里，这个入口通常由 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md` 共同承担。
+在 AIPD 项目里，这个入口通常由 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md` 共同承担。
 
 ## 基本读取链路
 
@@ -38,6 +38,6 @@ AGENTS.md
 - `README.md`：面向第一次打开仓库的人，解释项目为什么存在和如何继续阅读。
 - `docs/`：面向人的学习文档。
 - `_adoc/`：面向 Agent 的项目认知事实源。
-- `aipd-skill/src/`：AIPD2 Skill 本体真实源码。
+- `aipd-skill/src/`：AIPD Skill 本体真实源码。
 
-Agent 执行项目任务时，不应把 `docs/` 当成 `_adoc/` 的替代品。`docs/` 可以帮助人理解 AIPD2，但执行事实源仍是 `_adoc/` 和 case / step。
+Agent 执行项目任务时，不应把 `docs/` 当成 `_adoc/` 的替代品。`docs/` 可以帮助人理解 AIPD，但执行事实源仍是 `_adoc/` 和 case / step。

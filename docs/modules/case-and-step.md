@@ -1,6 +1,6 @@
 # Case 与 Step
 
-Case / Step 是 AIPD2 的任务执行组织系统。
+Case / Step 是 AIPD 的任务执行组织系统。
 
 它解决的问题不是“列一个 todo”，而是让一次 AI 协作事项可恢复、可派发、可验收、可归档。
 
@@ -48,9 +48,9 @@ Step 是 Case 内的最小执行单元。
 
 ## case-create 与 case-run
 
-`aipd2-case-create` 负责创建 case、沉淀目标、边界、上下文索引和 step。
+`aipd-case-create` 负责创建 case、沉淀目标、边界、上下文索引和 step。
 
-`aipd2-case-run` 负责按 case 恢复状态、判断下一个 step、派发执行 Agent、收集结果、验收并写回状态。
+`aipd-case-run` 负责按 case 恢复状态、判断下一个 step、派发执行 Agent、收集结果、验收并写回状态。
 
 这两个能力的分工很重要：未确认的讨论点不要包装成 step；已经写清楚的 step 才适合进入执行。
 

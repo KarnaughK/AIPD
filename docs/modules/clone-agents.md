@@ -1,6 +1,6 @@
 # 分身 Agent
 
-AIPD2 的分身 Agent 模型不是“主 Agent 派工给低上下文子 Agent”。
+AIPD 的分身 Agent 模型不是“主 Agent 派工给低上下文子 Agent”。
 
 更准确的模型是：分身 Agent 是从主 Agent 当前认知 fork 出来的克隆体。它继承同一份项目认知、对话背景、任务方向和判断逻辑，然后进入局部探索或执行分支。
 

@@ -1,7 +1,7 @@
 ---
-name: aipd2-update
+name: aipd-update
 description: >
-  更新已初始化项目中的 AIPD 架构。审计 AGENTS.md、_adoc/index.md、_adoc/map.md、L3/L4/L5 map、case 模板和索引是否符合当前 AIPD2 规则，先输出差异清单和更新方案，用户确认后再安全合并更新。
+  更新已初始化项目中的 AIPD 架构。审计 AGENTS.md、_adoc/index.md、_adoc/map.md、L3/L4/L5 map、case 模板和索引是否符合当前 AIPD 规则，先输出差异清单和更新方案，用户确认后再安全合并更新。
   关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、补 map、同步新模板、检查 AIPD 架构、项目 AIPD 迁移、L3 map、L4 feature map
 allowed-tools:
   - Read
@@ -23,31 +23,31 @@ inject-from-core:
   - case/templates/case.md
 ---
 
-# AIPD2 Update
+# AIPD Update
 
-`aipd2-update` 用于把一个已经初始化过 AIPD 的项目，升级到当前 AIPD2 的最新项目入口、项目记忆地图和 case 观察锚点规则。
+`aipd-update` 用于把一个已经初始化过 AIPD 的项目，升级到当前 AIPD 的最新项目入口、项目记忆地图和 case 观察锚点规则。
 
 它不是初始化入口，也不是经验回流入口：
 
-- 初始化新项目用 `aipd2`。
-- 当前项目 ADOC 经验回写用 `aipd2-weave`。
-- 从会话和 transcript 提炼 AIPD2 框架经验用 `aipd2-learn`。
-- 已有项目同步 AIPD2 新结构、新模板、新 map 规则，用 `aipd2-update`。
+- 初始化新项目用 `aipd`。
+- 当前项目 ADOC 经验回写用 `aipd-weave`。
+- 从会话和 transcript 提炼 AIPD 框架经验用 `aipd-learn`。
+- 已有项目同步 AIPD 新结构、新模板、新 map 规则，用 `aipd-update`。
 
 ## 职责边界
 
-**只做**：审计当前项目 AIPD 架构 → 对比当前 AIPD2 模板和规则 → 输出更新清单 → 用户确认后安全合并更新。
+**只做**：审计当前项目 AIPD 架构 → 对比当前 AIPD 模板和规则 → 输出更新清单 → 用户确认后安全合并更新。
 
 **不做**：不改业务代码，不执行 case step，不归档 case，不自动提交，不覆盖用户项目文档正文，不主动把旧结构作为兼容目标长期保留。
 
 ## 升级原则
 
-`aipd2-update` 的目标是把项目升级到当前 AIPD2 标准结构，不是做兼容性维护。
+`aipd-update` 的目标是把项目升级到当前 AIPD 标准结构，不是做兼容性维护。
 
 - **最新结构优先**：发现旧结构时，默认把它识别为“过期结构”，给出迁移、删除或替换方案；不把旧结构继续作为读取兜底。
 - **不主动兼容**：除非用户明确要求保留旧入口或旧格式，否则 update 不主动提出“兼容旧结构”的目标。
 - **先沟通再写入**：只要升级涉及多个入口文件、目录结构变化、模板替换或 case 规则变化，必须先列出将修改哪些文件、为什么改、怎么合并。
-- **破坏性更新可跳过**：删除文件、重命名入口、大块替换模板、移除旧读取链路等属于破坏性更新。用户可以选择跳过；如果跳过，最终结果必须说明项目哪些部分没有升级到最新 AIPD2。
+- **破坏性更新可跳过**：删除文件、重命名入口、大块替换模板、移除旧读取链路等属于破坏性更新。用户可以选择跳过；如果跳过，最终结果必须说明项目哪些部分没有升级到最新 AIPD。
 - **跳过不伪装完成**：用户跳过某项破坏性更新时，不写“已完全升级”，只写“已完成非破坏性更新，以下旧结构仍保留”。
 
 ## 更新对象
@@ -101,13 +101,13 @@ test -f _adoc/map.md && sed -n '1,260p' _adoc/map.md
 find _adoc -maxdepth 3 -type f | sort
 ```
 
-如果没有 `_adoc/`，停止并建议使用 `aipd2` 初始化，不要把 update 当初始化用。
+如果没有 `_adoc/`，停止并建议使用 `aipd` 初始化，不要把 update 当初始化用。
 
 如果工作区有未提交改动，继续审计可以进行，但在输出中标记风险；执行写入前提醒用户当前工作区已有改动。
 
 ## 第二步：审计差异
 
-对照当前 AIPD2 注入模板和规则审计，不要求逐字一致，重点看能力是否存在。
+对照当前 AIPD 注入模板和规则审计，不要求逐字一致，重点看能力是否存在。
 
 ### 必须项
 
@@ -119,7 +119,7 @@ find _adoc -maxdepth 3 -type f | sort
 - L5 被定义为产品功能到代码实现之间的工程实现层，负责跨模块、跨端、跨页面的稳定实现规则。
 - 明确页面、弹窗、组件内部细节放就近 `README.md`，不塞回 L5。
 - case 恢复链路包含 case / step 文件作为事实源。
-- 执行概念或项目入口中包含 Weave：讨论、step 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd2-weave` 回写项目 ADOC、局部 README、map 或 case。
+- 执行概念或项目入口中包含 Weave：讨论、step 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README、map 或 case。
 
 ### 建议项
 
@@ -233,7 +233,7 @@ flowchart TD
 默认只输出清单，不写文件。
 
 ```md
-【AIPD2 Update 审计结果】
+【AIPD Update 审计结果】
 
 项目：
 - 路径：{project_root}
@@ -259,7 +259,7 @@ flowchart TD
 - `_adoc/index.md`：{缺什么；为什么要改；计划怎么合并}
 - `_adoc/map.md`：{不存在 / 缺章节 / 需要补路由 / 是否需要吸收过期 context-map 的稳定入口}
 - `_adoc/context-map.md`：{不存在 / 作为过期结构存在；是否列入破坏性更新删除项}
-- `AGENTS.md / _adoc/index.md / _adoc/map.md`：{是否缺 Weave 概念、反向编织锚点或 `/aipd2-weave` 路由}
+- `AGENTS.md / _adoc/index.md / _adoc/map.md`：{是否缺 Weave 概念、反向编织锚点或 `/aipd-weave` 路由}
 
 建议更新：
 - `_adoc/L3-core/map.md`：{建议补核心概念图骨架；如果用户指定概念，可先列候选，不擅自定稿}
@@ -306,7 +306,7 @@ flowchart TD
 3. `_adoc/map.md`
    - 不存在时使用 `@references/adoc/templates/map.md` 创建。
    - 已存在时只补缺失的标准章节，不删除用户已有路由。
-   - 如果缺少 Weave 反向编织锚点，只补锚点和 `/aipd2-weave` 路由，不写具体业务经验。
+   - 如果缺少 Weave 反向编织锚点，只补锚点和 `/aipd-weave` 路由，不写具体业务经验。
    - 如果发现 `_adoc/context-map.md`，先确认其中稳定入口已进入 `_adoc/map.md`，把删除旧文件列为破坏性更新；只有用户确认执行该破坏性更新时才删除。新架构不再兼容读取它。
 
 4. `_adoc/L3-core/map.md` / `_adoc/L4-product/map.md` / `_adoc/L5-dev/map.md`
@@ -345,7 +345,7 @@ flowchart TD
 - 执行了哪些破坏性更新；哪些破坏性更新被用户跳过。
 - 如果用户跳过破坏性更新，说明项目还保留哪些过期结构，以及它为什么不算完全升级。
 - 哪些建议没有执行，为什么。
-- 是否需要重新运行 `aipd2-case-create`、`aipd2-weave` 或 `aipd2-learn`。
+- 是否需要重新运行 `aipd-case-create`、`aipd-weave` 或 `aipd-learn`。
 - 是否建议提交当前改动。
 
 不要自动提交。

@@ -47,7 +47,7 @@ rg -n "build|install|src/platforms|src/skills|src/core" .
 
 结论：
 - 当前根目录存在旧结构：`src/`、`scripts/`、`modules/`、`dist/`、`v1/`、`v2-todo/`。
-- `src/`、`scripts/`、`dist/` 明确属于 AIPD2 Skill 本体；`modules/` 当前为空，但作为 Skill 本体候选目录迁入 `aipd-skill/`。
+- `src/`、`scripts/`、`dist/` 明确属于 AIPD Skill 本体；`modules/` 当前为空，但作为 Skill 本体候选目录迁入 `aipd-skill/`。
 - `v1/` 是 AIPD v1 历史框架材料；`v2-todo/` 是早期待讨论和已完成事项材料。
 - README、docs、_adoc、skill 自引用里存在旧路径引用，需要 Step 4 同步更新。
 

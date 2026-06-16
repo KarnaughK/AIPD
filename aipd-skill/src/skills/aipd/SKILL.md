@@ -1,5 +1,5 @@
 ---
-name: aipd2
+name: aipd
 description: >
   AIPD 渐进式总入口。根据用户输入在 ADOC 轻量认知加载、项目状态扫描、初始化和 case 流程之间路由。
   关键词：AIPD、ADOC、_adoc、项目认知、轻量认知加载、项目状态、初始化、case、前端规范、L5、开发前读文档
@@ -29,24 +29,24 @@ inject-from-core:
 
 # AIPD 渐进式总入口
 
-根据用户输入判断入口模式。`aipd2` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`，状态扫描细节交给分身 Agent。
+根据用户输入判断入口模式。`aipd` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`，状态扫描细节交给分身 Agent。
 
 ## 入口判断
 
 触发后先判断用户是否带着明确任务。
 
-如果用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd2-inbox`。这是独立 capture 入口，只负责把临时信息写入 `_adoc/inbox.md`，不要把这套判断扩散到 case-create、weave、learn 等其他 skill。
+如果用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd-inbox`。这是独立 capture 入口，只负责把临时信息写入 `_adoc/inbox.md`，不要把这套判断扩散到 case-create、weave、learn 等其他 skill。
 
 ### 进入 ADOC 轻量认知模式
 
 当用户带着具体开发、分析、讨论或修改任务时，进入此模式，例如：
 
 ```text
-$aipd2 我要改合同创建 Step1 的 README
-$aipd2 修一下合同列表搜索条件
-$aipd2 看看这个弹框为什么保存后没刷新
-$aipd2 讨论一下这个页面 README 怎么拆
-$aipd2 按项目规范实现一个新表单
+$aipd 我要改合同创建 Step1 的 README
+$aipd 修一下合同列表搜索条件
+$aipd 看看这个弹框为什么保存后没刷新
+$aipd 讨论一下这个页面 README 怎么拆
+$aipd 按项目规范实现一个新表单
 ```
 
 执行原则：
@@ -94,15 +94,15 @@ $aipd2 按项目规范实现一个新表单
 当用户没有明确任务，或明确要看状态、初始化、case、归档、复盘、总结经验时，进入此模式，例如：
 
 ```text
-$aipd2
-$aipd2 看一下项目
-$aipd2 当前状态
-$aipd2 初始化
-$aipd2 更新 AIPD
-$aipd2 case
-$aipd2 归档
-$aipd2 总结经验
-$aipd2 记一下刚才这段
+$aipd
+$aipd 看一下项目
+$aipd 当前状态
+$aipd 初始化
+$aipd 更新 AIPD
+$aipd case
+$aipd 归档
+$aipd 总结经验
+$aipd 记一下刚才这段
 ```
 
 此模式保留项目状态入口能力，但状态扫描细节由分身 Agent 读取 `@references/scan-agent.md` 执行，主 Agent 不直接加载完整扫描细节。
@@ -112,7 +112,7 @@ $aipd2 记一下刚才这段
 当用户有明确对象但没有明确动作时，例如：
 
 ```text
-$aipd2 看一下合同创建页面
+$aipd 看一下合同创建页面
 ```
 
 优先按 ADOC 轻量认知模式读取入口文档，给出简短理解，然后询问用户要分析、修改还是创建 case。不要直接进入完整状态面板，也不要全量扫描 `_adoc/`。
@@ -163,7 +163,7 @@ $aipd2 看一下合同创建页面
   当前 Case  : c0.2-功能名（8/10 步完成）
   已归档     : 3 个 Case
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  推荐下一步：/aipd2-case-run
+  推荐下一步：/aipd-case-run
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -216,7 +216,7 @@ mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
 4. 如果目标文件已有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换这两个标记之间的 AIPD 区块。
 5. 如果目标文件存在但没有 AIPD 标记，把 AIPD 区块追加到文件末尾，不覆盖用户原有内容。
 
-Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd2-inbox`、`/aipd2-case-create`、`/aipd2-case-run`、`/aipd2-weave`、`/aipd2-learn` 等具体流程 skill。
+Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd-inbox`、`/aipd-case-create`、`/aipd-case-run`、`/aipd-weave`、`/aipd-learn` 等具体流程 skill。
 
 #### 可选安装 Interaction Protocol
 
@@ -258,22 +258,22 @@ Agent MD 使用哪个模板等级？
 
 **有 `_adoc/` 但没有 intent.md** → 引导用户定义方向（同上）。
 
-**有 `_adoc/`，但用户要升级 / 同步 / 检查 AIPD 架构** → 推荐 `/aipd2-update`。`aipd2` 不直接迁移已有项目，避免初始化入口误覆盖用户文档。
+**有 `_adoc/`，但用户要升级 / 同步 / 检查 AIPD 架构** → 推荐 `/aipd-update`。`aipd` 不直接迁移已有项目，避免初始化入口误覆盖用户文档。
 
-**有 `_adoc/` 但没有 case** → 推荐 `/aipd2-case-create`。
+**有 `_adoc/` 但没有 case** → 推荐 `/aipd-case-create`。
 
-**有进行中的 case** → 推荐 `/aipd2-case-run`。
+**有进行中的 case** → 推荐 `/aipd-case-run`。
 
-**case 全部完成待归档** → 推荐 `/aipd2-case-archive`。
+**case 全部完成待归档** → 推荐 `/aipd-case-archive`。
 
-**用户想把当前项目里的讨论、step 结果、case 结论、diff、错误日志或外部资料沉淀回 `_adoc/`、局部 README 或 map** → 推荐 `/aipd2-weave`。
+**用户想把当前项目里的讨论、step 结果、case 结论、diff、错误日志或外部资料沉淀回 `_adoc/`、局部 README 或 map** → 推荐 `/aipd-weave`。
 
-**用户想采集会话定位信息，或诊断 AIPD2 框架自身的 skill、模板、Agent 行为规则** → 推荐 `/aipd2-learn`。
+**用户想采集会话定位信息，或诊断 AIPD 框架自身的 skill、模板、Agent 行为规则** → 推荐 `/aipd-learn`。
 
 ## 设计原则
 
-1. **一个总入口**：不新增 `aipd2-adoc`、`aipd2-l5` 等碎片化入口。
-2. **skill 是路由器**：`aipd2/SKILL.md` 负责判断模式和选择读取策略，不承载完整项目规则。
+1. **一个总入口**：不新增 `aipd-adoc`、`aipd-l5` 等碎片化入口。
+2. **skill 是路由器**：`aipd/SKILL.md` 负责判断模式和选择读取策略，不承载完整项目规则。
 3. **渐进式披露**：有任务时轻量加载 `_adoc` 并按需下钻；无任务时才进入状态与流程模式。
 4. **任务优先**：用户带着明确任务触发 AIPD 时，不先输出完整状态面板。
 5. **项目规则在项目里**：具体规范由 `_adoc/` 维护，skill 只说明什么时候读哪里。

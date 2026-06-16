@@ -1,16 +1,16 @@
 ---
-name: aipd2-git-push
+name: aipd-git-push
 description: >
-  AIPD2 常用 Git push 辅助入口。检查当前分支和提交状态，将当前分支推送到远端。
+  AIPD 常用 Git push 辅助入口。检查当前分支和提交状态，将当前分支推送到远端。
   关键词：git、push、提交、推送、同步远端
 allowed-tools:
   - Bash
   - AskUserQuestion
 ---
 
-# AIPD2 Git Push
+# AIPD Git Push
 
-这是 AIPD2 的常用 Git 辅助入口，不参与 AIPD case 生命周期。
+这是 AIPD 的常用 Git 辅助入口，不参与 AIPD case 生命周期。
 
 ## 职责边界
 
@@ -61,8 +61,8 @@ git log --oneline --decorate -5
 
 ```text
 准备推送 2 个提交：
-- fd93e70：把 AIPD2 的计划流程迁移为 Case，并加入 Agent Entry 初始化逻辑。
-- 333342a：新增 /aipd2-git-push，用来检查状态后推送当前分支。
+- fd93e70：把 AIPD 的计划流程迁移为 Case，并加入 Agent Entry 初始化逻辑。
+- 333342a：新增 /aipd-git-push，用来检查状态后推送当前分支。
 ```
 
 ### 第四步：推送当前分支

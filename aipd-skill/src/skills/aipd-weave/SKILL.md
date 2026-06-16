@@ -1,7 +1,7 @@
 ---
-name: aipd2-weave
+name: aipd-weave
 description: >
-  AIPD2 反向编织入口。把讨论、开发、step 结果、case 归档、外部资料或错误日志中产生的新信息，判断并回写到当前项目的 _adoc、局部 README、map 或 case 记录。
+  AIPD 反向编织入口。把讨论、开发、step 结果、case 归档、外部资料或错误日志中产生的新信息，判断并回写到当前项目的 _adoc、局部 README、map 或 case 记录。
   关键词：weave、反向编织、知识回写、项目经验沉淀、更新 ADOC、更新 map、更新 README、step 完成后回写、case 归档后回写
 allowed-tools:
   - Read
@@ -19,9 +19,9 @@ inject-from-core:
   - case/overview.md
 ---
 
-# AIPD2 Weave
+# AIPD Weave
 
-`aipd2-weave` 是 AIPD2 的反向编织入口。对用户来说，它就是“更新 ADOC 文档”：先看当前上下文，总结可沉淀重点，判断准备写到哪些文档，确认后修改项目级 ADOC 和索引系统。
+`aipd-weave` 是 AIPD 的反向编织入口。对用户来说，它就是“更新 ADOC 文档”：先看当前上下文，总结可沉淀重点，判断准备写到哪些文档，确认后修改项目级 ADOC 和索引系统。
 
 其他 skill 负责执行、验证和产出结果；`weave` 负责判断这些结果是否值得沉淀、沉淀到哪里、是否更新索引、是否提示旧知识冲突。
 
@@ -30,7 +30,7 @@ inject-from-core:
 **只做**：
 
 - 先读取项目入口和 map，再从当前上下文、用户描述、step 结果、case 归档、代码 diff、错误日志或外部资料中提炼可沉淀重点。
-- 判断候选信息属于 L3、L4、L5、局部 README、map、case / step、AIPD2 框架经验中的哪一类。
+- 判断候选信息属于 L3、L4、L5、局部 README、map、case / step、AIPD 框架经验中的哪一类。
 - 如果候选信息是可重复执行的项目动作，判断是否应进入 `_adoc/sop/` 作为以 Agent 为运行时的可复用 AI 原生程序。
 - 优先更新当前项目已有 `_adoc/`、局部 README、map 或 case / step 记录。
 - 在写入前输出回写方案，等用户确认后再改文件。
@@ -40,7 +40,7 @@ inject-from-core:
 
 - 不执行开发 step。
 - 不归档 case，不移动 case 目录，不合并分支。
-- 不替代 `aipd2-learn` 做 AIPD2 框架自迭代诊断。
+- 不替代 `aipd-learn` 做 AIPD 框架自迭代诊断。
 - 不把一次性聊天过程写进长期 ADOC。
 - 不为了沉淀创建大量零散文档；优先更新已有文件和索引。
 
@@ -48,22 +48,22 @@ inject-from-core:
 
 | skill | 负责什么 | 和 weave 的关系 |
 |---|---|---|
-| `aipd2` | 入口路由和轻量上下文加载 | 用户说“回写 / 记一下 / weave / 更新 ADOC”时推荐进入 `aipd2-weave` |
-| `aipd2-case-run` | 执行 case / step，收集结果 | step 完成后可把结果包交给 `aipd2-weave` 判断是否沉淀 |
-| `aipd2-case-archive` | 归档 case、收束状态 | 归档前后可调用 `aipd2-weave` 做稳定知识回写 |
-| `aipd2-learn` | AIPD2 框架自迭代、transcript 诊断、定位卡 | 框架经验走 `learn`；业务项目 ADOC 回写走 `weave` |
-| `aipd2-update` | 升级已初始化项目的 AIPD 架构 | 架构模板同步走 `update`；当前项目经验沉淀走 `weave` |
+| `aipd` | 入口路由和轻量上下文加载 | 用户说“回写 / 记一下 / weave / 更新 ADOC”时推荐进入 `aipd-weave` |
+| `aipd-case-run` | 执行 case / step，收集结果 | step 完成后可把结果包交给 `aipd-weave` 判断是否沉淀 |
+| `aipd-case-archive` | 归档 case、收束状态 | 归档前后可调用 `aipd-weave` 做稳定知识回写 |
+| `aipd-learn` | AIPD 框架自迭代、transcript 诊断、定位卡 | 框架经验走 `learn`；业务项目 ADOC 回写走 `weave` |
+| `aipd-update` | 升级已初始化项目的 AIPD 架构 | 架构模板同步走 `update`；当前项目经验沉淀走 `weave` |
 
 ## 触发场景
 
 进入 `weave` 的典型说法：
 
 ```text
-/aipd2-weave 把刚才这段记到 ADOC
-/aipd2-weave step 做完了，看看要不要回写
-/aipd2-weave 这次踩坑沉淀一下
-/aipd2-weave 根据这个 diff 更新项目文档
-/aipd2-weave 把这个外部资料编织进项目认知
+/aipd-weave 把刚才这段记到 ADOC
+/aipd-weave step 做完了，看看要不要回写
+/aipd-weave 这次踩坑沉淀一下
+/aipd-weave 根据这个 diff 更新项目文档
+/aipd-weave 把这个外部资料编织进项目认知
 ```
 
 流程型触发点：
@@ -98,7 +98,7 @@ inject-from-core:
 test -d _adoc && test -f _adoc/index.md
 ```
 
-如果没有 `_adoc/`，说明当前项目还未初始化 AIPD。此时不要创建 ADOC 文档；提示用户先运行 `aipd2` 初始化，或只输出一份普通经验摘要。
+如果没有 `_adoc/`，说明当前项目还未初始化 AIPD。此时不要创建 ADOC 文档；提示用户先运行 `aipd` 初始化，或只输出一份普通经验摘要。
 
 如果有 `_adoc/`，读取：
 
@@ -176,7 +176,7 @@ Agent 内部可以用来源分类辅助判断：
 按下面顺序判断：
 
 1. **是否稳定**：未来任务是否可能复用；如果只是一次性过程，留在 case / step。
-2. **影响层级**：它影响概念、功能、实现规则、局部代码入口、检索路径，还是 AIPD2 框架本身。
+2. **影响层级**：它影响概念、功能、实现规则、局部代码入口、检索路径，还是 AIPD 框架本身。
 3. **归属位置**：选择 L3 / L4 / L5 / 局部 README / map / case / step。
 4. **索引需求**：是否需要更新 `_adoc/map.md` 或细节 map。
 5. **冲突关系**：是否推翻、替换或限制了已有知识。
@@ -193,14 +193,14 @@ Agent 内部可以用来源分类辅助判断：
 | 可重复执行的项目动作、Agent 执行流程、跨前端/后端/脚本/外部工具的操作程序 | `_adoc/sop/`；同步更新 `_adoc/sop/map.md`，高频入口再同步 `_adoc/map.md` |
 | 用户高频说法、业务词、工程词、容易迷路的入口 | `_adoc/map.md` |
 | 一次性执行过程、验收记录、临时决策 | 当前 case / step |
-| AIPD2 skill、模板、分层、Agent 行为规则 | `aipd2-learn` 生成框架回流方案，回 AIPD2 源项目处理 |
+| AIPD skill、模板、分层、Agent 行为规则 | `aipd-learn` 生成框架回流方案，回 AIPD 源项目处理 |
 
 ### 第五步：输出回写方案
 
 写文件前必须先给方案：
 
 ```md
-【AIPD2 Weave 回写方案】
+【AIPD Weave 回写方案】
 来源：当前对话 / step / case / diff / 外部资料
 判定：稳定知识 / 一次性过程 / 两者都有
 
@@ -238,7 +238,7 @@ Agent 内部可以用来源分类辅助判断：
 完成后输出：
 
 ```md
-【AIPD2 Weave 完成】
+【AIPD Weave 完成】
 已修改：
 - `path/to/file.md`：{摘要}
 
@@ -246,7 +246,7 @@ Agent 内部可以用来源分类辅助判断：
 - {内容}：{原因}
 
 后续建议：
-- {是否需要运行测试、构建、aipd2-update 或 case 归档}
+- {是否需要运行测试、构建、aipd-update 或 case 归档}
 ```
 
 不要自动提交。除非用户明确要求，不运行 git commit / push。
@@ -259,14 +259,14 @@ Agent 内部可以用来源分类辅助判断：
 Raw source -> Ingest -> 更新 wiki pages -> 更新 index -> 追加 log -> Lint
 ```
 
-AIPD2 中对应为：
+AIPD 中对应为：
 
 ```text
 讨论 / step / case / diff / 外部资料
--> aipd2-weave
+-> aipd-weave
 -> 回写 L3 / L4 / L5 / README / map / case
 -> 必要时提示旧知识冲突
 -> 下次 Agent 通过正向索引读取到新上下文
 ```
 
-AIPD2 已经有 L1-L6、OKR、Case、Step、Agent Entry 等项目级纵向模块。`weave` 的核心价值是把新信息编织进这些稳定位置，让项目知识库持续积累。
+AIPD 已经有 L1-L6、OKR、Case、Step、Agent Entry 等项目级纵向模块。`weave` 的核心价值是把新信息编织进这些稳定位置，让项目知识库持续积累。

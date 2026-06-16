@@ -1,6 +1,6 @@
 # L3 核心概念地图
 
-本文件是 AIPD2 核心概念的检索入口。它只索引稳定概念、别名、关系和细节文档，不替代 L3 正文。
+本文件是 AIPD 核心概念的检索入口。它只索引稳定概念、别名、关系和细节文档，不替代 L3 正文。
 
 ## 核心概念总表
 
@@ -15,7 +15,7 @@
 | 黑箱上移 | 决策杠杆上移 | 把人的决策位置从局部实现细节上移到边界、输入输出和验收层 | `_adoc/L3-core/index.md` | case-create、case-run | 不等同于传统封装 |
 | 扁平化检索 | 大地图 + 细节 Map | 用结构化总图提高 AI 第一跳命中率 | `_adoc/L3-core/index.md`、`_adoc/map.md` | AIPD Update、case-create、weave | 不是取消分层维护 |
 | 分身 Agent | fork 出来的 Main Agent 克隆体 | 进入局部探索分支并回流结论的同源 Agent | `_adoc/L5-dev/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | case-run、Agent 调度 | 不是低上下文执行工人 |
-| Weave 反向编织 | 项目知识回写 | 把稳定信息回写到当前项目 ADOC、局部 README、map 或 case | `_adoc/L3-core/horizontal-capabilities.md`、`aipd-skill/src/skills/aipd2-weave/SKILL.md` | Weave | 和 `aipd2-learn` 分工不同 |
+| Weave 反向编织 | 项目知识回写 | 把稳定信息回写到当前项目 ADOC、局部 README、map 或 case | `_adoc/L3-core/horizontal-capabilities.md`、`aipd-skill/src/skills/aipd-weave/SKILL.md` | Weave | 和 `aipd-learn` 分工不同 |
 
 ## 对象关系
 

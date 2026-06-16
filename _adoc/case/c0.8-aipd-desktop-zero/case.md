@@ -32,7 +32,7 @@ _adoc/case/c0.8-aipd-desktop-zero/
 
 ## 2. 场景分流
 
-- **项目类型**：AIPD2 框架项目。
+- **项目类型**：AIPD 框架项目。
 - **Case 类型**：L3 / L4 / L5 交叉的产品形态与工程入口讨论，偏目标型 / 认知型 case。
 - **适用流程**：通用 case-create。当前只沉淀目标、上下文索引、讨论结论和参考资料。
 - **不适用经验**：不套用 Vue 前端实现型 case，不创建页面 / 组件 / provider / 架构图实现 step。
@@ -41,7 +41,7 @@ _adoc/case/c0.8-aipd-desktop-zero/
 
 ### 层级判断
 
-- **L1 Intent**：涉及 AIPD2 是否从 Skill / Agent 约束扩展到桌面工作台，但当前不改方向文件。
+- **L1 Intent**：涉及 AIPD 是否从 Skill / Agent 约束扩展到桌面工作台，但当前不改方向文件。
 - **L3 Core**：涉及 AIPD 的组织单位、Case / Step、上下文显性化、Agent 自由度与流程控制边界。
 - **L4 Product**：涉及 AIPD Desktop 的产品形态、第零版 / 第一版边界、左侧导航、聊天区、预览区。
 - **L5 Dev**：涉及 Codex App Server / SDK / `codex exec --json`、Claude Code / OpenCode adapter 可能性，但当前仅记录参考，不做实现设计。
@@ -49,12 +49,12 @@ _adoc/case/c0.8-aipd-desktop-zero/
 
 ### 项目认知
 
-- `_adoc/index.md` - AIPD2 项目状态、L1-L5 入口、case / okr / inbox 入口。
+- `_adoc/index.md` - AIPD 项目状态、L1-L5 入口、case / okr / inbox 入口。
 - `_adoc/map.md` - 路由到 Case Create、Case Run、Agent 调度、Weave、Codex 平台适配等高频入口。
-- `_adoc/L3-core/index.md` - AIPD2 核心认知：上下文解耦、黑箱上移、扁平化检索、Case / Step 和 Weave。
+- `_adoc/L3-core/index.md` - AIPD 核心认知：上下文解耦、黑箱上移、扁平化检索、Case / Step 和 Weave。
 - `_adoc/L3-core/horizontal-capabilities.md` - 横向能力：map 检索、Case 系统、Weave、Agent Entry、未来上下文服务。
 - `_adoc/L3-core/vertical-concept-modules.md` - 纵向模块：L1-L6、OKR、Case、Step、Agent Entry、Agent 使用方案。
-- `_adoc/L4-product/map.md` - AIPD2 产品功能线入口，尤其 Case Create / Case Run / Weave / Learn / Update。
+- `_adoc/L4-product/map.md` - AIPD 产品功能线入口，尤其 Case Create / Case Run / Weave / Learn / Update。
 - `_adoc/L5-dev/index.md` - Codex 优先适配、Agent 调度、构建安装等工程语境。
 
 ### 参考资料
@@ -172,7 +172,7 @@ _adoc/case/c0.8-aipd-desktop-zero/
 
 ## 9. Weave 反向编织候选
 
-> 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd2-weave` 先给回写方案，用户确认后再写入。
+> 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd-weave` 先给回写方案，用户确认后再写入。
 
 - `_adoc/L3-core/horizontal-capabilities.md` - 若 Case Workspace 成为稳定方向，可补充“Case 作为聊天 / 执行收纳空间”的横向能力。
 - `_adoc/L4-product/map.md` - 若 AIPD Desktop 进入产品功能线，可新增入口。

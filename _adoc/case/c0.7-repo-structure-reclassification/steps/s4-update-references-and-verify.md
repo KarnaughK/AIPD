@@ -40,9 +40,9 @@
 已完成：
 - 更新 `README.md` 的仓库结构和 Agent 执行入口。
 - 更新 `docs/modules/build-and-install.md` 的源码、脚本、产物路径和命令。
-- 更新 `_adoc/map.md`、`_adoc/L3-core/map.md`、`_adoc/L4-product/map.md`、`_adoc/L5-dev/index.md`、`_adoc/index.md`、`_adoc/okr/index.md` 中的 AIPD2 Skill 源码路径。
+- 更新 `_adoc/map.md`、`_adoc/L3-core/map.md`、`_adoc/L4-product/map.md`、`_adoc/L5-dev/index.md`、`_adoc/index.md`、`_adoc/okr/index.md` 中的 AIPD Skill 源码路径。
 - 更新 `docs/modules/skills-overview.md`、`docs/modules/agent-entry.md`。
-- 更新 `aipd-skill/src/skills/aipd2-learn/SKILL.md`、`aipd-skill/src/core/agent-guide.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` 中的 AIPD2 自身源码路径。
+- 更新 `aipd-skill/src/skills/aipd-learn/SKILL.md`、`aipd-skill/src/core/agent-guide.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` 中的 AIPD 自身源码路径。
 - 保留 `_adoc/case/archive/` 和 `docs/legacy/` 中的旧路径作为历史语义。
 
 验证：

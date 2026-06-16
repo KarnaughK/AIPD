@@ -32,7 +32,7 @@ AIPD-2 仓库自身的项目认知事实源。
 
 ### `aipd-skill/`
 
-AIPD2 Skill 本体源码和构建相关内容。
+AIPD Skill 本体源码和构建相关内容。
 
 包含：
 

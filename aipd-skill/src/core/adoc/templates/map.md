@@ -18,7 +18,7 @@
 |---|---|---|---|---|---|
 | {示例：合同 / 产品 / 任务 / 交付记录} | {核心概念或功能线} | L3 + L4 | `_adoc/L3-core/map.md`、`_adoc/L4-product/{feature}/map.md` | 相关页面或模块 README | `rg "合同|产品|任务|交付"` |
 | {示例：权限 / 菜单 / 按钮显隐} | {工程规则} | L5 + 局部 README | `_adoc/L5-dev/{rule}/map.md` | 目标页面 README、权限工具函数 | `rg "permission|perms|auth|hasPermi"` |
-| inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `aipd2-inbox` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc` |
+| inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `aipd-inbox` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc` |
 | SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 | SOP 项目级 Agent 程序库 | SOP + L3 + case | `_adoc/sop/index.md`、`_adoc/sop/map.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure" _adoc` |
 
 ## L3 核心概念总表
@@ -26,7 +26,7 @@
 | 用户说法 / 黑话 | 标准概念 | 概念 map | 相关 L4 功能线 | 常见误解 |
 |---|---|---|---|---|
 | {别名} | {概念名} | `_adoc/L3-core/{concept}/map.md` | `_adoc/L4-product/{feature}/map.md` | {不要混用的词} |
-| Inbox | 临时收件箱 / capture | `_adoc/inbox.md` | aipd2-inbox | 不是待办、不是候选 case、不是稳定认知；只接住未整理信息 |
+| Inbox | 临时收件箱 / capture | `_adoc/inbox.md` | aipd-inbox | 不是待办、不是候选 case、不是稳定认知；只接住未整理信息 |
 | SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP、case-create、case-run、weave | 不是 L4/L5 知识条目，也不是单纯脚本 |
 
 ## L4 产品功能线总表
@@ -49,7 +49,7 @@
 
 ## 自迭代观察锚点
 
-后续用 `aipd2-learn` 审计会话或 transcript 时，观察：
+后续用 `aipd-learn` 审计会话或 transcript 时，观察：
 
 - Agent 是否先读取 `_adoc/map.md`，再进入 L3 / L4 / L5 / 局部 README。
 - Agent 是否能从本文件一跳命中功能线或工程规则，而不是依赖多层目录链。
@@ -61,7 +61,7 @@
 
 ## Weave 反向编织锚点
 
-后续用 `aipd2-weave` 回写项目经验时，观察：
+后续用 `aipd-weave` 回写项目经验时，观察：
 
 - 新核心概念、别名、误解是否回写到 L3。
 - 新产品功能边界、业务规则是否回写到 L4。

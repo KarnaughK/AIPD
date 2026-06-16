@@ -95,7 +95,7 @@ _adoc/case/c{X.Y}-{case-name}/
 
 ## 8. Weave 反向编织候选
 
-> 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd2-weave` 先给回写方案，用户确认后再写入。
+> 本区只记录候选归属。真正回写长期 ADOC、局部 README 或 map 时，使用 `aipd-weave` 先给回写方案，用户确认后再写入。
 
 - `_adoc/L2-research/{topic}.md` - {可能需要沉淀的外部世界资料、竞品、场景、痛点或调研结论}
 - `_adoc/L3-core/{topic}.md` - {可能需要沉淀的核心概念、标准名、对象关系、项目成立模型或常见误解}
@@ -107,7 +107,7 @@ _adoc/case/c{X.Y}-{case-name}/
 
 ## 9. 自迭代观察锚点
 
-> 后续用 `aipd2-learn` 审计 transcript / session / step 记录时，检查 Agent 是否按这些锚点执行。锚点用于判断 AIPD SOP 是否生效，不只依赖用户反复纠正。
+> 后续用 `aipd-learn` 审计 transcript / session / step 记录时，检查 Agent 是否按这些锚点执行。锚点用于判断 AIPD SOP 是否生效，不只依赖用户反复纠正。
 
 - [ ] Agent 是否读取 `_adoc/map.md`，或说明其缺失并使用 `rg` / README 兜底。
 - [ ] Agent 是否读取本 case 上下文索引中的 L3 / L4 / L5 / 局部 README。

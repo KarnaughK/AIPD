@@ -1,6 +1,6 @@
 # 构建与安装
 
-AIPD2 仓库本身不是打开即用的应用，而是一个 skill 源码项目。
+AIPD 仓库本身不是打开即用的应用，而是一个 skill 源码项目。
 
 Skill 本体位于 `aipd-skill/`：源码在 `aipd-skill/src/`，构建产物在 `aipd-skill/dist/`，安装脚本在 `aipd-skill/scripts/`。
 
@@ -11,7 +11,7 @@ Skill 本体位于 `aipd-skill/`：源码在 `aipd-skill/src/`，构建产物在
 建议用 Codex、Claude Code 或其他支持 Skill 的 Agent 打开本项目，然后说明目标：
 
 ```text
-请阅读本仓库的项目说明和 AIPD 认知，把 AIPD2 打包并安装到我本机可用的 Skill 目录。
+请阅读本仓库的项目说明和 AIPD 认知，把 AIPD 打包并安装到我本机可用的 Skill 目录。
 ```
 
 Agent 应先读取：
@@ -57,14 +57,14 @@ AGENTS.md
 
 dev 模式下，重新 build 后通常会自动生效；install 模式下，修改源码并 build 后通常需要重新 install。
 
-Agent 修改 AIPD2 源码后，可以直接运行 `./aipd-skill/scripts/build` 做低风险打包验证，但不要默认继续执行 install。install 会改写用户级或项目级 Agent 运行环境，build 完成后必须主动问用户是否执行 install；只有用户明确确认后，才运行对应安装脚本。
+Agent 修改 AIPD 源码后，可以直接运行 `./aipd-skill/scripts/build` 做低风险打包验证，但不要默认继续执行 install。install 会改写用户级或项目级 Agent 运行环境，build 完成后必须主动问用户是否执行 install；只有用户明确确认后，才运行对应安装脚本。
 
 ## 仓库结构
 
 ```text
 AIPD-2/
-├── _adoc/             # AIPD2 仓库自身的项目认知
-├── aipd-skill/        # AIPD2 Skill 本体源码、脚本和构建产物
+├── _adoc/             # AIPD 仓库自身的项目认知
+├── aipd-skill/        # AIPD Skill 本体源码、脚本和构建产物
 │   ├── src/
 │   ├── scripts/
 │   ├── modules/

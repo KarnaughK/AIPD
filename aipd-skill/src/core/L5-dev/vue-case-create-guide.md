@@ -1,6 +1,6 @@
 # Vue 前端 Case Create 按需指南
 
-本指南只在 case 被判断为 Vue / Nuxt 纯前端实现型时读取。`aipd2-case-create` 主入口只负责场景分流，不承载本文件细节。
+本指南只在 case 被判断为 Vue / Nuxt 纯前端实现型时读取。`aipd-case-create` 主入口只负责场景分流，不承载本文件细节。
 
 ## 适用场景
 
@@ -22,7 +22,7 @@
 4. 先细化根组件和 `useXxx.js`。如果本 case 会新增或重构模块，step 拆分前应先确认根组件职责、`useXxx.js` 输出数据 / 输出方法、provide / inject 边界、controller 引入点，再讨论末端组件内部实现。
 5. 架构图稳定后再写 step。图只是设计讨论稿时放在 case `doc/`；一旦它会指导实现，必须在第一个相关实现 step 中落到代码就近目录，case 只保留链接。
 
-组件图画法读取 `L5-dev/vue-architecture-diagram-guide.md`，不要把 Mermaid 细节复制回 `aipd2-case-create/SKILL.md`。
+组件图画法读取 `L5-dev/vue-architecture-diagram-guide.md`，不要把 Mermaid 细节复制回 `aipd-case-create/SKILL.md`。
 
 ## Step 粒度
 

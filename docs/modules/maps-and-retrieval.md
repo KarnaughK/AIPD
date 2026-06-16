@@ -1,12 +1,12 @@
 # Map 与检索系统
 
-Map 是 AIPD2 的检索系统，不只是 `_adoc/map.md` 这个文件。
+Map 是 AIPD 的检索系统，不只是 `_adoc/map.md` 这个文件。
 
 它的目标是让 Agent 从用户自然语言稳定命中相关上下文，减少乱翻、漏读和误读。
 
 ## 两类 Map
 
-AIPD2 至少要区分两类 Map。
+AIPD 至少要区分两类 Map。
 
 | 类型 | 服务对象 | 作用 | 例子 |
 |---|---|---|---|
@@ -39,7 +39,7 @@ AIPD2 至少要区分两类 Map。
 
 旧 README 中曾出现 `_adoc/context-map.md` 的说法。
 
-当前 AIPD2 仓库的正式项目地图入口是：
+当前 AIPD 仓库的正式项目地图入口是：
 
 ```text
 _adoc/map.md

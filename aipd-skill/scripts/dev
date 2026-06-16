@@ -10,7 +10,11 @@ TARGET_DIR="$HOME/.claude/skills"
 
 mkdir -p "$TARGET_DIR"
 
-for legacy in mermaid-preview; do
+for legacy in \
+    aipd2 aipd2-case-create aipd2-case-run aipd2-case-archive aipd2-weave aipd2-inbox aipd2-learn aipd2-update aipd2-git-push \
+    aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-learn \
+    aipd-plan-create aipd-plan-run aipd-plan-archive aipd-plan-learn \
+    mermaid-preview; do
     target="$TARGET_DIR/$legacy"
     if [ -e "$target" ] || [ -L "$target" ]; then
         rm -rf "$target"

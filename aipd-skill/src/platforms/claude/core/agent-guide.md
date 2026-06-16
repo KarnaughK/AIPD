@@ -1,6 +1,6 @@
 # 多 Agent 协作机制：Claude Code
 
-Claude Code 版本使用 Agent Team 承载 AIPD2 的分身 Agent 任务。
+Claude Code 版本使用 Agent Team 承载 AIPD 的分身 Agent 任务。
 
 ## 上下文机制
 
@@ -24,7 +24,7 @@ Agent Team 创建的是独立 Claude Code 实例。它在技术上不能像 Code
 ## 分身 Agent Prompt 模板
 
 ```text
-你是 AIPD2 开发分身 Agent。
+你是 AIPD 开发分身 Agent。
 
 你的任务：
 1. 读取 worker 指南：@references/worker-dev.md

@@ -1,7 +1,7 @@
 ---
-name: aipd2-inbox
+name: aipd-inbox
 description: >
-  AIPD2 Inbox 收件箱。用于明确要求“先记一下 / 先存一下 / 放 inbox / 收件箱 / 回头再整理”的临时信息捕获。
+  AIPD Inbox 收件箱。用于明确要求“先记一下 / 先存一下 / 放 inbox / 收件箱 / 回头再整理”的临时信息捕获。
   关键词：inbox、收件箱、先记一下、先存一下、临时记录、回头整理、待整理材料、灵感、外部框架
 allowed-tools:
   - Read
@@ -14,9 +14,9 @@ inject-from-core:
   - adoc/templates/inbox.md
 ---
 
-# AIPD2 Inbox
+# AIPD Inbox
 
-`aipd2-inbox` 是 AIPD 的低承诺度收件箱入口。它只负责 capture：把用户明确要求暂存的信息追加到 `_adoc/inbox.md`，不自动归类、不创建 case、不执行 weave。
+`aipd-inbox` 是 AIPD 的低承诺度收件箱入口。它只负责 capture：把用户明确要求暂存的信息追加到 `_adoc/inbox.md`，不自动归类、不创建 case、不执行 weave。
 
 ## 触发边界
 

@@ -1,7 +1,7 @@
 ---
-name: aipd2-case-run
+name: aipd-case-run
 description: >
-  执行 AIPD2 case。先读 case.md 的上下文索引，按需加载上下文，再检查并把 Step 派给角色执行 Agent 或必要时的上下文分身，收集结果，用户验收。
+  执行 AIPD case。先读 case.md 的上下文索引，按需加载上下文，再检查并把 Step 派给角色执行 Agent 或必要时的上下文分身，收集结果，用户验收。
   关键词：case、执行、step、验收、角色 Agent、上下文分身
 allowed-tools:
   - Read
@@ -18,9 +18,9 @@ inject-from-core:
   - agent-guides/*
 ---
 
-# AIPD2 Case Run
+# AIPD Case Run
 
-`case-run` 是 AIPD2 的执行入口。它承接 `case-create` 已经沉淀好的 case / step，以文件为事实源推进执行，不依赖主 Agent 临时聊天记忆直接开干。
+`case-run` 是 AIPD 的执行入口。它承接 `case-create` 已经沉淀好的 case / step，以文件为事实源推进执行，不依赖主 Agent 临时聊天记忆直接开干。
 
 ## 执行流程
 
@@ -51,7 +51,7 @@ case-run 的任务状态以 `_adoc/case/index.md`、目标 `case.md` 和 `steps/
 读取 `steps/` 目录：
 
 - 有未完成 step：展示进度并派发下一个 step。
-- 没有可执行 step：停止在执行前，不要在 `case-run` 中自行创建 step 后继续执行。提示用户当前 case 还没有可执行 step，需要切回 `aipd2-case-create` 回到设计阶段，先设计 case / step；如果用户只是输错了指令，也说明应改用 `aipd2-case-create`。
+- 没有可执行 step：停止在执行前，不要在 `case-run` 中自行创建 step 后继续执行。提示用户当前 case 还没有可执行 step，需要切回 `aipd-case-create` 回到设计阶段，先设计 case / step；如果用户只是输错了指令，也说明应改用 `aipd-case-create`。
 - 全部完成：进入用户验收。
 
 无可执行 step 时的回复模板：
@@ -60,7 +60,7 @@ case-run 的任务状态以 `_adoc/case/index.md`、目标 `case.md` 和 `steps/
 【没有可执行 Step】
 当前 case 还没有可执行 step，`case-run` 不能直接开工。
 
-请切到 `aipd2-case-create` 回到设计阶段，先确认 step 拆分方案，再写详细 step 文件。
+请切到 `aipd-case-create` 回到设计阶段，先确认 step 拆分方案，再写详细 step 文件。
 ```
 
 ```
@@ -103,7 +103,7 @@ Main Agent 不直接执行 step 内容。case-run 链路内，文件修改、git
 用于 step 已经写清楚、上下文文档齐全的常规执行：
 
 ```
-你是 AIPD2 {推荐 Agent} 执行 Agent。
+你是 AIPD {推荐 Agent} 执行 Agent。
 
 角色自检：
 - 如果你已经具备 {推荐 Agent} 的 custom agent 身份，仍然要读取下方“执行指引”，用它校准本 step 的工作方式。
@@ -137,7 +137,7 @@ Case 文件：{case.md 绝对路径}
 仅用于 step 强依赖主 Agent 当前尚未沉淀的聊天判断，或临时探索过程不适合进入主线时：
 
 ```text
-你是 AIPD2 上下文分身 Agent。
+你是 AIPD 上下文分身 Agent。
 
 你继承了 Main Agent 当前上下文。看到这句话后，不要再继续分身；你就是被 fork 出来的克隆体，负责完成当前局部探索 / 执行分支并回流结果。
 
@@ -173,7 +173,7 @@ Case 文件：{case.md 绝对路径}
 2. 更新 case.md 步骤状态为 ✅
 3. 确认 step / case 已写回可恢复状态
 4. 判断本 step 是否产生可复用知识：新核心概念、新产品边界、新工程规则、新局部入口、新高频检索路径或旧知识冲突。
-5. 如果有可复用知识，整理一个极简 Weave Candidate，建议用户运行 `/aipd2-weave`；不要在 case-run 内直接写长期 ADOC。
+5. 如果有可复用知识，整理一个极简 Weave Candidate，建议用户运行 `/aipd-weave`；不要在 case-run 内直接写长期 ADOC。
 6. 如果还有下一个已存在、已写清楚的 step，再判断是否自动派发下一步；不要在 case-run 中新增未来 step。
 
 **失败**：告知用户，询问：重试 / 跳过 / 手动处理。
@@ -184,6 +184,6 @@ Case 文件：{case.md 绝对路径}
 
 所有步骤 ✅ 后，展示完成情况，请用户验收。
 
-**通过** → 告知用户执行 `/aipd2-case-archive` 归档。
+**通过** → 告知用户执行 `/aipd-case-archive` 归档。
 
 **发现问题** → 在 `steps/` 创建新 step（`c{X.Y.N+1}-fix-xxx.md`），更新 case.md，派发执行，完成后重新验收。

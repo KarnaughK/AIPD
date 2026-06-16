@@ -81,7 +81,7 @@ Main Agent：
 
 Build / Install 边界：
 
-- 修改 AIPD2 源码后，可以直接运行 build 做低风险打包验证。
+- 修改 AIPD 源码后，可以直接运行 build 做低风险打包验证。
 - build 完成后，必须主动问用户是否执行 install；不要只说明“可能需要 install”。
 - install 会改写用户级或项目级 Agent 运行环境，只有用户明确确认后才执行安装命令。
 
