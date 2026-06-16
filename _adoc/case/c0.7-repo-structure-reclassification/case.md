@@ -147,12 +147,23 @@ aipd-skill/dist/
 
 ## 6. Step 列表
 
-当前 step 是执行候选，后续使用 case-run 或目标模式执行。
+当前已完成首轮仓库重构；后续继续清理 legacy 和命名。
 
-- `steps/s1-audit-current-structure.md` - 审计现有目录、路径引用、构建脚本和历史材料价值。
-- `steps/s2-move-skill-source.md` - 创建 `aipd-skill/` 并迁移 `src/`、`scripts/`、`modules/`、`dist/`。
-- `steps/s3-handle-legacy-and-todo.md` - 处理 `v1/` 和 `v2-todo/`：归档、转 inbox 或转 case 候选。
-- `steps/s4-update-references-and-verify.md` - 更新路径引用并验证构建 / 安装 / 文档入口。
+- [x] `steps/s1-audit-current-structure.md` - 审计现有目录、路径引用、构建脚本和历史材料价值。
+- [x] `steps/s2-move-skill-source.md` - 创建 `aipd-skill/` 并迁移 `src/`、`scripts/`、`modules/`、`dist/`。
+- [x] `steps/s3-handle-legacy-and-todo.md` - 处理 `v1/` 和 `v2-todo/`：归档、转 inbox 或转 case 候选。
+- [x] `steps/s4-update-references-and-verify.md` - 更新路径引用并验证构建 / 安装 / 文档入口。
+- [ ] `steps/s5-clean-legacy-after-tag.md` - 在当前稳定点打 tag 后，清理 `docs/legacy/v1` 与 `docs/legacy/v2-todo`。
+- [ ] `steps/s6-rename-aipd2-to-aipd.md` - 将当前对外命名从 `aipd2` 收敛回 `aipd`。
+
+## 6.1 执行结果
+
+- 根目录已收敛为 `_adoc/`、`aipd-skill/`、`docs/` 等稳定入口；未创建 `aipd-desktop/`。
+- AIPD2 Skill 本体已迁移到 `aipd-skill/`：`src/`、`scripts/`、`modules/`、`dist/` 均在其内部。
+- `v1/`、`v2-todo/` 已迁移到 `docs/legacy/`，并在 `_adoc/inbox.md` 记录 `v2-todo` 后续待判断索引。
+- README、docs、_adoc map、L5 工程规则、skill 自迭代文档和脚本提示已同步新路径。
+- 已运行 `./aipd-skill/scripts/build`，Claude / Codex 均生成 10 个 skill，Codex agent 模板已生成。
+- 当前提交将作为清理 legacy 前的稳定保留点；清理前应创建 Git tag，便于回看 v1 / v2-todo 旧材料。
 
 ## 7. 后续候选事项
 
@@ -160,15 +171,17 @@ aipd-skill/dist/
 - 判断是否需要在根 README 增加“仓库分层”章节。
 - 判断 `_adoc/map.md` 是否需要新增 `aipd-skill/`、`aipd-desktop/` 的路由入口。
 - 判断 `docs/modules/build-and-install.md` 是否需要按新路径重写。
+- 清理 `docs/legacy/v1/` 和 `docs/legacy/v2-todo/` 前先打 Git tag。
+- 将 `aipd2` 命名统一改回 `aipd`，包括 skill 名、文档、命令和目录引用。
 
 ## 8. 验收标准
 
-- [ ] 根目录职责清晰，Skill 本体、Desktop、项目认知、面向人文档不混在一起。
-- [ ] AIPD Skill 源码和脚本迁移到 `aipd-skill/` 后，构建 / 安装链路仍可用。
-- [ ] 根目录不再保留归属不清的 `src/`、`scripts/`、`modules/`、`dist/`。
-- [ ] `v1/`、`v2-todo/` 已处理为明确归档 / inbox / case 候选，不再作为根目录长期入口。
-- [ ] README、docs、_adoc map 和相关 case 路径已同步。
-- [ ] 未创建 Desktop 项目；Desktop 创建留给后续 `c0.8`。
+- [x] 根目录职责清晰，Skill 本体、Desktop、项目认知、面向人文档不混在一起。
+- [x] AIPD Skill 源码和脚本迁移到 `aipd-skill/` 后，构建 / 安装链路仍可用。
+- [x] 根目录不再保留归属不清的 `src/`、`scripts/`、`modules/`、`dist/`。
+- [x] `v1/`、`v2-todo/` 已处理为明确归档 / inbox / case 候选，不再作为根目录长期入口。
+- [x] README、docs、_adoc map 和相关 case 路径已同步。
+- [x] 未创建 Desktop 项目；Desktop 创建留给后续 `c0.8`。
 
 ## 9. Weave 反向编织候选
 
@@ -180,14 +193,14 @@ aipd-skill/dist/
 
 ## 10. 自迭代观察锚点
 
-- [ ] Agent 执行迁移前是否先用 `rg` 审计路径引用，而不是直接移动目录。
-- [ ] Agent 是否先验证 `v1/`、`v2-todo/` 内容价值，而不是直接删除。
-- [ ] Agent 是否把 Skill 本体和 Desktop 解耦，避免让基础 Skill 依赖 Desktop。
-- [ ] Agent 是否执行构建 / 安装验证，避免只改文档不验证脚本。
-- [ ] Agent 是否在迁移完成后更新 `c0.8` 的路径假设。
+- [x] Agent 执行迁移前是否先用 `rg` 审计路径引用，而不是直接移动目录。
+- [x] Agent 是否先验证 `v1/`、`v2-todo/` 内容价值，而不是直接删除。
+- [x] Agent 是否把 Skill 本体和 Desktop 解耦，避免让基础 Skill 依赖 Desktop。
+- [x] Agent 是否执行构建 / 安装验证，避免只改文档不验证脚本。
+- [x] Agent 是否在迁移完成后更新 `c0.8` 的路径假设。
 
 ## 11. 归档状态
 
-- **状态**：待开始
+- **状态**：进行中
 - **创建时间**：2026-06-15
 - **归档时间**：

@@ -4,7 +4,7 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c0.7-repo-structure-reclassification` | 待开始 | 正式创建 AIPD Desktop 前，重划仓库根目录：AIPD Skill 本体、项目认知、docs、历史材料与桌面端边界 |
+| `c0.7-repo-structure-reclassification` | 进行中 | 正式创建 AIPD Desktop 前，重划仓库根目录：AIPD Skill 本体、项目认知、docs、历史材料与桌面端边界 |
 | `c0.8-aipd-desktop-zero` | 讨论中 | 讨论 AIPD Desktop 第零版：AIPD 文件树解析 + 真实 Agent 聊天接入 |
 
 ## 已归档 Case

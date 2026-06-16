@@ -2,8 +2,8 @@
 set -e
 
 if [ -z "$1" ]; then
-    echo "用法: scripts/install-project <项目路径>"
-    echo "示例: scripts/install-project /Users/xxx/my-project"
+    echo "用法: aipd-skill/scripts/install-project <项目路径>"
+    echo "示例: aipd-skill/scripts/install-project /Users/xxx/my-project"
     exit 1
 fi
 

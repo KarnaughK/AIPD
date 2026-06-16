@@ -32,4 +32,4 @@ for skill_dir in "$DIST_DIR"/*/; do
 done
 
 echo ""
-echo "开发模式安装完成。修改源码后运行 scripts/build 即可更新。"
+echo "开发模式安装完成。修改源码后运行 aipd-skill/scripts/build 即可更新。"

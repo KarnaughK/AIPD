@@ -39,4 +39,4 @@ AIPD2 的多 Agent 设计目标是：让主 Agent 保持主线连续，把探索
 - Claude Code：使用 Agent Team 机制。
 - Codex：使用 Codex 子 agent 技术（worker / explorer / custom agent）创建分身 Agent。
 
-构建时如果存在 `src/platforms/{platform}/core/agent-guide.md`，会使用平台文件覆盖本文件；否则才使用本文件。
+构建时如果存在 `aipd-skill/src/platforms/{platform}/core/agent-guide.md`，会使用平台文件覆盖本文件；否则才使用本文件。

@@ -12,6 +12,7 @@ build_platform() {
     local agents_src_dir="$SRC_DIR/platforms/$platform/agents"
     local agents_dist_dir="$DIST_ROOT/$platform/agents"
     local platform_core_dir="$SRC_DIR/platforms/$platform/core"
+    local skill_count
 
     rm -rf "$dist_dir"
     mkdir -p "$dist_dir"
@@ -55,7 +56,8 @@ build_platform() {
 
     echo ""
     echo "[$platform] 构建完成。产物在 $dist_dir/"
-    echo "共 $(ls -d "$dist_dir"/*/ 2>/dev/null | wc -l | xargs) 个 skill"
+    skill_count=$(find "$dist_dir" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
+    echo "共 $skill_count 个 skill"
     echo ""
 }
 
@@ -167,7 +169,7 @@ case "${1:-all}" in
         build_platform "codex"
         ;;
     *)
-        echo "用法: scripts/build [claude|codex|all]"
+        echo "用法: aipd-skill/scripts/build [claude|codex|all]"
         exit 1
         ;;
 esac

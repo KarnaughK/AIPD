@@ -2,7 +2,7 @@
 
 AIPD2 仓库本身不是打开即用的应用，而是一个 skill 源码项目。
 
-源码在 `src/`，构建产物在 `dist/`，安装脚本在 `scripts/`。
+Skill 本体位于 `aipd-skill/`：源码在 `aipd-skill/src/`，构建产物在 `aipd-skill/dist/`，安装脚本在 `aipd-skill/scripts/`。
 
 ## 推荐使用方式
 
@@ -22,7 +22,7 @@ AGENTS.md
 -> _adoc/map.md
 ```
 
-然后再根据任务进入 `scripts/`、`src/skills/`、`src/platforms/` 等入口。
+然后再根据任务进入 `aipd-skill/scripts/`、`aipd-skill/src/skills/`、`aipd-skill/src/platforms/` 等入口。
 
 ## 脚本入口
 
@@ -30,48 +30,48 @@ AGENTS.md
 
 ```bash
 # 修改源码后重新构建
-./scripts/build
+./aipd-skill/scripts/build
 
 # 只构建某个平台
-./scripts/build claude
-./scripts/build codex
+./aipd-skill/scripts/build claude
+./aipd-skill/scripts/build codex
 
 # Claude Code 开发模式安装（symlink）
-./scripts/dev
+./aipd-skill/scripts/dev
 
 # Claude Code 用户级安装
-./scripts/install
+./aipd-skill/scripts/install
 
 # Claude Code 项目级安装
-./scripts/install-project /path/to/your-project
+./aipd-skill/scripts/install-project /path/to/your-project
 
 # Codex 开发模式安装（symlink）
-./scripts/dev-codex
+./aipd-skill/scripts/dev-codex
 
 # Codex 用户级安装
-./scripts/install-codex
+./aipd-skill/scripts/install-codex
 
 # Codex 项目级安装
-./scripts/install-project-codex /path/to/your-project
+./aipd-skill/scripts/install-project-codex /path/to/your-project
 ```
 
 dev 模式下，重新 build 后通常会自动生效；install 模式下，修改源码并 build 后通常需要重新 install。
 
-Agent 修改 AIPD2 源码后，可以直接运行 `./scripts/build` 做低风险打包验证，但不要默认继续执行 install。install 会改写用户级或项目级 Agent 运行环境，build 完成后必须主动问用户是否执行 install；只有用户明确确认后，才运行对应安装脚本。
+Agent 修改 AIPD2 源码后，可以直接运行 `./aipd-skill/scripts/build` 做低风险打包验证，但不要默认继续执行 install。install 会改写用户级或项目级 Agent 运行环境，build 完成后必须主动问用户是否执行 install；只有用户明确确认后，才运行对应安装脚本。
 
 ## 仓库结构
 
 ```text
 AIPD-2/
-├── docs/             # 面向人的学习文档
-├── src/
-│   ├── core/          # AIPD 核心认知、模板和通用规则
-│   ├── platforms/     # Codex / Claude Code 等平台适配
-│   └── skills/        # 各个 skill 的源码
-├── scripts/           # 构建、开发安装、用户安装和项目安装脚本
-├── dist/              # 构建产物
 ├── _adoc/             # AIPD2 仓库自身的项目认知
-└── v1/                # v1 历史归档
+├── aipd-skill/        # AIPD2 Skill 本体源码、脚本和构建产物
+│   ├── src/
+│   ├── scripts/
+│   ├── modules/
+│   └── dist/
+├── docs/              # 面向人的学习文档与历史材料
+│   └── legacy/
+└── aipd-desktop/      # 未来 AIPD Desktop，c0.8 创建
 ```
 
 ## README 入口修正

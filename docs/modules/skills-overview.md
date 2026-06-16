@@ -1,6 +1,6 @@
 # Skill 概览
 
-AIPD2 是一个可构建的 skill 工程。仓库中的 `src/skills/` 保存各 skill 源码，构建后会生成可安装到 Agent 平台的 skill。
+AIPD2 是一个可构建的 skill 工程。仓库中的 `aipd-skill/src/skills/` 保存各 skill 源码，构建后会生成可安装到 Agent 平台的 skill。
 
 ## Skill 清单
 
@@ -66,4 +66,4 @@ AIPD2 是一个可构建的 skill 工程。仓库中的 `src/skills/` 保存各 
 
 `docs/` 只解释 skill 的职责和协作方式，不作为源码级对象手册。
 
-要修改 skill 运行逻辑，Agent 应读取 `AGENTS.md`、`_adoc/index.md`、`_adoc/map.md`，再进入 `src/skills/{skill}/SKILL.md`、`src/core/`、`src/platforms/` 和相关脚本。
+要修改 skill 运行逻辑，Agent 应读取 `AGENTS.md`、`_adoc/index.md`、`_adoc/map.md`，再进入 `aipd-skill/src/skills/{skill}/SKILL.md`、`aipd-skill/src/core/`、`aipd-skill/src/platforms/` 和相关脚本。

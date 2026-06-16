@@ -19,16 +19,16 @@
 
 | 功能线 | 主要源码入口 | 模板 / 支撑文件 |
 |---|---|---|
-| AIPD 初始化 | `src/skills/aipd2/SKILL.md` | `src/core/agent-entry/template.md`、`src/core/adoc/templates/index.md`、`src/core/adoc/templates/map.md` |
-| AIPD Update | `src/skills/aipd2-update/SKILL.md` | `src/core/agent-entry/template.md`、`src/core/adoc/templates/index.md`、`src/core/adoc/templates/map.md`、`src/core/case/templates/case.md` |
-| Case Create | `src/skills/aipd2-case-create/SKILL.md` | `src/core/case/templates/case.md`、`src/core/case/templates/step.md` |
-| Case Run | `src/skills/aipd2-case-run/SKILL.md` | `src/platforms/codex/core/agent-guide.md`、`src/core/agent-guides/` |
-| Case Archive | `src/skills/aipd2-case-archive/SKILL.md` | `_adoc/case/index.md`、case 目录 |
-| Weave | `src/skills/aipd2-weave/SKILL.md` | `_adoc/map.md`、L3 / L4 / L5 / 局部 README |
-| Learn | `src/skills/aipd2-learn/SKILL.md` | Codex transcript、AIPD2 源码 |
-| Git Push | `src/skills/aipd2-git-push/SKILL.md` | git 当前状态 |
+| AIPD 初始化 | `aipd-skill/src/skills/aipd2/SKILL.md` | `aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/adoc/templates/index.md`、`aipd-skill/src/core/adoc/templates/map.md` |
+| AIPD Update | `aipd-skill/src/skills/aipd2-update/SKILL.md` | `aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/adoc/templates/index.md`、`aipd-skill/src/core/adoc/templates/map.md`、`aipd-skill/src/core/case/templates/case.md` |
+| Case Create | `aipd-skill/src/skills/aipd2-case-create/SKILL.md` | `aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/step.md` |
+| Case Run | `aipd-skill/src/skills/aipd2-case-run/SKILL.md` | `aipd-skill/src/platforms/codex/core/agent-guide.md`、`aipd-skill/src/core/agent-guides/` |
+| Case Archive | `aipd-skill/src/skills/aipd2-case-archive/SKILL.md` | `_adoc/case/index.md`、case 目录 |
+| Weave | `aipd-skill/src/skills/aipd2-weave/SKILL.md` | `_adoc/map.md`、L3 / L4 / L5 / 局部 README |
+| Learn | `aipd-skill/src/skills/aipd2-learn/SKILL.md` | Codex transcript、AIPD2 源码 |
+| Git Push | `aipd-skill/src/skills/aipd2-git-push/SKILL.md` | git 当前状态 |
 
 ## 兜底搜索
 
-- `rg "aipd2-case-create|aipd2-case-run|aipd2-weave|aipd2-learn|aipd2-update" src _adoc`
-- `rg "Case Create|Case Run|Weave|Learn|Update|初始化|归档" src _adoc README.md`
+- `rg "aipd2-case-create|aipd2-case-run|aipd2-weave|aipd2-learn|aipd2-update" aipd-skill/src _adoc`
+- `rg "Case Create|Case Run|Weave|Learn|Update|初始化|归档" aipd-skill/src _adoc README.md`

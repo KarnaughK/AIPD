@@ -78,7 +78,7 @@ AIPD2 这个仓库本身不是一个“打开即用”的应用。
 - `AGENTS.md`：Agent 进入项目后的默认协作规则。
 - `_adoc/index.md`：AIPD2 仓库自身的项目认知入口。
 - `_adoc/map.md`：把“构建 / 安装 / Codex 适配 / Skill”这类任务路由到具体上下文。
-- `scripts/`：实际构建、开发安装、用户级安装和项目级安装脚本。
+- `aipd-skill/scripts/`：实际构建、开发安装、用户级安装和项目级安装脚本。
 
 安装完成后，在目标项目里让 Agent 使用：
 
@@ -123,7 +123,7 @@ AIPD2 这个仓库本身不是一个“打开即用”的应用。
 请修改 AIPD2 源码后，按本项目规则重新构建，并告诉我是否需要重新安装。
 ```
 
-Agent 应先读取 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md`，再根据任务进入 `scripts/`、`src/skills/`、`src/platforms/` 等代码入口。用户只需要关注目标、验收结果和风险，不需要记住具体打包命令。
+Agent 应先读取 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md`，再根据任务进入 `aipd-skill/scripts/`、`aipd-skill/src/skills/`、`aipd-skill/src/platforms/` 等代码入口。用户只需要关注目标、验收结果和风险，不需要记住具体打包命令。
 
 开发者需要查看脚本和安装细节时，读 [构建与安装](docs/modules/build-and-install.md)。
 
@@ -131,15 +131,18 @@ Agent 应先读取 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md`，再根据
 
 ```text
 AIPD-2/
-├── docs/             # 面向用户的学习文档
-├── src/
-│   ├── core/          # AIPD 核心认知、模板和通用规则
-│   ├── platforms/     # Codex / Claude Code 等平台适配
-│   └── skills/        # 各个 skill 的源码
-├── scripts/           # 构建、开发安装、用户安装和项目安装脚本
-├── dist/              # 构建产物
 ├── _adoc/             # AIPD2 仓库自身的项目认知
-└── v1/                # v1 历史归档
+├── aipd-skill/        # AIPD2 Skill 本体源码、脚本和构建产物
+│   ├── src/
+│   │   ├── core/       # AIPD 核心认知、模板和通用规则
+│   │   ├── platforms/  # Codex / Claude Code 等平台适配
+│   │   └── skills/     # 各个 skill 的源码
+│   ├── scripts/        # 构建、开发安装、用户安装和项目安装脚本
+│   ├── modules/        # Skill 相关模块材料，当前为空
+│   └── dist/           # Skill 构建产物
+├── docs/              # 面向用户的学习文档与历史材料
+│   └── legacy/         # v1、v2-todo 等历史归档
+└── aipd-desktop/      # 未来 AIPD Desktop，c0.8 创建
 ```
 
 ## 适合什么时候用

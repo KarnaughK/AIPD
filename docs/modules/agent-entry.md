@@ -38,6 +38,6 @@ AGENTS.md
 - `README.md`：面向第一次打开仓库的人，解释项目为什么存在和如何继续阅读。
 - `docs/`：面向人的学习文档。
 - `_adoc/`：面向 Agent 的项目认知事实源。
-- `src/`：真实源码。
+- `aipd-skill/src/`：AIPD2 Skill 本体真实源码。
 
 Agent 执行项目任务时，不应把 `docs/` 当成 `_adoc/` 的替代品。`docs/` 可以帮助人理解 AIPD2，但执行事实源仍是 `_adoc/` 和 case / step。

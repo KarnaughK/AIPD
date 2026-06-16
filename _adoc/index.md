@@ -35,7 +35,7 @@
 - AIPD2 方向、边界、定位：`_adoc/L1-intent/intent.md`
 - AIPD2 纵向概念模块与横向功能能力：`_adoc/L3-core/index.md`、`_adoc/L3-core/vertical-concept-modules.md`、`_adoc/L3-core/horizontal-capabilities.md`
 - 上下文检索：`_adoc/map.md`
-- Weave 反向编织 / 项目 ADOC 回写：`src/skills/aipd2-weave/SKILL.md`、`_adoc/L3-core/horizontal-capabilities.md`
+- Weave 反向编织 / 项目 ADOC 回写：`aipd-skill/src/skills/aipd2-weave/SKILL.md`、`_adoc/L3-core/horizontal-capabilities.md`
 - SOP / 可复用 AI 原生程序 / Agent 执行流程：`_adoc/sop/index.md`、`_adoc/sop/map.md`
 - Codex / Agent / case-run / 构建安装：`_adoc/L5-dev/index.md`
 - 当前开发事项：`_adoc/case/index.md`

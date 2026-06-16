@@ -34,7 +34,7 @@ inject-from-core:
 1. **会话定位卡**：在外部项目中自动采集 thread ID、transcript path、可见时的 turn ID，只输出最小定位信息。这是外部项目默认路径。
 2. **自迭代诊断**：在 AIPD2 源项目中，用户贴入定位卡、会话 ID 或 transcript path 后，读取原始 transcript，优先审计用户纠正了 Agent 什么、哪些 skill 行为反复出错、哪些规则需要回写。
 3. **会话回流包**：用户明确要求“生成回流包 / 总结经验 / 整理给 AIPD2 吸收”时，才输出结构化回流包。
-4. **即时写回**：如果当前就在 AIPD2 源项目，且用户确认要吸收框架经验，先给写回方案，确认后修改 `src/core/`、`src/skills/` 或 `src/platforms/`。
+4. **即时写回**：如果当前就在 AIPD2 源项目，且用户确认要吸收框架经验，先给写回方案，确认后修改 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/`。
 5. **异步回流**：用户在项目中先写反馈文件，之后切回 AIPD2 源项目再处理。文件只是缓存方式，不是必要中转。
 
 ## 职责边界
@@ -51,7 +51,7 @@ inject-from-core:
 
 - 外部页面、模块、业务对象、接口、字段、权限名、角色名、流程名，抽象为“产品功能线 / 认知线 / 项目事实 / 代码入口 / 接口字段 / 权限规则 / 数据状态”等 AIPD 通用概念。
 - 外部项目中的具体失败场景，只用于定位 transcript 原文，不作为框架规则正文的示例。
-- 写回 `src/core/`、`src/skills/` 或 `src/platforms/` 时，只保留可跨 AIPD 项目复用的判断标准、触发条件、职责边界和停止条件。
+- 写回 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/` 时，只保留可跨 AIPD 项目复用的判断标准、触发条件、职责边界和停止条件。
 - 如果某个经验必须依赖外部项目特有词才能讲清楚，说明它更可能属于项目 ADOC，应改交给 `aipd2-weave`，不要写入 AIPD2 框架源码。
 
 输出自迭代诊断时，可以短摘用户纠正点，但应优先改写为 AIPD 通用表达；不要让非 AIPD 的案例名词、项目黑话或业务词进入“建议改动”“可回写判断”和最终源码。
@@ -66,8 +66,8 @@ inject-from-core:
 
 可用信号：
 
-- 当前目录存在 `src/skills/aipd2-learn/SKILL.md`
-- 当前目录存在 `src/core/overview.md`
+- 当前目录存在 `aipd-skill/src/skills/aipd2-learn/SKILL.md`
+- 当前目录存在 `aipd-skill/src/core/overview.md`
 - `_adoc/index.md` 中项目名称是 `AIPD2`
 
 如果不在 AIPD2 源项目，进入**外部项目采集器模式**：
@@ -124,7 +124,7 @@ rg -n "\"id\":\"${CODEX_THREAD_ID}\"" "$HOME/.codex/session_index.jsonl" 2>/dev/
 
 如果用户提供的是一大段经验记录，先判断它是：
 
-- **即时框架回流**：直接修改 AIPD2 源项目的 `src/core/`、`src/skills/` 或 `src/platforms/`。
+- **即时框架回流**：直接修改 AIPD2 源项目的 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/`。
 - **项目经验沉淀**：交给 `aipd2-weave` 回写当前项目 `_adoc/`、局部 README、map 或 case。
 - **待转交反馈**：当前不在 AIPD2 源项目，先整理为“框架回流建议”，让用户带到 AIPD2 源项目执行。
 
@@ -200,7 +200,7 @@ find _adoc/case/{case目录}/steps -type f
 
 6. **用户纠正 Agent 的表达和产物形态**
    - 例如图里模块名、组件概览、QlmForm-update 的表达方式。
-   - 这类问题优先回写 `src/core/` 下的方法论文档或模板。
+   - 这类问题优先回写 `aipd-skill/src/core/` 下的方法论文档或模板。
 
 7. **上下文检索 SOP 没有被执行**
    - 任务开始后没有读取 `_adoc/map.md`，也没有说明缺失和兜底策略。
@@ -239,9 +239,9 @@ Agent 反应问题：
 - {应该改哪类规则，以及为什么}
 
 建议修改位置：
-- `src/skills/...`：{原因}
-- `src/core/...`：{原因}
-- `src/platforms/...`：{原因}
+- `aipd-skill/src/skills/...`：{原因}
+- `aipd-skill/src/core/...`：{原因}
+- `aipd-skill/src/platforms/...`：{原因}
 
 下一步：
 - 等用户确认后再写文件。
@@ -303,12 +303,12 @@ Agent 反应问题：
 | 经验类型 | 回写位置 |
 |---|---|
 | 当前项目方向、业务判断、功能规则、研发约束、局部入口 | 交给 `aipd2-weave` 判断并回写当前项目 `_adoc/`、局部 README、map 或 case |
-| AIPD2 通用知识、结构规则 | AIPD2 仓库的 `src/core/` |
-| aipd2 总入口、ADOC 入口、经验回流方式 | AIPD2 仓库的 `src/skills/aipd2*/` |
-| 已初始化项目的 AIPD 架构升级、AGENTS.md / map 同步 | AIPD2 仓库的 `src/skills/aipd2-update/` |
-| case-create/run/archive 的流程经验 | AIPD2 仓库的 `src/skills/aipd2-case-*/` |
-| Codex 会话 ID、transcript、回流包生成 | AIPD2 仓库的 `src/skills/aipd2-learn/` 或 `src/platforms/codex/` |
-| Claude/Codex 平台差异 | AIPD2 仓库的 `src/platforms/` |
+| AIPD2 通用知识、结构规则 | AIPD2 仓库的 `aipd-skill/src/core/` |
+| aipd2 总入口、ADOC 入口、经验回流方式 | AIPD2 仓库的 `aipd-skill/src/skills/aipd2*/` |
+| 已初始化项目的 AIPD 架构升级、AGENTS.md / map 同步 | AIPD2 仓库的 `aipd-skill/src/skills/aipd2-update/` |
+| case-create/run/archive 的流程经验 | AIPD2 仓库的 `aipd-skill/src/skills/aipd2-case-*/` |
+| Codex 会话 ID、transcript、回流包生成 | AIPD2 仓库的 `aipd-skill/src/skills/aipd2-learn/` 或 `aipd-skill/src/platforms/codex/` |
+| Claude/Codex 平台差异 | AIPD2 仓库的 `aipd-skill/src/platforms/` |
 
 如果当前工作目录不是 AIPD2 源码仓库，但经验属于 AIPD2 框架本身，不要硬写目标项目；先整理为“框架回流建议”，让用户切换到 AIPD2 仓库后再执行。
 
@@ -339,9 +339,9 @@ Agent 反应问题：
 1. 优先更新已有文件，不为了沉淀创建零散新文件
 2. 新经验追加到最接近的现有章节；没有合适章节时再新增小节
 3. 只写本次确认过的经验，不顺手重构文档结构
-4. 如果修改 AIPD2 源码，应运行 `./scripts/build` 验证源码能正常打包；build 属于低风险验证动作，可以在写回后直接执行
+4. 如果修改 AIPD2 源码，应运行 `./aipd-skill/scripts/build` 验证源码能正常打包；build 属于低风险验证动作，可以在写回后直接执行
 5. 不要在源码修改后自动执行 install；install 会改写用户级或项目级 Agent 运行环境，存在覆盖当前可用版本的风险
-6. build 完成后，必须主动问用户是否执行对应安装命令；不要只说明“可能需要 install”；只有用户确认后才运行 `./scripts/install`、`./scripts/install-codex`、`./scripts/install-project` 或 `./scripts/install-project-codex`
+6. build 完成后，必须主动问用户是否执行对应安装命令；不要只说明“可能需要 install”；只有用户确认后才运行 `./aipd-skill/scripts/install`、`./aipd-skill/scripts/install-codex`、`./aipd-skill/scripts/install-project` 或 `./aipd-skill/scripts/install-project-codex`
 7. 如果当前是 dev 模式，说明 build 后通常会自动生效；如果当前是 install 模式，说明需要用户确认后重新 install
 
 ### 第九步：返回结果
@@ -352,7 +352,7 @@ Agent 反应问题：
 - 自迭代路径：输出诊断、建议修改位置和待确认回写方案
 - 回流包路径：输出生成的回流包或提炼的经验
 - 修改了哪些文件
-- `./scripts/build` 是否已运行，以及是否需要用户确认后再执行 `./scripts/install-codex` 等安装命令
+- `./aipd-skill/scripts/build` 是否已运行，以及是否需要用户确认后再执行 `./aipd-skill/scripts/install-codex` 等安装命令
 
 不要自动提交，除非用户明确要求。
 
