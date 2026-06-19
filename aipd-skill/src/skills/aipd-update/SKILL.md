@@ -119,7 +119,7 @@ find _adoc -maxdepth 3 -type f | sort
 - L5 被定义为产品功能到代码实现之间的工程实现层，负责跨模块、跨端、跨页面的稳定实现规则。
 - 明确页面、弹窗、组件内部细节放就近 `README.md`，不塞回 L5。
 - case 恢复链路包含 case / step 文件作为事实源。
-- 执行概念或项目入口中包含 Weave：讨论、step 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README、map 或 case。
+- 执行概念或项目入口中包含 Weave：讨论、step 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README 或 map；一次性过程留在 case / step。
 
 ### 建议项
 

@@ -6,9 +6,12 @@
 
 - **项目名称**：{project_name}
 - **当前阶段**：方向定义 / 调研中 / 产品设计 / 开发中 / 维护中
-- **当前 OKR**：`_adoc/okr/index.md`
-- **当前 Case**：`_adoc/case/index.md`
 - **Inbox**：`_adoc/inbox.md`
+
+流程状态入口只在流程任务中读取：
+
+- **OKR**：`_adoc/okr/index.md`
+- **Case**：`_adoc/case/index.md`
 
 ## 认知层级
 
@@ -24,9 +27,10 @@
 ## 上下文检索
 
 - 项目级记忆地图：`_adoc/map.md`
-- 进入具体任务前，先判断任务涉及 L3 核心概念、L4 产品功能、L5 工程实现规则、局部 README、L6 代码入口、case 中的哪些上下文。
+- 进入具体任务前，先判断任务涉及 L3 核心概念、L4 产品功能、L5 工程实现规则、局部 README、L6 代码入口中的哪些上下文。
+- 普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`；只有明确进入 case / OKR 流程时才读取对应状态文件。
 - 如果 `map.md` 缺失或未覆盖本次任务，按相关核心词、功能线名、页面名、接口名、权限码、组件名使用 `rg` 兜底搜索，并把新发现的稳定入口回写到合适的 map。
-- 如果讨论、step 结果、case 归档、代码 diff、错误日志或外部资料产生了可复用知识，用 `aipd-weave` 判断回写到 L3 / L4 / L5 / 局部 README / map / case。
+- 如果讨论、step 结果、case 归档、代码 diff、错误日志或外部资料产生了可复用知识，用 `aipd-weave` 判断回写到 L3 / L4 / L5 / 局部 README / map；一次性过程和验收状态留在 case / step。
 
 ## 读取原则
 
@@ -43,7 +47,6 @@
 ## 常用入口
 
 - 项目记忆地图：`_adoc/map.md`
-- Case 索引：`_adoc/case/index.md`
-- OKR 索引：`_adoc/okr/index.md`
 - 临时收件箱：`_adoc/inbox.md`
 - 当前方向：`_adoc/L1-intent/intent.md`
+- Case / OKR 流程入口：`_adoc/case/index.md`、`_adoc/okr/index.md`

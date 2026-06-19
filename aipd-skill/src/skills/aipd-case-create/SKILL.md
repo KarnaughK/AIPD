@@ -139,13 +139,13 @@ inject-from-core:
 
 根据用户描述，精准读取相关文件：
 1. 主 Agent 读 `_adoc/index.md` 了解项目模块分布（一次，轻量）。
-2. 读取 `_adoc/map.md`，判断用户意图对应的 L3 / L4 / L5 / 局部 README / case。
+2. 读取 `_adoc/map.md`，判断用户意图对应的 L3 / L4 / L5 / 局部 README / L6 代码入口；当前流程是 case 创建，因此只读取当前要创建 / 关联的 case 状态，不把历史 case 当作普通上下文来源。
 3. 优先寻找本次事项相关的核心概念索引、产品功能文档、工程实现规则、页面 README、设计/原型资料和代码入口。
 4. 需要探索、验证、批量读取或整理 case 草案时，按 Agent Entry 中的分身 Agent 逻辑 fork 主 Agent 克隆体，主 Agent 只审阅结果回流。
 
 上下文检索包至少包含：
 
-- 层级判断：本次涉及 L3 / L4 / L5 / 局部 README / case 中哪些层。
+- 层级判断：本次涉及 L3 / L4 / L5 / 局部 README / L6 中哪些层；case 只记录本次事项状态和上下文索引。
 - 必读文档：执行前必须读的 `_adoc` 文档、页面 README、设计/原型资料。
 - 代码入口：页面、弹窗、组件、接口、权限工具、路由或配置文件等入口。
 - 兜底搜索：缺少地图或命中不清楚时可用的 `rg` 关键词。
@@ -180,7 +180,7 @@ mkdir -p _adoc/case/c{X.Y}-{名称}/doc
 - 后续候选事项：未确认的调整点只记录为候选，不创建 step 文件
 - 验收标准和 Weave 反向编织候选位置
 - 自迭代观察锚点：后续审计 transcript / session 时，检查 Agent 是否按本 case 的上下文索引和 AIPD 检索流程工作
-- Weave 候选位置：只记录可能需要回写到 L3 / L4 / L5 / 局部 README / map / case 的方向；真正回写由 `aipd-weave` 确认后执行
+- Weave 候选位置：只记录可能需要回写到 L3 / L4 / L5 / 局部 README / map 的稳定知识方向；一次性过程、验收记录和临时决策留在 case / step
 
 已确认的步骤文件写入 `steps/`，格式参考 `@references/case/templates/step.md`。
 

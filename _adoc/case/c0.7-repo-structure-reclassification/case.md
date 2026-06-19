@@ -11,7 +11,15 @@ _adoc/case/c0.7-repo-structure-reclassification/
 │   ├── s1-audit-current-structure.md
 │   ├── s2-move-skill-source.md
 │   ├── s3-handle-legacy-and-todo.md
-│   └── s4-update-references-and-verify.md
+│   ├── s4-update-references-and-verify.md
+│   ├── s5-clean-legacy-after-tag.md
+│   ├── s6-rename-aipd2-to-aipd.md
+│   ├── s7-audit-l1-intent-consistency.md
+│   ├── s8-audit-l2-research-scope.md
+│   ├── s9-create-l2-research-index.md
+│   ├── s10-map-l2-needs-to-aipd-solutions.md
+│   ├── s11-refresh-l3-core-models.md
+│   └── s12-refresh-l4-product-lines.md
 └── doc/
     ├── target-structure.md
     └── migration-plan.md
@@ -155,6 +163,12 @@ aipd-skill/dist/
 - [x] `steps/s4-update-references-and-verify.md` - 更新路径引用并验证构建 / 安装 / 文档入口。
 - [x] `steps/s5-clean-legacy-after-tag.md` - 在当前稳定点打 tag 后，清理 `docs/legacy/v1` 与 `docs/legacy/v2-todo`。
 - [x] `steps/s6-rename-aipd2-to-aipd.md` - 将旧 `aipd2` 对外命名收敛回 `aipd`。
+- [x] `steps/s7-audit-l1-intent-consistency.md` - 审计 L1 Intent 与当前 README / docs 教学文档之间的方向一致性差异。
+- [x] `steps/s8-audit-l2-research-scope.md` - 审计 L2 Research 缺口，明确用户画像、外部趋势、痛点、工具生态和 Desktop 需求来源。
+- [x] `steps/s9-create-l2-research-index.md` - 创建 `_adoc/L2-research/index.md`，正式沉淀 L2 外部世界、用户画像、痛点和需求线。
+- [ ] `steps/s10-map-l2-needs-to-aipd-solutions.md` - 将 L2 痛点 / 需求线映射到 AIPD 的 L3 / L4 / L5 / SOP / case / skill 解决方案入口。
+- [x] `steps/s11-refresh-l3-core-models.md` - 将 AIPD 自身 L3 收敛为六个核心成立模型，并同步 L3 map。
+- [x] `steps/s12-refresh-l4-product-lines.md` - 将 AIPD 自身 L4 刷新为产品能力层，并同步 L4 map 与总 map。
 
 ## 6.1 执行结果
 
@@ -164,9 +178,19 @@ aipd-skill/dist/
 - README、docs、_adoc map、L5 工程规则、skill 自迭代文档和脚本提示已同步新路径。
 - 已运行 `./aipd-skill/scripts/build`，Claude / Codex 均生成 10 个 skill，Codex agent 模板已生成。
 - 已创建 Git tag `c0.7-before-legacy-cleanup` 指向清理 legacy 前的稳定提交，便于回看 v1 / v2-todo 旧材料。
-- `docs/legacy/v1/` 和 `docs/legacy/v2-todo/` 已从工作树删除；`docs/legacy/README.md` 和 `_adoc/inbox.md` 已改为通过 tag 追溯旧材料。
+- `docs/legacy/` 已从工作树删除；旧 v1 / v2-todo 材料通过 Git tag `c0.7-before-legacy-cleanup` 追溯，`_adoc/inbox.md` 保留待判断索引。
 - Skill 源码目录、frontmatter、README、docs、_adoc、脚本和构建产物已统一到 `aipd*` 命名；安装脚本会清理旧 `aipd2*` skill。
 - 已运行 `./aipd-skill/scripts/build`，Claude / Codex 均生成 10 个 `aipd*` skill，Codex agent 模板已生成。
+- 已完成 L1 Intent 一致性审计：当前 L1 基础方向正确，但缺少 README / docs 中已经成型的新版一句话定位、从 Vibe Coding 到 Agent Coding 的问题来源、三条主线、适用边界、渐进采用原则和更完整的“不是什么”边界。
+- `_adoc/L1-intent/intent.md` 已刷新为新的 L1 表达：AIPD 是面向 AI 时代的软件开发框架，用来组织人和 AI 从项目方向到代码实现再到经验回写的完整协作过程；并展开为项目知识库、任务执行系统、AI 原生代码架构三个大方向。
+- 已完成 L2 Research 缺口审计：当前 L2 基本缺席，应补一人公司 / 单人开发者画像、Agent 上下文问题、项目文档完整性问题、AI 长时间工作问题、AI 原生代码架构扩展问题（含按 Vue / Nuxt 等技术栈沉淀经验库的需求）、SOP / AI 程序需求机会、未整理信息暂存与分流、AI 工作控制与验收信任、AIPD 框架自迭代、已接入项目的 AIPD 架构升级迁移、Desktop 文件查询与观看、CLI Agent 桌面化使用、MMD 高带宽交流、从 Vibe Coding 到 Agent Coding 的外部趋势、工具生态观察和 Desktop 需求来源。
+- `_adoc/L2-research/index.md` 已创建，正式沉淀 AIPD 的 L2 用户画像、外部趋势、12 条核心痛点 / 需求线、工具生态观察和 Desktop 场景来源。
+- 已创建 `s10-map-l2-needs-to-aipd-solutions.md`，用于下一步补齐“从 L2 痛点进入 AIPD 解决方案”的映射视角。
+- `_adoc/L3-core/index.md` 已刷新为六个核心成立模型：项目知识库维护模型、Map-first 上下文检索模型、任务执行模型、Agent 协作思考模型、SOP / AI 程序模型、AI 原生代码架构模型。
+- `_adoc/L3-core/map.md` 已同步六个核心模型入口，并明确 Weave 属于项目知识库维护模型，Map-first 不等同于默认 RAG / 全文搜索 / 多层目录跳转。
+- `_adoc/L4-product/index.md` 已创建，明确 L4 是 AIPD 的产品能力层，负责描述用户可见、Agent 可调用、case 可引用的功能边界。
+- `_adoc/L4-product/map.md` 已刷新，覆盖 AIPD 总入口与初始化、Map-first 认知加载、Inbox、Case Create / Run / Archive、Weave、Learn、Update、Mermaid / MMD、Git Push、SOP 库和 AIPD Desktop。
+- `_adoc/map.md` 的 L4 产品功能线总表已同步，不再漏掉 Inbox、Mermaid、SOP 和 Desktop。
 
 ## 7. 后续候选事项
 
@@ -182,7 +206,7 @@ aipd-skill/dist/
 - [x] AIPD Skill 源码和脚本迁移到 `aipd-skill/` 后，构建 / 安装链路仍可用。
 - [x] 根目录不再保留归属不清的 `src/`、`scripts/`、`modules/`、`dist/`。
 - [x] `v1/`、`v2-todo/` 已处理为明确归档 / inbox / case 候选，不再作为根目录长期入口。
-- [x] legacy 旧材料已通过 `c0.7-before-legacy-cleanup` 保留快照，当前工作树不再保留 `docs/legacy/v1/` 和 `docs/legacy/v2-todo/`。
+- [x] legacy 旧材料已通过 `c0.7-before-legacy-cleanup` 保留快照，当前工作树不再保留 `docs/legacy/`。
 - [x] README、docs、_adoc map 和相关 case 路径已同步。
 - [x] 未创建 Desktop 项目；Desktop 创建留给后续 `c0.8`。
 - [x] 当前对外主命名为 `AIPD` / `aipd`，构建产物使用 `aipd*` skill 名。
@@ -194,6 +218,9 @@ aipd-skill/dist/
 - `README.md` - 面向用户的仓库结构说明需要同步。
 - `docs/modules/build-and-install.md` - 构建安装路径必须同步。
 - `c0.8-aipd-desktop-zero` - Desktop case 必须在本 case 完成后基于新路径迭代。
+- `_adoc/L1-intent/intent.md` - L1 应在 L1-L5 审计完成后统一刷新，避免 Agent 继续把 AIPD 误读成 Codex Skill + case-run 工具集。
+- `_adoc/L2-research/index.md` - 需要补充“痛点 / 需求线 -> AIPD 解决能力”的索引。
+- `_adoc/L5-dev/index.md` - L4 产品能力稳定后，下一步可审计 L5 工程规则是否需要按这些产品线重新映射。
 
 ## 10. 自迭代观察锚点
 
@@ -205,6 +232,6 @@ aipd-skill/dist/
 
 ## 11. 归档状态
 
-- **状态**：待验收
+- **状态**：执行中
 - **创建时间**：2026-06-15
 - **归档时间**：

@@ -10,7 +10,7 @@ SOP 是以 Agent 为运行时的可复用 AI 原生程序。
 - L1-L5 负责提供项目认知和上下文。
 - SOP 负责把上下文、工具和 Agent 判断编排成可复用执行流程。
 - Case 可以记录某次 SOP 的具体执行实例；Step 可以承载一次执行中的局部任务。
-- Weave 可以在 SOP 执行后判断稳定新信息是否回写到 L1-L5、map、局部 README 或 case。
+- Weave 可以在 SOP 执行后判断稳定新信息是否回写到 L1-L5、map 或局部 README；一次性过程、验收记录和临时决策留在 case / step。
 
 ## 当前约定
 

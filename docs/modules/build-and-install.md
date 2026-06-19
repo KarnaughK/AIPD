@@ -69,8 +69,7 @@ AIPD-2/
 │   ├── scripts/
 │   ├── modules/
 │   └── dist/
-├── docs/              # 面向人的学习文档与历史材料
-│   └── legacy/
+├── docs/              # 面向人的学习文档
 └── aipd-desktop/      # 未来 AIPD Desktop，c0.8 创建
 ```
 

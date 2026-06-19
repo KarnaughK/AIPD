@@ -1,7 +1,7 @@
 ---
 name: aipd-weave
 description: >
-  AIPD 反向编织入口。把讨论、开发、step 结果、case 归档、外部资料或错误日志中产生的新信息，判断并回写到当前项目的 _adoc、局部 README、map 或 case 记录。
+  AIPD 反向编织入口。把讨论、开发、step 结果、case 归档、外部资料或错误日志中产生的新稳定信息，判断并回写到当前项目的 _adoc、局部 README 或 map；一次性过程留在 case / step。
   关键词：weave、反向编织、知识回写、项目经验沉淀、更新 ADOC、更新 map、更新 README、step 完成后回写、case 归档后回写
 allowed-tools:
   - Read
@@ -177,7 +177,7 @@ Agent 内部可以用来源分类辅助判断：
 
 1. **是否稳定**：未来任务是否可能复用；如果只是一次性过程，留在 case / step。
 2. **影响层级**：它影响概念、功能、实现规则、局部代码入口、检索路径，还是 AIPD 框架本身。
-3. **归属位置**：选择 L3 / L4 / L5 / 局部 README / map / case / step。
+3. **归属位置**：稳定知识选择 L3 / L4 / L5 / 局部 README / map；一次性过程、验收记录和临时决策才留在 case / step。
 4. **索引需求**：是否需要更新 `_adoc/map.md` 或细节 map。
 5. **冲突关系**：是否推翻、替换或限制了已有知识。
 6. **写入粒度**：优先追加小节或补充条目，避免新建零散文件。
@@ -264,9 +264,10 @@ AIPD 中对应为：
 ```text
 讨论 / step / case / diff / 外部资料
 -> aipd-weave
--> 回写 L3 / L4 / L5 / README / map / case
+-> 回写 L3 / L4 / L5 / README / map
+-> 一次性过程、验收记录和临时决策留在 case / step
 -> 必要时提示旧知识冲突
 -> 下次 Agent 通过正向索引读取到新上下文
 ```
 
-AIPD 已经有 L1-L6、OKR、Case、Step、Agent Entry 等项目级纵向模块。`weave` 的核心价值是把新信息编织进这些稳定位置，让项目知识库持续积累。
+AIPD 已经有 L1-L6、OKR、Case、Step、Agent Entry 等项目级纵向模块。`weave` 的核心价值是把稳定新信息编织进 L1-L5、局部 README 和 map，让项目知识库持续积累；OKR、Case、Step 只保留流程状态、一次性过程和恢复记录。

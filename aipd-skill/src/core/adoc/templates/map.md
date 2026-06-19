@@ -2,12 +2,13 @@
 
 本文件是 AI 读取项目记忆的第一跳。它允许比普通索引更厚，但必须结构化：短句、表格、路径、关键词优先，不写长篇正文。
 
-目标是让 Agent 尽量一次读完本文件，就能知道本次任务应该进入哪些 L3 / L4 / L5 / 局部 README / case。
+目标是让 Agent 尽量一次读完本文件，就能知道本次任务应该进入哪些 L3 / L4 / L5 / 局部 README / L6 代码入口。
 
 ## 使用规则
 
 - 普通开发、分析、case-create、case-run 前，优先读取 `_adoc/map.md`。
 - 本文件只记录稳定入口和高频检索路径，不记录一次性执行细节。
+- 普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`；只有明确进入 case / OKR 流程时才读取对应状态文件。
 - 允许和局部 map 少量重复关键词、功能线名和入口路径，换取 AI 第一跳命中率。
 - 命中不清楚时，用 `rg` 搜索核心词、功能线名、页面名、接口名、权限码、组件名和 README。
 - 新发现的稳定入口，后续应回写到本文件或对应 L3 / L4 / L5 map。
@@ -19,7 +20,7 @@
 | {示例：合同 / 产品 / 任务 / 交付记录} | {核心概念或功能线} | L3 + L4 | `_adoc/L3-core/map.md`、`_adoc/L4-product/{feature}/map.md` | 相关页面或模块 README | `rg "合同|产品|任务|交付"` |
 | {示例：权限 / 菜单 / 按钮显隐} | {工程规则} | L5 + 局部 README | `_adoc/L5-dev/{rule}/map.md` | 目标页面 README、权限工具函数 | `rg "permission|perms|auth|hasPermi"` |
 | inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `aipd-inbox` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc` |
-| SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 | SOP 项目级 Agent 程序库 | SOP + L3 + case | `_adoc/sop/index.md`、`_adoc/sop/map.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure" _adoc` |
+| SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 | SOP 项目级 Agent 程序库 | SOP + L3 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure" _adoc` |
 
 ## L3 核心概念总表
 
