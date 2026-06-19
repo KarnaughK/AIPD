@@ -4,6 +4,8 @@
 
 AIPD 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻辑、AI 原生代码架构实验。
 
+正在施工中的前置能力是 **AIPD Think**：它位于 Case Create 之前，用来把模糊想法、调研和方案比较沉淀成可决策的 Think 对象，再决定进入 Case、暂缓、终止或继续研究。
+
 ## 推荐阅读路径
 
 第一次系统了解 AIPD，建议按顺序读完这 6 篇：
@@ -14,6 +16,10 @@ AIPD 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻
 4. [Case / Step 开发逻辑](guide/04-case-step-development.md)
 5. [AI 原生代码架构实验](guide/05-ai-native-code-architecture-experiment.md)
 6. [第一次完整路径](guide/06-first-complete-flow.md)
+
+补充阅读：
+
+- [AIPD Think（施工中）](modules/think.md)
 
 ## 按主线查模块
 
@@ -27,6 +33,7 @@ AIPD 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻
 
 ### 二、Case / Step 开发逻辑
 
+- [AIPD Think（施工中）](modules/think.md)
 - [OKR](modules/okr.md)
 - [Case 与 Step](modules/case-and-step.md)
 - [分身 Agent](modules/clone-agents.md)

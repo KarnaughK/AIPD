@@ -4,6 +4,7 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
+| `c0.9-aipd-think-system-design` | 待执行 | 调研 OpenSpec / Spec Kit / BMAD / Open SWE 等前置讨论与 spec 机制，设计 AIPD Think 一等对象、状态流转和 Think -> Case Create 交接 |
 | `c0.7-repo-structure-reclassification` | 待验收 | 正式创建 AIPD Desktop 前，重划仓库根目录：AIPD Skill 本体、项目认知、docs、历史材料与桌面端边界 |
 | `c0.8-aipd-desktop-zero` | 讨论中 | 讨论 AIPD Desktop 第零版：AIPD 文件树解析 + 真实 Agent 聊天接入 |
 

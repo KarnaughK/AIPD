@@ -17,6 +17,12 @@ AIPD 是一个可构建的 skill 工程。仓库中的 `aipd-skill/src/skills/` 
 | `aipd-git-push` | `/aipd-git-push` | 检查当前分支和提交状态，并推送远端 |
 | `aipd-mermaid` | `/aipd-mermaid` | 创建、修改、评审或按需渲染 Mermaid 架构图 |
 
+## 规划中能力
+
+| 能力 | 状态 | 作用 |
+|---|---|---|
+| AIPD Think / `aipd-think` | 施工中，尚无正式命令 | 在 Case Create 之前承载讨论、调研、方案比较和决策出口 |
+
 ## 常见协作顺序
 
 新项目：

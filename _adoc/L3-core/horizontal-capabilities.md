@@ -6,23 +6,26 @@
 
 ## 核心判断
 
-AIPD 的核心工作不是只维护一组文档目录，而是基于 L1-L6、OKR、Case、Step、Agent Entry 等纵向模块，提供 Agent 可用的项目级上下文能力。
+AIPD 的核心工作不是只维护一组文档目录，而是基于 L1-L6 长期知识库、OKR / Case / Step 流程状态、Agent Entry 等纵向模块，提供 Agent 可用的项目级上下文能力。
 
 当前这些能力主要通过 `_adoc/` 文档、map、case、step、AGENTS.md 和 skill 工作流提供。未来也可以通过 MCP、检索工具或上下文服务提供。
+
+普通开发、找代码、查业务规则、查页面或组件实现时，横向功能只把 Agent 路由到 L3 / L4 / L5 / 局部 README / L6。Case / OKR 只在对应流程任务中读取，不作为普通知识检索链路的一部分。
 
 ## 功能总览
 
 | 横向功能 | 要解决的问题 | 会串起哪些纵向模块 |
 |---|---|---|
-| 项目入口 / Agent Entry | Agent 进入项目后先知道怎么读上下文、怎么行动 | Agent Entry、map、L1-L5、Case |
+| 项目入口 / Agent Entry | Agent 进入项目后先知道怎么读上下文、怎么行动 | Agent Entry、map、L1-L5；流程任务再进入 Case / OKR |
 | 大地图 / map 检索 | 用户说一句自然语言，Agent 怎么找到相关上下文和代码入口 | L3、L4、L5、局部 README、L6 |
 | L3 概念地图 | 一个业务词、黑话或核心概念到底是什么意思 | L3、L4、L5、L6 |
 | L4 功能地图 | 一个产品功能涉及哪些页面、接口、数据对象、权限和代码入口 | L4、L3、L5、L6 |
 | L5 工程规则地图 | 权限、路由、插件、前后端约定等规则怎么查 | L5、L4、L6 |
 | 局部 README 地图 | 某个页面、弹窗、组件或模块内部怎么理解和修改 | L4、L5、L6 |
+| Think 系统 | 模糊想法如何讨论、调研、比较方案并形成 Create / Kill / Defer / Research / Weave / Continue 等出口 | L1-L5、Think、L2 Research、Case、Weave、Agent 使用方案 |
 | Case 系统 | 一个事项如何创建、拆 step、执行、恢复和验收 | OKR、Case、Step、L1-L6、Agent 使用方案 |
 | SOP 系统 | 项目里可重复执行的动作如何沉淀为以 Agent 为运行时的 AI 原生程序 | SOP、L1-L5、L6 工具代码、Case、Step、Agent 使用方案、Weave |
-| Weave 反向编织 | 做完后把新判断、踩坑、规则、入口和外部资料写回哪里 | Case、Step、L3、L4、L5、局部 README、map |
+| Weave 反向编织 | 做完后把新判断、踩坑、规则、入口和外部资料写回哪里 | L3、L4、L5、局部 README、map；一次性过程留在 Case / Step |
 | OKR 对齐 | 当前 case / step 是否推进阶段目标 | OKR、Case、L1 |
 | 构建 / 安装 | AIPD skill 怎么生成、安装到不同 Agent 平台 | L5、L6、Agent Entry |
 | 未来上下文服务 | 用 MCP / 检索工具给 Agent 提供上下文 | map、L1-L6、Agent 使用方案 |
@@ -47,6 +50,31 @@ Map 负责把用户自然语言、业务词、工程词路由到相关 L3 / L4 /
 
 Map 不负责承载全部正文。它负责把 Agent 带到正确上下文。
 
+## Think 系统
+
+Think 系统是 Case 之前的高带宽讨论和决策能力。它接住模糊想法、陌生领域、新产品方向、需求是否值得做等问题，把原本容易散在聊天里的讨论、调研和取舍状态化。
+
+Think 与 Case 同层，不是 Case 的子目录。两者边界是：
+
+- Think 解决“要不要做、做什么、做到什么程度、还缺什么信息”。
+- Case Create 解决“已经决定要做以后，怎么设计边界、上下文索引、架构和 steps”。
+- Case Run 解决“按 case / step 执行、验证和回写状态”。
+
+Think 的核心出口应至少包括：
+
+| 出口 | 含义 | 后续动作 |
+|---|---|---|
+| Create | 目标清晰且值得执行 | 转入 Case Create |
+| Kill | 不值得做或方向不成立 | 记录终止原因，避免重复讨论 |
+| Defer | 值得但不是当前阶段 | 记录延后条件，可进入 inbox / OKR / 后续 Think |
+| Research | 信息不足 | 继续调研，必要时派发分身 Agent |
+| Weave | 产生稳定认知但不形成事项 | 由 Weave 判断写回 L2 / L3 / L4 / L5 / map |
+| Continue | 尚未清晰 | 继续讨论和澄清 |
+
+Think 可以包含 deep research / 深度检索，但调研资料先服务当前 Think 对象，不直接变成长期认知。只有经过判断的稳定结论才回写到 L2 / L3 / L4 / L5。
+
+Think 和 Inbox 的区别是承诺度：Inbox 只负责 capture，不承诺讨论；Think 已经进入主动澄清和决策。Think 和 SOP 的区别是对象：SOP 是可重复执行程序，Think 是一次具体想法的思考状态。
+
 ## Case 系统
 
 Case 系统是一组重功能，可以聚合理解，但需要区分子功能。
@@ -57,7 +85,7 @@ Case 系统是一组重功能，可以聚合理解，但需要区分子功能。
 | Case 执行 | 按 case 恢复状态，推进 step，收集结果并验收 |
 | Step 派发 / 恢复 | step 是 case 内的执行、派发、恢复和验收单元 |
 
-Case 创建会横向读取 L1-L6、OKR、map 和局部 README，把一次事项压缩成可恢复的 case。
+Case 创建会横向读取 L1-L6、map、局部 README 和必要的 OKR 约束，把一次事项压缩成可恢复的 case。
 
 Case 执行会按 case / step 恢复任务状态，再读取 step 指定的上下文。Step 可以派发给分身 Agent 或角色 Agent，执行后只回流结论、依据、风险、建议、改动文件和验证结果。
 
@@ -81,11 +109,11 @@ SOP 和现有模块的关系：
 - L6 代码、脚本、API 和外部工具可以作为 SOP 的工具。
 - Case 可以记录某次 SOP 的执行实例。
 - Step 可以承载某次执行中的局部任务。
-- Weave 可以在 SOP 执行后判断稳定新信息是否回写到知识库、map、局部 README 或 case。
+- Weave 可以在 SOP 执行后判断稳定新信息是否回写到知识库、map 或局部 README；一次性执行实例留在 case / step。
 
 ## Weave 反向编织功能
 
-Weave 负责把执行、讨论、step 完成、case 归档、代码 diff、错误日志和外部资料中产生的新信息，编织回稳定位置。
+Weave 负责把执行、讨论、step 完成、case 归档、代码 diff、错误日志和外部资料中产生的新信息，编织回稳定位置。稳定位置指 L3 / L4 / L5、局部 README、总 map 或细节 map；case / step 只保留一次性过程、验收记录和临时决策。
 
 常见回写方向：
 

@@ -1,6 +1,6 @@
 # AIPD 项目记忆地图
 
-本文件是 AI 读取 AIPD 项目记忆的第一跳。它只负责引路，不承载完整正文；目标是让 Agent 尽量一次读完本文件，就能判断本次任务应进入哪些 L3 / L4 / L5 / 局部 README / case / 源码入口。
+本文件是 AI 读取 AIPD 项目记忆的第一跳。它只负责引路，不承载完整正文；目标是让 Agent 尽量一次读完本文件，就能判断本次任务应进入哪些 L3 / L4 / L5 / 局部 README / 源码入口。
 
 新增稳定入口优先回写到本文件，再按需要同步到细节 map。
 
@@ -8,9 +8,10 @@
 
 - 普通开发、分析、case-create、case-run、update、weave 前，优先读取 `_adoc/map.md`。
 - 本文件记录高频入口、稳定路径和兜底搜索词，不记录一次性执行细节。
-- 命中不清楚时，用 `rg` 搜索核心词、skill 名、agent 名、平台名、case 名和 README。
+- 命中不清楚时，用 `rg` 搜索核心词、skill 名、agent 名、平台名和 README。
 - 新发现的稳定入口，后续应回写到本文件或对应 L3 / L4 / L5 map。
 - 关键路径尽量扁平暴露，不要求 Agent 通过多层目录链自行发现。
+- 普通开发、找代码、查业务规则、查页面或组件实现时，本文件不把请求路由到 `_adoc/case/` 或 `_adoc/okr/`。只有用户明确要求 case / OKR 流程，或当前任务本身是 case-create、case-run、case-archive、OKR 对齐时，才读取对应流程状态。
 
 ## 高频任务入口
 
@@ -23,12 +24,13 @@
 | 更新已有项目 AIPD 架构 / aipd update / 过期结构 / 破坏性更新 | AIPD Update | L5 + L6 | `_adoc/map.md`、`_adoc/L5-dev/index.md` | `aipd-skill/src/skills/aipd-update/SKILL.md`、`aipd-skill/src/core/adoc/templates/map.md`、`aipd-skill/src/core/adoc/templates/index.md`、`aipd-skill/src/core/agent-entry/template.md` | `rg "aipd-update|更新 AIPD|破坏性更新|过期结构|map.md|AGENTS" aipd-skill/src _adoc` |
 | 上下文检索 / 大地图 / map | 项目记忆地图 | L3 + L5 | `_adoc/map.md`、`_adoc/L3-core/index.md` | `aipd-skill/src/core/adoc/templates/map.md`、`aipd-skill/src/skills/aipd-case-create/SKILL.md` | `rg "map.md|上下文检索|检索包|观察锚点" aipd-skill/src _adoc AGENTS.md` |
 | inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_adoc/inbox.md` | `aipd-skill/src/skills/aipd-inbox/SKILL.md`、`aipd-skill/src/core/adoc/templates/inbox.md` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _adoc aipd-skill/src` |
-| SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 / 查关键词 / 日报 | SOP 项目级 Agent 程序库 | SOP + L3 + case | `_adoc/sop/index.md`、`_adoc/sop/map.md`、`_adoc/L3-core/horizontal-capabilities.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure|查关键词|日报" _adoc aipd-skill/src docs` |
-| case 创建 / 上下文索引 / step 拆分 | Case 创建 | L4 + L5 + case | `_adoc/case/index.md`、`_adoc/L3-core/horizontal-capabilities.md` | `aipd-skill/src/skills/aipd-case-create/SKILL.md`、`aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/step.md` | `rg "case-create|上下文索引|step|候选" aipd-skill/src _adoc/case` |
-| case 执行 / 分身 Agent / fork_context / Agent 指引兜底 | Case 执行 | L5 + case | `_adoc/L5-dev/index.md`、相关 case `case.md` | `aipd-skill/src/skills/aipd-case-run/SKILL.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md`、`aipd-skill/src/core/agent-guides/` | `rg "fork_context|分身|case-run|推荐 Agent|agent-guides|unknown agent_type" aipd-skill/src _adoc/case` |
-| Weave / 反向编织 / 项目 ADOC 回写 / 更新 map / 更新局部 README | Weave 反向编织 | L3 + L5 + case | `_adoc/L3-core/horizontal-capabilities.md`、`_adoc/map.md` | `aipd-skill/src/skills/aipd-weave/SKILL.md`、`aipd-skill/src/skills/aipd-case-run/SKILL.md`、`aipd-skill/src/skills/aipd-case-archive/SKILL.md` | `rg "weave|反向编织|Weave Candidate|知识回写|更新 ADOC|更新 map" aipd-skill/src _adoc README.md` |
-| 自迭代 / learn / transcript / 观察锚点 | AIPD Learn | L5 + case | `aipd-skill/src/skills/aipd-learn/SKILL.md`、当前 case 的观察锚点 | `aipd-skill/src/platforms/codex/` | `rg "观察锚点|transcript|回流|自迭代|learn" aipd-skill/src _adoc` |
-| docs / 学习文档 / README / 教学文档 / 三条主线 / 用户学习路径 | AIPD 面向用户的学习文档体系 | L3 + L5 + docs | `docs/README.md`、`README.md`、`_adoc/case/archive/c0.6-human-docs-three-lines/case.md` | `docs/guide/`、`docs/modules/` | `rg "学习文档|三条主线|知识库最小闭环|Case / Step|AI 原生代码架构|README" README.md docs _adoc/case` |
+| think / AIPD Think / 讨论任务 / 定任务 / 前置判断 / 要不要做 / 从模糊到清晰 / 深度调研后再决定 | AIPD Think 前置讨论与决策 | L3 + L4 规划能力 | `_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md`、`_adoc/L4-product/index.md`、`_adoc/L4-product/map.md` | 规划中的 `aipd-think` / Think 对象；当前实现前先走讨论或 case-create 设计 | `rg "Think|AIPD Think|任务澄清|前置讨论|要不要做|从模糊到清晰|Create|Kill|Defer|Research" _adoc aipd-skill/src docs` |
+| SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 / 查关键词 / 日报 | SOP 项目级 Agent 程序库 | SOP + L3 | `_adoc/sop/index.md`、`_adoc/sop/map.md`、`_adoc/L3-core/horizontal-capabilities.md` | `_adoc/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure|查关键词|日报" _adoc aipd-skill/src docs` |
+| case 创建 / 上下文索引 / step 拆分 | Case 创建 | case 流程 + L4/L5 能力文档 | `_adoc/case/index.md`、`_adoc/L3-core/horizontal-capabilities.md` | `aipd-skill/src/skills/aipd-case-create/SKILL.md`、`aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/step.md` | `rg "case-create|上下文索引|step|候选" aipd-skill/src _adoc/case` |
+| case 执行 / 分身 Agent / fork_context / Agent 指引兜底 | Case 执行 | case 流程 + L5 能力文档 | `_adoc/L5-dev/index.md`、相关 case `case.md` | `aipd-skill/src/skills/aipd-case-run/SKILL.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md`、`aipd-skill/src/core/agent-guides/` | `rg "fork_context|分身|case-run|推荐 Agent|agent-guides|unknown agent_type" aipd-skill/src _adoc/case` |
+| Weave / 反向编织 / 项目 ADOC 回写 / 更新 map / 更新局部 README | Weave 反向编织 | L3 + L5 | `_adoc/L3-core/horizontal-capabilities.md`、`_adoc/map.md` | `aipd-skill/src/skills/aipd-weave/SKILL.md` | `rg "weave|反向编织|Weave Candidate|知识回写|更新 ADOC|更新 map" aipd-skill/src _adoc README.md` |
+| 自迭代 / learn / transcript / 观察锚点 | AIPD Learn | L5 + 框架自迭代 | `aipd-skill/src/skills/aipd-learn/SKILL.md` | `aipd-skill/src/platforms/codex/` | `rg "观察锚点|transcript|回流|自迭代|learn" aipd-skill/src _adoc` |
+| docs / 学习文档 / README / 教学文档 / 三条主线 / 用户学习路径 | AIPD 面向用户的学习文档体系 | L3 + L5 + docs | `docs/README.md`、`README.md` | `docs/guide/`、`docs/modules/` | `rg "学习文档|三条主线|知识库最小闭环|Case / Step|AI 原生代码架构|README" README.md docs _adoc` |
 | Vue 页面 / 组件 / AI 友好前端架构 / 纯前端 case | Vue 角色 Agent 调度 | L5 + 局部 README | `_adoc/L5-dev/index.md`、`aipd-skill/src/core/L5-dev/vue-case-create-guide.md`、`aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md`、`aipd-skill/src/core/agent-guides/aipd_vue_architect.md` | `aipd-skill/src/platforms/codex/agents/aipd_vue_architect.toml` | `rg "Vue|组件|README|aipd_vue_architect|纯前端|一个文件一个 step|useXxx" aipd-skill/src _adoc` |
 | Vue useXxx / provide inject / 页面数据源 / API 字段对齐 / 兜底字段 | Vue Provider 角色 Agent 调度 | L5 + 局部 README | `_adoc/L5-dev/index.md`、`aipd-skill/src/core/L5-dev/vue-provider-guide.md`、`aipd-skill/src/core/agent-guides/aipd_vue_provider.md` | `aipd-skill/src/platforms/codex/agents/aipd_vue_provider.toml` | `rg "useXxx|provide|inject|provider|API|字段|兜底|aipd_vue_provider" aipd-skill/src _adoc` |
 
@@ -39,6 +41,7 @@
 | 项目认知 / ADOC | ADOC / `_adoc` | `_adoc/L3-core/map.md` | AIPD 初始化、AIPD Update、Weave | 不等同于普通 README；它是 AI 长期上下文结构 |
 | 纵向概念模块 | L1-L6 / OKR / Case / Step / Agent Entry | `_adoc/L3-core/vertical-concept-modules.md` | case-create、case-run、update | 不是功能清单；它回答项目认知和代码实现按什么类别沉淀 |
 | 横向功能能力 | map 检索 / Case 系统 / Weave / 上下文服务 | `_adoc/L3-core/horizontal-capabilities.md` | case-create、case-run、weave、learn | 不是新的层级；它回答 Agent 做事时怎么串起纵向模块 |
+| Think / AIPD Think / 任务澄清 / 前置讨论 / 要不要做 | Think / 任务澄清决策模型 | `_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md` | AIPD Think、case-create、weave | 不是 Case 子步骤，也不是普通聊天记录；Think 是 Case 之前的一等对象 |
 | 外部世界 | L2 Research | `_adoc/L3-core/vertical-concept-modules.md` | AIPD 初始化、case-create | 不只是痛点；竞品、玩法范式、市场观察、流量来源和变现方式也可先放 L2 |
 | 项目成立模型 | L3 Core | `_adoc/L3-core/index.md` | AIPD 初始化、AIPD Update | 不等于狭义数据模型；也可能是增长模型、内容模型、流量模型、留存模型和商业模型 |
 | 局部 map | 代码就近 README / 局部 map | `_adoc/L5-dev/index.md`、`aipd-skill/src/core/adoc-structure.md` | case-create、weave | 页面、弹窗、组件内部实现地图不应大老远塞回 L5 |
@@ -50,14 +53,22 @@
 
 ## L4 产品功能线总表
 
-| 用户说法 / 场景 | 标准功能线 | 功能线 map | 前端入口 | 后端入口 | 数据对象 | 相关 L3 | 相关 L5 |
-|---|---|---|---|---|---|---|---|
-| 初始化新项目 / 安装 AIPD | AIPD 初始化 | `_adoc/L4-product/map.md` | 不适用 | 不适用 | `AGENTS.md`、`_adoc/` | `_adoc/L3-core/map.md` | `_adoc/L5-dev/index.md` |
-| 更新已有项目 AIPD 架构 | AIPD Update | `_adoc/L4-product/map.md` | 不适用 | 不适用 | `AGENTS.md`、`_adoc/map.md`、case | `_adoc/L3-core/map.md` | `_adoc/L5-dev/index.md` |
-| 创建 case / 拆 step | Case Create | `_adoc/L4-product/map.md` | 不适用 | 不适用 | case.md、steps | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
-| 执行 case / 派发分身 Agent | Case Run | `_adoc/L4-product/map.md` | 不适用 | 不适用 | case.md、step.md、Agent 指引 | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
-| 经验回写 / 反向编织 | Weave | `_adoc/L4-product/map.md` | 不适用 | 不适用 | L3 / L4 / L5 / README / map / case | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
-| 框架自迭代 / transcript 回流 | Learn | `_adoc/L4-product/map.md` | 不适用 | 不适用 | transcript、回流包、AIPD 源码 | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
+| 用户说法 / 场景 | 标准功能线 | 功能线 map | 主要入口 | 数据对象 | 相关 L3 | 相关 L5 / 流程入口 |
+|---|---|---|---|---|---|---|
+| 初始化新项目 / 安装 AIPD / 项目状态 | AIPD 总入口与初始化 | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd/SKILL.md` | `AGENTS.md`、`_adoc/`、基础模板 | `_adoc/L3-core/map.md` | `_adoc/L5-dev/index.md` |
+| 读 map / 加载项目认知 / 找上下文 | Map-first 认知加载 | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd/SKILL.md`、`_adoc/map.md` | `_adoc/index.md`、`_adoc/map.md`、L3/L4/L5、局部 README | `_adoc/L3-core/map.md` | `_adoc/L5-dev/index.md` |
+| inbox / 收件箱 / 先记一下 | Inbox 临时收件箱 | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-inbox/SKILL.md` | `_adoc/inbox.md` | `_adoc/L3-core/map.md` | `aipd-skill/src/core/adoc/templates/inbox.md` |
+| think / AIPD Think / 讨论任务 / 定任务 / 要不要做 | AIPD Think | `_adoc/L4-product/map.md` | 规划中的 `aipd-think` / Think 对象 | discussion、research、options、decision、决策出口 | `_adoc/L3-core/index.md` | 后续设计 case 确认 |
+| 创建 case / 拆 step | Case Create | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-case-create/SKILL.md` | case.md、steps | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
+| 执行 case / 派发分身 Agent | Case Run | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-case-run/SKILL.md` | case.md、step.md、Agent 指引 | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
+| 归档 case / 整理 Weave Candidate | Case Archive | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-case-archive/SKILL.md` | case archive、case index、git diff | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/case/index.md` |
+| 经验回写 / 反向编织 | Weave | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-weave/SKILL.md` | L3 / L4 / L5 / README / map；一次性过程留在 case / step | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
+| 框架自迭代 / transcript 回流 | Learn | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-learn/SKILL.md` | transcript、回流包、AIPD 源码 | `_adoc/L3-core/horizontal-capabilities.md` | `_adoc/L5-dev/index.md` |
+| 更新已有项目 AIPD 架构 | AIPD Update | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-update/SKILL.md` | `AGENTS.md`、`_adoc/map.md`、case 模板 | `_adoc/L3-core/map.md` | `_adoc/L5-dev/index.md` |
+| Mermaid / MMD / 架构图 / 预览图 | Mermaid / MMD | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | `_adoc/L3-core/index.md` | `aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md` |
+| git push / 推送当前分支 | Git Push | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | `_adoc/L3-core/horizontal-capabilities.md` | git 状态 |
+| SOP / AI 程序 / 可复用流程 | SOP 库 | `_adoc/L4-product/map.md` | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP 目录、输入、步骤、工具、输出 | `_adoc/L3-core/index.md` | `_adoc/sop/` |
+| AIPD Desktop / 桌面端 / 聊天 UI / 文件树 | AIPD Desktop | `_adoc/L4-product/map.md` | `aipd-desktop/README.md` | AIPD 文件树、聊天、context chip、预览 | `_adoc/L3-core/index.md` | 规划 case 仅在 Desktop case 流程中读取 |
 
 ## L5 工程规则总表
 
