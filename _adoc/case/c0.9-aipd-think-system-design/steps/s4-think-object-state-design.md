@@ -32,12 +32,12 @@
 
 ## 任务清单
 
-- [ ] 设计 `_adoc/think/` 是否需要 index、active / archive、doc / research 等目录。
-- [ ] 设计单个 Think 对象的建议文件：think.md、research.md、options.md、decision.md、handoff.md 等是否必要。
-- [ ] 设计 Think 状态字段和出口字段。
-- [ ] 设计 Think 的恢复链路：AGENTS -> index -> map -> think index -> 当前 think。
-- [ ] 设计最小模板草案，但只写入本 step 产出文档，不改源码模板。
-- [ ] 标出仍需用户决策的问题。
+- [x] 设计 `_adoc/think/` 是否需要 index、active / archive、doc / research 等目录。
+- [x] 设计单个 Think 对象的建议文件：think.md、research.md、options.md、decision.md、handoff.md 等是否必要。
+- [x] 设计 Think 状态字段和出口字段。
+- [x] 设计 Think 的恢复链路：AGENTS -> index -> map -> think index -> 当前 think。
+- [x] 设计最小模板草案，但只写入本 step 产出文档，不改源码模板。
+- [x] 标出仍需用户决策的问题。
 
 ## 产出要求
 
@@ -46,9 +46,9 @@
 
 ## 验收标准
 
-- [ ] 设计能支持长讨论和深度调研恢复。
-- [ ] 设计能表达非执行出口，不会强制进入 Case Create。
-- [ ] 设计足够轻，不会把 Think 做成比 Case 更重的流程系统。
+- [x] 设计能支持长讨论和深度调研恢复。
+- [x] 设计能表达非执行出口，不会强制进入 Case Create。
+- [x] 设计足够轻，不会把 Think 做成比 Case 更重的流程系统。
 
 ## 不做
 
@@ -60,12 +60,21 @@
 
 ## 执行记录
 
-**完成时间**：
+**完成时间**：2026-06-20
 
 **主要改动**：
-- 
+- 新增 `_adoc/case/c0.9-aipd-think-system-design/doc/think-object-state-design.md`。
+- 设计 `_adoc/think/` 的建议基础结构：`index.md`、`active/`、`archive/`，不建议设置全局 `doc/` / `research/`。
+- 设计单个 Think 对象的渐进式文件结构：Light Think 只需 `think.md`，Research-heavy Think 增加 `research.md` / `research/` / `options.md`，Create Handoff 增加 `decision.md` / `handoff.md`。
+- 设计 `status`、`mode`、`phase`、`current_exit` 等状态字段，以及 Create / Kill / Defer / Research / Weave / Continue 出口字段。
+- 设计恢复链路：`AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/think/index.md -> 当前 Think think.md -> 按索引读取附属文件`。
+- 产出 `index.md`、`think.md`、`research.md`、`options.md`、`decision.md`、`handoff.md` 的最小模板草案。
 
 **遇到的问题**：
+- 无阻塞。主要设计取舍是避免把 Think 做成默认重型目录，因此采用按需加文件的渐进结构。
 
 **Weave 候选**：
-- 
+- L3 Core：补充 Think 的文件化原则：Think 是可恢复决策对象，但默认轻量、按需加重。
+- L4 Product：补充 AIPD Think 的三种模式：Light Think / Research-heavy Think / Create Handoff。
+- `_adoc/map.md`：后续实现后补 Think 恢复链路和 `_adoc/think/index.md` 入口。
+- `aipd-case-create`：后续实现 case 中收窄 Case Create，要求优先读取 Think handoff（如果存在）。

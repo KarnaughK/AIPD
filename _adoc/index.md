@@ -8,6 +8,7 @@
 - **当前阶段**：框架自举与 Codex 优先适配
 - **SOP**：`_adoc/sop/index.md`、`_adoc/sop/map.md`
 - **Inbox**：`_adoc/inbox.md`
+- **发展日志**：`_adoc/development-log.md`
 
 流程状态入口只在流程任务中读取：
 
@@ -37,6 +38,7 @@
 ## 任务类型读取入口
 
 - AIPD 方向、边界、定位：`_adoc/L1-intent/intent.md`
+- AIPD 历史演进 / 长期回顾 / 是否肿歪审计：`_adoc/development-log.md`
 - AIPD 纵向概念模块与横向功能能力：`_adoc/L3-core/index.md`、`_adoc/L3-core/vertical-concept-modules.md`、`_adoc/L3-core/horizontal-capabilities.md`
 - Think / AIPD Think / 前置讨论 / 要不要做 / 从模糊到清晰：`_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md`、`_adoc/L4-product/index.md`、`_adoc/L4-product/map.md`
 - AIPD 产品能力、功能边界和入口地图：`_adoc/L4-product/index.md`、`_adoc/L4-product/map.md`
