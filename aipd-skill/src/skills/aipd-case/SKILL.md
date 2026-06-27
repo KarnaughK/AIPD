@@ -102,7 +102,7 @@ _adoc/case/{case-dir}/case.md
 | Design | `@references/case/phases/design.md` | 找复杂度爆点，形成文件 / 文件夹级架构边界和工作包 |
 | Execute | `@references/case/phases/execute.md` | 按工作包推进，可用目标模式和执行 Agent |
 | Verify | `@references/case/phases/verify.md` | 验收目标、设计约束和执行结果 |
-| Close | `@references/case/phases/close.md` | 归档、整理 Weave Candidate、更新索引 |
+| Close | `@references/case/phases/close.md` | 归档、整理 Close 归档候选、更新索引 |
 
 不要一次加载所有 phase 细则。只有当当前 phase 完成并切换到下一 phase 时，再加载下一份文档。
 
@@ -141,7 +141,7 @@ case.md 保留 Case Contract、Case Runtime、压缩后的 phase 摘要和链接
 - `Phase State`
 - 当前 phase 的结论摘要
 - 新增或更新的 work packages
-- Weave Candidate
+- Close 归档候选
 - 阻塞和待确认项
 
 Case 状态以文件为准，不依赖聊天记忆。

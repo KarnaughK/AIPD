@@ -1,7 +1,7 @@
 ---
 name: aipd-weave
 description: >
-  AIPD 反向编织入口。把讨论、开发、work package 结果、case 归档、外部资料或错误日志中产生的新稳定信息，判断并回写到当前项目的 _adoc、局部 README 或 map；一次性过程留在 case / work package。
+  AIPD 反向编织入口。把已完成事项、已验证实现、case 归档、外部资料或错误日志中产生的新稳定信息，判断并回写到当前项目的 _adoc、局部 README 或 map；未完成 case 中的候选先记入 Close phase。
   关键词：weave、反向编织、知识回写、项目经验沉淀、更新 ADOC、更新 map、更新 README、work package 完成后回写、case 归档后回写
 allowed-tools:
   - Read
@@ -25,12 +25,15 @@ inject-from-core:
 
 其他 skill 负责执行、验证和产出结果；`weave` 负责判断这些结果是否值得沉淀、沉淀到哪里、是否更新索引、是否提示旧知识冲突。
 
+如果当前对话正在推进一个尚未完成的 case，`aipd-weave` 不直接把内容写进 L1-L5、README 或 map。它只提示用户“当前 case 还没有完成”，并把候选记录到该 case 的 Close phase，等待 Close 时统一判断。
+
 ## 职责边界
 
 **只做**：
 
 - 先读取项目入口和 map，再从当前上下文、用户描述、work package 结果、case 归档、代码 diff、错误日志或外部资料中提炼可沉淀重点。
 - 判断候选信息属于 L3、L4、L5、局部 README、map、case / work package、AIPD 框架经验中的哪一类。
+- 如果当前上下文属于未完成 case，只把候选记录到 `05-close/close.md` 或 case.md 的 Close 摘要，作为 Close 阶段的归档候选。
 - 如果候选信息是可重复执行的项目动作，判断是否应进入 `_adoc/sop/` 作为以 Agent 为运行时的可复用 AI 原生程序。
 - 优先更新当前项目已有 `_adoc/`、局部 README、map 或 case / work package 记录。
 - 在写入前输出回写方案，等用户确认后再改文件。
@@ -42,6 +45,7 @@ inject-from-core:
 - 不归档 case，不移动 case 目录，不合并分支。
 - 不替代 `aipd-learn` 做 AIPD 框架自迭代诊断。
 - 不把一次性聊天过程写进长期 ADOC。
+- 不把未完成 case、未实现设计、未来计划或尚未验收的讨论内容写进 L1-L5、局部 README 或 map。
 - 不为了沉淀创建大量零散文档；优先更新已有文件和索引。
 
 ## 和其他 skill 的关系
@@ -49,7 +53,7 @@ inject-from-core:
 | skill | 负责什么 | 和 weave 的关系 |
 |---|---|---|
 | `aipd` | 入口路由和轻量上下文加载 | 用户说“回写 / 记一下 / weave / 更新 ADOC”时推荐进入 `aipd-weave` |
-| `aipd-case` | 执行 case / work package，收集结果 | work package 完成后可把结果包交给 `aipd-weave` 判断是否沉淀 |
+| `aipd-case` | 执行 case / work package，收集结果 | case 未完成时只把候选记到 Close phase；case Close 后再交给 `aipd-weave` 判断是否沉淀 |
 | `aipd-learn` | AIPD 框架自迭代、transcript 诊断、定位卡 | 框架经验走 `learn`；业务项目 ADOC 回写走 `weave` |
 | `aipd-update` | 升级已初始化项目的 AIPD 架构 | 架构模板同步走 `update`；当前项目经验沉淀走 `weave` |
 
@@ -72,6 +76,8 @@ inject-from-core:
 3. **Case 归档触发**：case 完成后，把临时过程和稳定知识分离。
 4. **普通开发结束触发**：轻量代码修改后，只有出现可复用知识时才建议 weave。
 
+在进行中 case 内触发时，默认不执行长期 ADOC 回写。用户说“记一下，看需不需要反编织回去”时，只把它作为 Close phase 的归档候选；除非 case 已经完成并进入 Close，否则不要生成 L1-L5 回写方案。
+
 ## 执行流程
 
 `weave` 对用户的入口语义是“更新 ADOC 文档”。不要一上来要求用户选择来源类型。来源分类、稳定性判断和归属判断都是 Agent 内部工作。
@@ -80,6 +86,7 @@ inject-from-core:
 
 ```text
 读取项目入口和 map
+-> 如果当前上下文属于未完成 case，提示 case 未完成并记录 Close 候选，停止长期回写
 -> 回看当前对话 / 用户输入 / 已知执行结果
 -> 自动提炼可沉淀重点
 -> 判断准备更新哪些 ADOC / README / map / case 文件
@@ -136,12 +143,26 @@ Agent 内部可以用来源分类辅助判断：
 我现在看不出要沉淀进 ADOC 的具体内容。你想把哪段内容更新进 ADOC？
 ```
 
+### Case 进行中调用规则
+
+如果用户在 case 讨论、Design、Execute、Verify 或 work package 执行期间调用 `aipd-weave`，先判断当前 case 是否已经完成：
+
+1. 读取相关 `case.md`，查看 Case Contract、`Current Phase`、`Phase State` 和 Verify 状态。
+2. 如果 case 尚未 Close，或目标尚未验收完成，提示用户：`当前 case 还没有完成，暂时不反编织到长期知识库；我会把这条记到 Close 阶段，等 case 收口时统一判断。`
+3. 如果用户要记录的候选内容明确，写入 `05-close/close.md` 的“归档候选 / 反向编织候选”区；如果 `05-close/close.md` 尚不存在，可先在 case.md 的 Close 摘要中记录。
+4. 候选必须标注状态：`未完成 / 待验证 / 已实现待验收 / 已完成可评估`，以及候选归属：`L3 / L4 / L5 / README / map / SOP / 仅留 case`。
+5. 停止长期 ADOC 回写流程，不读取或修改 L1-L5、README 或 map。
+
+只有 case 已完成、Verify 通过并进入 Close 时，`aipd-weave` 才判断哪些候选真正进入长期知识库。
+
 ### 第三步：形成内部回写候选
 
 候选包是 Agent 内部整理材料，不需要默认展示给用户。其他 skill 调用 `weave` 时，可以交付下面的候选包；用户直接触发时，`weave` 自己补齐。
 
+在 case 尚未完成时，下面这类候选包应保存到 Close phase，而不是进入长期 ADOC。这里的候选是 Close 阶段待复核的归档候选，不是 L1-L5 的临时区。
+
 ```md
-# Weave Candidate
+# Close 归档候选
 
 ## 来源
 - 类型：用户讨论 / work package 结果 / case 归档 / 代码 diff / 错误日志 / 外部资料
@@ -174,7 +195,8 @@ Agent 内部可以用来源分类辅助判断：
 
 按下面顺序判断：
 
-1. **是否稳定**：未来任务是否可能复用；如果只是一次性过程，留在 case / work package。
+0. **case 是否完成**：如果候选来自未完成 case、未实现设计、未来计划或尚未验收的讨论，默认不稳定，只记录到 Close phase。
+1. **是否稳定**：它是否已经落成现有代码、现有产品行为、已验收规则或可复用事实；如果只是一次性过程，留在 case / work package。
 2. **影响层级**：它影响概念、功能、实现规则、局部代码入口、检索路径，还是 AIPD 框架本身。
 3. **归属位置**：稳定知识选择 L3 / L4 / L5 / 局部 README / map；一次性过程、验收记录和临时决策才留在 case / work package。
 4. **索引需求**：是否需要更新 `_adoc/map.md` 或细节 map。
@@ -192,6 +214,7 @@ Agent 内部可以用来源分类辅助判断：
 | 可重复执行的项目动作、Agent 执行流程、跨前端/后端/脚本/外部工具的操作程序 | `_adoc/sop/`；同步更新 `_adoc/sop/map.md`，高频入口再同步 `_adoc/map.md` |
 | 用户高频说法、业务词、工程词、容易迷路的入口 | `_adoc/map.md` |
 | 一次性执行过程、验收记录、临时决策 | 当前 case / work package |
+| 未完成 case 中的候选、未实现设计、未来计划 | `05-close/close.md` 的归档候选；Close 前不进长期 ADOC |
 | AIPD skill、模板、分层、Agent 行为规则 | `aipd-learn` 生成框架回流方案，回 AIPD 源项目处理 |
 
 ### 第五步：输出回写方案
@@ -230,7 +253,7 @@ Agent 内部可以用来源分类辅助判断：
 5. SOP 存储可以按实际项目动作选择目录；索引必须能从 `_adoc/sop/map.md` 找到，高频入口再回写 `_adoc/map.md`。
 6. 局部 README 只写当前模块的最后一层实现地图，不把跨模块规则塞进去。
 7. 如果新信息推翻旧知识，保留旧知识的上下文，并写清新规则的适用范围。
-8. 如果无法确认稳定性，先留在 case / work package，并建议后续归档时再判断。
+8. 如果无法确认稳定性，先留在 case / work package；如果属于进行中 case，写入 Close phase 归档候选，后续 Close 时再判断。
 
 ### 第七步：返回结果
 

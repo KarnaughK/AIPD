@@ -4,7 +4,7 @@
 >
 > **收口结论（2026-06-27）**：本 case 不再继续推进为独立的能力层重构事项。后续 AIPD 已收敛到 contract + phase-first case 生命周期：`Case Contract -> Think -> Design -> Execute -> Verify -> Close`。Think 不再作为独立 `_adoc/think/` 系统或独立 `aipd-think` skill 推进，而是作为 Case 内 phase 承接当前目标下的信息同步、调研、比较和抉择。本文保留为原子能力和中间对象模型的参考材料，不作为待执行 case。
 >
-> **暂停说明（2026-06-27）**：原子能力和统一中间对象模型暂不继续设计或实现。Context Pack、Research Pack、Decision Record、Handoff、Weave Candidate 等对象只作为后续优化 case phase、work package 和 Agent 交接格式时的参考材料。
+> **暂停说明（2026-06-27）**：原子能力和统一中间对象模型暂不继续设计或实现。Context Pack、Research Pack、Decision Record、Handoff、Close 归档候选 等对象只作为后续优化 case phase、work package 和 Agent 交接格式时的参考材料。
 
 ## 目录结构
 
@@ -20,7 +20,7 @@ _adoc/case/c0.10-aipd-capability-object-model/
 ## 1. 目标
 
 - **保存新架构判断**：把“Think 可能只是阶段，不是单一动作；底层应拆成原子能力”的判断固化下来。
-- **设计统一中间对象模型**：明确各原子能力之间交换哪些对象，例如 Context Pack、Research Pack、Decision Record、Spec Pack、Task Plan、Execution Result、Verification Report、Weave Candidate、Handoff。
+- **设计统一中间对象模型**：明确各原子能力之间交换哪些对象，例如 Context Pack、Research Pack、Decision Record、Spec Pack、Task Plan、Execution Result、Verification Report、Close 归档候选、Handoff。
 - **设计原子能力层**：梳理 context.scan、research.deep、domain.lens、options.compare、decision.check、handoff.generate、weave.extract、verify.review、execution.run 等能力的输入输出和复用关系。
 - **吸收开源项目精华**：把 OpenSpec、Spec Kit、BMAD、Kiro、Cline、Open SWE、OpenHands、搜索 / RAG / repo map 工具等看作能力范式或外部 adapter 候选，而不是直接拼接多个封闭系统。
 - **降低重复实现**：让 Think / Case Create / Case Run / Weave / SOP 通过统一能力和对象组合工作，避免每个 skill 各自重写上下文检索、深度调研、方案比较和回写候选提取。
@@ -31,7 +31,7 @@ _adoc/case/c0.10-aipd-capability-object-model/
 - **Case 类型**：L3 核心模型 + L4 产品能力 + L5 skill 架构边界的底层架构设计 case。
 - **适用流程**：目标型 / 认知型 case。当前先沉淀讨论和设计框架，不直接实现能力层。
 - **不适用经验**：不套用 Vue 前端实现流程，不创建代码执行 step，不把外部开源项目直接接入 AIPD。
-- **和 c0.9 的关系**：`c0.9-aipd-think-system-design` 证明 Think 需要前置讨论和决策对象；本 case 进一步把 Think 中暴露的上下文扫描、深度检索、方案比较、handoff、weave candidate 等能力抽象成跨流程可复用原子能力。
+- **和 c0.9 的关系**：`c0.9-aipd-think-system-design` 证明 Think 需要前置讨论和决策对象；本 case 进一步把 Think 中暴露的上下文扫描、深度检索、方案比较、handoff、Close 归档候选 等能力抽象成跨流程可复用原子能力。
 
 ## 3. 上下文索引
 
@@ -66,7 +66,7 @@ _adoc/case/c0.10-aipd-capability-object-model/
 
 ### 兜底搜索
 
-- `rg "Think|Case Create|Case Run|Weave|SOP|Context Pack|Research Pack|Decision Record|Handoff|Weave Candidate" _adoc aipd-skill/src docs`
+- `rg "Think|Case Create|Case Run|Weave|SOP|Context Pack|Research Pack|Decision Record|Handoff|Close 归档候选" _adoc aipd-skill/src docs`
 - `rg "OpenSpec|Spec Kit|BMAD|Kiro|Cline|Open SWE|OpenHands|requirements analysis|Plan Act|artifact DAG" _adoc docs aipd-skill/src`
 - Web 搜索：`AI coding atomic capability`, `agent workflow intermediate artifacts`, `spec driven development artifact model`, `repo context scan agent`, `AI coding requirements analysis`
 
@@ -82,7 +82,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 - 方案比较。
 - 决策检查。
 - handoff 生成。
-- Weave Candidate 提取。
+- Close 归档候选 提取。
 
 因此，`aipd-think` 不应自己实现所有逻辑，而应维护 Think 对象和状态，并调用可复用能力。
 
@@ -130,7 +130,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 | Task Plan | 任务拆分、依赖、并行性、验收口径 |
 | Execution Result | step / agent 执行结果、改动、验证、风险 |
 | Verification Report | 完整性、正确性、一致性、证据覆盖 |
-| Weave Candidate | 可能进入 L3 / L4 / L5 / README / map 的稳定认知 |
+| Close 归档候选 | 可能进入 L3 / L4 / L5 / README / map 的稳定认知 |
 | Handoff | 阶段间交接输入，如 Think -> Case Create、Case Create -> Run |
 
 这些对象是能力之间的接口。外部项目只能通过这些对象被 AIPD 吸收。
@@ -156,7 +156,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 
 ### 2026-06-27 收口后的边界
 
-- **保留参考**：Context Pack、Research Pack、Decision Record、Handoff、Weave Candidate 等对象模型仍可作为后续优化 Case phase、work package 和 Agent 交接格式的参考。
+- **保留参考**：Context Pack、Research Pack、Decision Record、Handoff、Close 归档候选 等对象模型仍可作为后续优化 Case phase、work package 和 Agent 交接格式的参考。
 - **不再单独推进**：不再从本 case 派生独立 Capability Registry、独立 `_adoc/think/` 或独立 `aipd-think` skill。
 - **已被吸收的部分**：Think 的运行位置已调整为 Case 生命周期内的 `Think phase`；Case Create / Run / Archive 的旧拆分已收敛为统一 `aipd-case`。
 - **上层 Human-AI Think 不归 AIPD 管**：个人助手、日记、个人 OKR、跨项目 Think 和个人经验库属于 Human-AI 协作层；AIPD 只处理项目 case 内的 Think phase 和项目执行交接。
@@ -184,7 +184,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 ## 7. 后续候选事项
 
 - **能力清单设计**：context.scan、research.deep、domain.lens、requirements.analyze、spec.generate、options.compare、decision.check、handoff.generate、weave.extract、verify.review、execution.run。
-- **对象模型设计**：Context Pack、Research Pack、Decision Record、Spec Pack、Task Plan、Execution Result、Verification Report、Weave Candidate、Handoff 的字段和落文件规则。
+- **对象模型设计**：Context Pack、Research Pack、Decision Record、Spec Pack、Task Plan、Execution Result、Verification Report、Close 归档候选、Handoff 的字段和落文件规则。
 - **能力注册表**：是否需要 `_adoc/capabilities/`、`aipd-skill/src/core/capabilities/` 或 SOP 形式承载能力说明。
 - **外部项目映射**：把 OpenSpec、Spec Kit、BMAD、Kiro、Cline、Open SWE、OpenHands、搜索 / RAG 项目映射到能力范式，而不是直接拼接。
 - **模型策略**：某些原子能力是否适合用更便宜、更大上下文、更擅长搜索的模型或分身 Agent 执行。
@@ -210,7 +210,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 - [ ] 后续讨论是否能区分“阶段 / workflow”和“原子能力”。
 - [ ] Agent 是否避免把外部项目当成整体依赖，而是抽取能力范式和对象接口。
 - [ ] 设计是否先统一中间对象，再讨论能力实现。
-- [ ] 是否发现现有 skill 中重复实现的上下文扫描、调研、方案比较和 Weave Candidate 提取逻辑。
+- [ ] 是否发现现有 skill 中重复实现的上下文扫描、调研、方案比较和 Close 归档候选 提取逻辑。
 - [ ] 是否能从本 case 派生出更清晰的实现 case，而不是直接大改所有 skill。
 
 ## 11. 归档状态

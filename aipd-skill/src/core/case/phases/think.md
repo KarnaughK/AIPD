@@ -27,7 +27,7 @@ Think phase 是 case 内的信息同步、调研和抉择阶段。
 - 选项比较。
 - 决策结论。
 - 未解决风险。
-- 结论回流位置：Case Contract / Design / Execute / Verify / Weave Candidate。
+- 结论回流位置：Case Contract / Design / Execute / Verify / Close 归档候选。
 
 调研、代码实验、竞品比较、数据采样或临时评测分支写入 `01-think/{branch}/`。每个分支必须先有一个具体目标，结束时给出结论，并说明结论应该补到哪里。它可以在分支目录里自由折腾，但不能把没有收口的材料直接推进成 Design 或 Execute。
 
@@ -41,7 +41,7 @@ Think phase 是 case 内的信息同步、调研和抉择阶段。
 
 分支目录内可以有 `summary.md`、`evidence.md`、`code/`、`data/` 等材料。它们属于 Think phase，不应膨胀成平级 case，除非确实需要独立恢复状态和独立验收。
 
-如果 Think 产生可复用外部世界资料，记录 Weave Candidate，后续由 `aipd-weave` 判断是否进入 L2 / L3 / L4 / L5。
+如果 Think 产生未来可能沉淀的外部世界资料，先记录到 Close 归档候选。只有 case 完成并进入 Close 后，才由 `aipd-weave` 判断是否进入 L2 / L3 / L4 / L5。
 
 ## 下一 phase 判断
 

@@ -34,4 +34,4 @@ _adoc/sop/{sop-name}/
 - 步骤：Agent 按什么顺序读上下文、调用工具、执行代码、分析和输出。
 - 工具：涉及哪些脚本、API、外部服务、数据源或代码入口。
 - 输出：执行后要交付什么。
-- 收尾：是否生成 Case 候选、Weave Candidate 或更新 map。
+- 收尾：是否生成 Case 候选、Close 归档候选或更新 map。

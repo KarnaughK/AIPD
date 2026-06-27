@@ -19,7 +19,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 | Design | 找复杂度爆点，形成文件 / 文件夹级架构边界和工作包 |
 | Execute | 按工作包推进，可以使用目标模式和执行 Agent |
 | Verify | 验收目标、工作包结果和设计护栏 |
-| Close | 归档、更新索引、整理 Weave Candidate |
+| Close | 归档、更新索引、整理归档候选 / 反向编织候选 |
 
 `Goal` 不再是独立 phase。目标和边界不是一段过程材料，而是整个 case 的契约；后续所有 phase 都必须以 `case.md` 中的 Case Contract 为上下文。
 
@@ -46,11 +46,11 @@ _adoc/case/cX.Y-name/
 - Execute 的总状态和 work package 写入 `03-execute/`。
 - Verify 和 Close 分别写入 `04-verify/`、`05-close/`。
 
-`case.md` 是入口和状态聚合，不承载所有过程细节。它保存 Case Contract、Current Phase、Phase State、关键摘要、上下文索引、Weave Candidate 和各 phase 文件链接。
+`case.md` 是入口和状态聚合，不承载所有过程细节。它保存 Case Contract、Current Phase、Phase State、关键摘要、上下文索引、Close 归档候选和各 phase 文件链接。
 
 ## Case 文件的价值
 
-Case 不只是任务清单。它的价值是把本次事项的目标、上下文索引、关键决策、设计边界、横向工作包、验收状态和 Weave Candidate 固定成文件事实源。
+Case 不只是任务清单。它的价值是把本次事项的目标、上下文索引、关键决策、设计边界、横向工作包、验收状态和 Close 归档候选固定成文件事实源。
 
 `case.md` 可以同时放“目标边界”和“任务推进”，但必须分区：
 
@@ -64,7 +64,7 @@ Case 不只是任务清单。它的价值是把本次事项的目标、上下文
 
 旧模型里，Think 位于 Case 之前，用来判断模糊想法是否值得创建 case。新模型保留这个判断，但对于已经定下短周期目标的事项，Think 也可以作为 Case 内 phase 存在。
 
-Think phase 是分支材料容器，不是无限展开的思考池。每个 `01-think/{branch}/` 都应该有自己的目标：要调研什么、比较什么、验证什么或同步什么。分支内可以随便折腾，但结束时必须给出结论，并说明结论回流到 Case Contract、Design、Execute、Verify 还是 Weave Candidate。
+Think phase 是分支材料容器，不是无限展开的思考池。每个 `01-think/{branch}/` 都应该有自己的目标：要调研什么、比较什么、验证什么或同步什么。分支内可以随便折腾，但结束时必须给出结论，并说明结论回流到 Case Contract、Design、Execute、Verify 还是 Close 归档候选。
 
 ## Design 的核心认知
 
@@ -131,6 +131,15 @@ Case 运行要有节奏感，不应一恢复就直接跨 phase 推进。
 - Think -> Design、Design -> Execute、Verify -> Close 这类关键跳转需要用户确认。
 - Design 产物没有得到用户确认前，不创建正式 Execute work package。
 - 执行中发现边界变化、架构变化或实现偏差时，先回到对应层处理，不把偏差直接混进执行记录。
+- 执行中想到“以后可能要反向编织”的内容，先记入 Close phase 的归档候选；case 未完成前不写入 L1-L5、README 或 map。
+
+## Close 归档候选
+
+Close 归档候选是 case 内部的待复核清单，不是长期知识库内容。
+
+当用户在进行中 case 里调用 `aipd-weave`，或说“记一下，看需不需要反编织回去”时，Agent 应提示当前 case 尚未完成，并把候选记录到 `05-close/close.md` 或 case.md 的 Close 摘要。候选应标注当前状态和候选归属。
+
+只有 case 完成、实现落地并通过验收后，Close phase 才把其中已经成为现有项目事实的候选交给 `aipd-weave`。未实现设计、未来计划、临时讨论和未完成 work package 继续留在 case。
 
 ## 子 Case
 
@@ -161,7 +170,7 @@ Case 运行要有节奏感，不应一恢复就直接跨 phase 推进。
 3. Design：找到复杂度爆点，形成文件 / 文件夹级架构边界和工作包。
 4. Execute：按 work package 推进，写回执行记录。
 5. Verify：验收目标、工作包结果和设计护栏。
-6. Close：归档、更新索引、整理 Weave Candidate。
+6. Close：归档、更新索引、整理归档候选 / 反向编织候选。
 
 ## 关键原则
 
@@ -175,5 +184,5 @@ Case 运行要有节奏感，不应一恢复就直接跨 phase 推进。
 8. Execute 按架构横向铺模块，不纵向堆版本。
 9. Verify 要检查设计护栏，不只检查代码是否运行。
 10. Close 前必须保证 case 是完整闭环；没完成就回到对应 phase。
-11. 可复用知识进入 Weave Candidate；一次性过程留在对应 phase / work package。
+11. 可复用知识先进入 Close 归档候选；只有 case 完成、实现落地并验收后，才由 `aipd-weave` 判断是否进入长期知识库。
 12. 旧 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `aipd-case`，不再作为独立 skill 暴露。

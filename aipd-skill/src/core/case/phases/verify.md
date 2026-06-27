@@ -32,7 +32,7 @@ Verify phase 负责验收目标是否完成，以及执行结果是否遵守 Des
 - 通过 / 未通过项。
 - 残留风险。
 - 用户验收状态。
-- Weave Candidate。
+- Close 归档候选。
 
 ## 下一 phase 判断
 

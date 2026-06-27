@@ -57,7 +57,7 @@ Think 中包含多个原子能力，例如：
 - Task Plan：任务计划。
 - Execution Result：执行结果。
 - Verification Report：验证报告。
-- Weave Candidate：反向编织候选。
+- Close 归档候选：反向编织候选。
 - Handoff：阶段间交接。
 
 这些对象让原子能力之间可以互相消费输出，而不是变成互相不兼容的小系统。

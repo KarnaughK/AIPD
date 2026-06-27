@@ -37,9 +37,9 @@ L1 Intent
 -> OKR
 -> Case
 -> Work Package
--> Weave Candidate
+-> Close 归档候选
 ```
 
-L1 定方向，飞书 OKR 定阶段目标，Case 固化一次短周期事项，Work Package 执行局部目标包，Weave Candidate 再判断执行经验是否回到知识库。
+L1 定方向，飞书 OKR 定阶段目标，Case 固化一次短周期事项，Work Package 执行局部目标包，Close 归档候选在 case 收口时判断执行经验是否回到知识库。
 
 `/aipd-okr` 只做最小 CLI 检测：`command -v lark-cli` 和 `lark-cli auth status`。没有安装或未登录时，提示用户安装 / 登录即可。飞书查询输出应裁剪后返回，不把完整 JSON 当作聊天正文。

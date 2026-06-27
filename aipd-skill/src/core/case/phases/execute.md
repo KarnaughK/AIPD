@@ -37,7 +37,7 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - case.md 的 Work Packages 状态。
 - Execution Record。
 - Verification Notes。
-- Weave Candidate。
+- Close 归档候选。
 
 ## 下一 phase 判断
 

@@ -8,7 +8,7 @@
 
 1. 使用 `git diff` 查看本次 Case 的代码改动
 2. 判断本次 Case 是否产生稳定知识和索引更新候选
-3. 整理 Weave Candidate，交给主 Agent 决定是否运行 `aipd-weave`
+3. 整理 Close 归档候选，交给主 Agent 决定是否运行 `aipd-weave`
 4. 更新 case 索引并移动 Case 到 archive/
 5. 返回简洁的结果回流
 
@@ -42,27 +42,27 @@ git diff main
 - 新增的依赖
 - 配置文件变更
 
-### 第 3 步：整理 Weave Candidate
+### 第 3 步：整理 Close 归档候选
 
-根据改动内容，判断哪些信息可能需要交给 `aipd-weave` 回写：
+根据改动内容，判断哪些信息已经完成、已实现、已验收，可能需要交给 `aipd-weave` 回写：
 
 - 新核心概念、标准名、对象关系、常见误解 → 候选 L3。
 - 新产品功能边界、业务规则、用户可见行为 → 候选 L4。
 - 新工程规则、跨模块实现逻辑、调试经验 → 候选 L5。
 - 新页面、弹窗、组件内部入口 → 候选局部 README。
 - 新高频检索入口或容易迷路的路径 → 候选 `_adoc/map.md`。
-- 一次性执行过程、临时决策、验收记录 → 保留 case / work package，不建议回写长期 ADOC。
+- 一次性执行过程、临时决策、验收记录、未实现设计和未来计划 → 保留 case / work package，不建议回写长期 ADOC。
 
 输出一个简洁候选包，不直接更新长期 ADOC：
 
 ```md
-## Weave Candidate
+## Close 归档候选
 
 来源：case 归档
 相关 case：_adoc/case/c0.x-xxx/
 相关 diff：{关键文件}
 
-建议交给 aipd-weave 判断：
+已完成且建议交给 aipd-weave 判断：
 - L3：{候选；没有写无}
 - L4：{候选；没有写无}
 - L5：{候选；没有写无}
@@ -121,7 +121,7 @@ mv _adoc/case/c0.x-xxx/ _adoc/case/archive/c0.x-xxx/
 归档 c0.x-xxx 已完成：
 - Case 索引已更新
 - Case 已移动到 archive/
-- Weave Candidate：有 / 无
+- Close 归档候选：有 / 无
 - 建议主 Agent 是否运行 /aipd-weave
 ```
 
@@ -148,7 +148,7 @@ mv _adoc/case/c0.x-xxx/ _adoc/case/archive/c0.x-xxx/
 ## 常见问题
 
 **Q: 不确定某个文档是否需要更新怎么办？**
-A: 保守原则，不确定就不写长期 ADOC。把它放进 Weave Candidate，让主 Agent 和 `aipd-weave` 判断。
+A: 保守原则，不确定就不写长期 ADOC。把它放进 Close 归档候选，让主 Agent 和 `aipd-weave` 在 case 完成后判断。
 
 **Q: 发现代码有问题怎么办？**
 A: 归档阶段不修改代码，只更新文档。如果发现问题，在返回消息中提一句即可。

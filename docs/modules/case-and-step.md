@@ -27,7 +27,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 | Design | 找复杂度爆点，形成文件 / 文件夹级架构边界和工作包 |
 | Execute | 按工作包推进，可以使用目标模式和执行 Agent |
 | Verify | 验收目标、工作包结果和设计护栏 |
-| Close | 归档、更新索引、整理 Weave Candidate |
+| Close | 归档、更新索引、整理 Close 归档候选 |
 
 `Goal` 不再是独立 phase。目标和边界是整个 case 的契约，直接放在 `case.md`。这些 phase 不需要拆成独立 skill。`aipd-case` 根据 case.md 的 `Current Phase` 加载对应 phase 文档。
 

@@ -96,7 +96,7 @@ Case / Work Package / OKR 是流程状态模块。只有创建、执行、恢复
 AIPD 面向用户解释时，可以按教学主线讲清楚，而不是一上来展开所有纵向模块和横向能力：
 
 1. **知识库最小闭环**：讲知识库本体、知识怎么存、知识怎么取。L1-L5 是知识库本体，L6 是被索引的真实代码；Weave / 反向编织负责维护，map 负责读取。
-2. **Case / Work Package 开发逻辑**：讲短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 完成闭环。OKR、Case、Work Package、分身 Agent、执行记录、归档和 Weave Candidate 都服务这条执行线。
+2. **Case / Work Package 开发逻辑**：讲短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 完成闭环。OKR、Case、Work Package、分身 Agent、执行记录、归档和 Close 归档候选都服务这条执行线。
 3. **Think / Design 决策逻辑**：讲模糊想法和推进中的未知如何通过讨论、调研、方案比较、复杂度爆点识别和最小解耦设计，变成可执行工作包，或被 kill / defer / research / weave。
 4. **SOP / Agent 原生程序**：讲项目里可重复执行的动作如何沉淀为以 Agent 为运行时的 AI 原生程序。SOP 可以调用代码和工具，但主体是目标、输入、步骤、分析判断、输出和收尾。
 5. **AI 原生代码架构实验**：讲代码组织如何进一步适配 AI，包括纵向黑箱、降低牵连面和 Decouple first, DRY later。这是探索性主线，不应写成已经定型的硬规范。

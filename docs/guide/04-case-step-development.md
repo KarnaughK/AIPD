@@ -35,7 +35,7 @@ Case 通常记录：
 - Design 结论。
 - Work Package。
 - Verify 结果。
-- Weave Candidate。
+- Close 归档候选。
 - Close 状态。
 
 新建 Case 使用 contract + phase-first 目录结构：
@@ -123,11 +123,13 @@ Execute phase 中，执行 work package 的工作可以交给分身 Agent 或角
 
 主 Agent 保留用户沟通、目标边界、最终判断和状态写回。
 
-## Weave Candidate：执行和知识库的接口
+## Close 归档候选：执行和知识库的接口
 
 Work Package 执行结束后，不一定直接改长期 ADOC。
 
-更稳妥的做法是先产出 Weave Candidate：说明这次任务产生了哪些可能值得回写的稳定信息，以及建议写到哪里。
+更稳妥的做法是先把候选写入 case 的 Close 阶段：说明这次任务产生了哪些可能值得回写的信息、当前状态是什么、建议归属哪里。
+
+进行中 case 里的候选默认不进入 L1-L5、局部 README 或 map。只有 case 完成、实现落地并验收后，Close 阶段才把稳定候选交给 `aipd-weave` 判断。
 
 之后由 Weave 判断知识归属、索引更新和旧知识冲突。
 

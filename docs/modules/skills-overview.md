@@ -45,7 +45,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 -> Design：找到复杂度爆点并做最小必要解耦
 -> Execute：按 work package 执行
 -> Verify / Close
--> 产出 Weave Candidate
+-> 产出 Close 归档候选
 ```
 
 已有项目规则升级：
