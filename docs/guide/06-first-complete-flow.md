@@ -18,33 +18,33 @@
 
 到这里，Agent 已经可以少靠用户 `@` 文件，更多靠项目自己的知识库定位上下文。
 
-## 第二步：先判断是否需要 AIPD Think（施工中）
+## 第二步：进入 Case，并按需 Think / Design
 
-如果任务已经清晰，可以直接进入 Case / Step。
+如果任务已经清晰，可以直接进入 Case Goal。
 
-如果还只是一个想法、方向、陌生领域或“要不要做”的问题，后续应先进入正在施工中的 AIPD Think：
+如果还只是一个想法、方向、陌生领域或“要不要做”的问题，先在 Think 中澄清：
 
 ```text
-AIPD Think -> Case Create -> Case Run
+Case Goal -> Think -> Design -> Execute
 ```
 
-Think 先沉淀讨论、调研、方案比较和决策出口。只有出口是 Create 时，才继续创建 case。
+Think 先沉淀讨论、调研、方案比较和决策出口。目标清楚后，进入 Design 找复杂度爆点并做最小必要解耦。
 
-## 第三步：用 Case / Step 做一个大任务
+## 第三步：用 Work Package 执行
 
 当任务变大，开始创建 case。
 
 一个最小 case 应该写清：
 
 - 目标。
-- 场景分流。
 - 上下文索引。
 - 本次做什么、不做什么。
-- 已确认的 step。
+- Think / Design 结论。
+- 已确认的 work package。
 - 验收标准。
 - Weave Candidate。
 
-执行时不要靠聊天记忆直接开工，而是让执行 Agent 读取 step 文件、case 文件和 step 列出的上下文。
+执行时不要靠聊天记忆直接开工，而是让执行 Agent 读取 work package 文件、case 文件和 work package 列出的上下文。
 
 ## 第四步：把稳定经验回写
 
@@ -57,7 +57,7 @@ Think 先沉淀讨论、调研、方案比较和决策出口。只有出口是 C
 - 新工程规则或调试经验，回写 L5。
 - 新局部入口，回写就近 README。
 - 新高频路径，回写 map。
-- 一次性过程，留在 case / step。
+- 一次性过程，留在 case / work package。
 
 这一步让下一次 Agent 继承本次经验。
 
@@ -72,7 +72,7 @@ Think 先沉淀讨论、调研、方案比较和决策出口。只有出口是 C
 - 某个页面或模块是否可以变成更自足的纵向黑箱。
 - 局部 README 或 map 是否能减少 Agent 跳转。
 
-第三层不是上来就必须做的重构，而是在知识库和 Case / Step 跑起来后，进一步提高 AI 协作稳定性的方向。
+第三层不是上来就必须做的重构，而是在知识库和 Case / Work Package 跑起来后，进一步提高 AI 协作稳定性的方向。
 
 ## 推荐读法
 
@@ -82,7 +82,7 @@ Think 先沉淀讨论、调研、方案比较和决策出口。只有出口是 C
 01 从 Vibe Coding 到 Agent Coding
 02 AIPD 的三条主线
 03 知识库最小闭环
-04 Case / Step 开发逻辑
+04 Case / Work Package 开发逻辑
 05 AI 原生代码架构实验
 06 第一次完整路径
 ```

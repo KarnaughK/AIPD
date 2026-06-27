@@ -18,6 +18,7 @@ SOP 的存储可以按实际项目情况调整，不强行塞进 L4 或 L5。索
 |---|---|---|---|---|---|
 | 查关键词 / 关键词调研 / SEO 选题 | 待创建 | `_adoc/sop/seo-keyword-research/` | SEO / 内容 / 出海项目 | 种子词、市场、语言、站点目标 | 关键词列表、机会判断、内容建议 |
 | 日报 / 网站数据汇报 / 每日站点数据 | 待创建 | `_adoc/sop/daily-site-report/` | SEO / 站点运营 / 增长项目 | 站点、日期范围、数据源 | 数据摘要、趋势判断、异常和建议 |
+| 飞书 OKR / lark-cli / 同步 OKR / 创建 OKR / 删除测试 OKR | 飞书 OKR CLI 操作 | `_adoc/sop/feishu-okr-cli/` | AIPD 飞书 OKR、个人全局 OKR 和子项目 KR 对齐 | 用户目标、飞书账号、周期 ID、O/KR 文本 | 飞书 OKR 读写结果、必要 ID、验收摘要 |
 
 ## 存储约定
 

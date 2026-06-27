@@ -33,7 +33,7 @@
 - 进入具体任务前，先判断任务涉及 L3 核心概念、L4 产品功能、L5 工程实现规则、局部 README、L6 代码入口中的哪些上下文。
 - 普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`；只有明确进入 case / OKR 流程时才读取对应状态文件。
 - 如果 `map.md` 缺失或未覆盖本次任务，按相关核心词、skill 名、agent 名、平台名、README 使用 `rg` 兜底搜索，并把新发现的稳定入口回写到合适的 map 或 index。
-- 如果讨论、step 结果、case 归档、代码 diff、错误日志或外部资料产生了可复用知识，用 `aipd-weave` 判断回写到 L3 / L4 / L5 / 局部 README / map；一次性过程和验收状态留在 case / step。
+- 如果讨论、work package 结果、case 归档、代码 diff、错误日志或外部资料产生了可复用知识，用 `aipd-weave` 判断回写到 L3 / L4 / L5 / 局部 README / map；一次性过程和验收状态留在 case / work package。
 
 ## 任务类型读取入口
 
@@ -45,9 +45,9 @@
 - 上下文检索：`_adoc/map.md`
 - Weave 反向编织 / 项目 ADOC 回写：`aipd-skill/src/skills/aipd-weave/SKILL.md`、`_adoc/L3-core/horizontal-capabilities.md`
 - SOP / 可复用 AI 原生程序 / Agent 执行流程：`_adoc/sop/index.md`、`_adoc/sop/map.md`
-- Codex / Agent / case-run / 构建安装：`_adoc/L5-dev/index.md`
+- Codex / Agent / case Execute / 构建安装：`_adoc/L5-dev/index.md`
 - 临时收件箱：`_adoc/inbox.md`
-- 具体 case 执行：先读对应 case 的 `case.md`，再读 step 明确列出的上下文文档。
+- 具体 case 执行：先读对应 case 的 `case.md`，再读 work package 明确列出的上下文文档。
 
 ## 读取原则
 

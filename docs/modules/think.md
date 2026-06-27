@@ -1,35 +1,39 @@
-# AIPD Think（施工中）
+# Think
 
-AIPD Think 是 AIPD 正在施工中的前置讨论能力。它位于 Case Create 之前，负责把模糊想法、陌生领域、深度调研和方案比较沉淀成一个可恢复的 Think 对象。
+Think 是 AIPD 的高带宽思考缓冲层。它可以在 Case 前，也可以在 Case 内。
 
 它要解决的问题不是“怎么拆任务”，而是：
 
 - 这个想法要不要做？
 - 现在适不适合做？
 - 还缺哪些信息？
-- 有没有更小的版本？
+- 有哪些选项和取舍？
+- 当前 case 推进不下去的卡点是什么？
 - 讨论中产生的稳定认知是否应该 weave？
 
-## 和 Case 的关系
+## Case 前的 Think
 
-Think 与 Case 同层，不是 Case 的子步骤。
+当用户只有模糊想法、陌生领域、深度调研或方案比较需求时，Think 可以先于 Case 存在。
 
-```text
-AIPD Think -> Case Create -> Case Run
-想清楚要不要做 -> 设计怎么做 -> 执行
-```
+它的出口包括：
 
-AIPD Think 的出口包括：
-
-- **Create**：进入 Case Create。
+- **Create**：目标清晰且值得执行，进入 Case Goal。
 - **Kill**：不值得做，记录终止原因。
 - **Defer**：值得但不是现在做。
 - **Research**：信息不足，继续调研。
 - **Weave**：产生稳定认知，但不形成执行事项。
 - **Continue**：继续讨论。
 
-## 当前状态
+## Case 内的 Think
 
-这个能力还没有实现为正式 `aipd-think` skill，也还没有固定 `_adoc/think/` 目录结构。
+当 case 目标已经确定，但推进中遇到选型、测试集可信度、实验分支、用户取舍或关键未知时，不必膨胀出平级 case，也不必只留在聊天里。
 
-当前已经稳定的是概念边界：Think 是人和 AI 的高带宽思考缓冲层，负责从模糊到清晰；Case Create 只在决定要执行之后，负责架构、上下文索引和 step 拆分。
+这类内容进入当前 case 的 Think phase，产出问题、选项、依据、结论和对 Design / Execute 的输入。
+
+## 和 Design 的关系
+
+Think 回答“当前卡点是什么、依据是什么、选哪个方向”。
+
+Design 回答“复杂度爆点在哪里、如何做最小必要解耦、后续 work package 如何横向铺开”。
+
+Think 不替代 Design；Design 也不做无限调研。

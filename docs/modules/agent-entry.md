@@ -20,7 +20,7 @@ AGENTS.md
 
 ## case 恢复链路
 
-当任务处于 case-run、长任务续跑、上下文压缩或状态不确定时，应按文件事实源恢复：
+当任务处于 case Execute、长任务续跑、上下文压缩或状态不确定时，应按文件事实源恢复：
 
 ```text
 AGENTS.md
@@ -28,10 +28,10 @@ AGENTS.md
 -> _adoc/map.md
 -> _adoc/case/index.md
 -> 当前 case.md
--> 当前 step
+-> 当前 phase 目录 / work package
 ```
 
-聊天上下文只是临时缓存。聊天记忆和 case / step 文件冲突时，应先指出冲突，再以文件为准继续。
+聊天上下文只是临时缓存。聊天记忆和 case / phase / work package 文件冲突时，应先指出冲突，再以文件为准继续。
 
 ## README、docs、_adoc 的分工
 
@@ -40,4 +40,4 @@ AGENTS.md
 - `_adoc/`：面向 Agent 的项目认知事实源。
 - `aipd-skill/src/`：AIPD Skill 本体真实源码。
 
-Agent 执行项目任务时，不应把 `docs/` 当成 `_adoc/` 的替代品。`docs/` 可以帮助人理解 AIPD，但执行事实源仍是 `_adoc/` 和 case / step。
+Agent 执行项目任务时，不应把 `docs/` 当成 `_adoc/` 的替代品。`docs/` 可以帮助人理解 AIPD，但执行事实源仍是 `_adoc/` 和 case / phase / work package。

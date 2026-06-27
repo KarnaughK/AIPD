@@ -2,7 +2,7 @@
 
 Weave 是 AIPD 的反向编织能力。
 
-它负责把讨论、开发、step 结果、case 归档、代码 diff、错误日志和外部资料中产生的新信息，判断并回写到合适位置。
+它负责把讨论、开发、work package 结果、case 归档、代码 diff、错误日志和外部资料中产生的新信息，判断并回写到合适位置。
 
 ## Weave 不是什么
 
@@ -21,7 +21,7 @@ Weave 关注的是稳定信息。
 | 新实现逻辑、跨模块规则、调试经验 | L5 |
 | 页面、弹窗、组件内部入口 | 局部 README |
 | 高频检索路径 | `_adoc/map.md` 或细节 map |
-| 一次性执行过程 | case / step |
+| 一次性执行过程 | case / work package |
 
 ## Weave Candidate
 

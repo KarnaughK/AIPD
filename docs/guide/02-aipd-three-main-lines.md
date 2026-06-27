@@ -4,13 +4,10 @@
 
 AIPD 的新版学习路径可以先按三条主线理解，而不是一上来背所有术语。
 
-另外，AIPD 正在施工一个前置能力：**AIPD Think**。它位于 Case / Step 之前，用来把模糊想法讨论清楚，再决定是否进入 Case Create。
-
 ```text
 第一层：知识库最小闭环
-第二层：Case / Step 开发逻辑
+第二层：Case / Work Package 开发逻辑
 第三层：AI 原生代码架构实验
-施工中：AIPD Think 前置讨论层
 ```
 
 这三条主线不是互相隔离的硬层级。它们是三个问题域：AI 怎么理解项目，AI 怎么执行大任务，代码本身怎么更适合 AI 维护。
@@ -27,21 +24,21 @@ AIPD 的新版学习路径可以先按三条主线理解，而不是一上来背
 
 这一层结束后，AIPD 已经可以独立发挥作用。用户不必每次都手动 `@` 文件，Agent 也不必在项目里重新盲搜一遍。
 
-## 第二层：Case / Step 开发逻辑
+## 第二层：Case / Work Package 开发逻辑
 
 第二层解决的是：Agent 怎么完成一个较大的事项。
 
-在进入这一层之前，正在施工中的 AIPD Think 会先处理“要不要做、现在做不做、还缺什么信息”。Think 的出口可以是 Create、Kill、Defer、Research、Weave 或 Continue；只有出口是 Create 时，才进入 Case Create。
+聊天上下文会压缩、会中断，也会混进很多讨论、猜测和被否定的方案。Case / Work Package 的作用是把任务从聊天里固定到文件里。
 
-聊天上下文会压缩、会中断，也会混进很多讨论、猜测和被否定的方案。Case / Step 的作用是把任务从聊天里固定到文件里。
-
-- OKR 说明当前阶段为什么做这些事。
-- Case 记录一次事项的目标、边界、上下文索引和验收状态。
-- Step 把 case 拆成可执行、可恢复、可验收的小黑箱。
+- 飞书 OKR 说明当前阶段为什么做这些事。
+- Case 记录一次短周期事项的 Goal / Think / Design / Execute / Verify / Close 状态。
+- Think 处理目标不清、信息不足、调研和抉择。
+- Design 找复杂度爆点，并做最小必要解耦。
+- Work Package 把设计边界下的横向模块变成可执行、可恢复、可验收的目标包。
 - 分身 Agent 消化搜索、验证、日志和 diff 等过程成本。
 - Weave Candidate 把执行中产生的稳定经验交给知识库闭环判断。
 
-所以 Case / Step 不是知识库本体，而是基于知识库之上的任务执行系统。
+所以 Case / Work Package 不是知识库本体，而是基于知识库之上的任务执行系统。
 
 ## 第三层：AI 原生代码架构实验
 
@@ -64,11 +61,11 @@ AI 更适合纵向黑箱：
 
 | 能力 | 推荐归属 | 说明 |
 |---|---|---|
-| OKR | 第二层 | 长期目标管理，帮助判断 case 是否推进阶段目标 |
-| AIPD Think | 施工中 | Case Create 前的讨论和决策对象，处理 Create / Kill / Defer / Research / Weave / Continue |
+| OKR | 第二层 | 飞书目标管理，帮助判断 case 是否推进阶段目标 |
+| Think | 第二层 | Case 前或 Case 内的讨论和决策阶段，处理 Create / Kill / Defer / Research / Weave / Continue / Design |
 | Inbox | 辅助能力 | 临时接住未整理想法，后续可 weave 进知识库或转成 case |
 | MMD / Mermaid | 按用途归属 | 画稳定认知归第一层，画执行拆解归第二层，画代码组织实验归第三层 |
 | Agent Entry | 贯穿三层 | Agent 进入项目后先读什么、按什么规则行动 |
-| Weave | 第一层 + 第二层连接处 | 维护知识库，也承接 case / step 产出的经验候选 |
+| Weave | 第一层 + 第二层连接处 | 维护知识库，也承接 case / work package 产出的经验候选 |
 
-后面的章节仍沿着这三条主线展开；AIPD Think 当前作为施工中的前置补充能力单独索引。
+后面的章节仍沿着这三条主线展开。

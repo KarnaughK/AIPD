@@ -1,71 +1,126 @@
-# Case 与 Step
+# Case 与 Work Package
 
-Case / Step 是 AIPD 的任务执行组织系统。
+Case / Work Package 是 AIPD 的任务执行组织系统。
 
-它解决的问题不是“列一个 todo”，而是让一次 AI 协作事项可恢复、可派发、可验收、可归档。
-
-在三条主线里，Case / Step 属于第二层：大任务执行和上下文恢复。OKR、分身 Agent、执行记录、归档和 Weave Candidate 都围绕这条执行线工作。
-
-正在施工中的 AIPD Think 位于 Case / Step 之前。它负责把模糊想法、调研和方案比较状态化，并判断出口是 Create、Kill、Defer、Research、Weave 还是 Continue。
-
-## 和 OKR / Inbox 的关系
-
-OKR 位于 Case 上游，帮助判断当前 case 是否推进阶段目标。它不替代 case，也不记录执行细节。
-
-Inbox 位于 Case 之前，用来临时接住还没整理清楚的想法。只有当一个想法变成明确事项，才应该创建 case。
-
-Think 也位于 Case 之前，但它和 Inbox 不同。Inbox 只负责暂存；Think 已经进入主动讨论、调研和决策。
+它解决的问题不是“列一个 todo”，而是让一次 AI 协作事项可恢复、可设计、可派发、可验收、可归档。
 
 ## Case
 
-Case 是一次具体事项的容器。
+Case 是一个短周期目标容器。
 
-它通常包含：
+它类似 OKR，都会先定目标并连接大方向上下文；但 OKR 面向长期周期、持续对齐和复盘，Case 面向当前目标的设计、执行、验收和关闭。
 
-- 目标。
-- 场景和边界。
-- 上下文索引。
-- 任务拆分。
-- Step 列表。
-- 验收标准。
-- Weave 候选。
-- 归档状态。
+一个 case 推完，应该是一个完整事项闭环，而不是只推进了一部分。
 
-Case 的价值是把一次任务从聊天里固定到文件里。
+## Phase
 
-当聊天被压缩、中断或多人/多 Agent 接力时，case 文件能成为事实源。
+新的 case 生命周期按 phase 渐进推进：
 
-## Step
+```text
+Goal -> Think -> Design -> Execute -> Verify -> Close
+```
 
-Step 是 Case 内的最小执行单元。
+| Phase | 作用 |
+|---|---|
+| Goal | 定目标、上下文、大方向边界和完成标准 |
+| Think | 信息不足或需要抉择时，做同步、调研、比较和决策 |
+| Design | 找复杂度爆点，做最小必要解耦，形成架构边界和工作包 |
+| Execute | 按工作包推进，可以使用目标模式和执行 Agent |
+| Verify | 验收目标、工作包结果和设计护栏 |
+| Close | 归档、更新索引、整理 Weave Candidate |
 
-一个 step 应该能让执行 Agent 独立恢复边界：
+这些 phase 不需要拆成独立 skill。`aipd-case` 根据 case.md 的 `Current Phase` 加载对应 phase 文档。
 
-- 读 step 文件。
+## 目录结构
+
+新建 case 使用 phase-first 结构，不再用顶层 `doc/`、`steps/`、`code/` 按材料类型分层：
+
+```text
+_adoc/case/cX.Y-name/
+├── case.md
+├── 01-goal/
+├── 02-think/
+├── 03-design/
+├── 04-execute/
+├── 05-verify/
+└── 06-close/
+```
+
+`case.md` 是入口和状态聚合。每个 phase 目录收纳自己的文档、调研、代码实验、执行记录或验收材料。旧 case 的 `doc/`、`steps/` 不再兼容运行；继续推进前应先迁移为 phase-first case。
+
+## Think
+
+Think 可以在 Case 内发生。
+
+当目标已经确定，但推进中遇到关键未知、调研、选型、测试集可信度或用户取舍时，不必膨胀出一堆平级 case。优先在当前 case 的 Think phase 中记录问题、选项、依据和结论。
+
+调研、实验、采样或模型评测这类分支，默认放在 `02-think/{branch}/`。只有当分支需要独立恢复状态、跨多轮执行、有独立验收标准和独立产物时，才升级成子 case。
+
+## Execute
+
+Work Package 只属于 Execute phase，放在：
+
+```text
+04-execute/work-packages/
+```
+
+旧 `steps/` 不再是新结构，也不再作为运行兼容入口。
+
+## Design
+
+Design 的核心不是完整抽象所有概念，而是找到复杂度爆点，并对爆点做最小必要解耦，让后续执行可以横向铺模块，而不是纵向堆版本。
+
+搜索列表的例子：
+
+```text
+复杂度爆点：搜索 API 参数组装会随筛选项增加而膨胀
+解耦点：每个 Filter 自治产出 postValue
+特殊节点：Pagination 是带搜索语义的特殊 Filter
+主干职责：Controller 只管触发搜索，不管业务数据
+```
+
+这种设计比“先做 list、再叠分页、再叠搜索、再叠筛选”更适合 Agent 执行。
+
+## Work Package
+
+Step 的语义调整为 Work Package。
+
+Work Package 是可验收、可派发、可恢复的目标包，不是微步骤。它可以包含多个横向模块，只要这些模块共享同一个设计边界和验收口径。
+
+一个 Work Package 应能让执行 Agent 独立恢复边界：
+
+- 读 work package 文件。
 - 读 case 文件。
-- 读 step 列出的上下文文档。
-- 按任务清单执行。
+- 读 `03-design/design.md` 和上下文文档。
+- 按横向模块推进。
 - 按验收标准自检。
 - 写回执行记录。
 
-调用方不应把 step 正文复制到 prompt 里。任务正文以 step 文件为准。
+调用方不应把正文复制到 prompt 里。任务正文以 work package 文件为准。
 
-## case-create 与 case-run
+## 统一入口
 
-`aipd-case-create` 负责创建 case、沉淀目标、边界、上下文索引和 step。
+`aipd-case` 是推荐入口，负责恢复 case 状态、判断当前 phase、加载对应 phase 文档并推进。
 
-`aipd-case-run` 负责按 case 恢复状态、判断下一个 step、派发执行 Agent、收集结果、验收并写回状态。
+旧入口已合并：
 
-这两个能力的分工很重要：未确认的讨论点不要包装成 step；已经写清楚的 step 才适合进入执行。后续 AIPD Think 实现后，未确认的开放式讨论应优先留在 Think，而不是强行进入 case-create。
+- `aipd-case-create`：并入 `aipd-case` 的 Goal / Think / Design。
+- `aipd-case-run`：并入 `aipd-case` 的 Execute / Verify。
+- `aipd-case-archive`：并入 `aipd-case` 的 Close。
+
+这些旧入口不再作为独立 skill 构建。用户提到旧命令时，引导到 `aipd-case`；遇到旧 case 结构时，只提示是否迁移，不执行兼容运行逻辑。
+
+长期建议收敛到 `aipd-case`。
 
 ## 执行记录
 
-每个改变项目状态的 step 完成后，都应留下可恢复记录。
+每个改变项目状态的 work package 完成后，都应留下可恢复记录。
 
 执行记录通常包括：
 
 - 完成时间。
 - 主要改动。
+- 验证结果。
 - 遇到的问题。
 - Weave 候选。
 

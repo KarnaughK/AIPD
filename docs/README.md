@@ -2,9 +2,9 @@
 
 这里是面向用户的 AIPD 学习入口。
 
-AIPD 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻辑、AI 原生代码架构实验。
+AIPD 可以按三条主线理解：知识库最小闭环、Case / Work Package 开发逻辑、AI 原生代码架构实验。
 
-正在施工中的前置能力是 **AIPD Think**：它位于 Case Create 之前，用来把模糊想法、调研和方案比较沉淀成可决策的 Think 对象，再决定进入 Case、暂缓、终止或继续研究。
+Case 现在采用统一生命周期：Goal / Think / Design / Execute / Verify / Close。Think 和 Design 都可以作为 Case 内 phase，分别处理推进中的未知和复杂度爆点解耦。
 
 ## 推荐阅读路径
 
@@ -13,7 +13,7 @@ AIPD 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻
 1. [从 Vibe Coding 到 Agent Coding](guide/01-from-vibe-coding-to-agent-coding.md)
 2. [AIPD 的三条主线](guide/02-aipd-three-main-lines.md)
 3. [知识库最小闭环](guide/03-knowledge-base-minimum-loop.md)
-4. [Case / Step 开发逻辑](guide/04-case-step-development.md)
+4. [Case / Work Package 开发逻辑](guide/04-case-step-development.md)
 5. [AI 原生代码架构实验](guide/05-ai-native-code-architecture-experiment.md)
 6. [第一次完整路径](guide/06-first-complete-flow.md)
 
@@ -31,11 +31,10 @@ AIPD 可以按三条主线理解：知识库最小闭环、Case / Step 开发逻
 - [Map 与检索系统](modules/maps-and-retrieval.md)
 - [Weave](modules/weave.md)
 
-### 二、Case / Step 开发逻辑
+### 二、Case / Work Package 开发逻辑
 
-- [AIPD Think（施工中）](modules/think.md)
 - [OKR](modules/okr.md)
-- [Case 与 Step](modules/case-and-step.md)
+- [Case 与 Work Package](modules/case-and-step.md)
 - [分身 Agent](modules/clone-agents.md)
 - [Inbox](modules/inbox.md)
 

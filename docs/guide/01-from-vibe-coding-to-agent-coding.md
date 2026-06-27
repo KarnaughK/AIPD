@@ -49,5 +49,5 @@ AIPD 解决的不是“让 Agent 更会写代码”。
 这就是后面几章要讲的主线：
 
 ```text
-项目知识库 -> L1-L5 存储结构 -> map 读取结构 -> weave 回写机制 -> case / step 执行闭环
+项目知识库 -> L1-L5 存储结构 -> map 读取结构 -> weave 回写机制 -> case / work package 执行闭环
 ```

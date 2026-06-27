@@ -7,21 +7,24 @@ AIPD 是一个可构建的 skill 工程。仓库中的 `aipd-skill/src/skills/` 
 | skill | 命令 | 作用 |
 |---|---|---|
 | `aipd` | `/aipd` | 总入口：识别项目状态，加载轻量认知，引导下一步 |
-| `aipd-case-create` | `/aipd-case-create` | 创建 case，整理目标、边界、上下文索引和 steps |
-| `aipd-case-run` | `/aipd-case-run` | 执行 case，读取上下文并派发执行 Agent |
+| `aipd-case` | `/aipd-case` | 统一推进 case：Goal / Think / Design / Execute / Verify / Close |
 | `aipd-weave` | `/aipd-weave` | 把稳定经验回写到 ADOC、局部 README、map 或 case |
 | `aipd-inbox` | `/aipd-inbox` | 临时接住未整理思路，后续再判断 weave、转 case 或丢弃 |
 | `aipd-learn` | `/aipd-learn` | 采集会话定位信息，辅助 AIPD 框架自迭代 |
+| `aipd-okr` | `/aipd-okr` | 查看、同步或操作飞书 OKR，并把飞书结果压缩成 OKR 经验包 |
 | `aipd-update` | `/aipd-update` | 更新已初始化项目中的 AIPD 架构、AGENTS 和 map |
-| `aipd-case-archive` | `/aipd-case-archive` | 归档 case，整理 Weave Candidate，合并分支 |
 | `aipd-git-push` | `/aipd-git-push` | 检查当前分支和提交状态，并推送远端 |
 | `aipd-mermaid` | `/aipd-mermaid` | 创建、修改、评审或按需渲染 Mermaid 架构图 |
 
-## 规划中能力
+旧 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `aipd-case`，不再作为独立 skill 构建。
 
-| 能力 | 状态 | 作用 |
-|---|---|---|
-| AIPD Think / `aipd-think` | 施工中，尚无正式命令 | 在 Case Create 之前承载讨论、调研、方案比较和决策出口 |
+## Case phase
+
+`aipd-case` 内部按 phase 渐进加载说明文档，不为每个阶段拆独立 skill。
+
+```text
+Goal -> Think -> Design -> Execute -> Verify -> Close
+```
 
 ## 常见协作顺序
 
@@ -30,18 +33,19 @@ AIPD 是一个可构建的 skill 工程。仓库中的 `aipd-skill/src/skills/` 
 ```text
 /aipd
 -> 初始化 _adoc 和 AGENTS.md
--> 后续按任务进入 case-create / case-run / weave
+-> 后续按任务进入 aipd-case / weave
 ```
 
 一次较明确的开发事项：
 
 ```text
-/aipd-case-create
--> 生成 case 和 step
--> /aipd-case-run
--> 执行 step
+/aipd-case
+-> Goal：确认短周期目标
+-> Think：按需调研和抉择
+-> Design：找到复杂度爆点并做最小必要解耦
+-> Execute：按 work package 执行
+-> Verify / Close
 -> 产出 Weave Candidate
--> /aipd-case-archive
 ```
 
 已有项目规则升级：

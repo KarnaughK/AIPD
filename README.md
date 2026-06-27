@@ -21,7 +21,7 @@ AIPD 的核心目标，是让项目不只拥有代码源码，还拥有一套 AI
 
 ## 三条主线
 
-AIPD 可以按三条主线理解。另有一个正在施工中的前置能力：**AIPD Think**，用于在 Case Create 之前把模糊想法讨论清楚，再决定是否进入执行。
+AIPD 可以按三条主线理解。Case 现在采用统一生命周期：先定短周期目标，再按需 Think、Design、Execute、Verify 和 Close。
 
 ### 1. 知识库最小闭环
 
@@ -33,13 +33,11 @@ AIPD 可以按三条主线理解。另有一个正在施工中的前置能力：
 - 存：通过初始化编织和 Weave / 反向编织维护项目认知。
 - 取：通过 `_adoc/map.md` 从自然语言路由到相关文档和代码入口。
 
-### 2. Case / Step 开发逻辑
+### 2. Case / Work Package 开发逻辑
 
 大任务不能只靠聊天上下文推进。
 
-Case 把一次事项的目标、边界、上下文索引和验收状态固定下来；Step 把 Case 拆成可执行、可恢复、可验收的小单元。OKR、分身 Agent、执行记录、归档和 Weave Candidate 都围绕这条执行线工作。
-
-正在施工的 AIPD Think 位于 Case Create 之前，负责讨论“这个想法要不要做、现在做不做、还缺什么信息”。它的出口可以是 Create、Kill、Defer、Research、Weave 或 Continue。
+Case 把一次马上要完成的事项固定成短周期目标容器，并在内部按 Goal / Think / Design / Execute / Verify / Close 推进。Step 的语义调整为 Work Package：它不是微步骤，而是围绕设计边界的可执行、可恢复、可验收目标包。飞书 OKR、分身 Agent、执行记录、归档和 Weave Candidate 都围绕这条执行线工作。
 
 ### 3. AI 原生代码架构实验
 
@@ -55,12 +53,12 @@ Case 把一次事项的目标、边界、上下文索引和验收状态固定下
 |---|---|
 | `_adoc/` | 项目认知事实源，记录代码里不容易表达的方向、模型、边界、规则和经验 |
 | `map` | 第一跳检索，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / 代码入口 |
-| `Case / Step` | 把大任务变成可恢复、可派发、可验收的文件事实源 |
-| `AIPD Think` | 施工中：把模糊想法、调研和方案比较状态化，再决定是否进入 Case |
+| `Case / Work Package` | 把短周期目标变成可恢复、可派发、可验收的文件事实源 |
+| `Case Think / Design` | 在 case 内完成必要调研、抉择和复杂度爆点解耦设计 |
 | 分身 Agent | 进入局部探索或执行分支，消化搜索、验证、日志和 diff 等过程成本 |
 | Weave | 把稳定经验回写到 `_adoc`、局部 README、map 或 case 记录 |
 | Inbox | 临时接住未整理思路，后续再判断 weave、转 case 或丢弃 |
-| OKR | 管理阶段目标，帮助判断 case / step 是否推进项目方向 |
+| OKR | 管理飞书阶段目标，帮助判断 case / work package 是否推进项目方向 |
 
 详细学习路径见 [docs/README.md](docs/README.md)。
 
@@ -98,15 +96,16 @@ AIPD 这个仓库本身不是一个“打开即用”的应用。
 | skill | 命令 | 作用 |
 |---|---|---|
 | `aipd` | `/aipd` | 总入口：识别项目状态，加载轻量认知，引导下一步 |
-| `aipd-case-create` | `/aipd-case-create` | 创建 case，整理目标、边界、上下文索引和 steps |
-| `aipd-case-run` | `/aipd-case-run` | 执行 case，读取上下文并派发分身 Agent |
+| `aipd-case` | `/aipd-case` | 统一推进 case：Goal / Think / Design / Execute / Verify / Close |
 | `aipd-weave` | `/aipd-weave` | 把稳定经验回写到 ADOC、局部 README、map 或 case |
 | `aipd-inbox` | `/aipd-inbox` | 临时接住未整理思路，后续再判断归属 |
 | `aipd-learn` | `/aipd-learn` | 采集会话定位信息，辅助 AIPD 框架自迭代 |
+| `aipd-okr` | `/aipd-okr` | 查看、同步或操作飞书 OKR，并生成压缩 OKR 经验包 |
 | `aipd-update` | `/aipd-update` | 更新已初始化项目中的 AIPD 架构、AGENTS 和 map |
-| `aipd-case-archive` | `/aipd-case-archive` | 归档 case，整理 Weave Candidate，合并分支 |
 | `aipd-git-push` | `/aipd-git-push` | 检查当前分支和提交状态，并推送远端 |
 | `aipd-mermaid` | `/aipd-mermaid` | 创建、修改、评审或按需渲染 Mermaid 架构图 |
+
+旧 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `aipd-case`，不再作为独立 skill 构建。旧 case 结构需要先迁移为 phase-first case，再继续推进。
 
 旧 `/aipd2*` 命令不再作为主入口；重新运行安装脚本会移除本机残留的旧 `aipd2*` skill，后续统一使用 `/aipd*`。
 
