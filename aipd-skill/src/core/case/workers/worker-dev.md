@@ -22,7 +22,7 @@
 读取主 Agent 指定的 work package 文件。新结构中的默认路径是：
 
 ```text
-_adoc/case/cA.B-{case-name}/04-execute/work-packages/cA.B.C-xxx.md
+_adoc/case/cA.B-{case-name}/03-execute/work-packages/cA.B.C-xxx.md
 ```
 
 用它校准：
@@ -39,7 +39,7 @@ _adoc/case/cA.B-{case-name}/04-execute/work-packages/cA.B.C-xxx.md
 按 work package 文件中「上下文文档」列出的路径，逐一读取。重点关注：
 
 - 技术约束（技术栈、分层规则、目录职责）
-- 设计约束（`03-design/design.md`、架构图、README）
+- 设计约束（`02-design/design.md`、架构图、README）
 - 数据库设计（表结构、字段含义）
 - 已有代码的模式（如果 work package 依赖前序产出）
 

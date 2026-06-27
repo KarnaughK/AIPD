@@ -20,12 +20,12 @@
 
 ## 第二步：进入 Case，并按需 Think / Design
 
-如果任务已经清晰，可以直接进入 Case Goal。
+如果任务已经清晰，可以直接写入 Case Contract。
 
 如果还只是一个想法、方向、陌生领域或“要不要做”的问题，先在 Think 中澄清：
 
 ```text
-Case Goal -> Think -> Design -> Execute
+Case Contract -> Think -> Design -> Execute
 ```
 
 Think 先沉淀讨论、调研、方案比较和决策出口。目标清楚后，进入 Design 找复杂度爆点并做最小必要解耦。

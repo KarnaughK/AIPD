@@ -15,27 +15,28 @@ Think phase 是 case 内的信息同步、调研和抉择阶段。
 
 ## 输入
 
-- case.md 的 Goal、Context Index、Boundary。
-- Goal phase 列出的上下文。
+- case.md 的 Case Contract：目标、边界、验收标准、上下文索引和不做范围。
 - 必要的外部资料、实验脚本、历史 case 或用户补充。
 
 ## 输出
 
-写入 `02-think/think.md`，并把摘要同步到 case.md：
+写入 `01-think/think.md`，并把摘要同步到 case.md：
 
 - 关键问题。
 - 调研范围。
 - 选项比较。
 - 决策结论。
 - 未解决风险。
-- 对 Design 或 Execute 的输入。
+- 结论回流位置：Case Contract / Design / Execute / Verify / Weave Candidate。
 
-调研、代码实验、竞品比较、数据采样或临时评测分支写入 `02-think/{branch}/`。例如：
+调研、代码实验、竞品比较、数据采样或临时评测分支写入 `01-think/{branch}/`。每个分支必须先有一个具体目标，结束时给出结论，并说明结论应该补到哪里。它可以在分支目录里自由折腾，但不能把没有收口的材料直接推进成 Design 或 Execute。
+
+例如：
 
 ```text
-02-think/openrouter-evaluation/
-02-think/contexto-live-sampling/
-02-think/model-benchmark-comparison/
+01-think/openrouter-evaluation/
+01-think/contexto-live-sampling/
+01-think/model-benchmark-comparison/
 ```
 
 分支目录内可以有 `summary.md`、`evidence.md`、`code/`、`data/` 等材料。它们属于 Think phase，不应膨胀成平级 case，除非确实需要独立恢复状态和独立验收。
@@ -44,6 +45,6 @@ Think phase 是 case 内的信息同步、调研和抉择阶段。
 
 ## 下一 phase 判断
 
-- 已经选定方向且需要架构设计：进入 Design。
+- 已经选定方向且需要架构设计：向用户汇报 Think 结论和回流位置，确认后进入 Design。
 - 结论是目标不成立：进入 Close，并标记为 stopped / killed。
 - 还缺信息：继续 Think，但必须写清下一轮要查什么，不要无限泛调研。

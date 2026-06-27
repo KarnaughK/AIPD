@@ -4,7 +4,7 @@ Verify phase 负责验收目标是否完成，以及执行结果是否遵守 Des
 
 它不只是跑测试。Verify 要同时检查三类东西：
 
-- Goal 是否完成。
+- Case Contract 中的目标和验收标准是否完成。
 - Work Package 是否完成。
 - Design Guardrails 是否被破坏。
 
@@ -26,7 +26,7 @@ Verify phase 负责验收目标是否完成，以及执行结果是否遵守 Des
 
 ## 输出
 
-写入 `05-verify/verify.md`，并把摘要同步到 case.md：
+写入 `04-verify/verify.md`，并把摘要同步到 case.md：
 
 - Verify Result。
 - 通过 / 未通过项。

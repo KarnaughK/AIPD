@@ -21,6 +21,6 @@
 
 ## 使用原则
 
-- 新事项先创建 phase-first case，再按 Design 结果拆 work package。
+- 新事项先创建 contract + phase-first case：目标、边界和验收标准写入 `case.md`，再按 Design 结果拆 work package。
 - work package 必须列出显式上下文文档、横向模块和验收标准。
 - 代码实现、调研和审查默认交给分身 Agent，主 Agent 负责调度和验收。

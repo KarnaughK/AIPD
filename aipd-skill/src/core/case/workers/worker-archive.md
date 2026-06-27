@@ -22,7 +22,7 @@
 
 - **Case 目标**：这次做了什么
 - **涉及的模块**：哪些 L4-product / L5-dev 模块
-- **完成的工作包**：所有 `04-execute/work-packages/` 文件
+- **完成的工作包**：所有 `03-execute/work-packages/` 文件
 
 ### 第 2 步：查看代码改动
 

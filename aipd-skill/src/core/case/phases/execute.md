@@ -17,7 +17,7 @@ Execute phase 按 Design phase 产出的 work package 推进。
 ## 输入
 
 - case.md。
-- 当前 `04-execute/work-packages/` 下的 work package 文件。
+- 当前 `03-execute/work-packages/` 下的 work package 文件。
 - Design Summary 和 Design Guardrails。
 - work package 列出的上下文文档。
 
@@ -26,13 +26,13 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - 对简单、低噪声、主 Agent 可直接完成的文档或状态更新，可以由主 Agent 执行。
 - 对代码修改、构建、测试、批量验证、跨文件 diff、调研或长日志分析，优先使用执行 Agent。
 - 未获用户授权使用子 Agent 时，必须先单独询问。
-- 目标模式可以作为运行时锚点，但长期状态仍写回 case.md、`04-execute/execute.md` 和 work package 文件。
+- 目标模式可以作为运行时锚点，但长期状态仍写回 case.md、`03-execute/execute.md` 和 work package 文件。
 
 ## 输出
 
 写回：
 
-- `04-execute/execute.md`。
+- `03-execute/execute.md`。
 - work package 执行记录。
 - case.md 的 Work Packages 状态。
 - Execution Record。
@@ -41,7 +41,7 @@ Execute phase 按 Design phase 产出的 work package 推进。
 
 ## 下一 phase 判断
 
-- 所有必要 work package 完成：进入 Verify。
+- 所有必要 work package 完成：汇报执行结果和残留风险，确认后进入 Verify。
 - 执行暴露设计缺口：回到 Design。
 - 执行暴露信息缺口：回到 Think。
 - 执行失败：记录阻塞，询问用户重试、调整设计、缩小工作包或暂停。

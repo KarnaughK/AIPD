@@ -56,7 +56,7 @@ AIPD 不把 `fork_context: true` 作为所有 work package 的默认规则。是
 
 允许 Main Agent 直接完成的例外应很窄：单一事实、单一入口、单一局部文件、用户明确要求不派子 Agent，或用户没有授权。不要因为任务看起来简单、用户目标清楚、或只是评估 / 方案 / review，就让 Main Agent 继续承担事实检索过程。
 
-case / phase / work package 文件是执行阶段的事实源。进入 Case Execute 后，如果 `04-execute/work-packages/` 下的 work package 已经写清楚，优先让角色执行 Agent 自行读取 work package、case 和上下文文档执行；只有 work package 强依赖 Main Agent 当前尚未沉淀的聊天判断时，才使用上下文继承型子 Agent。
+case / phase / work package 文件是执行阶段的事实源。进入 Case Execute 后，如果 `03-execute/work-packages/` 下的 work package 已经写清楚，优先让角色执行 Agent 自行读取 work package、case 和上下文文档执行；只有 work package 强依赖 Main Agent 当前尚未沉淀的聊天判断时，才使用上下文继承型子 Agent。
 
 派发子 Agent 时，prompt 应尽量短，只传执行指引路径、work package 文件路径、case 文件路径和返回格式。不要把长任务正文、上下文清单或讨论结论复制到 prompt 里。规范和任务都应以文件链接形式进入子 Agent：先读领域指引，再读 work package，再按 work package 中的上下文文档执行。
 
@@ -81,14 +81,14 @@ Codex goal 是平台运行时目标，不是 AIPD 的长期记忆，也不是子
 
 1. 读取 `_adoc/case/index.md`，定位当前或目标 case。
 2. 读取 `_adoc/case/{case目录}/case.md`，按上下文索引加载必要文档。
-3. 读取 `Current Phase`。若处于 Execute，读取 `04-execute/execute.md` 和 `04-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
+3. 读取 `Current Phase`。若处于 Execute，读取 `03-execute/execute.md` 和 `03-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
 4. 如果存在可执行 work package，且本轮尚未获得子 Agent 授权，先询问用户是否授权当前 case 使用子 Agent；确认后授权覆盖当前 case。
 5. 判断是否启用 goal：多 work package、长任务、可能跨轮次或上下文压缩时启用；单个短 work package 或只读状态检查可以不启用。
 6. 根据 work package 头部 `推荐 Agent` 字段选择执行角色；没有声明时再兜底判断：调研用 `explorer`，Vue `useXxx` / provider / API 数据源优先用 `aipd_vue_provider`，Vue 架构 / Vue 组件实现优先用 `aipd_vue_architect`，其他开发任务用 `worker`。
 7. 如果 work package 已经写清楚，派发角色执行 Agent 读取 work package / case / 上下文文档执行。
 8. 如果 work package 强依赖 Main Agent 当前未沉淀的聊天判断，才使用上下文继承型子 Agent，并在 prompt 中说明它是局部探索 / 执行分支。
 9. Agent 完成后，主 Agent 只读取结果回流：结论、依据、风险、建议、改动文件和验证结果。
-10. 成功则先更新 work package 执行记录、`04-execute/execute.md` 和 case 状态；如果启用了 goal，再更新 goal 进度，确保压缩后可恢复。
+10. 成功则先更新 work package 执行记录、`03-execute/execute.md` 和 case 状态；如果启用了目标模式，再更新 goal 进度，确保压缩后可恢复。
 11. 失败则告知用户，询问重试、跳过或手动处理。
 
 ## Main Agent 执行边界
@@ -174,4 +174,4 @@ Work Package {work_package_id} 失败：{原因}
 - prompt 必须包含 case 目录或 case.md 路径，以及本 work package 需要遵守的上下文边界。
 - 执行 Agent 必须自己读取 work package 文件和上下文文档，用它们校准任务和恢复锚点。
 - 主 Agent 不重复执行执行 Agent 已承担的任务，只负责入口读取、状态判断、派发、审查摘要、验收、状态更新和下一步调度。
-- 每个 work package 完成后必须写回 work package 执行记录、`04-execute/execute.md` 和 case 状态，保证上下文压缩后能从文件恢复。
+- 每个 work package 完成后必须写回 work package 执行记录、`03-execute/execute.md` 和 case 状态，保证上下文压缩后能从文件恢复。

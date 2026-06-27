@@ -22,7 +22,7 @@
 复杂前端 case 在 Design phase 可以先把图放到 case 目录：
 
 ```text
-_adoc/case/{case}/03-design/{module}-component-architecture-draft.mmd
+_adoc/case/{case}/02-design/{module}-component-architecture-draft.mmd
 ```
 
 这时它是讨论稿，用来和用户确认业务状态、数据所有权、架构流转和组件划分。

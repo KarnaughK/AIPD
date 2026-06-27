@@ -4,7 +4,7 @@
 > **Phase**: Execute
 > **类型**: dev / research / review / verify / docs
 > **推荐 Agent**: worker / explorer / aipd_vue_architect / aipd_vue_provider / 留空
-> **依赖**: 无 / {前置 work package 或 03-design/design.md}
+> **依赖**: 无 / {前置 work package 或 02-design/design.md}
 
 ## 目标
 
@@ -18,6 +18,7 @@
 - 解耦方式：{例如每个 Filter 自治产出 postValue}
 - 主干职责：{例如 Controller 只管触发搜索，不管业务数据}
 - 特殊节点：{例如 Pagination 是特殊 Filter}
+- 文件 / 文件夹边界：{本工作包涉及哪些目录和文件，职责是什么}
 
 ## 横向模块
 
@@ -32,7 +33,7 @@
 执行前必须读取：
 
 - `{case.md}`
-- `{03-design/design.md 或 case.md Design 摘要}`
+- `{02-design/design.md 或 case.md Design 摘要}`
 - `{相关 L3 / L4 / L5 / README / 代码入口}`
 
 ## 验收标准

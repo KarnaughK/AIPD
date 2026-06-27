@@ -18,7 +18,7 @@ Agent Team 创建的是独立 Claude Code 实例。它在技术上不能像 Code
 3. 生成完整 prompt，包含角色、work package 文件绝对路径、约束和返回格式。
 4. 创建 Agent Team 分身 Agent。
 5. 等待分身 Agent 返回简洁结果。
-6. 成功则更新 work package、`04-execute/execute.md` 和 case 状态，继续派发下一步。
+6. 成功则更新 work package、`03-execute/execute.md` 和 case 状态，继续派发下一步。
 7. 失败则告知用户，询问重试、跳过或手动处理。
 
 ## 分身 Agent Prompt 模板

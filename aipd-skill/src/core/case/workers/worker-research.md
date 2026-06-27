@@ -18,15 +18,15 @@
 新 case 默认使用：
 
 ```text
-_adoc/case/{case}/04-execute/work-packages/{work-package}.md
+_adoc/case/{case}/03-execute/work-packages/{work-package}.md
 ```
 
 如果 work package 属于 Think 阶段的调查分支，应优先把过程资料和结论写入对应分支目录，例如：
 
 ```text
-_adoc/case/{case}/02-think/{branch}/summary.md
-_adoc/case/{case}/02-think/{branch}/evidence.md
-_adoc/case/{case}/02-think/{branch}/code/
+_adoc/case/{case}/01-think/{branch}/summary.md
+_adoc/case/{case}/01-think/{branch}/evidence.md
+_adoc/case/{case}/01-think/{branch}/code/
 ```
 
 ---

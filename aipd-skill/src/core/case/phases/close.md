@@ -7,7 +7,7 @@ Case 完成后不应留下“其实还没做完，只是推进了一部分”的
 ## 要回答的问题
 
 - 用户是否已经验收？
-- case 是否达成 Goal？
+- case 是否达成 Case Contract 中的目标和验收标准？
 - case.md 是否记录了完整 phase 状态？
 - Work Packages 是否都有执行记录或明确取消原因？
 - Weave Candidate 是否整理完成？
@@ -18,7 +18,7 @@ Case 完成后不应留下“其实还没做完，只是推进了一部分”的
 ## 输入
 
 - case.md。
-- `04-execute/work-packages/`。
+- `03-execute/work-packages/`。
 - git diff。
 - Verify Result。
 - 用户验收结论。
@@ -26,9 +26,11 @@ Case 完成后不应留下“其实还没做完，只是推进了一部分”的
 ## 输出
 
 - 更新 `_adoc/case/index.md`。
-- 更新 `06-close/close.md`。
+- 更新 `05-close/close.md`。
 - 移动 case 到 `_adoc/case/archive/`，或标记为完成待归档。
 - 整理 Weave Candidate。
 - 如用户确认，执行 git add / commit / merge / push。
 
 Close 不替代 `aipd-weave`。如果 case 产生稳定知识，Close 只整理候选和建议，真正回写长期 ADOC 时使用 `aipd-weave`。
+
+如果 case 根目录存在 `自我察觉迭代.md`，Close phase 必须读取并整理回流候选：哪些应进入 `aipd-case` skill、case 模板、Agent Entry、SOP 或长期 ADOC；哪些只是本 case 的一次性过程。该文件不进入普通项目认知 map，只在 case 复盘或 AIPD 框架迭代时读取。

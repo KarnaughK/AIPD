@@ -31,7 +31,7 @@ AIPD 的新版学习路径可以先按三条主线理解，而不是一上来背
 聊天上下文会压缩、会中断，也会混进很多讨论、猜测和被否定的方案。Case / Work Package 的作用是把任务从聊天里固定到文件里。
 
 - 飞书 OKR 说明当前阶段为什么做这些事。
-- Case 记录一次短周期事项的 Goal / Think / Design / Execute / Verify / Close 状态。
+- Case 在 `case.md` 记录一次短周期事项的目标契约，并维护 Think / Design / Execute / Verify / Close 状态。
 - Think 处理目标不清、信息不足、调研和抉择。
 - Design 找复杂度爆点，并做最小必要解耦。
 - Work Package 把设计边界下的横向模块变成可执行、可恢复、可验收的目标包。

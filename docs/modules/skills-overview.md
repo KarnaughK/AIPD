@@ -7,7 +7,7 @@ AIPD 是一个可构建的 skill 工程。仓库中的 `aipd-skill/src/skills/` 
 | skill | 命令 | 作用 |
 |---|---|---|
 | `aipd` | `/aipd` | 总入口：识别项目状态，加载轻量认知，引导下一步 |
-| `aipd-case` | `/aipd-case` | 统一推进 case：Goal / Think / Design / Execute / Verify / Close |
+| `aipd-case` | `/aipd-case` | 统一推进 case：Case Contract / Think / Design / Execute / Verify / Close |
 | `aipd-weave` | `/aipd-weave` | 把稳定经验回写到 ADOC、局部 README、map 或 case |
 | `aipd-inbox` | `/aipd-inbox` | 临时接住未整理思路，后续再判断 weave、转 case 或丢弃 |
 | `aipd-learn` | `/aipd-learn` | 采集会话定位信息，辅助 AIPD 框架自迭代 |
@@ -23,7 +23,7 @@ AIPD 是一个可构建的 skill 工程。仓库中的 `aipd-skill/src/skills/` 
 `aipd-case` 内部按 phase 渐进加载说明文档，不为每个阶段拆独立 skill。
 
 ```text
-Goal -> Think -> Design -> Execute -> Verify -> Close
+Case Contract -> Think -> Design -> Execute -> Verify -> Close
 ```
 
 ## 常见协作顺序
@@ -40,7 +40,7 @@ Goal -> Think -> Design -> Execute -> Verify -> Close
 
 ```text
 /aipd-case
--> Goal：确认短周期目标
+-> Case Contract：确认短周期目标、边界和验收标准
 -> Think：按需调研和抉择
 -> Design：找到复杂度爆点并做最小必要解耦
 -> Execute：按 work package 执行

@@ -263,7 +263,7 @@ Agent MD 使用哪个模板等级？
 
 **有 `_adoc/`，但用户要升级 / 同步 / 检查 AIPD 架构** → 推荐 `/aipd-update`。`aipd` 不直接迁移已有项目，避免初始化入口误覆盖用户文档。
 
-**有 `_adoc/` 但没有 case** → 推荐 `/aipd-case` 进入 Goal phase。
+**有 `_adoc/` 但没有 case** → 推荐 `/aipd-case` 创建 `case.md` 的 Case Contract，再进入 Think / Design。
 
 **有进行中的 case** → 推荐 `/aipd-case`，由它按 `Current Phase` 继续。
 

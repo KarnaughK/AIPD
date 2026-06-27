@@ -20,7 +20,7 @@
 2. 以入口文件为起点。优先从 `index.vue` / `IndexView.vue` / 弹框根组件开始，按页面生命周期梳理：加载页面 -> 创建或调用 `useXxx.js` / provider / controller -> 拉取或注入数据 -> 根组件按状态渲染子组件 -> 子组件各自自治。
 3. 把渲染链和提交流程分开。第一张图或第一轮讨论优先确认渲染结构、组件嵌套、provider 注入起点和主要数据读取；用户修改、局部提交、整体提交、切换步骤、关闭刷新等属于后续事件流，可在同一图的独立模块或后续图中补充。
 4. 先细化根组件和 `useXxx.js`。如果本 case 会新增或重构模块，work package 拆分前应先确认根组件职责、`useXxx.js` 输出数据 / 输出方法、provide / inject 边界、controller 引入点，再讨论末端组件内部实现。
-5. 架构图稳定后再写 work package。图只是设计讨论稿时放在 case `03-design/`；一旦它会指导实现，必须在第一个相关实现 work package 中落到代码就近目录，case 只保留链接。
+5. 架构图稳定后再写 work package。图只是设计讨论稿时放在 case `02-design/`；一旦它会指导实现，必须在第一个相关实现 work package 中落到代码就近目录，case 只保留链接。
 
 组件图画法读取 `L5-dev/vue-architecture-diagram-guide.md`，不要把 Mermaid 细节复制回 `aipd-case/SKILL.md`。
 

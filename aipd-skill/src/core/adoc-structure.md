@@ -40,19 +40,17 @@ _adoc/
     ├── index.md                # Case 索引
     ├── c0.1-功能名/
     │   ├── case.md
-    │   ├── 01-goal/
-    │   │   └── goal.md
-    │   ├── 02-think/
+    │   ├── 01-think/
     │   │   └── think.md
-    │   ├── 03-design/
+    │   ├── 02-design/
     │   │   └── design.md
-    │   ├── 04-execute/
+    │   ├── 03-execute/
     │   │   ├── execute.md
     │   │   └── work-packages/
     │   │       └── c0.1.1-工作包名.md
-    │   ├── 05-verify/
+    │   ├── 04-verify/
     │   │   └── verify.md
-    │   └── 06-close/
+    │   └── 05-close/
     │       └── close.md
     └── archive/
         └── c0.1-功能名/        # 已归档 case

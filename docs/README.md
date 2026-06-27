@@ -4,7 +4,7 @@
 
 AIPD 可以按三条主线理解：知识库最小闭环、Case / Work Package 开发逻辑、AI 原生代码架构实验。
 
-Case 现在采用统一生命周期：Goal / Think / Design / Execute / Verify / Close。Think 和 Design 都可以作为 Case 内 phase，分别处理推进中的未知和复杂度爆点解耦。
+Case 现在采用统一生命周期：Case Contract / Think / Design / Execute / Verify / Close。目标、边界和验收标准直接写在 `case.md`；Think 和 Design 作为 Case 内 phase，分别处理推进中的未知和复杂度爆点解耦。
 
 ## 推荐阅读路径
 

@@ -186,7 +186,7 @@ find _adoc/case/{case目录}/steps -type f
    - 这说明 `aipd-case` 没有把真实协作规则固化住。
 
 3. **用户纠正 Agent 的任务分层**
-   - 例如工具文档和流程规则混淆、Goal / Think / Design / Execute 边界混淆。
+   - 例如工具文档和流程规则混淆、Case Contract / Think / Design / Execute 边界混淆。
    - 这类问题优先回写 skill 的职责边界或场景分流规则。
 
 4. **用户纠正 Agent 的探索 / 执行节奏**
