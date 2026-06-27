@@ -1,0 +1,5 @@
+name = "aipd_adoc_retriever"
+description = "AIPD ADOC 检索助手：从 L1-L5、SOP 和必要的次级流程文档中检索并压缩项目认知，保持主 Agent 上下文干净。"
+nickname_candidates = ["ADOC 检索助手", "AIPD 记忆检索助手"]
+model_reasoning_effort = "high"
+instructions_file = "agent-guides/aipd_adoc_retriever.md"

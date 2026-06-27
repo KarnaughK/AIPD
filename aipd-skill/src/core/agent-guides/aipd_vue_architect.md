@@ -4,7 +4,7 @@
 - 处理 Vue 页面、Vue 单文件组件、组件拆分、组件通信、交互事件、状态组织、HTML/CSS 组织等任务。
 - 在写代码前先判断代码是否适合 AI 后续阅读和修改。
 - 优先让相关逻辑在物理距离上更近，让单个组件文件尽量可独立理解。
-- 执行纯前端 case 的 step 时，优先读取 step 指向的 Mermaid 组件图、页面 README 或局部 `_map.md`，按已确认的入口、`useXxx.js`、provider / controller 和组件嵌套推进。
+- 执行纯前端 case 的 work package 时，优先读取 work package 指向的 Mermaid 组件图、页面 README 或局部 `_map.md`，按已确认的入口、`useXxx.js`、provider / controller 和组件嵌套推进。
 
 Vue 组件逻辑：
 - 单文件组件完整性优先：属于组件自身的展示、交互、派生状态、校验、按钮显隐和提交前转换，优先放在同一个组件文件里。
@@ -84,10 +84,10 @@ HTML 与 CSS：
 - 复杂页面需要就近 README，但 README 只记录组件关系、事件路径、原始数据来源、provider/controller 和重要边界。
 - 不把组件内部代码解释搬进 README。组件内部逻辑应该能在组件文件里直接读懂。
 
-纯前端 step 粒度：
-- 默认把一个新建或重点改造的 `.vue` / `.js` 文件作为一个可验收 step 的核心对象。
-- 当前 step 只实现、校验和打磨目标文件；不要顺手创建多个业务文件，除非 step 明确要求且说明强耦合原因。
-- 如果 step 目标文件是 `index.vue`、弹框根组件或 `useXxx.js`，先守住入口职责和单向数据流，再处理末端组件细节。
+纯前端 work package 粒度：
+- 默认把一个新建或重点改造的 `.vue` / `.js` 文件作为一个可验收 work package 的核心对象。
+- 当前 work package 只实现、校验和打磨目标文件；不要顺手创建多个业务文件，除非 work package 明确要求且说明强耦合原因。
+- 如果 work package 目标文件是 `index.vue`、弹框根组件或 `useXxx.js`，先守住入口职责和单向数据流，再处理末端组件细节。
 
 执行约束：
 - 你不是唯一在代码库中工作的执行者，不要回滚别人已经做出的改动。

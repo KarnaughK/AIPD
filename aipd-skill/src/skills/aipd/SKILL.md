@@ -35,7 +35,9 @@ inject-from-core:
 
 触发后先判断用户是否带着明确任务。
 
-如果用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd-inbox`。这是独立 capture 入口，只负责把临时信息写入 `_adoc/inbox.md`，不要把这套判断扩散到 case-create、weave、learn 等其他 skill。
+如果用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd-inbox`。这是独立 capture 入口，只负责把临时信息写入 `_adoc/inbox.md`，不要把这套判断扩散到 case、weave、learn 等其他 skill。
+
+如果用户明确说“OKR / 飞书 OKR / lark-cli / 目标 / 周期 / O / KR / 子项目目标 / OKR 经验包”，进入 `aipd-okr`。这是独立 OKR 入口，负责查看、创建、同步、删除或压缩飞书 OKR 经验包；不要让主入口直接翻 AIPD 源码或把完整 CLI 输出带入主上下文。
 
 ### 进入 ADOC 轻量认知模式
 
@@ -128,7 +130,7 @@ $aipd 看一下合同创建页面
 - 按检索结果读取 L3 / L4 / L5 / 局部 README。前端任务不等于只读 L5；涉及业务词先读 L3，涉及功能边界先读 L4，涉及跨模块工程实现先读 L5，涉及页面内部细节先读就近 README。
 - skill 不复制 `_adoc` 正文，不把项目规范写死在 skill 里。
 - 读完后直接进入用户任务，不输出大段 AIPD 解释。
-- L1-L5 是长期知识库；普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`。只有用户明确要求创建、执行、恢复、归档 case，查看 / 更新 OKR，或当前任务本身就是 case-run / case-archive / OKR 对齐时，才进入 case / OKR。
+- L1-L5 是长期知识库；普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`。只有用户明确要求创建、执行、恢复、归档 case，查看 / 更新 OKR，或当前任务本身就是 `aipd-case` / OKR 对齐时，才进入 case / OKR。
 
 ### 输出要求
 
@@ -164,7 +166,7 @@ $aipd 看一下合同创建页面
   当前 Case  : c0.2-功能名（8/10 步完成）
   已归档     : 3 个 Case
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  推荐下一步：/aipd-case-run
+  推荐下一步：/aipd-case
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -217,7 +219,7 @@ mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
 4. 如果目标文件已有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换这两个标记之间的 AIPD 区块。
 5. 如果目标文件存在但没有 AIPD 标记，把 AIPD 区块追加到文件末尾，不覆盖用户原有内容。
 
-Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd-inbox`、`/aipd-case-create`、`/aipd-case-run`、`/aipd-weave`、`/aipd-learn` 等具体流程 skill。
+Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd-inbox`、`/aipd-okr`、`/aipd-case`、`/aipd-weave`、`/aipd-learn` 等具体流程 skill。
 
 #### 可选安装 Interaction Protocol
 
@@ -261,13 +263,15 @@ Agent MD 使用哪个模板等级？
 
 **有 `_adoc/`，但用户要升级 / 同步 / 检查 AIPD 架构** → 推荐 `/aipd-update`。`aipd` 不直接迁移已有项目，避免初始化入口误覆盖用户文档。
 
-**有 `_adoc/` 但没有 case** → 推荐 `/aipd-case-create`。
+**有 `_adoc/` 但没有 case** → 推荐 `/aipd-case` 进入 Goal phase。
 
-**有进行中的 case** → 推荐 `/aipd-case-run`。
+**有进行中的 case** → 推荐 `/aipd-case`，由它按 `Current Phase` 继续。
 
-**case 全部完成待归档** → 推荐 `/aipd-case-archive`。
+**case 全部完成待归档** → 推荐 `/aipd-case` 进入 Close phase。
 
-**用户想把当前项目里的讨论、step 结果、case 结论、diff、错误日志或外部资料沉淀回 `_adoc/`、局部 README 或 map** → 推荐 `/aipd-weave`。
+**用户想把当前项目里的讨论、work package 结果、case 结论、diff、错误日志或外部资料沉淀回 `_adoc/`、局部 README 或 map** → 推荐 `/aipd-weave`。
+
+**用户想查看、创建、同步、删除或讨论 OKR，尤其是飞书 OKR / lark-cli / O/KR / 周期 / 子项目目标对齐** → 推荐 `/aipd-okr`。
 
 **用户想采集会话定位信息，或诊断 AIPD 框架自身的 skill、模板、Agent 行为规则** → 推荐 `/aipd-learn`。
 

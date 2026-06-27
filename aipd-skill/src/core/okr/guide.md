@@ -1,69 +1,75 @@
 # OKR 目标管理 — 基础指引
 
-> 状态：未经实践验证的初始文档。方向性参考，非 SOP。
-
 ## 这一层在做什么
 
-管理项目的中短期目标，定期复盘执行情况。
+AIPD 里的 OKR 默认指飞书 OKR。OKR 管理项目的中短期目标，并用于定期复盘执行情况。
 
-OKR 和 Case 是项目执行的两条并行线：Case 管"做什么"，OKR 管"做到什么程度"。两者松耦合——可以先跑 Case 再回顾 OKR，也可以先定 OKR 再拆 Case。
+OKR 和 Case 是项目执行的两条并行线：Case 管"做什么"，OKR 管"做到什么程度"。两者松耦合，可以先跑 Case 再回顾 OKR，也可以先定 OKR 再拆 Case。
 
-## OKR 在 AIPD 中的角色
+## 飞书 OKR 在 AIPD 中的角色
 
-不是公司级的 OKR 管理工具，而是项目级的目标锚点：
-- 帮你记住"这段时间最重要的事是什么"
-- 避免在执行中迷失方向（Case 做了很多，但离目标更近了吗？）
-- 提供复盘的锚点（这周做的事，对应哪个 KR？）
+飞书 OKR 是项目执行的方向锚点：
 
-## 灵感与思路
+- 帮你记住这段时间最重要的结果是什么。
+- 避免 Case 做了很多，但离目标没有更近。
+- 给 `aipd-case` 的 Goal / Execute / Close 提供方向判断。
+- 串联全局目标、子项目 KR 和具体 Case。
 
-**O 要有方向感，KR 要可判断**
+## O / KR 写法
 
-- O（Objective）：定性的方向，读起来让人知道"我们要去哪"
-- KR（Key Result）：可判断完成与否的结果，不是任务清单
+O 要有方向感，KR 要可判断。
 
-比如：
-- O：让提示词的迭代过程可追溯、可验证
-- KR1：提示词支持版本对比（完成/未完成）
-- KR2：每个版本可关联测试用例运行结果（完成/未完成）
-- KR3：历史版本可一键回滚（完成/未完成）
+- O（Objective）：定性的方向，读起来让人知道"我们要去哪"。
+- KR（Key Result）：可判断完成与否的结果，不是任务清单。
 
-注意 KR 不是"完成搜索功能开发"这种任务描述，而是"搜索结果在 200ms 内返回"这种可验证的结果。
+例如：
 
-**个人项目的 OKR 可以更灵活**
+- O：让提示词的迭代过程可追溯、可验证。
+- KR1：提示词支持版本对比。
+- KR2：每个版本可关联测试用例运行结果。
+- KR3：历史版本可一键回滚。
 
-公司 OKR 讲究对齐、层层分解。个人项目不需要这么重：
-- 一个 O 配 2-4 个 KR 就够
-- 周期可以是一周、两周、一个月，按项目节奏来
-- 不需要打分，完成/未完成就行
+KR 不应写成"完成搜索功能开发"这种任务描述，而应尽量写成可判断的结果。
 
-**OKR 和 Case 的关系**
+## OKR 和 Case 的关系
 
-```
-OKR: 这段时间要达成什么
+```text
+飞书 OKR: 这段时间要达成什么
   ↕ 松耦合
-Case: 具体做哪些事来达成
+AIPD Case: 具体做哪些事来推进
 ```
 
 一个 KR 可能对应多个 Case，一个 Case 也可能推进多个 KR。不需要强制一一对应。
 
-实际操作中，常见的节奏是：
-1. 定 OKR（比如月初）
-2. 日常跑 Case
-3. 定期回顾（比如周末）：这周的 Case 推进了哪些 KR？有没有偏离？
+实际操作中，常见节奏是：
 
-**进展记录的价值**
+1. 在飞书 OKR 中定 O / KR。
+2. 在相关 AIPD 项目里创建和执行 Case。
+3. 定期回顾：这段时间的 Case 推进了哪些 KR？有没有偏离？
 
-每次回顾时写一小段进展（`_adoc/okr/O1-xxx/YYYY-MM-DD.md`），不需要长篇大论：
-- 这段时间做了什么
-- 哪些 KR 有进展
-- 遇到什么阻塞
-- 下一步打算做什么
+## 飞书 CLI 最小经验
 
-这些记录积累起来，就是项目的"航行日志"。回头看时能清楚地知道项目是怎么一步步走过来的。
+Agent 只做最小检测：
 
-## 产出形式
+```bash
+command -v lark-cli
+lark-cli auth status
+```
 
-- `_adoc/okr/index.md`：目标索引
-- `_adoc/okr/O1-目标名/index.md`：O + KR 定义
-- `_adoc/okr/O1-目标名/YYYY-MM-DD.md`：进展记录
+如果没有安装或未登录，提示用户安装 / 登录 `lark-cli`。不要写复杂的兼容检测。
+
+常用只读命令：
+
+```bash
+lark-cli okr +cycle-list --user-id <open_id> --user-id-type open_id
+lark-cli okr +cycle-detail --cycle-id <cycle_id>
+```
+
+常用写入命令：
+
+```bash
+lark-cli okr +batch-create --cycle-id <cycle_id> --input '[{"text":"O","krs":[{"text":"KR1"}]}]'
+lark-cli okr objectives delete --objective-id <objective_id> --yes
+```
+
+项目级可复用流程见 `_adoc/sop/feishu-okr-cli/README.md`。

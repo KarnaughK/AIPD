@@ -34,18 +34,26 @@ _adoc/
 │   ├── map.md                  # SOP 局部地图：按用户说法 / 项目动作 / 场景查找 SOP
 │   └── daily-site-report/
 │       └── README.md           # 某个 SOP 的目标、输入、步骤、工具调用、输出和收尾
-├── okr/                        # 目标管理
-│   ├── index.md                # 目标索引
-│   └── O1-目标名/
-│       ├── index.md            # O + KR 定义
-│       └── YYYY-MM-DD.md       # 每日进展
+├── okr/                        # 飞书 OKR 入口
+│   └── index.md                # 飞书 OKR 入口、必要 ID 和协作边界
 └── case/                       # 事项执行记录
     ├── index.md                # Case 索引
     ├── c0.1-功能名/
     │   ├── case.md
-    │   ├── steps/
-    │   │   └── c0.1.1-步骤名.md
-    │   └── doc/
+    │   ├── 01-goal/
+    │   │   └── goal.md
+    │   ├── 02-think/
+    │   │   └── think.md
+    │   ├── 03-design/
+    │   │   └── design.md
+    │   ├── 04-execute/
+    │   │   ├── execute.md
+    │   │   └── work-packages/
+    │   │       └── c0.1.1-工作包名.md
+    │   ├── 05-verify/
+    │   │   └── verify.md
+    │   └── 06-close/
+    │       └── close.md
     └── archive/
         └── c0.1-功能名/        # 已归档 case
 ```

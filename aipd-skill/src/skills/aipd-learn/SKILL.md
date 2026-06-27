@@ -22,7 +22,7 @@ inject-from-core:
 
 基于当前上下文做 AIPD 框架经验回流，但不归档 case，不合并分支，不自动提交。
 
-当前项目的 ADOC 文档回写、局部 README 更新、map 更新和 case / step 稳定知识沉淀，交给 `aipd-weave`。`aipd-learn` 只处理 AIPD 框架自身的 skill、模板、Agent 行为规则和 transcript 诊断。
+当前项目的 ADOC 文档回写、局部 README 更新、map 更新和 case / work package 稳定知识沉淀，交给 `aipd-weave`。`aipd-learn` 只处理 AIPD 框架自身的 skill、模板、Agent 行为规则和 transcript 诊断。
 
 `aipd-learn` 有两重身份：
 
@@ -39,9 +39,9 @@ inject-from-core:
 
 ## 职责边界
 
-**只做**：外部项目中采集当前会话定位信息；AIPD 源项目中基于定位卡 / transcript 审计 AIPD 自身行为；在用户确认后，从当前对话、用户粘贴经验、Codex transcript 引用、用户补充文件、进行中的 case 或已完成 step 中提炼框架经验，生成诊断或回流包，判断经验归属，并在用户确认后写回 AIPD 源码。
+**只做**：外部项目中采集当前会话定位信息；AIPD 源项目中基于定位卡 / transcript 审计 AIPD 自身行为；在用户确认后，从当前对话、用户粘贴经验、Codex transcript 引用、用户补充文件、进行中的 case 或已完成 work package 中提炼框架经验，生成诊断或回流包，判断经验归属，并在用户确认后写回 AIPD 源码。
 
-**不做**：不执行 step，不归档 case，不移动 case 目录，不合并分支，不主动提交代码，不把当前业务项目经验直接写入项目 `_adoc/`。项目 ADOC 回写用 `aipd-weave`。
+**不做**：不执行 work package，不归档 case，不移动 case 目录，不合并分支，不主动提交代码，不把当前业务项目经验直接写入项目 `_adoc/`。项目 ADOC 回写用 `aipd-weave`。
 
 ## 经验抽象与脱敏边界
 
@@ -178,25 +178,25 @@ find _adoc/case/{case目录}/steps -type f
 重点找这些信号：
 
 1. **用户反复纠正 Agent 行为**
-   - 用户多次说“不是这个意思”“不要急着写代码”“先讨论”“别拆 step”“这个规则不对”。
+   - 用户多次说“不是这个意思”“不要急着写代码”“先讨论”“别拆 work package / step”“这个规则不对”。
    - 这通常说明对应 skill 的流程顺序、默认动作或停止条件有问题。
 
 2. **用户在使用某个 skill 时仍然频繁补规则**
-   - 例如使用 `aipd-case-create` 时，用户仍然不断纠正 case 创建流程、step 创建时机、前端架构讨论顺序。
-   - 这说明 `aipd-case-create` 没有把真实协作规则固化住。
+   - 例如使用 `aipd-case` 时，用户仍然不断纠正 case phase 推进、work package 创建时机、前端架构讨论顺序。
+   - 这说明 `aipd-case` 没有把真实协作规则固化住。
 
 3. **用户纠正 Agent 的任务分层**
-   - 例如工具文档和流程规则混淆、设计阶段和执行阶段混淆、case-create 和 case-run 边界混淆。
+   - 例如工具文档和流程规则混淆、Goal / Think / Design / Execute 边界混淆。
    - 这类问题优先回写 skill 的职责边界或场景分流规则。
 
 4. **用户纠正 Agent 的探索 / 执行节奏**
-   - 例如应该先读图、先聊业务流程、先建最小 case 壳，而 Agent 直接查接口、拆 step 或写代码。
+   - 例如应该先读图、先聊业务流程、先建最小 case 壳，而 Agent 直接查接口、拆 work package 或写代码。
    - 这类问题优先回写执行流程和默认停止点。
 
 5. **用户纠正 Agent 的逐层确认和落盘保真**
    - 例如用户要求“一层一层推进”，实际意思是一次只确认当前层，不要提前展开第三、第四层细节。
-   - 例如用户已经认可了方案预览、叙事路径、目录草案或执行策略，但 Agent 写入 case / step 时只留下缩略关键词。
-   - 这类问题优先回写 `aipd-case-create` 的逐层确认规则、step 模板和 step 上下文隔离规则。
+   - 例如用户已经认可了方案预览、叙事路径、目录草案或执行策略，但 Agent 写入 case / work package 时只留下缩略关键词。
+   - 这类问题优先回写 `aipd-case` 的逐层确认规则、work package 模板和上下文隔离规则。
 
 6. **用户纠正 Agent 的表达和产物形态**
    - 例如图里模块名、组件概览、QlmForm-update 的表达方式。
@@ -222,13 +222,13 @@ find _adoc/case/{case目录}/steps -type f
 来源：
 - transcript: {path}
 - 外部项目：{project_root}
-- 关联 skill：{推断出的 skill，如 aipd-case-create / aipd-case-run / aipd-learn}
+- 关联 skill：{推断出的 skill，如 aipd-case / aipd-learn}
 
 用户纠正点：
 - {用户原话或短摘，说明纠正了什么}
 
 Agent 反应问题：
-- {过早执行 / 场景分流失败 / step 拆早 / 上下文加载不对 / 工具文档和流程规则混淆}
+- {过早执行 / 场景分流失败 / work package 拆早 / 上下文加载不对 / 工具文档和流程规则混淆}
 
 观察锚点审计：
 - {应观察的锚点}
@@ -306,7 +306,7 @@ Agent 反应问题：
 | AIPD 通用知识、结构规则 | AIPD 仓库的 `aipd-skill/src/core/` |
 | aipd 总入口、ADOC 入口、经验回流方式 | AIPD 仓库的 `aipd-skill/src/skills/aipd*/` |
 | 已初始化项目的 AIPD 架构升级、AGENTS.md / map 同步 | AIPD 仓库的 `aipd-skill/src/skills/aipd-update/` |
-| case-create/run/archive 的流程经验 | AIPD 仓库的 `aipd-skill/src/skills/aipd-case-*/` |
+| case 生命周期流程经验 | AIPD 仓库的 `aipd-skill/src/skills/aipd-case/` 或 `aipd-skill/src/core/case/` |
 | Codex 会话 ID、transcript、回流包生成 | AIPD 仓库的 `aipd-skill/src/skills/aipd-learn/` 或 `aipd-skill/src/platforms/codex/` |
 | Claude/Codex 平台差异 | AIPD 仓库的 `aipd-skill/src/platforms/` |
 
@@ -320,7 +320,7 @@ Agent 反应问题：
 
 ```md
 【经验迭代方案】
-来源：当前对话 / 用户粘贴经验 / Codex transcript / 反馈文件 / case / step
+来源：当前对话 / 用户粘贴经验 / Codex transcript / 反馈文件 / case / work package
 类型：项目经验 / AIPD 框架经验 / 两者都有
 准备修改：
 - 文件 A：修改原因

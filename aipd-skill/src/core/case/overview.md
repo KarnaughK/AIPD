@@ -1,72 +1,153 @@
 # Case 机制总览
 
-Case 是 AIPD 的事项执行载体：一次需要 AI 参与处理、带上下文索引、可拆 step、可记录 Weave 候选并归档的具体事项。
+Case 是 AIPD 的短周期目标容器：一次马上要推进、需要 AI 参与、最终要验收关闭的具体事项。
 
-Case 不只是任务清单。它的首要价值是把“本次事项最强相关的上下文”显式告诉 AI，包括项目认知文档、上下文检索地图、页面 README、代码入口、设计/原型、调研资料和历史决策。后续执行时，主 Agent 先读取 case 的上下文索引，再判断是否需要派发 step。
+Case 类似 OKR，都会定目标并连接大方向上下文；但 OKR 面向长期周期、持续对齐和复盘，Case 面向当前目标的 Think、Design、Execute、Verify 和 Close。一个 case 推完，应该是一个完整事情闭环，而不是“只推进了一部分，后面还要隐藏补一堆 case”。
 
-Case 还承担自迭代观察锚点：创建 case 时应留下少量可审计问题，用于后续 `aipd-learn` 检查 Agent 是否真正按 AIPD 的上下文检索 SOP 工作，而不是只在用户多次纠正后才发现规则失效。
+## 生命周期
 
-Case 不直接承担长期知识回写。执行、讨论或归档中出现的新核心概念、产品边界、工程规则、局部入口和 map 入口，应先记录为 Weave 候选，再由 `aipd-weave` 判断是否回写到 L3 / L4 / L5 / 局部 README / map。一次性过程、验收记录和临时决策才留在 case / step。
+新的 case 生命周期按 phase 渐进推进：
 
-Case 默认采用渐进式推进：不要企图一开始就把所有步骤规划完。用户说清一个点，就推进一个点；需要可恢复、可派发、可验收时，再把这个点固化成 step。暂时没必要固化的内容继续对话，只把值得后续执行的事项沉淀为候选。
-
-## 三级版本号（A.B.C）
-
-| 级别 | 含义 | 谁定 | 示例 |
-|------|------|------|------|
-| **A** | 大版本 / 里程碑 | 用户决定 | c1.0 |
-| **B** | 功能版本（一次迭代） | 主 Agent + 用户 | c0.2-search |
-| **C** | 迭代步骤（最小执行单元） | 主 Agent 拆分 | c0.2.1-basic-table |
-
-- B 级 = 一个 Case，对应一个目录
-- C 级 = Case 内的步骤，由分身 Agent 执行并回流结果
-- C 级只代表已确认的执行步骤，不代表所有可能的后续事项都要提前建文件
-
-## Case 类型
-
-| 类型 | 用途 | 分身 Agent 角色 |
-|------|------|--------------|
-| **dev**（默认） | 开发功能 | 写代码、调试、自检 |
-| **research** | 调研分析 | 搜索、读文档、输出结论 |
-| **review** | 代码/方案审查 | 读代码、分析问题、输出报告 |
-
-## 目录结构
-
+```text
+Goal -> Think -> Design -> Execute -> Verify -> Close
 ```
-_adoc/case/
-├── c0.1-功能名/
-│   ├── case.md
-│   ├── steps/
-│   │   ├── c0.1.1-步骤名.md
-│   │   └── c0.1.2-步骤名.md
-│   └── doc/
-└── archive/
-    └── c0.1-功能名/
+
+| Phase | 作用 |
+|---|---|
+| Goal | 定目标、上下文、大方向边界和完成标准 |
+| Think | 信息不足或需要抉择时，做同步、调研、比较和决策 |
+| Design | 找复杂度爆点，做最小必要解耦，形成架构边界和工作包 |
+| Execute | 按工作包推进，可以使用目标模式和执行 Agent |
+| Verify | 验收目标、工作包结果和设计护栏 |
+| Close | 归档、更新索引、整理 Weave Candidate |
+
+`aipd-case` 是统一入口。它先读取 case.md 的 `Current Phase` 和 `Phase State`，再按当前 phase 加载 `case/phases/{phase}.md`。不要把每个 phase 拆成独立 skill；phase 是 case 内部状态，不是用户需要记住的一组命令。
+
+## Phase-first 目录结构
+
+Case 内部也要遵守横向平摊原则。新建 case 不再按材料类型拆成顶层 `doc/`、`steps/`、`code/`，而是按 phase 直接平铺：
+
+```text
+_adoc/case/cX.Y-name/
+├── case.md
+├── 01-goal/
+├── 02-think/
+├── 03-design/
+├── 04-execute/
+├── 05-verify/
+└── 06-close/
 ```
+
+每个 phase 自己收纳本阶段的材料：
+
+- Goal 的目标和边界写入 `01-goal/goal.md`。
+- Think 的调研、实验、数据采样和方案比较分支写入 `02-think/{branch}/`。
+- Design 的复杂度爆点、最小解耦和决策记录写入 `03-design/`。
+- Execute 的总状态和 work package 写入 `04-execute/`。
+- Verify 和 Close 分别写入 `05-verify/`、`06-close/`。
+
+`case.md` 是入口和状态聚合，不承载所有过程细节。它保存 Current Phase、Phase State、关键摘要、上下文索引、Weave Candidate 和各 phase 文件链接。
+
+## Case 文件的价值
+
+Case 不只是任务清单。它的价值是把本次事项的目标、上下文索引、关键决策、设计边界、横向工作包、验收状态和 Weave Candidate 固定成文件事实源。
+
+当聊天被压缩、中断或多个 Agent 接力时，case.md 是恢复入口。聊天上下文只是临时工作缓存；如果聊天记忆和 case 文件冲突，以 case 文件为准。
+
+## Think 在 Case 内
+
+旧模型里，Think 位于 Case 之前，用来判断模糊想法是否值得创建 case。新模型保留这个判断，但对于已经定下短周期目标的事项，Think 也可以作为 Case 内 phase 存在。
+
+这解决了复杂事项中常见的问题：目标已经明确，但推进中会遇到关键未知、调研、选型、测试集可信度、用户取舍等卡点。它们不是新的顶层 case，也不该散落在聊天里；应记录在当前 case 的 Think phase，并把结论回流到 Design 或 Execute。
+
+## Design 的核心认知
+
+Design 的目标不是完整抽象所有概念，而是找到复杂度爆点，并对爆点做最小必要解耦，让后续执行可以横向铺模块，而不是纵向堆版本。
+
+例如搜索列表的复杂度爆点可能不是表格渲染，而是 API 调用前的参数组装：
+
+```text
+搜索 API 参数会随筛选项增加而膨胀
+-> 每个 Filter 自治产出 postValue
+-> Controller 只管何时触发搜索
+-> Pagination 是带搜索语义的特殊 Filter
+-> 页面 onSearch 只收集参数并调用 API
+```
+
+这种设计让后续新增筛选项时横向增加 filter 模块，而不是在旧搜索函数上继续堆逻辑。AIPD 的 Design phase 应优先找到这种爆点，而不是把 query state、renderer、data source、controls 等所有概念预先抽象一遍。
+
+## Work Package / Step
+
+Step 的语义调整为 Work Package：一个可验收、可派发、可恢复的目标包。
+
+Work Package 不再表示“先做 list，再加分页，再加搜索，再加筛选”的堆叠式微步骤。它应围绕 Design phase 的架构边界列出一个或多个横向模块，让执行 Agent 依据目标、上下文、设计护栏和验收口径推进。
+
+一个 Work Package 应包含：
+
+- 目标。
+- 设计依据：复杂度爆点、解耦方式、主干职责、特殊节点和设计护栏。
+- 横向模块。
+- 必读上下文。
+- 验收标准。
+- 不做范围。
+- 执行记录。
+
+Work Package 只属于 Execute phase。新建 work package 写入 `04-execute/work-packages/`。旧 case 的 `steps/` 目录不再兼容运行；遇到旧结构时先提示用户是否迁移为 phase-first case。
+
+## Agent 执行关系
+
+Agent 不需要被指挥先迈左腿还是右腿。AIPD 应提供的是：
+
+- 目标。
+- 上下文索引。
+- 复杂度爆点和最小解耦设计。
+- 工作包边界。
+- 验收标准。
+- 禁止破坏的设计护栏。
+
+进入 Execute phase 后，主 Agent 负责用户沟通、状态判断、派发、审查和写回。执行 Agent 或目标模式围绕 `04-execute/work-packages/` 下的 work package 运行。文件修改、构建、测试、批量验证、跨文件 diff、长调研和长日志分析优先交给执行 Agent；主 Agent 接收压缩结果并写回 case。
+
+## 子 Case
+
+复杂 case 可能产生调研、实验或数据采样分支。默认先作为当前 case 的 phase 内容记录：调研和数据采样放入 `02-think/{branch}/`，架构判断放入 `03-design/`，真正执行才进入 `04-execute/work-packages/`。
+
+只有当一个分支满足以下条件时，才升级成子 case：
+
+- 需要独立恢复状态。
+- 会跨多轮执行。
+- 有自己的验收标准。
+- 有独立产物，例如实验代码、报告、数据集。
+- 可能由不同 Agent 或不同会话长期执行。
+
+升级成子 case 时，必须记录：
+
+- `parentCase`
+- `triggerDecision`
+- `returnTo`
+- `expectedOutput`
+- `howResultFeedsParent`
+
+这样 case index 可以保持树状语义，而不是把父目标、决策分支、实验分支都膨胀成平级 case。
 
 ## 完整生命周期
 
-1. 创建 Case（在 main 分支）
-2. 提交 Case 到 main（锁定版本号）
-3. 创建开发分支
-4. 读取 `_adoc/map.md` 和 case 上下文索引，加载最相关上下文
-5. 有已确认的未完成 Step → 派发给分身 Agent 执行
-6. 没有 Step → 基于 case 上下文继续讨论或补充 Step
-7. 所有 Step 完成 → 用户验收
-8. 验收通过 → 归档
-9. 合并分支到 main
+1. Goal：创建或恢复 case，定目标、上下文和完成标准。
+2. Think：按需调研、比较和做决策。
+3. Design：找到复杂度爆点，做最小必要解耦，形成工作包。
+4. Execute：按 work package 推进，写回执行记录。
+5. Verify：验收目标、工作包结果和设计护栏。
+6. Close：归档、更新索引、整理 Weave Candidate。
 
 ## 关键原则
 
-1. **主 Agent 保护主线**：代码、调研、验证等过程性工作优先交给分身 Agent 完成
-2. **Case 先提供上下文索引**：主 Agent 按 case.md 读取最强相关上下文，不全量扫描项目
-3. **Case 留下观察锚点**：case.md 应声明后续审计时要观察的检索行为、L3/L4/L5 读取行为和偏离原因
-4. **分身 Agent 用步骤文件校准边界**：它继承主 Agent 当前上下文，但仍用 step 和指定上下文校准当前分支
-5. **主 Agent 做最少的审查**：看分身 Agent 返回的结果回流即可
-6. **失败时人在环路**：分身 Agent 失败后与用户商量，不自动无限重试
-7. **只做 case 中定义的任务**：不要"顺手"做额外的事
-8. **Step 是审核成本**：用户只要求搭上下文框架或明确说不要多做时，最多创建一个上下文整理 step；未确认的后续事项写入候选区，不预创建 step 文件
-9. **渐进式推进**：用户说一点就推进一点；只有当某个事项需要独立执行、恢复或验收时，才固化为 step
-10. **遵循 dev 约束**：约束不合理先讨论修改
-11. **Case 先提交 main，再创建分支**：保证编号全局唯一
-12. **验收环节不可跳过**：始终让用户确认结果符合预期
+1. Case 是短周期目标容器，不是长期 OKR，也不是普通 todo。
+2. Phase 是 case 内部状态，不是独立 skill。
+3. Think 可以在 case 内发生，用来处理推进中的未知和抉择。
+4. Design 先找复杂度爆点，不做过度完整抽象。
+5. Case 内部使用 phase-first 目录结构，不用顶层 `doc/` / `steps/` 作为新结构。
+6. Work Package 是 Execute phase 的目标包，不是微步骤。
+7. Execute 按架构横向铺模块，不纵向堆版本。
+8. Verify 要检查设计护栏，不只检查代码是否运行。
+9. Close 前必须保证 case 是完整闭环；没完成就回到对应 phase。
+10. 可复用知识进入 Weave Candidate；一次性过程留在对应 phase / work package。
+11. 旧 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `aipd-case`，不再作为独立 skill 暴露。

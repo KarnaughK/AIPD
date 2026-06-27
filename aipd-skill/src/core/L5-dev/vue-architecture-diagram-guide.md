@@ -19,15 +19,15 @@
 
 ## 使用阶段
 
-复杂前端 case 在 case-create 阶段可以先把图放到 case 目录：
+复杂前端 case 在 Design phase 可以先把图放到 case 目录：
 
 ```text
-_adoc/case/{case}/doc/{module}-component-architecture-draft.mmd
+_adoc/case/{case}/03-design/{module}-component-architecture-draft.mmd
 ```
 
 这时它是讨论稿，用来和用户确认业务状态、数据所有权、架构流转和组件划分。
 
-当图在设计讨论中稳定后，应在 case-run 或 case 的第一个实现 step 里，先创建对应业务目录文件，并把这张图和必要 README 一起落到开发目录：
+当图在设计讨论中稳定后，应在 Case Execute 或 case 的第一个实现 work package 里，先创建对应业务目录文件，并把这张图和必要 README 一起落到开发目录：
 
 ```text
 src/views/xxx/README-component-architecture.mmd

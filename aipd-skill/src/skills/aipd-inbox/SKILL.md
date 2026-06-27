@@ -30,7 +30,7 @@ inject-from-core:
 - “这个外部框架先收一下”
 - “这个想法先扔进来”
 
-不要因为用户普通讨论、提出需求、反馈 bug 或描述稳定认知，就自动进入 inbox。那些场景分别由普通对话、case-create 或 weave 处理。
+不要因为用户普通讨论、提出需求、反馈 bug 或描述稳定认知，就自动进入 inbox。那些场景分别由普通对话、aipd-case 或 weave 处理。
 
 ## 职责
 
@@ -44,7 +44,7 @@ inject-from-core:
 **不做**：
 
 - 不创建 case。
-- 不拆 step。
+- 不拆 work package。
 - 不执行 weave 回写。
 - 不把条目写入 L1-L5。
 - 不把 inbox 条目自动变成 OKR、候选 case 或稳定认知。

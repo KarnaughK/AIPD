@@ -6,7 +6,7 @@
 
 ## 使用规则
 
-- 普通开发、分析、case-create、case-run 前，优先读取 `_adoc/map.md`。
+- 普通开发、分析、`aipd-case` 前，优先读取 `_adoc/map.md`。
 - 本文件只记录稳定入口和高频检索路径，不记录一次性执行细节。
 - 普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`；只有明确进入 case / OKR 流程时才读取对应状态文件。
 - 允许和局部 map 少量重复关键词、功能线名和入口路径，换取 AI 第一跳命中率。
@@ -28,7 +28,7 @@
 |---|---|---|---|---|
 | {别名} | {概念名} | `_adoc/L3-core/{concept}/map.md` | `_adoc/L4-product/{feature}/map.md` | {不要混用的词} |
 | Inbox | 临时收件箱 / capture | `_adoc/inbox.md` | aipd-inbox | 不是待办、不是候选 case、不是稳定认知；只接住未整理信息 |
-| SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP、case-create、case-run、weave | 不是 L4/L5 知识条目，也不是单纯脚本 |
+| SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP、aipd-case、weave | 不是 L4/L5 知识条目，也不是单纯脚本 |
 
 ## L4 产品功能线总表
 
@@ -70,4 +70,4 @@
 - 新的可复用 Agent 执行流程是否进入 `_adoc/sop/`，并更新 `_adoc/sop/map.md`。
 - 页面、弹窗、组件内部入口是否回写到就近 README。
 - 高频检索入口是否回写到本文件或细节 map。
-- 一次性执行过程是否留在 case / step，没有误写进长期知识。
+- 一次性执行过程是否留在 case / work package，没有误写进长期知识。

@@ -47,6 +47,7 @@ inject-from-core:
 - **最新结构优先**：发现旧结构时，默认把它识别为“过期结构”，给出迁移、删除或替换方案；不把旧结构继续作为读取兜底。
 - **不主动兼容**：除非用户明确要求保留旧入口或旧格式，否则 update 不主动提出“兼容旧结构”的目标。
 - **先沟通再写入**：只要升级涉及多个入口文件、目录结构变化、模板替换或 case 规则变化，必须先列出将修改哪些文件、为什么改、怎么合并。
+- **写入前硬确认**：执行写入前必须拿到用户对破坏性更新和 Agent MD 目标等级的明确选择；不能把“执行上述更新 / 按你建议来”解释为允许大块替换 `AGENTS.md` 或执行删除、重命名、移除旧链路。
 - **破坏性更新可跳过**：删除文件、重命名入口、大块替换模板、移除旧读取链路等属于破坏性更新。用户可以选择跳过；如果跳过，最终结果必须说明项目哪些部分没有升级到最新 AIPD。
 - **跳过不伪装完成**：用户跳过某项破坏性更新时，不写“已完全升级”，只写“已完成非破坏性更新，以下旧结构仍保留”。
 
@@ -73,7 +74,9 @@ inject-from-core:
 
 ## Agent MD 模板等级
 
-`AGENTS.md` / `CLAUDE.md` 不是单一“符合 / 不符合”状态。审计时必须单独报告当前 Agent MD 模板等级：
+`AGENTS.md` / `CLAUDE.md` 不是单一“符合 / 不符合”状态。AIPD Project Entry 是项目级统一入口，应尽量同步到当前 AIPD 2 标准模板；模板等级只决定是否同时安装或同步 Interaction Protocol。
+
+审计时必须单独报告当前 Agent MD 模板等级：
 
 | 等级 | 名称 | 内容 | 适用情况 |
 |---|---|---|---|
@@ -86,7 +89,25 @@ inject-from-core:
 - 即使 AIPD Project Entry 已经符合，也要继续检查 Interaction Protocol 是否存在。
 - 如果 Interaction Protocol 不存在，不能写“AGENTS.md 已完全符合”；应写“AGENTS.md 的 AIPD Project Entry 符合；Interaction Protocol 未安装，可选是否升级到等级 2”。
 - 如果用户没有明确选择等级，默认只输出审计和建议，不修改 Agent MD。
-- 如果用户说“按你建议来 / 开搞 / 执行上述更新”，但没有提 Agent MD 等级，只能执行清单里已明确列出的 AIPD 必须更新；Interaction Protocol 仍需单独确认。
+- 如果用户说“按你建议来 / 开搞 / 执行上述更新”，但没有提 Agent MD 等级，必须先追问目标等级；在用户明确选择前不修改 Agent MD，也不进入写入阶段。
+- 如果用户或项目偏好声明了默认等级（例如个人项目默认等级 2），审计输出可以把它作为推荐等级，但写入前仍必须向用户展示目标等级并获得本轮确认。
+
+## 写入前确认门槛
+
+在进入“第四步：用户确认后写入”前，必须确认以下三类选择。缺任一项时，停止在审计清单，不修改文件：
+
+1. **是否执行更新**：用户明确同意从审计进入写入阶段。
+2. **破坏性更新策略**：用户明确选择执行哪些破坏性更新、跳过哪些破坏性更新。没有破坏性更新时也要写明“本次无破坏性更新”。
+3. **Agent MD 目标等级**：用户明确选择 0 / 1 / 2。项目或个人默认等级只能作为推荐值，不能替代本轮确认。
+
+破坏性更新包括但不限于：
+
+- 大块替换 `AGENTS.md` / `CLAUDE.md` 的 AIPD Project Entry。
+- 安装、替换或删除 Interaction Protocol 区块。
+- 删除、重命名或弃用旧入口文件。
+- 移除旧读取链路或旧兼容说明。
+
+如果用户只说“执行上述更新 / 按你建议来”，但审计清单里存在破坏性更新或 Agent MD 等级未确认，应先追问，不写入。
 
 ## 第一步：判断项目状态
 
@@ -118,8 +139,8 @@ find _adoc -maxdepth 3 -type f | sort
 - L4 被定义为产品功能线、业务边界、交互规则和实现入口地图的承载层。
 - L5 被定义为产品功能到代码实现之间的工程实现层，负责跨模块、跨端、跨页面的稳定实现规则。
 - 明确页面、弹窗、组件内部细节放就近 `README.md`，不塞回 L5。
-- case 恢复链路包含 case / step 文件作为事实源。
-- 执行概念或项目入口中包含 Weave：讨论、step 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README 或 map；一次性过程留在 case / step。
+- case 恢复链路包含 case / work package 文件作为事实源。
+- 执行概念或项目入口中包含 Weave：讨论、work package 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README 或 map；一次性过程留在 case / work package。
 
 ### 建议项
 
@@ -250,7 +271,7 @@ flowchart TD
 - 是否存在用户可跳过项：{否 / 是，跳过后的影响是什么}
 
 破坏性更新：
-- `{path}`：{删除 / 重命名 / 大块替换 / 移除旧读取链路；为什么属于破坏性更新；建议动作；跳过影响}
+- `{path}`：{删除 / 重命名 / 大块替换 / 安装或替换 Interaction Protocol / 移除旧读取链路；为什么属于破坏性更新；建议动作；跳过影响}
 
 需要更新：
 - `AGENTS.md`：
@@ -271,22 +292,24 @@ flowchart TD
 可选更新：
 - Agent MD 模板等级：
   - 当前等级：{0 / 1 / 2}
-  - 推荐等级：{通常为 1；如果用户希望调整回复风格，推荐 2}
+  - 推荐等级：{通常为 1；如果项目或用户默认启用回复约束，可推荐 2}
+  - 推荐理由：{为什么推荐该等级；如果来自用户个人默认档位，要明说它只是推荐值}
   - 可选动作：{不改 Agent MD / 只同步 AIPD Project Entry / 同步 AIPD Project Entry + Interaction Protocol}
-  - 风险提示：Interaction Protocol 会约束回复结构，需用户明确同意
+  - 风险提示：AIPD Project Entry 大块替换、Interaction Protocol 安装或替换都可能改变后续 Agent 行为，需用户明确同意
 
 不处理：
 - {明确不碰哪些业务文档、代码、历史 case}
 
 待用户确认：
 - 是否执行上述更新？
-- 是否执行破坏性更新？如跳过，哪些旧结构保留？
-- Agent MD 使用哪个等级：0 不修改 / 1 只同步 AIPD Project Entry / 2 同步 AIPD Project Entry + Interaction Protocol？
+- 破坏性更新策略：执行哪些？跳过哪些？如跳过，哪些旧结构保留？
+- Agent MD 目标等级：0 不修改 / 1 只同步 AIPD Project Entry / 2 同步 AIPD Project Entry + Interaction Protocol？
+- 如果用户未回答破坏性更新策略或 Agent MD 目标等级，必须继续停在审计阶段，不写入。
 ```
 
 ## 第四步：用户确认后写入
 
-只有用户明确确认后才修改文件。
+只有用户明确确认后才修改文件。进入写入前，再检查一次“写入前确认门槛”：是否执行更新、破坏性更新策略、Agent MD 目标等级三项必须齐备。
 
 写入规则：
 
@@ -295,7 +318,8 @@ flowchart TD
    - 等级 0：不修改 `AGENTS.md` / `CLAUDE.md`，即使审计发现 Interaction Protocol 缺失也不写入。
    - 等级 1：只处理 AIPD Project Entry，不处理 Interaction Protocol。
    - 等级 2：先处理 AIPD Project Entry，再处理 Interaction Protocol。
-   - 如果有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换标记区块。
+   - AIPD Project Entry 应同步到当前 AIPD 2 标准模板；等级 1 和等级 2 都使用同一份 Project Entry。
+   - 如果有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换标记区块；如果替换范围较大，按破坏性更新处理，必须已被用户确认。
    - 如果没有标记但有 AIPD 内容，先说明风险，优先追加新标记区块，不删除原文。
    - 如果不存在，写入当前 `@references/agent-entry/template.md` 并包裹 AIPD 标记。
 
@@ -326,6 +350,7 @@ flowchart TD
    - 不作为 AIPD update 必须项。
    - 只有用户明确同意“写入 / 同步 Interaction Protocol”或选择 Agent MD 等级 2 时才处理。
    - 读取 `@references/agent-entry/interaction-style.md`。
+   - 安装、替换或删除 Interaction Protocol 都可能改变后续 Agent 回复方式，应在破坏性更新策略或 Agent MD 等级确认中明确列出。
    - 用独立标记包裹：
      ```md
      <!-- AIPD-INTERACTION-STYLE:START -->
@@ -345,7 +370,7 @@ flowchart TD
 - 执行了哪些破坏性更新；哪些破坏性更新被用户跳过。
 - 如果用户跳过破坏性更新，说明项目还保留哪些过期结构，以及它为什么不算完全升级。
 - 哪些建议没有执行，为什么。
-- 是否需要重新运行 `aipd-case-create`、`aipd-weave` 或 `aipd-learn`。
+- 是否需要重新运行 `aipd-case`、`aipd-weave` 或 `aipd-learn`。
 - 是否建议提交当前改动。
 
 不要自动提交。
