@@ -20,9 +20,9 @@
 
 分身 Agent 必须在执行前读取以下文档：
 
-- `_adoc/case/c0.9-aipd-think-system-design/case.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/think-object-state-design.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/think-object-state-design.md`
 - `_adoc/L3-core/index.md`
 - `_adoc/L3-core/horizontal-capabilities.md`
 - `_adoc/L4-product/index.md`
@@ -43,7 +43,7 @@
 
 ## 产出要求
 
-- 结果文件路径：`_adoc/case/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md`
+- 结果文件路径：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md`
 - 格式：handoff schema 草案 + skill 边界 + 需要修改的文件清单 + 后续实现 case 建议。
 
 ## 验收标准
@@ -65,7 +65,7 @@
 **完成时间**：2026-06-20
 
 **主要改动**：
-- 新增 `_adoc/case/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md`。
+- 新增 `_adoc/case/archive/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md`。
 - 设计 Think -> Case Create `handoff.md` schema 草案，明确来源、Create 结论、目标和成功标准、关键依据、推荐方向、风险未知、上下文入口建议和 Case Create 建议。
 - 明确 Continue / Research / Create / Kill / Defer / Weave 的文件落点和后续动作。
 - 明确未来 `aipd-think` 只维护 Think 对象和决策出口，不执行代码、不创建 case、不直接写长期 ADOC。

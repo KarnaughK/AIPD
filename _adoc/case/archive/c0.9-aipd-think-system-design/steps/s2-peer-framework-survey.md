@@ -20,7 +20,7 @@
 
 分身 Agent 必须在执行前读取以下文档：
 
-- `_adoc/case/c0.9-aipd-think-system-design/case.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md`
 - `_adoc/index.md`
 - `_adoc/map.md`
 - `_adoc/L3-core/index.md`
@@ -55,7 +55,7 @@
 
 ## 产出要求
 
-- 结果文件路径：`_adoc/case/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
+- 结果文件路径：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
 - 格式：先给总表，再按项目 / 文章 / 论文展开；必须附证据链接，并标注资料层级。
 
 ## 验收标准
@@ -78,7 +78,7 @@
 **完成时间**：2026-06-20
 
 **主要改动**：
-- 新增调研报告：`_adoc/case/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
+- 新增调研报告：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
 - 覆盖 Spec Kit、BMAD Method、Open SWE 三个种子目标，并补充 Kiro Specs、Cline Plan & Act / Deep Planning、Roo Code、OpenHands / Agent Canvas 等候选。
 - 按一级 / 二级 / 三级资料分层整理 GitHub、官方文档、官方博客、公开报道和论文候选。
 - 明确各对象的纳入 / 暂缓 / 排除理由，并提炼与 AIPD Think 相关的前置讨论、spec、research、decision、task shaping 机制。

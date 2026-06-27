@@ -1,11 +1,13 @@
 # Case: c0.9-aipd-think-system-design
 
 > **本次事项目标**：以公开资料调研为目标，系统吸收 GitHub 项目、官方文档、实践博客和必要论文中的前置讨论 / spec / decision / task shaping 机制，设计 AIPD Think 体系，把“模糊想法 -> 讨论 / 调研 / 方案比较 -> 决策出口 -> Case Create”的前置层设计成一等能力。
+>
+> **归档结论（2026-06-27）**：本 case 设计的独立 Think 问题已被新的 phase-first case 生命周期吸收。Think 不再作为独立 `_adoc/think/` 或独立 `aipd-think` skill 推进，而是作为 Case 内 `Think phase` 承接信息同步、调研、比较和抉择。本 case 作为历史调研、边界矩阵和 handoff 设计参考归档。
 
 ## 目录结构
 
 ```text
-_adoc/case/c0.9-aipd-think-system-design/
+_adoc/case/archive/c0.9-aipd-think-system-design/
 ├── case.md
 ├── steps/
 │   ├── s1-openspec-think-analysis.md
@@ -149,6 +151,6 @@ _adoc/case/c0.9-aipd-think-system-design/
 
 ## 10. 归档状态
 
-- **状态**：待验收
+- **状态**：已归档
 - **创建时间**：2026-06-20
-- **归档时间**：
+- **归档时间**：2026-06-27

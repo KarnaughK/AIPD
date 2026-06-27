@@ -20,9 +20,9 @@
 
 分身 Agent 必须在执行前读取以下文档：
 
-- `_adoc/case/c0.9-aipd-think-system-design/case.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
 - `_adoc/L3-core/index.md`
 - `_adoc/L3-core/horizontal-capabilities.md`
 - `_adoc/L3-core/vertical-concept-modules.md`
@@ -45,7 +45,7 @@
 
 ## 产出要求
 
-- 结果文件路径：`_adoc/case/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
+- 结果文件路径：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
 - 格式：边界矩阵 + 典型场景分流 + 误用反例。
 
 ## 验收标准
@@ -67,7 +67,7 @@
 **完成时间**：2026-06-20
 
 **主要改动**：
-- 新增 `_adoc/case/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`。
+- 新增 `_adoc/case/archive/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`。
 - 基于 s1 / s2 调研和当前 AIPD L3 / L4 / Inbox / SOP / skill 文档，形成 Inbox / Think / Case / SOP / Weave 边界矩阵。
 - 明确 Case Create 应退出“值不值得做”的开放式讨论区，只承接 Think 的 Create 出口或用户明确执行倾向。
 - 明确 Think 与 Inbox 的承诺度差异：Inbox 只 capture，Think 承诺主动澄清、调研和决策出口。

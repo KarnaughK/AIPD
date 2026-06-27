@@ -22,11 +22,11 @@
 
 - `_adoc/case/c0.10-aipd-capability-object-model/case.md`
 - `_adoc/case/c0.10-aipd-capability-object-model/doc/discussion-seed.md`
-- `_adoc/case/c0.9-aipd-think-system-design/case.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/think-object-state-design.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/peer-framework-survey.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/think-object-state-design.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md`
 - `_adoc/L3-core/index.md`
 - `_adoc/L3-core/horizontal-capabilities.md`
 - `_adoc/L4-product/index.md`

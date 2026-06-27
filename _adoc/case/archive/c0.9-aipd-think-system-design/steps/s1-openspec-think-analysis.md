@@ -19,7 +19,7 @@
 
 分身 Agent 必须在执行前读取以下文档：
 
-- `_adoc/case/c0.9-aipd-think-system-design/case.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md`
 - `_adoc/index.md`
 - `_adoc/map.md`
 - `_adoc/L3-core/index.md`
@@ -49,7 +49,7 @@
 
 ## 产出要求
 
-- 结果文件路径：`_adoc/case/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md`
+- 结果文件路径：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md`
 - 格式：结论先行，包含证据链接、机制拆解、对 AIPD 的启发、风险与缺口。
 
 ## 验收标准
@@ -71,7 +71,7 @@
 **完成时间**：2026-06-20 00:28 CST
 
 **主要改动**：
-- 新增调研报告：`_adoc/case/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md`。
+- 新增调研报告：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md`。
 - 核对 OpenSpec README、`docs/opsx.md`、`docs/commands.md`、`docs/concepts.md`、`schemas/spec-driven/schema.yaml` 和 `openspec/explorations/explore-workflow-ux.md`。
 - 明确结论：OpenSpec 的 `/opsx:explore` 是 AIPD Think 的前置雏形，但默认不创建 artifact，也没有 Create / Kill / Defer / Research / Weave / Continue 的完整决策状态系统。
 - 提炼 OpenSpec 的 artifact DAG、verify、archive、custom schema / research-first 对 AIPD Think / Case Create 的可借鉴点。

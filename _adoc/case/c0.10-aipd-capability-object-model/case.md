@@ -1,6 +1,10 @@
 # Case: c0.10-aipd-capability-object-model
 
 > **本次事项目标**：讨论并设计 AIPD 的原子能力层和统一中间对象模型，让 Think / Case Create / Case Run / Weave / SOP 能复用同一组底层能力，而不是各自在 skill 内重复实现上下文扫描、调研、方案比较、决策检查和交接逻辑。
+>
+> **收口结论（2026-06-27）**：本 case 不再继续推进为独立的能力层重构事项。后续 AIPD 已收敛到 phase-first case 生命周期：`Goal -> Think -> Design -> Execute -> Verify -> Close`。Think 不再作为独立 `_adoc/think/` 系统或独立 `aipd-think` skill 推进，而是作为 Case 内 phase 承接当前目标下的信息同步、调研、比较和抉择。本文保留为原子能力和中间对象模型的参考材料，不作为待执行 case。
+>
+> **暂停说明（2026-06-27）**：原子能力和统一中间对象模型暂不继续设计或实现。Context Pack、Research Pack、Decision Record、Handoff、Weave Candidate 等对象只作为后续优化 case phase、work package 和 Agent 交接格式时的参考材料。
 
 ## 目录结构
 
@@ -52,12 +56,12 @@ _adoc/case/c0.10-aipd-capability-object-model/
 
 ### 相关 case / doc
 
-- `_adoc/case/c0.9-aipd-think-system-design/case.md` - Think 调研设计 case。
-- `_adoc/case/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md` - OpenSpec 机制分析。
-- `_adoc/case/c0.9-aipd-think-system-design/doc/peer-framework-survey.md` - Spec Kit、BMAD、Open SWE、Kiro、Cline 等同类资料调研。
-- `_adoc/case/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md` - Inbox / Think / Case / SOP / Weave 边界矩阵。
-- `_adoc/case/c0.9-aipd-think-system-design/doc/think-object-state-design.md` - Think 对象和状态流转设计。
-- `_adoc/case/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md` - Think -> Case Create handoff 和 skill 边界设计。
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md` - Think 调研设计 case。
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/openspec-think-analysis.md` - OpenSpec 机制分析。
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/peer-framework-survey.md` - Spec Kit、BMAD、Open SWE、Kiro、Cline 等同类资料调研。
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md` - Inbox / Think / Case / SOP / Weave 边界矩阵。
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/think-object-state-design.md` - Think 对象和状态流转设计。
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/handoff-and-skill-boundary.md` - Think -> Case Create handoff 和 skill 边界设计。
 - `_adoc/case/c0.10-aipd-capability-object-model/doc/discussion-seed.md` - 本 case 的原始讨论种子。
 
 ### 兜底搜索
@@ -150,6 +154,13 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 
 ## 5. 本次边界
 
+### 2026-06-27 收口后的边界
+
+- **保留参考**：Context Pack、Research Pack、Decision Record、Handoff、Weave Candidate 等对象模型仍可作为后续优化 Case phase、work package 和 Agent 交接格式的参考。
+- **不再单独推进**：不再从本 case 派生独立 Capability Registry、独立 `_adoc/think/` 或独立 `aipd-think` skill。
+- **已被吸收的部分**：Think 的运行位置已调整为 Case 生命周期内的 `Think phase`；Case Create / Run / Archive 的旧拆分已收敛为统一 `aipd-case`。
+- **上层 Human-AI Think 不归 AIPD 管**：个人助手、日记、个人 OKR、跨项目 Think 和个人经验库属于 Human-AI 协作层；AIPD 只处理项目 case 内的 Think phase 和项目执行交接。
+
 ### 要做
 
 - 创建本 case，保存“原子能力层 + 统一对象模型”的核心讨论。
@@ -168,7 +179,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 
 ## 6. Step 列表
 
-- [ ] `steps/s1-capability-object-model-design.md` - 设计 AIPD Capability Object Model 和原子能力层的第一版草案。
+- [ ] `steps/s1-capability-object-model-design.md` - 已取消执行；本 case 保留讨论种子和对象模型参考，不再继续拆 step。
 
 ## 7. 后续候选事项
 
@@ -204,6 +215,7 @@ Think 更像一个阶段 / 工作空间 / 编排场景，而不是单个大 skil
 
 ## 11. 归档状态
 
-- **状态**：讨论中
+- **状态**：已暂停，暂不推进
 - **创建时间**：2026-06-20
+- **暂停时间**：2026-06-27
 - **归档时间**：

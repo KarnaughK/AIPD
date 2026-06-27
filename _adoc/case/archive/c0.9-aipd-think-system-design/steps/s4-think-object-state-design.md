@@ -20,8 +20,8 @@
 
 分身 Agent 必须在执行前读取以下文档：
 
-- `_adoc/case/c0.9-aipd-think-system-design/case.md`
-- `_adoc/case/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/case.md`
+- `_adoc/case/archive/c0.9-aipd-think-system-design/doc/aipd-boundary-comparison.md`
 - `_adoc/L3-core/index.md`
 - `_adoc/L3-core/horizontal-capabilities.md`
 - `_adoc/L3-core/vertical-concept-modules.md`
@@ -41,7 +41,7 @@
 
 ## 产出要求
 
-- 结果文件路径：`_adoc/case/c0.9-aipd-think-system-design/doc/think-object-state-design.md`
+- 结果文件路径：`_adoc/case/archive/c0.9-aipd-think-system-design/doc/think-object-state-design.md`
 - 格式：建议结构 + 状态流转 + 模板草案 + 未决问题。
 
 ## 验收标准
@@ -63,7 +63,7 @@
 **完成时间**：2026-06-20
 
 **主要改动**：
-- 新增 `_adoc/case/c0.9-aipd-think-system-design/doc/think-object-state-design.md`。
+- 新增 `_adoc/case/archive/c0.9-aipd-think-system-design/doc/think-object-state-design.md`。
 - 设计 `_adoc/think/` 的建议基础结构：`index.md`、`active/`、`archive/`，不建议设置全局 `doc/` / `research/`。
 - 设计单个 Think 对象的渐进式文件结构：Light Think 只需 `think.md`，Research-heavy Think 增加 `research.md` / `research/` / `options.md`，Create Handoff 增加 `decision.md` / `handoff.md`。
 - 设计 `status`、`mode`、`phase`、`current_exit` 等状态字段，以及 Create / Kill / Defer / Research / Weave / Continue 出口字段。

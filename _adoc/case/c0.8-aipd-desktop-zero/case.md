@@ -1,6 +1,8 @@
 # Case: c0.8-aipd-desktop-zero
 
 > **本次事项目标**：讨论并沉淀 AIPD Desktop 的第零版边界：先做 AIPD 项目结构可视化和真实 Agent 聊天接入，不提前扩展成重型 Agent 编排工厂。
+>
+> **暂停说明（2026-06-27）**：AIPD Desktop 是否继续做尚不确定。本 case 暂停推进，不进入执行，不创建 `aipd-desktop/`，已有调研、技术路线和候选 step 只作为后续重新判断时的参考。
 
 ## 目录结构
 
@@ -143,7 +145,7 @@ _adoc/case/c0.8-aipd-desktop-zero/
 
 ## 6. Step 列表
 
-当前 step 是候选开发纲要，用于后续目标模式 / case-run 选择执行。尚未开始执行。
+当前 step 是候选开发纲要。因 Desktop 方向已暂停，以下内容只作为参考，不进入执行。
 
 - `steps/s1-project-bootstrap.md` - 创建 `aipd-desktop/`，使用官方 Tauri + Vue + TypeScript 模板，验证空壳启动。
 - `steps/s2-aipd-file-tree-readonly.md` - 实现 AIPD 文件树只读解析和展示。
@@ -190,6 +192,6 @@ _adoc/case/c0.8-aipd-desktop-zero/
 
 ## 11. 归档状态
 
-- **状态**：讨论中
+- **状态**：已暂停，暂不推进
 - **创建时间**：2026-06-13
 - **归档时间**：

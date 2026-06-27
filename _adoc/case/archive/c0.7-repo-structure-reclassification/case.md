@@ -1,11 +1,13 @@
 # Case: c0.7-repo-structure-reclassification
 
 > **本次事项目标**：在正式创建 AIPD Desktop 之前，先重划 AIPD-2 仓库根目录结构，把 AIPD 研发认知、Skill 本体、面向人文档、构建产物、历史材料和未来桌面端产品分清。
+>
+> **归档结论（2026-06-27）**：本 case 的仓库重分类目标已完成。剩余 `s10` 的“L2 痛点 / 需求线 -> AIPD 解决能力”映射视角已被后续 L2/L3/L4/map 更新部分吸收，不再作为本 case 的阻塞项继续执行。
 
 ## 目录结构
 
 ```text
-_adoc/case/c0.7-repo-structure-reclassification/
+_adoc/case/archive/c0.7-repo-structure-reclassification/
 ├── case.md
 ├── steps/
 │   ├── s1-audit-current-structure.md
@@ -166,7 +168,7 @@ aipd-skill/dist/
 - [x] `steps/s7-audit-l1-intent-consistency.md` - 审计 L1 Intent 与当前 README / docs 教学文档之间的方向一致性差异。
 - [x] `steps/s8-audit-l2-research-scope.md` - 审计 L2 Research 缺口，明确用户画像、外部趋势、痛点、工具生态和 Desktop 需求来源。
 - [x] `steps/s9-create-l2-research-index.md` - 创建 `_adoc/L2-research/index.md`，正式沉淀 L2 外部世界、用户画像、痛点和需求线。
-- [ ] `steps/s10-map-l2-needs-to-aipd-solutions.md` - 将 L2 痛点 / 需求线映射到 AIPD 的 L3 / L4 / L5 / SOP / case / skill 解决方案入口。
+- [x] `steps/s10-map-l2-needs-to-aipd-solutions.md` - 已由后续 L2/L3/L4/map 更新部分吸收，不再作为本 case 阻塞项继续执行。
 - [x] `steps/s11-refresh-l3-core-models.md` - 将 AIPD 自身 L3 收敛为六个核心成立模型，并同步 L3 map。
 - [x] `steps/s12-refresh-l4-product-lines.md` - 将 AIPD 自身 L4 刷新为产品能力层，并同步 L4 map 与总 map。
 
@@ -232,6 +234,6 @@ aipd-skill/dist/
 
 ## 11. 归档状态
 
-- **状态**：执行中
+- **状态**：已归档
 - **创建时间**：2026-06-15
-- **归档时间**：
+- **归档时间**：2026-06-27

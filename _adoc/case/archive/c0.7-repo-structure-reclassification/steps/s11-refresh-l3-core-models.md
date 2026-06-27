@@ -38,7 +38,7 @@ Inbox、Update、Learn、Desktop、Mermaid 等不作为独立 L3 模型。它们
 - `_adoc/L3-core/index.md`
 - `_adoc/L3-core/map.md`
 - `_adoc/index.md`
-- `_adoc/case/c0.7-repo-structure-reclassification/case.md`
+- `_adoc/case/archive/c0.7-repo-structure-reclassification/case.md`
 
 ## 验收
 

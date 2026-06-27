@@ -10,8 +10,8 @@
 
 ## 2. 本次读取
 
-- `_adoc/case/c0.7-repo-structure-reclassification/steps/s8-audit-l2-research-scope.md`
-- `_adoc/case/c0.7-repo-structure-reclassification/case.md`
+- `_adoc/case/archive/c0.7-repo-structure-reclassification/steps/s8-audit-l2-research-scope.md`
+- `_adoc/case/archive/c0.7-repo-structure-reclassification/case.md`
 - `_adoc/index.md`
 
 ## 3. 执行内容

@@ -1,13 +1,11 @@
 # AIPD Case 索引
 
-## 当前 Case
+## 暂停 Case
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c0.10-aipd-capability-object-model` | 讨论中 | 设计 AIPD 原子能力层和统一中间对象模型，支撑 Think / Case / Run / Weave / SOP 复用底层能力 |
-| `c0.9-aipd-think-system-design` | 待验收 | 调研 OpenSpec / Spec Kit / BMAD / Open SWE 等前置讨论与 spec 机制，设计 AIPD Think 一等对象、状态流转和 Think -> Case Create 交接 |
-| `c0.7-repo-structure-reclassification` | 待验收 | 正式创建 AIPD Desktop 前，重划仓库根目录：AIPD Skill 本体、项目认知、docs、历史材料与桌面端边界 |
-| `c0.8-aipd-desktop-zero` | 讨论中 | 讨论 AIPD Desktop 第零版：AIPD 文件树解析 + 真实 Agent 聊天接入 |
+| `c0.8-aipd-desktop-zero` | 已暂停 | AIPD Desktop 第零版方向暂不确定，暂停推进；已保留文件树解析、真实 Agent 聊天接入、MMD 预览等参考材料 |
+| `c0.10-aipd-capability-object-model` | 已暂停 | 原子能力和中间对象模型方向暂不推进；保留 Context Pack、Research Pack、Decision Record、Handoff 等参考材料 |
 
 ## 已归档 Case
 
@@ -18,9 +16,11 @@
 | `archive/c0.3-agent-fork-role-policy` | 2026-06-16 | 分析 fork 分身、角色 Agent 和直接执行的调配策略 |
 | `archive/c0.5-human-docs-architecture` | 2026-06-16 | 设计面向人的 docs 学习文档体系，区分 README、docs 与 _adoc |
 | `archive/c0.6-human-docs-three-lines` | 2026-06-14 | 将面向用户的教学文档升级为三条主线：知识库、Case / Step、AI 原生代码架构实验 |
+| `archive/c0.7-repo-structure-reclassification` | 2026-06-27 | 重划仓库根目录，收拢 AIPD Skill 本体、docs、项目认知和历史材料边界 |
+| `archive/c0.9-aipd-think-system-design` | 2026-06-27 | 旧 Think 一等对象设计 case；Think 问题已被新的 phase-first case 生命周期吸收，作为历史调研和边界参考归档 |
 
 ## 使用原则
 
-- 新事项先创建 case，再拆 step。
-- step 必须列出显式上下文文档。
+- 新事项先创建 phase-first case，再按 Design 结果拆 work package。
+- work package 必须列出显式上下文文档、横向模块和验收标准。
 - 代码实现、调研和审查默认交给分身 Agent，主 Agent 负责调度和验收。
