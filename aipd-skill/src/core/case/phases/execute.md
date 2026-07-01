@@ -27,6 +27,8 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - 对代码修改、构建、测试、批量验证、跨文件 diff、调研或长日志分析，优先使用执行 Agent。
 - 未获用户授权使用子 Agent 时，必须先单独询问。
 - 目标模式可以作为运行时锚点，但长期状态仍写回 case.md、`03-execute/execute.md` 和 work package 文件。
+- 长执行、子 Agent 派发、批量验证或目标模式运行前，必须先在 `03-execute/execute.md` 或 work package 文件写执行前 checkpoint：当前 work package、设计输入、执行边界、验收标准、禁止事项、恢复入口和预期返回格式。
+- 执行完成、失败、阻塞、回跳或范围变化后，必须写执行后 checkpoint：完成了什么、验证结果、残留风险、受影响设计或下一步。不要只在聊天里汇报结果。
 
 ## 输出
 
@@ -38,6 +40,7 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - Execution Record。
 - Verification Notes。
 - Close 归档候选。
+- 最近 checkpoint：当前执行游标、下一步、是否需要回到 Design / Think / Verify。
 
 ## 下一 phase 判断
 

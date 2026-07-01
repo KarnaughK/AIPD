@@ -113,6 +113,8 @@ Main Agent 可以直接完成的例外：
 
 AIPD 的长期任务状态以 case / work package 文件为准，聊天上下文只是临时工作缓存。
 
+项目 Agent 不应把长期连续性建立在聊天记忆上。每个会影响后续恢复路径的小步确认、状态变化、调研边界、设计决策、phase 跳转、work package 派发或执行结果，都应及时写回 `case.md`、当前 phase artifact、work package、局部 README 或 map。判断标准是恢复价值：压缩后丢失会改变后续方向的信息要落文件；不改变状态的解释、闲聊和未采纳想法不要膨胀文档。
+
 当发生上下文压缩、长任务续跑、状态不确定，或聊天记忆与项目文件不一致时，按以下链路恢复任务状态：
 
 ```text
@@ -126,6 +128,7 @@ AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/case/index.md -> 当前 cas
 - 执行 case 或普通开发前，先确认是否已经按 `_adoc/map.md` 和 case 的上下文索引完成检索；没有完成时先补上下文包。
 - 聊天上下文与 case / work package 文件冲突时，先指出冲突，再以 case / work package 文件作为事实来源继续。
 - 每个会改变项目状态的 work package 完成后，必须把可恢复状态写回 work package 执行记录、`03-execute/execute.md` 和 case 状态。
+- 大调研、长执行、批量验证、子 Agent 派发或 phase 跳转前，先写 checkpoint：当前问题、边界、预期输出、停止条件和返回位置。
 - 在 `aipd-case` Execute phase 内，`03-execute/work-packages/` 下的 work package 是默认的子 Agent 派发节点。Main Agent 默认只做入口读取、状态判断、派发、审查摘要、验收和状态写回；work package 的具体执行默认交给子 Agent。
 - 如果平台提供目标模式，目标模式只作为 case Execute phase 的运行时目标锚点；是否启用由 `aipd-case` 判断，长期状态仍以 case / work package 文件为准。
 

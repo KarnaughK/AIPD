@@ -8,6 +8,7 @@
 |---|---|---|---|---|---|
 | 知识库 / ADOC / Weave / 知识回写 | 项目知识库维护模型 | AIPD 如何分层存储、更新、回写并维护项目知识库可信度 | `_adoc/L3-core/index.md`、`_adoc/L3-core/vertical-concept-modules.md`、`_adoc/L3-core/horizontal-capabilities.md` | AIPD 初始化、AIPD Update、Weave | Weave 不是独立于知识库的模型，而是知识库更新机制 |
 | map / 大地图 / 上下文检索 / 找上下文 | Map-first 上下文检索模型 | Agent 先读显性 map，再进入 L3/L4/L5/局部 README/L6，搜索只作为兜底并反向回写稳定入口 | `_adoc/L3-core/index.md`、`_adoc/map.md` | AIPD Update、AIPD Case、Weave | 不等同于默认 RAG、全文搜索或多层目录跳转 |
+| 文件优先 / 落文件 / checkpoint / 聊天不是事实源 / 自然压缩 / 恢复入口 | 文件优先上下文承接模型 | 聊天只是运行缓存，文件才是长期事实源；影响恢复路径的小步确认、状态变化、调研边界和下一步游标要写成 checkpoint | `_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md`、`aipd-skill/src/core/case/overview.md` | AIPD Case、Agent Entry、Weave | 不是把聊天全文存档，也不是每句话都落文件；判断标准是恢复价值 |
 | Think / AIPD Think / 任务澄清 / 前置讨论 / 要不要做 | Think / 任务澄清决策模型 | 模糊想法或 case 推进中的未知如何通过讨论、调研、方案比较和决策出口变成清晰方向、设计输入或被 kill / defer / research / weave | `_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md` | AIPD Case、Weave | Think 可以在 Case 前，也可以作为 Case 内 phase |
 | 长任务 / case / work package / 恢复 / 验收 | 任务执行模型 | 短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 变成可恢复、可验收、可关闭的执行闭环 | `_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md`、`_adoc/case/index.md` | AIPD Case | Case 不是普通聊天记录，Work Package 不是微步骤 |
 | Main Agent / 分身 Agent / 角色 Agent / fork_context | Agent 协作思考模型 | 多个 Agent 如何分工探索、保护主线判断，并回流压缩结论 | `_adoc/L3-core/index.md`、`_adoc/L5-dev/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | Case Execute、Agent 调度 | 分身 Agent 不是低上下文执行工人 |
@@ -21,6 +22,7 @@
 | ADOC / 项目认知 | ADOC / `_adoc` | 面向 AI 协作的长期项目认知结构 | `_adoc/L3-core/vertical-concept-modules.md`、`aipd-skill/src/core/adoc-structure.md` | AIPD 初始化、AIPD Update、Weave | 不等同于普通 README |
 | L1-L6 / 纵向模块 | 纵向概念模块 | 项目认知和代码实现按层级沉淀的结构 | `_adoc/L3-core/vertical-concept-modules.md` | AIPD 初始化、aipd-case | 不是产品功能清单 |
 | map / case / weave | 横向功能能力 | Agent 做事时串联纵向模块的能力 | `_adoc/L3-core/horizontal-capabilities.md` | AIPD Update、AIPD Case、Weave、Learn | 不是新的认知层级，也不是 L3 核心模型的替代分类 |
+| 文件 checkpoint / 落盘 / 压缩后恢复 / 当前游标 | 文件优先上下文承接 | 用 case、phase、work package、README 和 map 承接长期上下文，让压缩或换 Agent 后能恢复当前状态 | `_adoc/L3-core/horizontal-capabilities.md`、`aipd-skill/src/core/case/overview.md` | AIPD Case、Agent Entry | 不等同于备忘；只写影响后续恢复路径的状态和判断 |
 | 讨论层 / 定任务 / 从模糊到清晰 / 高带宽思考缓冲层 | Think | Case 前或 Case 内的思考 phase，用文件化状态承载讨论、调研、方案比较和决策出口 | `_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md` | AIPD Case | 不等同于 Inbox；Inbox 只暂存，Think 主动澄清并给出出口 |
 | 外部世界 / 痛点 / 竞品 | L2 Research | 项目方向所处的外部世界 | `_adoc/L3-core/vertical-concept-modules.md`、`aipd-skill/src/core/L2-scenario/guide.md` | AIPD 初始化、aipd-case | L2 不只是痛点 |
 | 成立模型 / 核心对象 / 数据模型 | L3 Core | 项目内部长期成立所依赖的稳定模型 | `_adoc/L3-core/index.md`、`aipd-skill/src/core/L3-engine/guide.md` | AIPD 初始化、AIPD Update | 不等于狭义数据库模型 |
