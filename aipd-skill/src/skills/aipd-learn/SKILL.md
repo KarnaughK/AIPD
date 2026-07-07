@@ -16,6 +16,7 @@ inject-from-core:
   - overview.md
   - adoc-structure.md
   - case/overview.md
+  - experience/*
 ---
 
 # AIPD Learn
@@ -29,32 +30,62 @@ inject-from-core:
 1. **外部项目采集器**：在业务项目中使用时，默认只输出最小定位卡，帮助用户把原始会话带回 AIPD 源项目；如果用户只是想更新当前项目 ADOC，提示改用 `aipd-weave`。
 2. **AIPD 内部自迭代分析器**：在 AIPD 源项目中使用时，优先读取用户带回的定位卡 / transcript，从原始对话里审计 AIPD skill 或规则哪里反应不好。
 
-`aipd-learn` 支持五种经验回流方式：
+`aipd-learn` 支持六种经验回流方式：
 
 1. **会话定位卡**：在外部项目中自动采集 thread ID、transcript path、可见时的 turn ID，只输出最小定位信息。这是外部项目默认路径。
 2. **自迭代诊断**：在 AIPD 源项目中，用户贴入定位卡、会话 ID 或 transcript path 后，读取原始 transcript，优先审计用户纠正了 Agent 什么、哪些 skill 行为反复出错、哪些规则需要回写。
 3. **会话回流包**：用户明确要求“生成回流包 / 总结经验 / 整理给 AIPD 吸收”时，才输出结构化回流包。
 4. **即时写回**：如果当前就在 AIPD 源项目，且用户确认要吸收框架经验，先给写回方案，确认后修改 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/`。
-5. **异步回流**：用户在项目中先写反馈文件，之后切回 AIPD 源项目再处理。文件只是缓存方式，不是必要中转。
+5. **实践经验库回流**：把真实项目中已经校准过的技术栈、领域、搜索、调研或工具经验写入 `aipd-skill/src/core/experience/`，保留具象事实，不二次抽象成通用原则。
+6. **异步回流**：用户在项目中先写反馈文件，之后切回 AIPD 源项目再处理。文件只是缓存方式，不是必要中转。
 
 ## 职责边界
 
-**只做**：外部项目中采集当前会话定位信息；AIPD 源项目中基于定位卡 / transcript 审计 AIPD 自身行为；在用户确认后，从当前对话、用户粘贴经验、Codex transcript 引用、用户补充文件、进行中的 case 或已完成 work package 中提炼框架经验，生成诊断或回流包，判断经验归属，并在用户确认后写回 AIPD 源码。
+**只做**：外部项目中采集当前会话定位信息；AIPD 源项目中基于定位卡 / transcript 审计 AIPD 自身行为；在用户确认后，从当前对话、用户粘贴经验、Codex transcript 引用、用户补充文件、进行中的 case 或已完成 work package 中提炼框架经验，生成诊断或回流包，判断经验归属，并在用户确认后写回 AIPD 源码或实践经验库。
 
 **不做**：不执行 work package，不归档 case，不移动 case 目录，不合并分支，不主动提交代码，不把当前业务项目经验直接写入项目 `_adoc/`。项目 ADOC 回写用 `aipd-weave`。
 
-## 经验抽象与脱敏边界
+## 经验分流
 
-`aipd-learn` 吸收的是 AIPD 框架经验，不是外部项目案例库。诊断、回流包和写回方案中，除来源定位卡、transcript path、项目路径、分支名等必要定位信息外，不要把外部项目的专有名词写入 AIPD 通用规则。
+`aipd-learn` 先判断经验类型，再决定是否抽象。
 
-必须抽象成 AIPD 语言：
+### 抽象规则回流
+
+抽象规则回流用于修改 AIPD 通用规则、skill 行为、模板、phase 检查点或平台适配规则。写入 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/` 时，只保留可跨 AIPD 项目复用的判断标准、触发条件、职责边界和停止条件。
+
+这类内容必须抽象成 AIPD 语言：
 
 - 外部页面、模块、业务对象、接口、字段、权限名、角色名、流程名，抽象为“产品功能线 / 认知线 / 项目事实 / 代码入口 / 接口字段 / 权限规则 / 数据状态”等 AIPD 通用概念。
 - 外部项目中的具体失败场景，只用于定位 transcript 原文，不作为框架规则正文的示例。
-- 写回 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/` 时，只保留可跨 AIPD 项目复用的判断标准、触发条件、职责边界和停止条件。
-- 如果某个经验必须依赖外部项目特有词才能讲清楚，说明它更可能属于项目 ADOC，应改交给 `aipd-weave`，不要写入 AIPD 框架源码。
+- 输出自迭代诊断时，可以短摘用户纠正点，但应优先改写为 AIPD 通用表达；不要让非 AIPD 的案例名词、项目黑话或业务词进入“建议改动”“可回写判断”和最终源码。
 
-输出自迭代诊断时，可以短摘用户纠正点，但应优先改写为 AIPD 通用表达；不要让非 AIPD 的案例名词、项目黑话或业务词进入“建议改动”“可回写判断”和最终源码。
+### 实践经验库回流
+
+实践经验库用于保存抽象逻辑在真实项目里的具象落地样本。它不是把经验再次抽象成原则，而是保留足够真实的技术栈、领域、框架机制、目录结构、失败路径和最终取舍，帮助后续 Agent 在相似场景中快速借鉴。
+
+实践经验写入：
+
+```text
+aipd-skill/src/core/experience/index.md
+aipd-skill/src/core/experience/{experience-name}.md
+```
+
+实践经验按一个统一索引管理，不按 Think / Design / Execute 各维护一份索引。每条经验在索引里标注：
+
+- 适用阶段：Think / Design / Execute / Verify / Close。
+- 类型：代码实践 / 调研策略 / SEO 数据 / 搜索策略 / 工具经验等。
+- 技术栈或领域：Vue / Nuxt / Next / SEO / 深度搜索等。
+- 什么时候读。
+- 正文路径。
+
+实践经验的处理原则：
+
+- 保留具象上下文，不把经验压缩回抽象原则。
+- 只做隐私清理、来源标注和结构化整理。
+- 不把外部项目的本机绝对路径、外部 case 文件路径或只在某台机器存在的 transcript 路径写入实践经验正文；这些只属于回流过程定位，不属于可迁移经验。
+- 来源可以写成“已完成外部项目 case / 用户反馈 / transcript 诊断 / AIPD 内部文件”，但只有来源本身位于 AIPD 仓库内时，才在经验正文中保留具体文件路径。
+- 如果一条经验同时产生抽象规则和实践样本，分成两份写：抽象规则进 core / skill，实践样本进 `experience/`。
+- 如果经验仍属于某个业务项目自己的长期认知，不写进 AIPD 框架经验库，应交给该项目的 `aipd-weave`。
 
 ---
 
@@ -125,17 +156,30 @@ rg -n "\"id\":\"${CODEX_THREAD_ID}\"" "$HOME/.codex/session_index.jsonl" 2>/dev/
 如果用户提供的是一大段经验记录，先判断它是：
 
 - **即时框架回流**：直接修改 AIPD 源项目的 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/`。
+- **实践经验库回流**：写入 `aipd-skill/src/core/experience/`，并同步更新 `experience/index.md`；保留具象技术栈、领域、目录、框架机制、失败路径和最终取舍，不二次抽象。
 - **项目经验沉淀**：交给 `aipd-weave` 回写当前项目 `_adoc/`、局部 README、map 或 case。
 - **待转交反馈**：当前不在 AIPD 源项目，先整理为“框架回流建议”，让用户带到 AIPD 源项目执行。
 
-如果用户给出 case 目录，读取：
+如果用户给出 case 目录，先识别 case 结构，再读取和本次经验相关的入口。
+
+新结构 case 使用 contract + phase-first 目录，优先读取：
 
 ```bash
 cat _adoc/case/{case目录}/case.md
-find _adoc/case/{case目录}/steps -type f
+test -f _adoc/case/{case目录}/自我察觉迭代.md && cat _adoc/case/{case目录}/自我察觉迭代.md
+test -f _adoc/case/{case目录}/05-close/close.md && cat _adoc/case/{case目录}/05-close/close.md
+find _adoc/case/{case目录}/0*-*/ -maxdepth 2 -type f \
+  \( -name "summary.md" -o -name "think.md" -o -name "design.md" -o -name "execute.md" -o -name "verify.md" -o -name "close.md" \)
+find _adoc/case/{case目录}/03-execute/work-packages -maxdepth 1 -type f 2>/dev/null
 ```
 
-只读取和本次经验相关的 step 或 doc，不全量扫描项目。
+只读取和本次经验相关的 phase 摘要、Close 候选、自我察觉记录或 work package，不全量扫描项目。`自我察觉迭代.md` 是 AIPD 框架经验优先入口；`05-close/close.md` 用于判断候选已经回写、延后回写，还是仅留在 case。业务项目自身的 L3/L4/L5/README/map 回写仍交给 `aipd-weave`。
+
+如果目标 case 仍是旧结构（例如存在顶层 `steps/`、`doc/` 或旧 `01-goal/`），不要按旧结构继续执行 case；只把旧文件作为经验来源读取，并在诊断中标注“旧结构来源”。旧 `steps/` 只作为兼容读取：
+
+```bash
+find _adoc/case/{case目录}/steps -type f 2>/dev/null
+```
 
 如果用户给出反馈文件路径，读取该文件；但不要要求用户为了反馈专门创建文件。
 
@@ -304,6 +348,7 @@ Agent 反应问题：
 | 经验类型 | 回写位置 |
 |---|---|
 | 当前项目方向、业务判断、功能规则、研发约束、局部入口 | 交给 `aipd-weave` 判断并回写当前项目 `_adoc/`、局部 README、map 或 case |
+| 已校准的真实项目实践样本、技术栈经验、领域调研经验、搜索策略、工具使用经验 | AIPD 仓库的 `aipd-skill/src/core/experience/`，并更新 `experience/index.md` |
 | AIPD 通用知识、结构规则 | AIPD 仓库的 `aipd-skill/src/core/` |
 | aipd 总入口、ADOC 入口、经验回流方式 | AIPD 仓库的 `aipd-skill/src/skills/aipd*/` |
 | 已初始化项目的 AIPD 架构升级、AGENTS.md / map 同步 | AIPD 仓库的 `aipd-skill/src/skills/aipd-update/` |
