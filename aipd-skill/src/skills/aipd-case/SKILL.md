@@ -19,6 +19,7 @@ inject-from-core:
   - case/templates/case.md
   - case/templates/work-package.md
   - case/workers/*
+  - experience/*
   - agent-guide.md
   - agent-guides/*
 ---
@@ -113,6 +114,18 @@ _adoc/case/{case-dir}/case.md
 | Close | `@references/case/phases/close.md` | 归档、整理 Close 归档候选、更新索引 |
 
 不要一次加载所有 phase 细则。只有当当前 phase 完成并切换到下一 phase 时，再加载下一份文档。
+
+### 2.5 读取实践经验索引
+
+读取当前 phase 文档后，检查 `@references/experience/index.md`。实践经验是与 case phase 并列的上下文维度，不为 Think / Design / Execute 各维护一份独立索引。
+
+如果索引里有和当前 phase、技术栈、领域或任务类型匹配的经验，读取对应经验正文；如果没有命中，只说明未命中，不要为了补齐索引临时发明经验。
+
+常见命中：
+
+- Think phase：领域调研、SEO 数据、深度搜索、信息获取策略。
+- Design phase：Vue / Nuxt / Next 等代码实践经验、上下文边界、文件结构、框架扫描机制。
+- Execute phase：工具链、迁移、批量验证或调试经验。
 
 ### 3. 推进当前 phase
 

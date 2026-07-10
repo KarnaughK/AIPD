@@ -1,6 +1,6 @@
 # Development Outline: AIPD Desktop Zero
 
-> 本文作为 c0.8 的总开发纲要。它不是最终 PRD，也不是立即执行计划；它给后续目标模式 / case-run 提供任务拆分和边界。
+> 本文作为 c0.8 的旧总开发纲要。它不是最终 PRD，也不是立即执行计划；后续若恢复推进，需要按当前 Case / Work Package 语言刷新后再执行。
 
 ## 1. 总目标
 
@@ -8,7 +8,7 @@
 
 第零版只验证两条主链路：
 
-1. **AIPD 文件树可视化**：能读取并展示 L1-L5、case、step、okr、inbox、MMD 文件。
+1. **AIPD 文件树可视化**：能读取并展示 L1-L5、case、phase、work package、okr、inbox、MMD 文件。
 2. **真实 Codex 聊天接入**：能通过 Codex App Server / SDK 实现接近 Codex 桌面端的聊天体验。
 
 ## 2. 非目标
@@ -58,7 +58,7 @@ Fallback route: codex exec --json
 
 - 选择本地 AIPD 项目路径。
 - 读取 `_adoc/index.md`、`_adoc/map.md`。
-- 展示 L1-L5、case、steps、okr、inbox。
+- 展示 L1-L5、case、phase、work package、okr、inbox。
 
 产出：
 
@@ -111,7 +111,7 @@ Fallback route: codex exec --json
 
 目标：
 
-- 左侧选中 doc / case / step 后，聊天输入区显示上下文 chip。
+- 左侧选中 doc / case / phase / work package 后，聊天输入区显示上下文 chip。
 - 用户发送时把选中对象作为显式上下文附加。
 
 产出：
@@ -122,11 +122,11 @@ Fallback route: codex exec --json
 ## 5. 推荐执行顺序
 
 ```text
-s1-project-bootstrap
-s2-aipd-file-tree-readonly
-s3-codex-appserver-spike
-s4-chat-ui-mvp
-s5-mermaid-preview-and-context-chips
+c0.8.1-project-bootstrap
+c0.8.2-aipd-file-tree-readonly
+c0.8.3-codex-appserver-spike
+c0.8.4-chat-ui-mvp
+c0.8.5-preview-and-context-chips
 ```
 
 说明：
