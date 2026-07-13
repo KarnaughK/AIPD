@@ -172,11 +172,19 @@ Case 状态以文件为准，不依赖聊天记忆。
 
 进入下一步前，如果本轮已经改变目标边界、当前焦点、设计节点、调研分支、work package 状态、验收口径或 Close 候选，必须至少写回一个可恢复 checkpoint。checkpoint 可以很短，但必须让压缩后的 Agent 能判断“现在在哪里、为什么在这里、下一步回哪里”。
 
-### 5. 执行授权和 Agent 调度
+### 5. 执行和 Agent 调度
 
-进入 Execute phase 后，如果需要子 Agent、角色 Agent、批量验证、构建、测试、跨文件 diff 或长调研，必须遵守项目 Agent Entry 的授权规则。未获授权时，先单独询问用户。
+进入 Execute phase 后，先把 Work Package 视为状态与验收边界，再按项目 Agent Entry 的运行时判定选择 Main 或 Child。任务类型、文件数量和推荐 Agent 字段本身都不强制派发。
 
-执行 Agent 的任务入口是 `03-execute/work-packages/` 下的 work package 文件和 case.md，不是主 Agent 复制出来的一大段 prompt。派发时只传文件路径、角色建议、边界和返回格式。
+- 内聚、高耦合、上下文规模可控的 Work Package 可以由 Main 连续完成。
+- 高噪声上下文隔离、两条以上独立并发工作线或必要独立复核有明确净收益时，优先 Child。
+- 决定派发、平台支持且用户未明确禁用时，可以直接创建 Child；用户明确禁用或平台不可用时，由 Main 回退执行。
+- 派发时默认最小上下文、single-owner evidence 和压缩回流；Main 不重复执行相同证据面。
+- 浏览器新流程、异常状态或路径不确定时，先与用户沟通再继续，不无边界深入或盲目绕路。
+
+Agent 调度不扩大 case / work package 边界，也不替代 install、远端写入、删除等真实外部副作用的确认。
+
+Main 或 Child 的执行入口都是 `03-execute/work-packages/` 下的 work package 文件和 case.md。决定派发后，prompt 只传文件路径、已选择角色、边界和返回格式，不复制长正文。
 
 ### 6. 旧入口处理
 
