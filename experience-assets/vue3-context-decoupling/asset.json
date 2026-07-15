@@ -27,7 +27,10 @@
     "includedInRepository": true
   },
   "github": {
-    "published": false,
+    "published": true,
+    "commit": "f7c36f250d8c45eb9cb7600aa0186e800c33df1e",
+    "latest": "https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling",
+    "pinned": "https://github.com/KarnaughK/AIPD/tree/f7c36f250d8c45eb9cb7600aa0186e800c33df1e/experience-assets/vue3-context-decoupling",
     "latestTemplate": "https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling",
     "pinnedTemplate": "https://github.com/KarnaughK/AIPD/tree/{full-commit-sha}/experience-assets/vue3-context-decoupling"
   },

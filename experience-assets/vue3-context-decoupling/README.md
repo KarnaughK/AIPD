@@ -245,8 +245,8 @@ npm run verify:full
 
 ## 版本化链接
 
-- 当前发布状态：尚未提交 / 推送，本 case 不把 404 模板声称为可用远端地址。
-- 合并到默认分支后的 latest 模板：`https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling`
-- 发布后 pinned 规则：把 `{full-commit-sha}` 替换为真实包含本资产的完整 commit SHA：`https://github.com/KarnaughK/AIPD/tree/{full-commit-sha}/experience-assets/vue3-context-decoupling`
+- 当前发布状态：已发布到 AIPD GitHub 仓库；latest 指向默认分支，pinned 固定到首次包含完整源码资产的提交。
+- latest：`https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling`
+- pinned：`https://github.com/KarnaughK/AIPD/tree/f7c36f250d8c45eb9cb7600aa0186e800c33df1e/experience-assets/vue3-context-decoupling`
 
 来源和许可证边界分别见 `SOURCE.md`、`LICENSE.md`。

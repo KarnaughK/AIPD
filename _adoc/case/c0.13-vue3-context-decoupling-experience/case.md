@@ -54,7 +54,7 @@
 - [x] 正式经验文档同时提供仓库内源码入口、远端发布状态与 GitHub 引用规则；使用者无需根据 MD 从零重写核心 controller。
 - [x] AIPD 自有正式经验、活跃指南、索引和附带资产中不再出现 `QLM` / `Qlm` 品牌残留；来源证据与迁移历史除外。
 - [x] 自动验证证明源码资产通过自身测试，AIPD build 通过，且 `experience-assets/` 没有进入 `aipd-skill/dist` 或安装产物。
-- [ ] 用户确认源码资产的公开复用许可证；当前只允许仓库所有者 / 已获授权使用者按其权利范围复制。
+- [x] 许可证状态明确并与发布文案一致：继续维持 owner / authorized-only，不因公开可读而擅自授予 MIT / Apache 等公开复用权。
 - [ ] 用户授权后将本 case 的改动隔离提交 / 推送，实测 GitHub latest 地址并记录真实 commit-pinned SHA。
 
 ### 上下文索引
@@ -91,24 +91,22 @@ Execute（WP-05 publishing）
 
 ### 当前焦点
 
-用户已授权发布；保持当前 owner / authorized-only 许可证边界，从 `origin/main` 隔离发布 c0.13，不混入 c0.12。
+用户已授权发布；隔离分支已创建，首个源码资产提交为 `f7c36f250d8c45eb9cb7600aa0186e800c33df1e`，pinned tree、源码与测试均已返回 HTTP 200。
 
 ### 下一步
 
-完成隔离提交 / 推送 / 默认分支合并，写入真实 pinned SHA；远端 URL 验证通过后返回 Verify，再重新 Close。
+提交发布元数据并合并默认分支；实测 latest 后返回 Verify，再重新 Close。
 
 ### 待确认项
 
 - 代码中的 `QlmModalBox` 按组件语义解释为 ModalBox；迁移目标采用 Vue 组件命名 `AipdModalBox`，避免把 modal 误写成 model。
-- GitHub 稳定引用同时支持默认分支 latest 地址和调用方自行锁定 commit 的 pinned 地址；当前资产未发布，所有正式经验已明确标成发布后模板，不伪造可用链接或 commit hash。
-- 需要用户选择公开许可证；当前 `LICENSE.md` 只说明权利边界，不擅自授予 MIT / Apache 等许可。
-- 需要用户授权 commit / push。当前工作区含 c0.12 与其他用户改动，提交时必须只纳入 c0.13 / experience-assets / 本次必要长期认知文件。
+- GitHub 稳定引用同时支持默认分支 latest 地址和锁定首个完整源码资产提交的 pinned 地址；pinned 已实测，latest 待默认分支合并后实测。
+- 许可证继续维持 owner / authorized-only；当前 `LICENSE.md` 只说明权利边界，不擅自授予 MIT / Apache 等许可。
+- 发布从 `origin/main` 的独立 worktree / 分支完成，已确认没有混入 c0.12 与原工作区其他未提交改动。
 
 ### 阻塞项
 
-- 公开复用许可证选择和 GitHub commit / push 属于新增外部副作用 / 权利决定，需要用户明确授权。
-- 2026-07-15 01:32 CST 再次检查：远端 `main` 仍为 `0d972ca25369181fcaf466891e8dffe85a159d6c`，不存在 c0.13 发布分支，latest 资产目录与 raw `asset.json` 均为 404。该授权门已连续出现在原始目标轮及两次自动 continuation，达到 goal blocked 条件。
-- 2026-07-15 13:46 CST 用户明确要求“发布”；blocked goal 恢复。发布采用现有 owner / authorized-only 权限说明，不擅自新增 MIT / Apache 许可，并授权执行隔离 commit / push / 默认分支落位所需动作。
+- 无。2026-07-15 13:46 CST 用户明确要求“发布”，原授权阻塞已解除；发布保持 owner / authorized-only 权限说明。
 
 ## Phase Summaries
 
@@ -133,11 +131,11 @@ Execute（WP-05 publishing）
 - WP-02：五条实践经验回流完成，AIPD build 通过。
 - WP-03：根级源码资产、19 项核心 / Vue runtime 测试、Vite smoke、依赖审计完成。
 - WP-04：正式经验 / 指南 / 索引品牌迁移与资产引用完成；正式面旧品牌清零。
-- WP-05：发布并锁定源码资产，in progress。
+- WP-05：首个源码资产提交已推送并验证 pinned，发布元数据与默认分支 latest 仍在推进。
 
 ### Verify
 
-- 状态：第二轮 Verify 进行中；本地 gates passed，等待发布授权。
+- 状态：第二轮 Verify 进行中；本地 gates passed，pinned passed，等待默认分支 latest 验证。
 - 入口：`04-verify/verify.md`
 - 回跳修正：全局 Dialog selector、QlmForm 示例和 FormItem 统计口径已修复并重验。
 - 第二轮回跳修正：校验错误放行、callback 异常清理、app context fail-fast、同步注册 / scope dispose、异步分页、初始化幂等、首次 render cleanup、显式 show options、示例错误处理和验证分层已修复。
@@ -147,5 +145,5 @@ Execute（WP-05 publishing）
 - 状态：原 Close 已撤销。2026-07-15 用户指出实现型经验缺少源码资产，原验收只能证明文字沉淀与项目迁移完成，不能证明经验可直接复用。
 - 入口：`05-close/close.md`
 - 原有成果仍有效：五条经验已回流；目标项目活跃 map / L4 / L5 / README / MMD 已同步。
-- 新增本地工作已经完成；当前只剩 WP-05 的公开许可证、隔离 commit / push、默认分支边界和远端 latest / pinned 实测需要用户授权。
+- 新增本地工作和隔离发布已完成；当前只剩默认分支合并、latest 实测与最终归档。
 - 延后候选：Vue3 SCSS、mock-first、若依字典 / 路由 / 权限、轻量 API facade。

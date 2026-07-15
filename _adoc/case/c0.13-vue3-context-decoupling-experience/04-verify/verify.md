@@ -96,7 +96,7 @@
 - [x] AIPD 正式经验、指南、索引、Agent / Learn 规则和附带资产无旧品牌残留；case / Inbox 来源历史保留事实。
 - [x] `aipd-learn` 已把“实现型经验附带非 Skill 打包源码资产”固化为通用回流规则。
 - [x] 根 README、`_adoc/map.md`、L5 已增加源码资产入口和 build 边界。
-- [ ] 用户选择允许公开复用的许可证，或明确继续维持 owner / authorized-only 状态。
+- [x] 发布继续维持 owner / authorized-only 状态，不擅自授予公开复用许可证。
 - [ ] 用户授权隔离 commit / push 后，实测 GitHub latest 并用真实 SHA 更新 pinned 引用。
 
 ### 自动验证证据
@@ -137,13 +137,12 @@
 
 - Element Plus Dialog / Drawer 动画、Teleport、遮罩、ESC、Router / Pinia 插件行为尚未做真实浏览器自动化；已明确要求消费项目冒烟。Drawer 来源侧也无真实业务案例。
 - Nuxt client plugin / hydration / request context 未建独立 Nuxt fixture；当前只验证 Vue app-level provide 继承和 SSR-safe scope 注册机制。
-- 资产尚未发布到 GitHub，因此 latest / pinned 只允许以模板存在，不声称当前可访问。
+- 首个完整源码资产提交已发布，pinned tree、源码与测试均实测可访问；默认分支 latest 待合并后验证。
 - 仓库顶级没有已确认的公共许可证；本 case 不擅自创建 MIT / Apache 授权。
 - AIPD build 后未 install；仍需用户显式确认。
 
 ### 下一步
 
-1. 用户确认源码许可证与 commit / push 权限。
-2. Verify 回跳 Execute，按 `03-execute/work-packages/wp-05-publish-and-pin-assets.md` 隔离发布，不混入 c0.12 / Agent 路由的既有脏改动。
-3. 发布后实测 pinned URL；资产进入默认分支后再实测 latest URL，记录真实完整 commit SHA。
-4. 回到 Verify 更新本节为 passed，重新 Close 并归档。
+1. 提交包含真实 pinned SHA 的发布元数据。
+2. 合并默认分支并实测 latest URL。
+3. 回到 Verify 更新本节为 passed，重新 Close 并归档。

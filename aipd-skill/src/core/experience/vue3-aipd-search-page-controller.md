@@ -14,8 +14,8 @@
 - 测试：`experience-assets/vue3-context-decoupling/test/aipd-search.test.js`
 - Vue runtime 测试：`experience-assets/vue3-context-decoupling/test/integration/vue-context.test.js`
 - 来源 / 权限：`experience-assets/vue3-context-decoupling/SOURCE.md`、`experience-assets/vue3-context-decoupling/LICENSE.md`
-- 远端状态：当前未发布；合并到 `main` 后的 latest 模板为 `https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling/src/aipd-search`。
-- commit-pinned 规则：发布后替换真实完整 SHA：`https://github.com/KarnaughK/AIPD/tree/{full-commit-sha}/experience-assets/vue3-context-decoupling/src/aipd-search`
+- latest：`https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling/src/aipd-search`
+- commit-pinned：`https://github.com/KarnaughK/AIPD/tree/f7c36f250d8c45eb9cb7600aa0186e800c33df1e/experience-assets/vue3-context-decoupling/src/aipd-search`
 
 AIPD 附带源码实现了动态 Filter 注销、Symbol context、可 await 初始化、初始化错误传播和循环依赖清理；核心层和 Vue scope runtime 已单测，浏览器请求竞争与 Nuxt SSR / hydration 仍需消费项目验证。仓库所有者或已获授权的使用者落地时读取源码与测试；其他读者在许可证明确前只审阅和引用。
 

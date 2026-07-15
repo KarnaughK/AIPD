@@ -13,8 +13,8 @@
 - 测试：`experience-assets/vue3-context-decoupling/test/aipd-modal-box.test.js`
 - Vue runtime 测试：`experience-assets/vue3-context-decoupling/test/integration/modal-runtime.test.js`
 - 来源 / 权限：`experience-assets/vue3-context-decoupling/SOURCE.md`、`experience-assets/vue3-context-decoupling/LICENSE.md`
-- 远端状态：当前未发布；合并到 `main` 后的 latest 模板为 `https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling/src/aipd-modal-box`。
-- commit-pinned 规则：发布后把 `{full-commit-sha}` 替换为真实完整 SHA：`https://github.com/KarnaughK/AIPD/tree/{full-commit-sha}/experience-assets/vue3-context-decoupling/src/aipd-modal-box`
+- latest：`https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling/src/aipd-modal-box`
+- commit-pinned：`https://github.com/KarnaughK/AIPD/tree/f7c36f250d8c45eb9cb7600aa0186e800c33df1e/experience-assets/vue3-context-decoupling/src/aipd-modal-box`
 
 源码资产位于 AIPD 仓库而不随 Skill 打包。仓库所有者或已获授权的使用者应读取 / 复制该资产并保留测试；其他读者在许可证明确前只审阅和引用。不要只根据本文重新手写浮层生命周期。
 

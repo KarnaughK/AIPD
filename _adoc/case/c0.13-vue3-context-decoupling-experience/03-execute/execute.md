@@ -6,7 +6,7 @@
 - WP-02 Vue3 实践经验库回流：completed
 - WP-03 非打包 Vue3 源码资产：completed / local
 - WP-04 经验引用与 AIPD 品牌迁移：completed / local
-- WP-05 GitHub 发布与 pinned revision：pending / waiting user authority
+- WP-05 GitHub 发布与 pinned revision：in progress / source revision pushed and pinned verified
 
 ## 执行顺序
 
@@ -40,4 +40,5 @@ WP-01 已完成 canonical 命名和目标项目说明；WP-02 以最终 public A
 - 回跳缺陷：独立代码 / 文档复核发现的问题均已定点修正并增加回归测试。
 - 验证：16 项 core tests + 3 项 Vue runtime tests、Vite 6.4.3 smoke、npm audit 0、AIPD Claude / Codex 各 9 skills build、品牌扫描、路径扫描、dist 目录 / 内容哈希隔离和 `git diff --check` 均通过。
 - 仓库级入口：`node experience-assets/scripts/verify-assets.mjs --full` 已统一重跑并通过上述资产 / build 门禁。
-- 下一步：当前停在 `04-verify/verify.md` 的 Reopen Verify；用户给出许可证与 Git 权限后，由 Verify 回跳 Execute 执行 WP-05，再返回 Verify 实测远端 URL。
+- WP-05 checkpoint：隔离分支 `codex/c0.13-vue3-experience-assets` 已从 `origin/main` 创建；源码资产提交 `f7c36f250d8c45eb9cb7600aa0186e800c33df1e` 已推送，pinned tree、源码与测试均返回 HTTP 200。
+- 下一步：提交发布元数据、合并默认分支并返回 Verify 实测 latest URL。

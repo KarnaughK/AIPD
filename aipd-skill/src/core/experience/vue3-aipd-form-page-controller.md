@@ -14,8 +14,8 @@
 - 测试：`experience-assets/vue3-context-decoupling/test/aipd-form.test.js`
 - Vue runtime 测试：`experience-assets/vue3-context-decoupling/test/integration/vue-context.test.js`
 - 来源 / 权限：`experience-assets/vue3-context-decoupling/SOURCE.md`、`experience-assets/vue3-context-decoupling/LICENSE.md`
-- 远端状态：当前未发布；合并到 `main` 后的 latest 模板为 `https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling/src/aipd-form`。
-- commit-pinned 规则：发布后替换真实完整 SHA：`https://github.com/KarnaughK/AIPD/tree/{full-commit-sha}/experience-assets/vue3-context-decoupling/src/aipd-form`
+- latest：`https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling/src/aipd-form`
+- commit-pinned：`https://github.com/KarnaughK/AIPD/tree/f7c36f250d8c45eb9cb7600aa0186e800c33df1e/experience-assets/vue3-context-decoupling/src/aipd-form`
 
 源码资产不随 Skill 打包。仓库所有者或已获授权的使用者优先使用其中的 controller、item、Symbol context 和测试；其他读者在许可证明确前只审阅和引用，不根据本文重写一份近似实现。
 

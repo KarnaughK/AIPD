@@ -44,9 +44,9 @@ in progress / user authorized publication
 
 ## 验收
 
-- [ ] 许可证状态与公开复用文案一致。
-- [ ] 隔离提交不包含 c0.12 或其他用户改动。
-- [ ] 远端 pinned URL 含真实完整 SHA，且可读取源码、示例和测试。
+- [x] 许可证状态与公开复用文案一致：owner / authorized-only。
+- [x] 隔离提交不包含 c0.12 或其他用户改动。
+- [x] 远端 pinned URL 含真实完整 SHA `f7c36f250d8c45eb9cb7600aa0186e800c33df1e`，且 tree、源码和测试均返回 HTTP 200。
 - [ ] 默认分支 latest URL 实际可访问，或明确记录尚待合并而不伪称 latest 已发布。
 - [ ] 发布后的 `asset.json`、三条实现型经验和资产 README 状态一致。
 - [ ] 发布版本通过统一全量验证和 `git diff --check`。
