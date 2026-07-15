@@ -1,7 +1,7 @@
 # Case: c0.12-codex-gpt-5-6-sol-adaptation
 
 > **目标**：判断 Codex 新模型 “GPT-5.6 / sol / 极高”（用户当前界面称呼）的适用边界，并从近期真实对话中找出 AIPD 可降低等待时间和无效 token 消耗的规则改进方向。
-> **当前 Phase**：Verify（WP-02 已安装并获准合并，真实使用观察继续）
+> **当前 Phase**：Close（completed）
 
 ## Case Contract
 
@@ -90,23 +90,23 @@
 
 ## Current Phase
 
-Verify
+Close
 
 ## Phase State
 
 - Think: completed（2026-07-14 短暂重开后重新收口） -> `01-think/think.md`
 - Design: completed / readiness passed -> `02-design/design.md`
 - Execute: completed / WP-01 + WP-02 -> `03-execute/execute.md`
-- Verify: passed / pending runtime observation -> `04-verify/verify.md`
-- Close: pending -> `05-close/close.md`
+- Verify: passed / user accepted / merged to `main` -> `04-verify/verify.md`
+- Close: completed / archived -> `05-close/close.md`
 
 ## 当前焦点
 
-- **当前要解决的问题**：完成 5.6 分支到 `main` 的发布；合并后继续自然观察调度是否按预期启用 Child。
-- **当前游标**：`04-verify/verify.md`
-- **最近 checkpoint**：WP-02、授权叙事扫描、双平台 build 和 Codex 用户级 install 均已通过。
-- **下一步建议**：在普通任务中自然观察，不额外提示模型使用 Child；如仍长期不使用再回到本 Case 分析。
-- **压缩后恢复入口**：先读 `04-verify/verify.md`；修正证据见 WP-02。
+- **当前要解决的问题**：已完成；c0.12 已通过用户验收、合入 `main` 并归档。
+- **当前游标**：`05-close/close.md`
+- **最近 checkpoint**：PR #3 已合入 `main`（`9558a7105db2d279dc79cbe962ac697ae77fad87`）；用户确认实际使用中没有明确问题并同意收口。
+- **下一步建议**：后续仅在出现明确运行时问题时新开 case，不继续占用当前活动 case。
+- **压缩后恢复入口**：先读 `05-close/close.md`；验收证据见 `04-verify/verify.md`。
 - **待确认项**：
   - [x] 用户已完成最终 Git 审阅并批准合并；Codex 用户级 install 已完成。
 - **阻塞项**：无；详细浏览器异常阈值和模型 A/B 均不阻塞当前实现。
@@ -129,6 +129,7 @@ Verify
 | 2026-07-14 | Design -> Execute | 用户授权一次性完成全部改动、Git 变更审查与整体验证 | Quick Design readiness passed；WP-01 由 Main 连续执行 | install 仍需 build 后单独确认 | 修改规则、审查 diff、运行 build | `03-execute/work-packages/wp-01-main-child-runtime-routing.md` |
 | 2026-07-14 | Execute -> Verify | WP-01 与自动验证完成 | 源码、直接相关认知 / docs、Codex / Claude 生成物语义一致；build 通过 | 用户验收与 install 确认 pending | 用户审查整体 Git 变更 | `04-verify/verify.md` |
 | 2026-07-14 | Verify -> Execute | 用户反馈要求移除子 Agent 授权叙事 | 不再显式讨论授权 / 前置询问；四维收益模型与外部副作用边界不变 | 自然调度是否增加 Child 使用率待真实观察 | 执行 WP-02 | `03-execute/work-packages/wp-02-remove-child-authorization-framing.md` |
+| 2026-07-15 | Verify -> Close | PR #3 已合入 `main`；用户确认实际使用无明确问题 | Verify 全部通过，运行时长期观察不再阻塞 Close | 同 prompt A/B 与浏览器阈值继续作为后续候选 | 完成 Close 并归档 | `05-close/close.md` |
 
 ## 回跳 / 重开记录
 
@@ -176,9 +177,9 @@ Verify
 
 ### 验收结果
 
-- **状态**：WP-02 已构建并安装，等待真实使用观察。
+- **状态**：passed。WP-02 已构建、安装并合入 `main`，用户验收通过。
 - **证据**：WP-01 全部验收项通过；`git diff --check`、旧语义扫描、Codex / Claude dist 核对和 AIPD build 均通过。
-- **残留风险**：缺少同 prompt A/B；浏览器阈值 deferred；install 已完成，但自然调度效果仍需真实任务持续观察。
+- **残留风险**：缺少同 prompt A/B；浏览器阈值 deferred；这些属于后续优化候选，不阻塞本 case Close。
 
 ## Close 归档候选 / 反向编织候选
 
@@ -202,7 +203,7 @@ Verify
 
 ## Close 摘要
 
-- **状态**：待开始
+- **状态**：completed
 - **创建时间**：2026-07-10
-- **归档时间**：
-- **归档位置**：
+- **归档时间**：2026-07-15
+- **归档位置**：`_adoc/case/archive/c0.12-codex-gpt-5-6-sol-adaptation/`

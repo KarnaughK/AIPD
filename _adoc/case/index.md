@@ -2,9 +2,7 @@
 
 ## 进行中 Case
 
-| Case | 状态 | 说明 |
-|---|---|---|
-| `c0.12-codex-gpt-5-6-sol-adaptation` | Verify / 已批准合并 | WP-02 已完成构建、Codex 用户级安装和 Git 审阅；合入 `main` 后继续自然观察调度表现 |
+当前无进行中 Case。
 
 ## 暂停 Case
 
@@ -25,6 +23,7 @@
 | `archive/c0.7-repo-structure-reclassification` | 2026-06-27 | 重划仓库根目录，收拢 AIPD Skill 本体、docs、项目认知和历史材料边界 |
 | `archive/c0.9-aipd-think-system-design` | 2026-06-27 | 旧 Think 一等对象设计 case；Think 问题已被新的 phase-first case 生命周期吸收，作为历史调研和边界参考归档 |
 | `archive/c0.11-aipd-case-design-flow` | 2026-07-10 | 将 Case Design 扩展为需求契约、后端 / 前端设计、上下文解耦、执行切片和 readiness gate，并完成构建与 Codex 安装验证 |
+| `archive/c0.12-codex-gpt-5-6-sol-adaptation` | 2026-07-15 | 完成 GPT-5.6 Sol / Ultra 使用边界与 Main / Child 调度适配，移除授权叙事，完成构建、安装、实际使用验收和 `main` 合并 |
 | `archive/c0.13-vue3-context-decoupling-experience` | 2026-07-15 | 从真实 Vue3 后台项目沉淀上下文解耦经验与可验证源码资产，完成 AIPD 品牌迁移、GitHub latest / pinned 发布和远端验收 |
 
 ## 使用原则

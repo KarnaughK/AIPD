@@ -2,9 +2,9 @@
 
 ## Verify Result
 
-- **结果**：WP-02 修正、自动验证和 Codex 用户级 install 均通过，进入真实使用观察。
+- **结果**：passed。WP-02 修正、自动验证、Codex 用户级 install 和 `main` 合并均通过。
 - **验收对象**：WP-01 的调度语义、源码 / 文档一致性、Codex / Claude 构建生成物和 Git 变更边界。
-- **用户验收状态**：accepted_for_merge / runtime_observation_continues。
+- **用户验收状态**：accepted。2026-07-15 用户确认实际使用中没有明确问题，同意按 `main` 完成合并与收口。
 
 ## Case Contract 验收
 
@@ -50,14 +50,15 @@
 
 - Sol High / Ultra 的同 prompt A/B 仍未执行；当前规则是交互与调度策略，不是模型质量基准结论。
 - 浏览器阈值仍按真实执行反馈补充，本 Case 不提前固化。
-- 安装已验证；自然调度是否会按预期使用 Child 仍需后续真实任务观察。
+- 安装已验证；自然调度效果仍可在后续真实任务中持续观察，但不再阻塞本 case Close。
 
 ## 下一步判断
 
 - 2026-07-14：用户要求移除“子 Agent 授权 / 前置询问”的显式叙事；WP-02 已完成并返回 Verify。
 - 2026-07-15：用户批准把 5.6 分支合入 `main`；运行时自然观察作为合并后的持续反馈，不再阻塞发布。
+- 2026-07-15：PR #3 已合入 `main`，merge commit 为 `9558a7105db2d279dc79cbe962ac697ae77fad87`；用户随后确认当前使用无明确问题，同意完成收口。
 - 用户发现规则或 diff 不符合预期：回到 Execute，新增或调整 Work Package。
-- 当前无需要回到 Design 的阻塞问题；合并完成后可进入 Close。
+- 当前无阻塞问题；Verify passed，进入 Close。
 
 ## Close / Weave 候选
 
