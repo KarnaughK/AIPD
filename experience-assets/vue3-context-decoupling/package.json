@@ -1,0 +1,27 @@
+{
+  "name": "@aipd/experience-vue3-context-decoupling",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Portable reference source for AipdModalBox, AipdForm and AipdSearch.",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:vue": "node --test test/integration/*.test.js",
+    "build:smoke": "node scripts/vite-smoke.mjs",
+    "check": "find src test -name '*.js' -exec node --check {} \\;",
+    "verify": "npm run check && npm test",
+    "verify:full": "npm run verify && npm run test:vue && npm run build:smoke"
+  },
+  "peerDependencies": {
+    "element-plus": ">=2.7.0",
+    "vue": ">=3.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vue/server-renderer": "3.5.26",
+    "element-plus": "2.13.1",
+    "jsdom": "^29.1.1",
+    "vite": "6.4.3",
+    "vue": "3.5.26"
+  }
+}

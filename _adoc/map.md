@@ -34,6 +34,7 @@
 | 旧 case-create / 旧 case-run / 旧 case-archive | AIPD Case 旧入口迁移 | case 流程 | `_adoc/case/index.md`、相关 case `case.md` | `aipd-skill/src/skills/aipd-case/SKILL.md`、`aipd-skill/src/core/case/overview.md` | `rg "case-create|case-run|case-archive|旧入口|迁移" aipd-skill/src _adoc docs` |
 | Weave / 反向编织 / 项目 ADOC 回写 / 更新 map / 更新局部 README / Close 归档候选 | Weave 反向编织 | L3 + L5 | `_adoc/L3-core/horizontal-capabilities.md`、`_adoc/map.md` | `aipd-skill/src/skills/aipd-weave/SKILL.md` | `rg "weave|反向编织|Close 归档候选|知识回写|更新 ADOC|更新 map" aipd-skill/src _adoc README.md` |
 | 自迭代 / learn / transcript / 观察锚点 | AIPD Learn | L5 + 框架自迭代 | `aipd-skill/src/skills/aipd-learn/SKILL.md` | `aipd-skill/src/platforms/codex/` | `rg "观察锚点|transcript|回流|自迭代|learn" aipd-skill/src _adoc` |
+| 实践经验库 / 附带源码 / experience assets / AipdModalBox / AipdForm / AipdSearch | AIPD 实践经验与源码资产 | L5 + 仓库级 L6 资产 | `aipd-skill/src/core/experience/index.md`、`_adoc/L5-dev/index.md` | `experience-assets/README.md`、`experience-assets/vue3-context-decoupling/README.md` | `rg "附带源码|experience-assets|AipdModalBox|AipdForm|AipdSearch" aipd-skill/src experience-assets _adoc` |
 | docs / 学习文档 / README / 教学文档 / 三条主线 / 用户学习路径 | AIPD 面向用户的学习文档体系 | L3 + L5 + docs | `docs/README.md`、`README.md` | `docs/guide/`、`docs/modules/` | `rg "学习文档|三条主线|知识库最小闭环|Case / Work Package|AI 原生代码架构|README" README.md docs _adoc` |
 | Vue 页面 / 组件 / AI 友好前端架构 / 纯前端 case | Vue 角色 Agent 调度 | L5 + 局部 README | `_adoc/L5-dev/index.md`、`aipd-skill/src/core/L5-dev/vue-case-create-guide.md`、`aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md`、`aipd-skill/src/core/agent-guides/aipd_vue_architect.md` | `aipd-skill/src/platforms/codex/agents/aipd_vue_architect.toml` | `rg "Vue|组件|README|aipd_vue_architect|纯前端|一个文件一个 work package|useXxx" aipd-skill/src _adoc` |
 | Vue useXxx / provide inject / 页面数据源 / API 字段对齐 / 兜底字段 | Vue Provider 角色 Agent 调度 | L5 + 局部 README | `_adoc/L5-dev/index.md`、`aipd-skill/src/core/L5-dev/vue-provider-guide.md`、`aipd-skill/src/core/agent-guides/aipd_vue_provider.md` | `aipd-skill/src/platforms/codex/agents/aipd_vue_provider.toml` | `rg "useXxx|provide|inject|provider|API|字段|兜底|aipd_vue_provider" aipd-skill/src _adoc` |
@@ -97,6 +98,7 @@
 | skill 源码 | `aipd-skill/src/skills/{skill}/SKILL.md` | skill 执行规则本体 | 对应功能线 |
 | OKR skill | `aipd-skill/src/skills/aipd-okr/SKILL.md` | OKR 触发入口、经验包格式、飞书远端操作边界 | AIPD OKR |
 | case 模板 | `aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/work-package.md` | case / work package 标准结构 | AIPD Case |
+| 实践经验源码资产 | `experience-assets/README.md` | 不随 Skill 打包的实现型经验源码、示例、来源与验证入口 | AIPD Learn、Vue3 代码实践经验 |
 
 ## 自迭代观察锚点
 
