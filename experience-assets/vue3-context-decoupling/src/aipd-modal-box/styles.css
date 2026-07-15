@@ -1,0 +1,23 @@
+.aipd-modal-box__dialog,
+.aipd-modal-box__drawer {
+  box-sizing: border-box;
+}
+
+.aipd-modal-box__dialog .el-dialog__body,
+.aipd-modal-box__drawer .el-drawer__body {
+  min-width: 0;
+}
+
+.aipd-modal-box__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.aipd-modal-box__title {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 0;
+}
