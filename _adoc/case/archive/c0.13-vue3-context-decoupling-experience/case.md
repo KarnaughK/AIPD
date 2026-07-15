@@ -1,7 +1,7 @@
 # Case: c0.13-vue3-context-decoupling-experience
 
 > **本次事项目标**：从 CaiShen Vue3 后台项目提炼可供 Vue3 与 Nuxt 前端复用的上下文解耦实践经验，并完成 ModalBox 命名迁移与必要说明补充。
-> **当前 Phase**：Execute（WP-05 publishing）
+> **当前 Phase**：Close（completed）
 
 ## Case Contract
 
@@ -55,7 +55,7 @@
 - [x] AIPD 自有正式经验、活跃指南、索引和附带资产中不再出现 `QLM` / `Qlm` 品牌残留；来源证据与迁移历史除外。
 - [x] 自动验证证明源码资产通过自身测试，AIPD build 通过，且 `experience-assets/` 没有进入 `aipd-skill/dist` 或安装产物。
 - [x] 许可证状态明确并与发布文案一致：继续维持 owner / authorized-only，不因公开可读而擅自授予 MIT / Apache 等公开复用权。
-- [ ] 用户授权后将本 case 的改动隔离提交 / 推送，实测 GitHub latest 地址并记录真实 commit-pinned SHA。
+- [x] 已隔离提交 / 推送并通过 PR #1 合入 `main`；GitHub latest 与 commit-pinned 地址均实测 HTTP 200。
 
 ### 上下文索引
 
@@ -79,28 +79,28 @@
 
 ### Current Phase
 
-Execute（WP-05 publishing）
+Close（completed）
 
 ### Phase State
 
 - Think: completed / 2026-07-15 补充源码资产缺口判断
 - Design: completed / reopen Readiness Gate passed
-- Execute: WP-01 至 WP-04 completed / WP-05 in progress
-- Verify: local gates passed / waiting for remote publication recheck
-- Close: reopened / previous archive reverted
+- Execute: WP-01 至 WP-05 completed
+- Verify: passed / local and remote publication gates passed
+- Close: completed / ready for archive
 
 ### 当前焦点
 
-用户已授权发布；隔离分支已创建，首个源码资产提交为 `f7c36f250d8c45eb9cb7600aa0186e800c33df1e`，pinned tree、源码与测试均已返回 HTTP 200。
+源码资产、经验文档和发布元数据已经由 PR #1 合入 `main`；latest 与 pinned 均已验证可访问。
 
 ### 下一步
 
-提交发布元数据并合并默认分支；实测 latest 后返回 Verify，再重新 Close。
+归档本 case，并把最终归档状态合入 `main`。
 
 ### 待确认项
 
 - 代码中的 `QlmModalBox` 按组件语义解释为 ModalBox；迁移目标采用 Vue 组件命名 `AipdModalBox`，避免把 modal 误写成 model。
-- GitHub 稳定引用同时支持默认分支 latest 地址和锁定首个完整源码资产提交的 pinned 地址；pinned 已实测，latest 待默认分支合并后实测。
+- GitHub 稳定引用同时支持默认分支 latest 地址和锁定首个完整源码资产提交的 pinned 地址；两者均已实测 HTTP 200。
 - 许可证继续维持 owner / authorized-only；当前 `LICENSE.md` 只说明权利边界，不擅自授予 MIT / Apache 等许可。
 - 发布从 `origin/main` 的独立 worktree / 分支完成，已确认没有混入 c0.12 与原工作区其他未提交改动。
 
@@ -125,25 +125,25 @@ Execute（WP-05 publishing）
 
 ### Execute
 
-- 状态：WP-01 至 WP-04 已完成；WP-05 已恢复并进入发布执行。
+- 状态：WP-01 至 WP-05 全部完成。
 - 入口：`03-execute/execute.md`
 - WP-01：AipdModalBox 迁移完成，目标项目生产构建通过。
 - WP-02：五条实践经验回流完成，AIPD build 通过。
 - WP-03：根级源码资产、19 项核心 / Vue runtime 测试、Vite smoke、依赖审计完成。
 - WP-04：正式经验 / 指南 / 索引品牌迁移与资产引用完成；正式面旧品牌清零。
-- WP-05：首个源码资产提交已推送并验证 pinned，发布元数据与默认分支 latest 仍在推进。
+- WP-05：源码资产提交 `f7c36f250d8c45eb9cb7600aa0186e800c33df1e` 已推送；PR #1 合入 `main`，latest / pinned 均验证通过。
 
 ### Verify
 
-- 状态：第二轮 Verify 进行中；本地 gates passed，pinned passed，等待默认分支 latest 验证。
+- 状态：第二轮 Verify passed；本地门禁、pinned 和默认分支 latest 全部通过。
 - 入口：`04-verify/verify.md`
 - 回跳修正：全局 Dialog selector、QlmForm 示例和 FormItem 统计口径已修复并重验。
 - 第二轮回跳修正：校验错误放行、callback 异常清理、app context fail-fast、同步注册 / scope dispose、异步分页、初始化幂等、首次 render cleanup、显式 show options、示例错误处理和验证分层已修复。
 
 ### Close
 
-- 状态：原 Close 已撤销。2026-07-15 用户指出实现型经验缺少源码资产，原验收只能证明文字沉淀与项目迁移完成，不能证明经验可直接复用。
+- 状态：completed。原 Close 撤销后新增的源码资产、许可证边界、GitHub 发布和远端引用验收均已闭环。
 - 入口：`05-close/close.md`
 - 原有成果仍有效：五条经验已回流；目标项目活跃 map / L4 / L5 / README / MMD 已同步。
-- 新增本地工作和隔离发布已完成；当前只剩默认分支合并、latest 实测与最终归档。
+- 最终归档路径：`_adoc/case/archive/c0.13-vue3-context-decoupling-experience/`。
 - 延后候选：Vue3 SCSS、mock-first、若依字典 / 路由 / 权限、轻量 API facade。

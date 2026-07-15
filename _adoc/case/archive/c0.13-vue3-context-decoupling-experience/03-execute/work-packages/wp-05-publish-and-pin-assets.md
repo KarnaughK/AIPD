@@ -2,7 +2,7 @@
 
 ## 状态
 
-in progress / user authorized publication
+completed / 2026-07-15
 
 ## 目标
 
@@ -47,6 +47,14 @@ in progress / user authorized publication
 - [x] 许可证状态与公开复用文案一致：owner / authorized-only。
 - [x] 隔离提交不包含 c0.12 或其他用户改动。
 - [x] 远端 pinned URL 含真实完整 SHA `f7c36f250d8c45eb9cb7600aa0186e800c33df1e`，且 tree、源码和测试均返回 HTTP 200。
-- [ ] 默认分支 latest URL 实际可访问，或明确记录尚待合并而不伪称 latest 已发布。
-- [ ] 发布后的 `asset.json`、三条实现型经验和资产 README 状态一致。
-- [ ] 发布版本通过统一全量验证和 `git diff --check`。
+- [x] 默认分支 latest tree、manifest 和三套源码实际返回 HTTP 200。
+- [x] 发布后的 `asset.json`、三条实现型经验和资产 README 状态一致。
+- [x] 发布版本通过统一全量验证和 `git diff --check`。
+
+## 完成记录
+
+- 源码资产提交：`f7c36f250d8c45eb9cb7600aa0186e800c33df1e`。
+- 发布元数据提交：`f98e73fc471d051c33c5e8b0277398eabb2c0b8f`。
+- 发布 PR：`https://github.com/KarnaughK/AIPD/pull/1`。
+- 默认分支 merge commit：`be0327968fdd0bcb62159439299426d6a5187989`。
+- 权限边界：owner / authorized-only；公开可读不等于公开复用授权。

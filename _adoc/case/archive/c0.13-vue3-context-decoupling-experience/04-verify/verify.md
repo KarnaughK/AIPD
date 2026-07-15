@@ -2,7 +2,7 @@
 
 ## 当前 Verify Result
 
-**local gates passed，publication in progress**。第一次 Verify 的代码与经验验收仍然有效，但后续因“实现型经验缺少可复用源码资产”而重开；当前结论以文末 `Reopen Verify` 为准。用户已授权 WP-05，发布完成后返回本 phase 做远端验收。
+**passed**。第一次 Verify 的代码与经验验收仍然有效；重开后新增的源码资产、品牌迁移、许可证边界和 GitHub 发布门禁也已全部通过。当前结论以文末 `Reopen Verify` 为准。
 
 ## 第一次 Verify Result（已被 Reopen Verify 覆盖）
 
@@ -81,9 +81,9 @@
 
 ### 当前结论
 
-**local gates passed，publication in progress**。
+**passed**。
 
-第一次 Close 被撤销后新增的 WP-03 / WP-04 已完成本地实现和两轮独立复核回跳。2026-07-15 13:46 CST 用户已授权发布；当前回跳 Execute 执行 WP-05，完成后返回本节验证真实 latest / pinned 地址。
+第一次 Close 被撤销后新增的 WP-03 / WP-04 已完成本地实现和两轮独立复核回跳；WP-05 已完成隔离发布、默认分支合并和真实 latest / pinned 验证。
 
 ### Reopen Contract 验收
 
@@ -92,12 +92,12 @@
 - [x] `AipdForm` 提供纯 controller / item、Symbol context、setup 同步注册、scope dispose、校验归一化、显式逐 item 提交值和事实 update。
 - [x] `AipdSearch` 提供 Filter / Pagination / Controller、Symbol context、scope dispose、可 await init、并发初始化幂等、错误传播和异步分页语义。
 - [x] Vite Vue3 与 Nuxt client plugin / SSR 边界有接入说明；来源验证、AIPD core / runtime 验证和未验证浏览器边界已分层。
-- [x] 三条实现型经验给出本地源码、总览、示例、测试、来源 / 权限、远端未发布状态、latest 模板和 pinned 规则。
+- [x] 三条实现型经验给出本地源码、总览、示例、测试、来源 / 权限、可访问的 latest 和真实 commit-pinned 地址。
 - [x] AIPD 正式经验、指南、索引、Agent / Learn 规则和附带资产无旧品牌残留；case / Inbox 来源历史保留事实。
 - [x] `aipd-learn` 已把“实现型经验附带非 Skill 打包源码资产”固化为通用回流规则。
 - [x] 根 README、`_adoc/map.md`、L5 已增加源码资产入口和 build 边界。
 - [x] 发布继续维持 owner / authorized-only 状态，不擅自授予公开复用许可证。
-- [ ] 用户授权隔离 commit / push 后，实测 GitHub latest 并用真实 SHA 更新 pinned 引用。
+- [x] 已隔离 commit / push，通过 PR #1 合入 `main`；GitHub latest 与真实 SHA pinned 引用均实测通过。
 
 ### 自动验证证据
 
@@ -137,12 +137,18 @@
 
 - Element Plus Dialog / Drawer 动画、Teleport、遮罩、ESC、Router / Pinia 插件行为尚未做真实浏览器自动化；已明确要求消费项目冒烟。Drawer 来源侧也无真实业务案例。
 - Nuxt client plugin / hydration / request context 未建独立 Nuxt fixture；当前只验证 Vue app-level provide 继承和 SSR-safe scope 注册机制。
-- 首个完整源码资产提交已发布，pinned tree、源码与测试均实测可访问；默认分支 latest 待合并后验证。
+- 首个完整源码资产提交已发布，pinned tree、源码与测试均实测可访问；默认分支 latest tree、manifest 和三套源码均返回 HTTP 200。
 - 仓库顶级没有已确认的公共许可证；本 case 不擅自创建 MIT / Apache 授权。
 - AIPD build 后未 install；仍需用户显式确认。
 
+### 远端发布证据
+
+- source revision：`f7c36f250d8c45eb9cb7600aa0186e800c33df1e`。
+- metadata revision：`f98e73fc471d051c33c5e8b0277398eabb2c0b8f`。
+- PR #1：`https://github.com/KarnaughK/AIPD/pull/1`，merge commit `be0327968fdd0bcb62159439299426d6a5187989`。
+- latest tree、raw manifest、AipdModalBox / AipdForm / AipdSearch 源码：HTTP 200。
+- pinned tree、AipdModalBox 源码与测试：HTTP 200。
+
 ### 下一步
 
-1. 提交包含真实 pinned SHA 的发布元数据。
-2. 合并默认分支并实测 latest URL。
-3. 回到 Verify 更新本节为 passed，重新 Close 并归档。
+进入 Close 并归档。
