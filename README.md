@@ -68,6 +68,8 @@ AIPD 这个仓库本身不是一个“打开即用”的应用。
 
 它是 **AIPD Skill 的打包源码项目**：源码在本仓库里，最终使用时需要由本地 Agent 把它打包成 Skill，并放到本机对应 Agent 的 Skill 目录下。
 
+仓库也可以保存少量“只靠文字不足以可靠复用”的实践经验源码。这些资产位于根级 `experience-assets/`，可在 GitHub 版本化阅读，但不会进入 Skill 安装产物。
+
 这件事不应该要求用户手工记命令。用户只需要用 Codex、Claude Code 或其他支持 Skill 的 Agent 打开本项目，然后把目标说清楚：
 
 ```text
@@ -136,6 +138,7 @@ Agent 应先读取 `AGENTS.md`、`_adoc/index.md` 和 `_adoc/map.md`，再根据
 ```text
 AIPD-2/
 ├── _adoc/             # AIPD 仓库自身的项目认知
+├── experience-assets/ # 实现型经验附带源码、示例和验证；不随 Skill 打包
 ├── aipd-skill/        # AIPD Skill 本体源码、脚本和构建产物
 │   ├── src/
 │   │   ├── core/       # AIPD 核心认知、模板和通用规则

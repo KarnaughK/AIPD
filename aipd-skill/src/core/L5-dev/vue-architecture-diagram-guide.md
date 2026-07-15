@@ -46,7 +46,7 @@ src/views/xxx/README-component-architecture.mmd
 1. 确认入口黑箱：`index.vue`、页面根组件、复杂弹框根组件、抽屉根组件或当前 Tab / Step 根组件。
 2. 确认 `useXxx.js` / provider / controller：它在哪个组件里创建或引入，输出哪些稳定数据和方法，哪些能力通过 provide / inject 下发。
 3. 确认首次渲染链路：入口加载后先取什么数据，根组件按什么状态渲染哪些子组件，子组件从 provider / props / controller 读取什么原始数据。
-4. 确认组件协作关系：哪些组件只是父子挂载，哪些组件通过 QlmForm / QlmSearch / provider update 这类 controller 发生协作。
+4. 确认组件协作关系：哪些组件只是父子挂载，哪些组件通过 AipdForm / AipdSearch / provider update 这类 controller 发生协作。
 5. 最后确认用户动作链路：修改字段、局部提交、整体提交、步骤切换、关闭刷新等事件。动作链路不要反过来污染组件嵌套关系。
 
 如果渲染链和提交链都复杂，优先先画渲染结构图，再补事件流模块或第二张图。不要为了“一张图讲完全部”把加载、渲染、编辑、提交、切换和刷新线混在一起。
@@ -79,7 +79,7 @@ src/views/xxx/README-component-architecture.mmd
 
 ```mermaid
 flowchart TD
-    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li><li>负责承载字段组件和提交动作</li></ul></fieldset><fieldset><legend>【useNumberDeliveryRecord.js】</legend><ul><li>读取详情作为只读回显源</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>创建 controller</li><li>收集 FormItem 提交值</li></ul></fieldset>"]
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li><li>负责承载字段组件和提交动作</li></ul></fieldset><fieldset><legend>【useNumberDeliveryRecord.js】</legend><ul><li>读取详情作为只读回显源</li></ul></fieldset><fieldset><legend>【AipdForm】</legend><ul><li>创建 controller</li><li>收集 FormItem 提交值</li></ul></fieldset>"]
 ```
 
 约定：
@@ -97,9 +97,9 @@ flowchart TD
 - `输出方法`
 - `接口调用`
 - `【useXxx.js】`
-- `【QlmForm】`
-- `【QlmForm-update：FormItemXxx.vue】`
-- `【QlmSearch】`
+- `【AipdForm】`
+- `【AipdForm-update：FormItemXxx.vue】`
+- `【AipdSearch】`
 
 模块名尽量使用对应文件名或架构名。
 
@@ -111,8 +111,8 @@ flowchart TD
 - `【useConstruct.js】`
 - `【useCreateStep.js】`
 - `【useNumberDeliveryRecord.js】`
-- `【QlmForm】`
-- `【QlmSearch】`
+- `【AipdForm】`
+- `【AipdSearch】`
 
 避免：
 
@@ -121,7 +121,7 @@ flowchart TD
 - `【page data】`
 - `【全局状态】`
 
-原因是图要能反向定位源码。看到 `【useConstruct.js】` 时，开发者可以直接去找这个文件；看到 `【QlmForm】` 时，开发者知道这是一个表单 controller 架构，而不是某个本地 hook 文件。
+原因是图要能反向定位源码。看到 `【useConstruct.js】` 时，开发者可以直接去找这个文件；看到 `【AipdForm】` 时，开发者知道这是一个表单 controller 架构，而不是某个本地 hook 文件。
 
 ## 图形语义
 
@@ -132,7 +132,7 @@ flowchart LR
     VueComponent["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>方块：Vue 组件文件</li></ul></fieldset>"]
     Judge{"主合同？"}
     Store[("<h2>usePageContext.js</h2><fieldset><legend>输出数据</legend><ul><li>圆柱：provider 状态桶</li></ul></fieldset>")]
-    Controller{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>六边形：controller</li></ul></fieldset>"}}
+    Controller{{"<h2>【AipdForm】</h2><fieldset><legend>事件架构</legend><ul><li>六边形：controller</li></ul></fieldset>"}}
 ```
 
 ### 方块：Vue 组件文件
@@ -233,33 +233,35 @@ flowchart TD
 
 适合：
 
-- `QlmForm`
-- `QlmSearch`
+- `AipdForm`
+- `AipdSearch`
 - 后续类似的表单、搜索、表格上层 controller
 
 示例：
 
 ```mermaid
 flowchart TD
-    controller_QlmForm{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 FormItem 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"}}
+    controller_AipdForm{{"<h2>【AipdForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 FormItem 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"}}
     vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset>"]
 
-    controller_QlmForm -->|controller 架构来源| vue_BlockForm
+    controller_AipdForm -->|controller 架构来源| vue_BlockForm
 ```
 
 规则：
 
 - controller 架构块只连到引入它的组件。
-- 子组件不必都连回 controller；在子组件方块内部写 `【QlmForm】` 模块即可。
-- 这样能表达“从引入组件往下都带上 QlmForm 模块”，但不把图画成满屏交叉线。
+- 子组件不必都连回 controller；在子组件方块内部写 `【AipdForm】` 模块即可。
+- 这样能表达“从引入组件往下都带上 AipdForm 模块”，但不把图画成满屏交叉线。
 
-## QlmForm 模块写法
+## AipdForm 模块写法
 
-如果组件本身是一个 FormItem，节点里写 `【QlmForm】` 模块，说明它如何注册、校验、贡献字段。
+`AipdForm` / `AipdSearch` 是采用 AIPD 参考资产时的 canonical 图例，不是强迫所有项目改名。架构图首先要能反向定位当前项目真实源码：未采用 AIPD 资产的项目应写自己的 controller 实名；尚未确定实现时，设计草稿可暂用中性 `FormController` / `SearchController`，落地后再换成真实名。
+
+如果组件本身是一个 FormItem，节点里写 `【AipdForm】` 模块，说明它如何注册、校验、贡献字段。
 
 ```html
 <fieldset>
-  <legend>【QlmForm】</legend>
+  <legend>【AipdForm】</legend>
   <ul>
     <li>注册 FormItem</li>
     <li>贡献提前开通原因字段</li>
@@ -272,7 +274,7 @@ flowchart TD
 
 ```html
 <fieldset>
-  <legend>【QlmForm-update：FormItemServiceTime.vue】</legend>
+  <legend>【AipdForm-update：FormItemServiceTime.vue】</legend>
   <ul>
     <li>事件来源：服务时间 FormItem 的时间判断结果</li>
     <li>主合同且开始时间早于签约时间时，本组件显示并开启必填校验</li>
@@ -284,8 +286,8 @@ flowchart TD
 
 拆成两个模块的原因：
 
-- `【QlmForm】` 说明“我自己作为 FormItem 做什么”。
-- `【QlmForm-update：来源组件】` 说明“我接收谁的 update 后做什么”。
+- `【AipdForm】` 说明“我自己作为 FormItem 做什么”。
+- `【AipdForm-update：来源组件】` 说明“我接收谁的 update 后做什么”。
 
 这能同时表达组件自身职责和跨组件事件关系，不污染代码嵌套层级。
 
@@ -312,7 +314,7 @@ flowchart TD
 
 ### 事件架构只画来源
 
-`QlmForm` 这类 controller 用六边形表示。
+`AipdForm` 这类 controller 用六边形表示。
 
 它只连到引入 controller 的组件，例如 `BlockForm.vue`。
 
@@ -320,7 +322,7 @@ flowchart TD
 
 ```html
 <fieldset>
-  <legend>【QlmForm】</legend>
+  <legend>【AipdForm】</legend>
   <ul>
     <li>注册 FormItem</li>
     <li>返回字段片段</li>
@@ -356,7 +358,7 @@ Mermaid 源码里的节点名要尽量接近源码文件名，方便从图回到
 - `.vue` 文件节点：`vue_组件名`，例如 `vue_BlockForm`
 - `.js` 文件节点：`js_文件名`，例如 `js_usePageContext`
 - 判断节点：`judge_判断名`，例如 `judge_isMainContract`
-- controller 节点：`controller_架构名`，例如 `controller_QlmForm`
+- controller 节点：`controller_架构名`，例如 `controller_AipdForm`
 
 推荐：
 
@@ -366,7 +368,7 @@ flowchart TD
     vue_FormItemDataNum["<h2>FormItemDataNum.vue</h2><fieldset><legend>组件概览</legend><ul><li>数据量 FormItem 组件</li></ul></fieldset>"]
     js_useNumberDeliveryRecord[("<h2>useNumberDeliveryRecord.js</h2><fieldset><legend>输出数据</legend><ul><li>record detail</li></ul></fieldset>")]
     judge_isMainContract{"主合同？"}
-    controller_QlmForm{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li></ul></fieldset>"}}
+    controller_AipdForm{{"<h2>【AipdForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li></ul></fieldset>"}}
 ```
 
 避免：
@@ -403,9 +405,9 @@ flowchart TD
 应该写：
 
 - `BlockForm.vue` 下面挂载 `FormItemDataNum.vue`
-- `BlockForm.vue` 引入 `QlmForm` controller
+- `BlockForm.vue` 引入 `AipdForm` controller
 - `FormItemDataNum.vue` 作为 FormItem 注册并贡献字段片段
-- `FormItemAdvanceReason.vue` 接收 `FormItemServiceTime.vue` 的 QlmForm update 后自行决定显示和校验
+- `FormItemAdvanceReason.vue` 接收 `FormItemServiceTime.vue` 的 AipdForm update 后自行决定显示和校验
 
 不应该写：
 
@@ -428,20 +430,20 @@ flowchart TD
 
     vue_BlockRecord["<h2>BlockRecord.vue</h2><fieldset><legend>组件概览</legend><ul><li>记录展示组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取记录列表并自行决定是否展示</li></ul></fieldset>"]
 
-    controller_QlmForm{{"<h2>【QlmForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 item 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"}}
+    controller_AipdForm{{"<h2>【AipdForm】</h2><fieldset><legend>事件架构</legend><ul><li>创建 controller</li><li>协调 item 注册</li><li>统一 validate / getSubmitValue</li></ul></fieldset>"}}
 
-    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取详情作为回显源</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>创建 controller</li><li>收集 item 提交值</li></ul></fieldset>"]
+    vue_BlockForm["<h2>BlockForm.vue</h2><fieldset><legend>组件概览</legend><ul><li>表单填写区组件</li></ul></fieldset><fieldset><legend>【usePageContext.js】</legend><ul><li>读取详情作为回显源</li></ul></fieldset><fieldset><legend>【AipdForm】</legend><ul><li>创建 controller</li><li>收集 item 提交值</li></ul></fieldset>"]
 
     judge_isMainGroup{"主合同？"}
 
-    vue_FormItemA["<h2>FormItemA.vue</h2><fieldset><legend>组件概览</legend><ul><li>A 字段组件</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>注册 FormItem</li><li>贡献 A 字段</li></ul></fieldset>"]
+    vue_FormItemA["<h2>FormItemA.vue</h2><fieldset><legend>组件概览</legend><ul><li>A 字段组件</li></ul></fieldset><fieldset><legend>【AipdForm】</legend><ul><li>注册 FormItem</li><li>贡献 A 字段</li></ul></fieldset>"]
 
-    vue_FormItemB["<h2>FormItemB.vue</h2><fieldset><legend>组件概览</legend><ul><li>B 字段组件</li></ul></fieldset><fieldset><legend>【QlmForm】</legend><ul><li>注册 FormItem</li><li>贡献 B 字段</li></ul></fieldset><fieldset><legend>【QlmForm-update：FormItemA.vue】</legend><ul><li>接收 A 字段 update 后自行决定显示、隐藏或校验策略</li></ul></fieldset>"]
+    vue_FormItemB["<h2>FormItemB.vue</h2><fieldset><legend>组件概览</legend><ul><li>B 字段组件</li></ul></fieldset><fieldset><legend>【AipdForm】</legend><ul><li>注册 FormItem</li><li>贡献 B 字段</li></ul></fieldset><fieldset><legend>【AipdForm-update：FormItemA.vue】</legend><ul><li>接收 A 字段 update 后自行决定显示、隐藏或校验策略</li></ul></fieldset>"]
 
     js_usePageContext -->|provide 注入起点| vue_Page
     vue_Page -->|有记录时展示| vue_BlockRecord
     vue_Page -->|可编辑状态展示| vue_BlockForm
-    controller_QlmForm -->|controller 架构来源| vue_BlockForm
+    controller_AipdForm -->|controller 架构来源| vue_BlockForm
     vue_BlockForm --> judge_isMainGroup
     judge_isMainGroup --> vue_FormItemA
     judge_isMainGroup --> vue_FormItemB
@@ -458,9 +460,9 @@ flowchart TD
 - 菱形是不是只用于同层子组件分组判断？
 - 简单条件是不是写在线上，而不是单独画菱形？
 - `useXxx.js` 是否用圆柱，并且只连到 provide 起点？
-- `QlmForm / QlmSearch` 是否用六边形，并且只连到引入 controller 的组件？
-- FormItem 自身注册逻辑是否写在 `【QlmForm】` 模块？
-- 接收其他 FormItem update 的逻辑是否单独写在 `【QlmForm-update：来源组件】` 模块？
+- `AipdForm / AipdSearch` 是否用六边形，并且只连到引入 controller 的组件？
+- FormItem 自身注册逻辑是否写在 `【AipdForm】` 模块？
+- 接收其他 FormItem update 的逻辑是否单独写在 `【AipdForm-update：来源组件】` 模块？
 - 跨组件 update 有没有避免画成错误的父子层级？
 - 图里有没有提前发明未来实现变量名？
 - 图里有没有塞进本该留给组件源码的 UI 细节？

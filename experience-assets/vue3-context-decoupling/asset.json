@@ -1,0 +1,38 @@
+{
+  "id": "vue3-context-decoupling",
+  "version": "0.1.0",
+  "status": "reference",
+  "canonicalNames": [
+    "AipdModalBox",
+    "AipdForm",
+    "AipdSearch"
+  ],
+  "entry": "src/index.js",
+  "readme": "README.md",
+  "source": "SOURCE.md",
+  "license": "LICENSE.md",
+  "verification": {
+    "repositoryCommand": "node experience-assets/scripts/verify-assets.mjs --full",
+    "command": "npm run verify:full",
+    "tests": {
+      "core": 16,
+      "vueRuntime": 3,
+      "total": 19
+    },
+    "viteSmoke": "verified with Vite 6.4.3 and @vitejs/plugin-vue against Vue 3.5.26 / Element Plus 2.13.1",
+    "dependencyAudit": "0 vulnerabilities"
+  },
+  "packaging": {
+    "includedInSkill": false,
+    "includedInRepository": true
+  },
+  "github": {
+    "published": true,
+    "commit": "f7c36f250d8c45eb9cb7600aa0186e800c33df1e",
+    "latest": "https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling",
+    "pinned": "https://github.com/KarnaughK/AIPD/tree/f7c36f250d8c45eb9cb7600aa0186e800c33df1e/experience-assets/vue3-context-decoupling",
+    "latestTemplate": "https://github.com/KarnaughK/AIPD/tree/main/experience-assets/vue3-context-decoupling",
+    "pinnedTemplate": "https://github.com/KarnaughK/AIPD/tree/{full-commit-sha}/experience-assets/vue3-context-decoupling"
+  },
+  "reuse": "repository-owner-or-authorized-use-only-until-license-selected"
+}

@@ -68,7 +68,10 @@ inject-from-core:
 ```text
 aipd-skill/src/core/experience/index.md
 aipd-skill/src/core/experience/{experience-name}.md
+experience-assets/{asset-name}/              # 仅在文字不足以可靠复用时
 ```
+
+其中 `experience-assets/` 位于 AIPD 仓库根级，不在 `aipd-skill/src/` 内。它保存实现型经验附带的源码、示例和验证入口，接受 Git / GitHub 版本化，但不随 Skill build / install。经验正文保存语义和远端入口，不把整套源码复制进 Skill references。
 
 实践经验按一个统一索引管理，不按 Think / Design / Execute 各维护一份索引。每条经验在索引里标注：
 
@@ -86,6 +89,15 @@ aipd-skill/src/core/experience/{experience-name}.md
 - 来源可以写成“已完成外部项目 case / 用户反馈 / transcript 诊断 / AIPD 内部文件”，但只有来源本身位于 AIPD 仓库内时，才在经验正文中保留具体文件路径。
 - 如果一条经验同时产生抽象规则和实践样本，分成两份写：抽象规则进 core / skill，实践样本进 `experience/`。
 - 如果经验仍属于某个业务项目自己的长期认知，不写进 AIPD 框架经验库，应交给该项目的 `aipd-weave`。
+- 代码实践经验包含 controller、adapter、组件基座等不可安全重写的实现细节时，先判断是否需要附带源码资产。需要时建立 `experience-assets/{asset-name}/asset.json`、`README.md`、`SOURCE.md`、许可证边界、`src/`、示例和与风险相称的测试。
+- 源码资产应是可迁移 reference implementation：移除业务数据、私有路径、项目品牌、全局工具类和不可见依赖；不能把外部业务仓库原样复制进 AIPD。
+- 正式经验同时给出仓库路径、GitHub 默认分支 latest 入口和完整 commit SHA 的 pinned 规则。资产尚未提交时不得伪造 pinned SHA。
+- GitHub 可见不等于已授权复用。外部来源没有明确许可证或权利边界时，记录来源性质并优先重新实现；不要擅自授予超出上游权利的许可证。
+- 新增资产后必须验证它没有进入 `aipd-skill/dist` 或安装产物；只有引用文字可以随经验正文进入 Skill。
+- 经验推荐的动作必须和资产许可证一致：未授予复制权时，只能指导普通读者审阅 / 引用；只有仓库所有者或已获授权的使用者才能按其权利范围复制。不能一边写“推荐复制”，一边在许可证中禁止所有读者复制。
+- 区分“来源模式已生产验证”和“AIPD 重写实现已验证”。验证记录至少分为核心单测、Vue runtime、浏览器 / UI adapter、Nuxt / SSR 集成；没有覆盖的层级明确写未验证。
+- 未提交 / 未推送的 GitHub 地址只能标成发布后模板，不能叫作当前 latest。只有远端实际可访问后才写可用 latest URL；pinned URL 必须包含真实完整 commit SHA，不能把 `{full-commit-sha}` 模板当成已发布入口。
+- 新增或更新源码资产后先运行 `node experience-assets/scripts/verify-assets.mjs`；发布前运行 `node experience-assets/scripts/verify-assets.mjs --full`，统一验证 manifest、引用路径、品牌、资产测试、依赖审计、Skill build 和 dist 隔离。
 
 ---
 
@@ -244,7 +256,7 @@ find _adoc/case/{case目录}/steps -type f 2>/dev/null
    - 这类问题优先回写 `aipd-case` 的逐层确认规则、work package 模板和上下文隔离规则。
 
 6. **用户纠正 Agent 的表达和产物形态**
-   - 例如图里模块名、组件概览、QlmForm-update 的表达方式。
+   - 例如图里模块名、组件概览、AipdForm-update 的表达方式。
    - 这类问题优先回写 `aipd-skill/src/core/` 下的方法论文档或模板。
 
 7. **上下文检索 SOP 没有被执行**

@@ -2,7 +2,9 @@
 
 ## 进行中 Case
 
-当前无进行中 Case。
+| Case | 状态 | 说明 |
+|---|---|---|
+| `c0.13-vue3-context-decoupling-experience` | Execute / WP-05 发布中 | 用户已授权发布；保持 owner / authorized-only，正在隔离提交、推送并验证 GitHub latest / pinned 地址 |
 
 ## 暂停 Case
 
