@@ -2,7 +2,7 @@
 
 ## 当前执行游标
 
-- **Work Package**：`work-packages/wp-01-main-child-runtime-routing.md`
+- **Work Package**：`work-packages/wp-02-remove-child-authorization-framing.md`
 - **状态**：completed
 - **执行者**：Main Agent
 - **设计输入**：`../02-design/design.md`
@@ -21,6 +21,7 @@
 | Work Package | 状态 | 执行者 | 说明 |
 |---|---|---|---|
 | `wp-01-main-child-runtime-routing.md` | completed | Main Agent | 高耦合规则统一、残留扫描、diff 审查与 build |
+| `wp-02-remove-child-authorization-framing.md` | completed | Main Agent | 移除授权 / 前置询问叙事，保留自然运行时判定 |
 
 ## 执行记录
 
@@ -28,17 +29,20 @@
 - 2026-07-14：统一 Agent Entry、Case / Execute、Codex / Claude 平台 guide、L3 / L5 / map 与直接相关 docs 的 Main / Child 语义。
 - 2026-07-14：残留扫描发现 Claude guide 仍把每个 Work Package 默认交给 Agent Team，补齐平台规则后重新 build。
 - 2026-07-14：AIPD build 成功生成 9 个 Claude skills、9 个 Codex skills 和 Codex agent templates；转入 Verify。
+- 2026-07-14：用户在 Verify 指出“无需授权”的解释本身仍会强化授权概念；回到 Execute 创建 WP-02。
+- 2026-07-14：WP-02 同步 Agent Entry、Codex guide、Case / Execute、L5、OKR 和分身文档；双平台 build 与生成物扫描通过。
 
 ## Verification Notes
 
 - `git diff --check` 通过。
 - 旧机械派发语义定向扫描无命中。
 - Codex / Claude dist 均包含 Work Package 解绑定、上下文隔离、真实并发和 single-owner 规则。
+- Codex / Claude dist 不再包含子 Agent 授权、申请授权或前置询问叙事。
 - 未发现可运行的项目测试套件；本次 docs / process 改动以 build、生成物语义扫描和 Git diff 审查为验证入口。
-- install、commit、push 均未执行。
+- WP-01 阶段未执行 install、commit、push；WP-02 后经用户确认完成 Codex 用户级 install，2026-07-15 另获 commit / push / merge 授权。
 
 ## 最近 checkpoint
 
-- **当前结论**：WP-01 已完成，Execute 验收项全部满足。
-- **下一步**：进入 Verify，等待用户最终验收；build 后单独确认是否 install。
-- **恢复入口**：`../04-verify/verify.md` 与 `work-packages/wp-01-main-child-runtime-routing.md`。
+- **当前结论**：WP-01、WP-02 均已完成，Execute 验收通过。
+- **下一步**：Codex 用户级 install 已完成；2026-07-15 用户批准把 5.6 分支合入 `main`，合并后继续以真实任务自然观察调度表现。
+- **恢复入口**：`../04-verify/verify.md` 与 WP-02。

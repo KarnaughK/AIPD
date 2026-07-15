@@ -64,17 +64,16 @@ AIPD 不把子 Agent 当成每个任务的默认步骤。Case / Goal / Work Pack
 
 ### Codex 默认调度
 
-当判定值得派发、平台提供可用能力且用户没有明确要求禁用时，Main Agent 可以直接创建子 Agent，无需为调度本身另行询问或等待许可。
+Main Agent 根据上述运行时判定自然选择是否创建子 Agent；平台能力不可用时，由 Main Agent 回退执行。
 
 - 子 Agent 调度是完成当前任务的内部执行方式，不扩大用户原始任务范围，也不授予额外的外部副作用权限。
-- 如果用户明确要求不派子 Agent，或当前平台没有可用的子 Agent 能力，Main Agent 可以直接执行，但要尽量压缩过程输出，避免把长日志和大段源码带回主线。
 - install、远端写入、删除等有外部副作用的动作，仍遵守各自的确认边界，不能因为派发了子 Agent 而跳过。
 
 ### ADOC 检索 Agent
 
 Main Agent 先按 `_adoc/map.md` 做最小路由。已知入口少、上下文可控时可直接读取；预计要扫描大量 `_adoc`、SOP 或多条独立认知线时，优先使用 `aipd_adoc_retriever` 隔离检索过程。
 
-- 判定 retriever 有明确净收益、当前平台支持且用户未明确禁用子 Agent 时，Main Agent 直接创建 `aipd_adoc_retriever`；不为调度本身发起前置询问。
+- 判定 retriever 有明确净收益且当前平台支持时，Main Agent 创建 `aipd_adoc_retriever`；平台不可用时回退为 Main 直接检索。
 - 如果可以指定 custom agent 身份，优先使用 `aipd_adoc_retriever`；该身份优先于完整上下文继承，不要求同时 fork 当前对话上下文。
 - 派发时只传用户任务摘要、当前工作目录、必要边界和返回格式；不要把长对话或长文档复制进 prompt。
 - `aipd_adoc_retriever` 默认检索 L1-L5 和 `_adoc/sop/`；Inbox、OKR、Case 属于次级流程检索，只有用户明确提到或任务明显需要时才读取。
@@ -135,7 +134,7 @@ AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/case/index.md -> 当前 cas
 
 派发规则：
 
-- 当前平台提供可用能力且用户未明确禁用时，按任务触发信号直接创建 Codex 子 Agent，不为调度本身向用户发起前置询问。
+- 当前平台提供可用能力时，按任务触发信号创建 Codex 子 Agent；平台不可用时由 Main 回退执行。
 - 是否使用特定角色 Agent、是否降级为普通 worker + 领域指引，不要只凭记忆硬判断；优先读取本项目 `_adoc/map.md` 路由到相关 L5 Agent 调度规则、平台 agent-guide 或 `agent-guides` 领域指引。
 - 普通 AIPD 对话和 Case Execute 使用同一套净收益判定，不因任务类型或文件数量自动派发。
 - 派发时每条证据面只设一个 owner；Main 不重复调查。需要并发时，首轮只创建少量正交工作线，避免 fan-out 和尾部等待吞掉收益。

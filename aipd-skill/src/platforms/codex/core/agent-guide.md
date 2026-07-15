@@ -43,10 +43,9 @@ Codex Agent 有两种上下文方式：
 - `fork_context: true`：继承主 Agent 当前上下文，用于上下文继承型子 Agent。
 - `fork_context: false`：不继承主 Agent 当前上下文，依靠短 prompt、case、work package 和显式文件恢复任务；这是上下文隔离或角色执行的优先选择。
 
-当运行时判定值得派发、平台提供可用能力且用户没有明确要求禁用时，Main Agent 可以直接创建子 Agent，不需要为调度本身询问或等待许可。
+Main Agent 根据运行时判定自然选择是否创建子 Agent；平台能力不可用时，由 Main Agent 回退执行。
 
 - 子 Agent 调度是当前任务内部的执行方式，不扩大用户原始任务范围，也不授予额外的外部副作用权限。
-- 如果用户明确要求不派子 Agent，或当前平台没有可用的子 Agent 能力，Main Agent 可以直接执行，但应控制过程输出。
 - install、远端写入、删除等有外部副作用的动作，仍遵守各自的确认边界。
 
 AIPD 不把 `fork_context: true` 作为默认规则。Case / Work Package 已承载目标和边界时，优先传最小上下文；只有任务强依赖尚未落盘的主线判断时才继承完整上下文。
@@ -177,7 +176,7 @@ Work Package {work_package_id} 失败：{原因}
 ## 关键约束
 
 - Work Package 是目标、上下文和验收边界，不是默认子 Agent 派发节点。
-- 判定派发有净收益、平台提供可用能力且用户未明确禁用时，可以直接创建子 Agent；用户明确禁用或平台不可用时，由 Main Agent 回退执行。
+- 判定派发有净收益且平台提供可用能力时，创建子 Agent；平台不可用时由 Main Agent 回退执行。用户明确要求不派子 Agent 时，遵循用户当前指令。
 - 只有 work package 强依赖 Main Agent 当前尚未沉淀到 case / phase / work package 文件的聊天判断，或临时探索过程确实不适合留在主线时，才使用 `fork_context: true` 创建上下文继承型子 Agent。
 - prompt 必须包含 work package 文件绝对路径。
 - prompt 必须包含已经选择的角色；Work Package 的推荐 Agent 只在决定派发后生效。

@@ -1,7 +1,7 @@
 # Case: c0.12-codex-gpt-5-6-sol-adaptation
 
 > **目标**：判断 Codex 新模型 “GPT-5.6 / sol / 极高”（用户当前界面称呼）的适用边界，并从近期真实对话中找出 AIPD 可降低等待时间和无效 token 消耗的规则改进方向。
-> **当前 Phase**：Verify（实现与自动验证通过，待用户验收）
+> **当前 Phase**：Verify（WP-02 已安装并获准合并，真实使用观察继续）
 
 ## Case Contract
 
@@ -36,7 +36,7 @@
 - [x] 已将结论写回 Think 产物和 `case.md`，等待用户决定是否进入 Design。
 - [x] 已确认 Work Package 与 Agent 派发解绑定，并完成最小规则改动的 quick Design。
 - [x] 已将最小调度规则写入源码与当前项目 Agent Entry，并完成构建验证。
-- [x] build 后已向用户询问是否执行 install；当前等待用户决定。
+- [x] build 后已向用户询问并完成 WP-02 对应的 Codex 用户级 install。
 
 ### 上下文索引
 
@@ -84,6 +84,7 @@
 
 - 2026-07-10：用户明确要求新开 Case，以 30 分钟为目标分析当天最近几次聊天并给出优化方向；本轮只做 Think，不直接改源码。
 - 2026-07-14：用户确认停止继续泛化讨论，先应用已确定结论；Case 扩展到最小规则实现。浏览器场景只保留“新流程或异常先与用户沟通”的边界，详细 SOP 与超时阈值 deferred。
+- 2026-07-14：用户在 Verify 要求移除“子 Agent 授权 / 前置询问”的显式叙事；四维收益判定、用户明确禁用和外部副作用确认边界不变。
 
 ## Case Runtime
 
@@ -95,19 +96,19 @@ Verify
 
 - Think: completed（2026-07-14 短暂重开后重新收口） -> `01-think/think.md`
 - Design: completed / readiness passed -> `02-design/design.md`
-- Execute: completed -> `03-execute/execute.md`
-- Verify: passed / awaiting user acceptance -> `04-verify/verify.md`
+- Execute: completed / WP-01 + WP-02 -> `03-execute/execute.md`
+- Verify: passed / pending runtime observation -> `04-verify/verify.md`
 - Close: pending -> `05-close/close.md`
 
 ## 当前焦点
 
-- **当前要解决的问题**：由用户审查整体 Git 变更并完成最终验收；build 后另行决定是否 install。
+- **当前要解决的问题**：完成 5.6 分支到 `main` 的发布；合并后继续自然观察调度是否按预期启用 Child。
 - **当前游标**：`04-verify/verify.md`
-- **最近 checkpoint**：WP-01、旧语义扫描、Codex / Claude 生成物核对和 AIPD build 均已通过。
-- **下一步建议**：用户验收；通过后按用户确认决定 install，再进入 Close。
-- **压缩后恢复入口**：先读 `04-verify/verify.md`；执行证据见 `03-execute/execute.md` 和 WP-01。
+- **最近 checkpoint**：WP-02、授权叙事扫描、双平台 build 和 Codex 用户级 install 均已通过。
+- **下一步建议**：在普通任务中自然观察，不额外提示模型使用 Child；如仍长期不使用再回到本 Case 分析。
+- **压缩后恢复入口**：先读 `04-verify/verify.md`；修正证据见 WP-02。
 - **待确认项**：
-  - [ ] WP-01 完成后由用户最终验收；build 后另行确认是否 install。
+  - [x] 用户已完成最终 Git 审阅并批准合并；Codex 用户级 install 已完成。
 - **阻塞项**：无；详细浏览器异常阈值和模型 A/B 均不阻塞当前实现。
 
 ## 状态卡记录
@@ -127,6 +128,7 @@ Verify
 | 2026-07-14 | Think -> Design | 用户要求停止无尽讨论并先应用确定结论 | Work Package / Agent 解绑定；Main 可执行内聚模块；Child 只在上下文隔离或真实并发有收益时优先；浏览器细节 deferred | 模型 A/B、浏览器超时阈值仍 open，但不阻塞 | 进入 Execute 实现一个最小规则包 | `02-design/design.md` |
 | 2026-07-14 | Design -> Execute | 用户授权一次性完成全部改动、Git 变更审查与整体验证 | Quick Design readiness passed；WP-01 由 Main 连续执行 | install 仍需 build 后单独确认 | 修改规则、审查 diff、运行 build | `03-execute/work-packages/wp-01-main-child-runtime-routing.md` |
 | 2026-07-14 | Execute -> Verify | WP-01 与自动验证完成 | 源码、直接相关认知 / docs、Codex / Claude 生成物语义一致；build 通过 | 用户验收与 install 确认 pending | 用户审查整体 Git 变更 | `04-verify/verify.md` |
+| 2026-07-14 | Verify -> Execute | 用户反馈要求移除子 Agent 授权叙事 | 不再显式讨论授权 / 前置询问；四维收益模型与外部副作用边界不变 | 自然调度是否增加 Child 使用率待真实观察 | 执行 WP-02 | `03-execute/work-packages/wp-02-remove-child-authorization-framing.md` |
 
 ## 回跳 / 重开记录
 
@@ -154,10 +156,10 @@ Verify
 
 ## Execute 摘要
 
-- **执行游标**：`03-execute/work-packages/wp-01-main-child-runtime-routing.md`。
+- **执行游标**：`03-execute/work-packages/wp-02-remove-child-authorization-framing.md`。
 - **状态**：completed。
 - **执行方式**：Main 连续执行；不派子 Agent。
-- **结果**：统一持久调度语义，补齐 Codex / Claude 平台差异，旧语义扫描和 build 通过。
+- **结果**：WP-01、WP-02 均完成；调度规则不再显式传播授权 / 前置询问概念。
 
 ## 后续候选事项
 
@@ -174,9 +176,9 @@ Verify
 
 ### 验收结果
 
-- **状态**：实现与自动验证通过，等待用户最终验收。
+- **状态**：WP-02 已构建并安装，等待真实使用观察。
 - **证据**：WP-01 全部验收项通过；`git diff --check`、旧语义扫描、Codex / Claude dist 核对和 AIPD build 均通过。
-- **残留风险**：缺少同 prompt A/B；浏览器阈值 deferred；未 install，因此尚未做安装后运行时验证。
+- **残留风险**：缺少同 prompt A/B；浏览器阈值 deferred；install 已完成，但自然调度效果仍需真实任务持续观察。
 
 ## Close 归档候选 / 反向编织候选
 

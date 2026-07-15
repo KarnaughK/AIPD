@@ -4,7 +4,7 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c0.12-codex-gpt-5-6-sol-adaptation` | Verify / 待用户验收 | Main / Child 调度规则、Codex / Claude 生成物与 build 已验证；等待用户审查整体 Git 变更，并确认是否 install |
+| `c0.12-codex-gpt-5-6-sol-adaptation` | Verify / 已批准合并 | WP-02 已完成构建、Codex 用户级安装和 Git 审阅；合入 `main` 后继续自然观察调度表现 |
 
 ## 暂停 Case
 
