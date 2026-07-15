@@ -4,7 +4,6 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c14-case-identifier-simplification` | Close / in_progress | 取消 Case 的版本号语义，统一 `cN-slug`、`wp-NN-slug` 和 `cN/wp-NN` |
 
 ## 暂停 Case
 
@@ -27,6 +26,7 @@
 | `archive/c11-aipd-case-design-flow` | 2026-07-10 | 将 Case Design 扩展为需求契约、后端 / 前端设计、上下文解耦、执行切片和 readiness gate，并完成构建与 Codex 安装验证 |
 | `archive/c12-codex-gpt-5-6-sol-adaptation` | 2026-07-15 | 完成 GPT-5.6 Sol / Ultra 使用边界与 Main / Child 调度适配，移除授权叙事，完成构建、安装、实际使用验收和 `main` 合并 |
 | `archive/c13-vue3-context-decoupling-experience` | 2026-07-15 | 从真实 Vue3 后台项目沉淀上下文解耦经验与可验证源码资产，完成 AIPD 品牌迁移、GitHub latest / pinned 发布和远端验收 |
+| `archive/c14-case-identifier-simplification` | 2026-07-15 | 取消 Case 的版本号语义，统一 `cN-slug`、`wp-NN-slug` 和 `cN/wp-NN`，完成 AIPD-2 迁移、构建与 Codex 安装 |
 
 ## 使用原则
 

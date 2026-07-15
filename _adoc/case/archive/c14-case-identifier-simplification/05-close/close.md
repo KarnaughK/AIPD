@@ -2,7 +2,7 @@
 
 ## 状态
 
-- **状态**：in_progress
+- **状态**：completed
 - **用户验收**：passed
 
 ## 完成结论
@@ -20,5 +20,5 @@
 
 ## Git 与归档
 
-- 用户已授权提交并推送 AIPD-2。
-- 当前 Case 无外部路径依赖，可以在推送完成后归档。
+- 主提交 `f1877dc` 已推送到 `origin/main`。
+- 当前 Case 无外部路径依赖，已移动到 `_adoc/case/archive/c14-case-identifier-simplification/`。

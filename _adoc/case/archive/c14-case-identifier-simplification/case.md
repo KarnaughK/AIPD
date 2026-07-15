@@ -54,13 +54,13 @@ Close
 - Design: completed -> `02-design/design.md`
 - Execute: completed -> `03-execute/execute.md`
 - Verify: completed -> `04-verify/verify.md`
-- Close: in_progress -> `05-close/close.md`
+- Close: completed -> `05-close/close.md`
 
 ## 当前焦点
 
-- **当前游标**：`05-close/close.md`
-- **最近 checkpoint**：规则、AIPD-2 迁移、build、Codex install 和验证均已完成。
-- **下一步**：提交并推送 AIPD-2；成功后完成归档。
+- **当前游标**：completed
+- **最近 checkpoint**：规则、AIPD-2 迁移、build、Codex install、验证和主提交推送均已完成。
+- **下一步**：无；Case 归档。
 - **待确认项**：无。
 - **阻塞项**：无。
 
@@ -98,5 +98,5 @@ Close
 
 ## Close 摘要
 
-- **状态**：等待 Git 提交与推送完成。
+- **状态**：completed / archived。
 - **长期规则**：新命名契约已经进入 skill 源码，无需额外 Weave。
