@@ -3,7 +3,7 @@
 > **所属 Case**: cA.B-{name}
 > **Phase**: Execute
 > **类型**: dev / research / review / verify / docs
-> **推荐 Agent**: worker / explorer / aipd_vue_architect / aipd_vue_provider / 留空
+> **推荐 Agent**: worker / explorer / aipd_vue_architect / aipd_vue_provider / Main Agent / 留空（仅在运行时决定派发后用于选择 Child 角色；不强制派发）
 > **依赖**: 无 / {前置 work package 或 02-design/design.md}
 
 ## 目标

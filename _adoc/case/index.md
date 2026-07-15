@@ -2,7 +2,9 @@
 
 ## 进行中 Case
 
-当前无进行中 Case。
+| Case | 状态 | 说明 |
+|---|---|---|
+| `c0.12-codex-gpt-5-6-sol-adaptation` | Verify / 已批准合并 | WP-02 已完成构建、Codex 用户级安装和 Git 审阅；合入 `main` 后继续自然观察调度表现 |
 
 ## 暂停 Case
 
@@ -29,4 +31,4 @@
 
 - 新事项先创建 contract + phase-first case：目标、边界和验收标准写入 `case.md`，再按 Design 结果拆 work package。
 - work package 必须列出显式上下文文档、横向模块和验收标准。
-- 代码实现、调研和审查默认交给分身 Agent，主 Agent 负责调度和验收。
+- Work Package 是可恢复、可验收的目标包，不等于子 Agent 派发节点；运行时根据上下文隔离收益、真实并发收益和主线耦合度选择 Main 或子 Agent。

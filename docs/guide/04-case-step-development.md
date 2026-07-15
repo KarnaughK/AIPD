@@ -108,11 +108,11 @@ Work Package 只放在 `03-execute/work-packages/`。旧 `steps/` 和旧 `01-goa
 
 如果两个 work package 之间必须共享上一轮聊天里的临时判断，说明共享判断还没有沉淀。要么合并成一个 work package，要么先把共享判断写入 case.md、`02-design/design.md`、README 或图里。
 
-## 分身 Agent：消化过程成本
+## 分身 Agent：按运行时收益选择
 
-Execute phase 中，执行 work package 的工作可以交给分身 Agent 或角色 Agent。
+Execute phase 中，Work Package 可以由 Main 直接完成，也可以在有明确上下文隔离或并发收益时交给分身 / 角色 Agent。
 
-分身 Agent 不是低上下文工人。更准确地说，它是从主 Agent 当前认知 fork 出来的克隆体，进入局部探索或执行分支，完成后只回流：
+Case / Goal / Work Package 已经承接长期状态，因此上下文可能压缩并不自动等于需要分身。分身默认读取最小必要上下文；只有强依赖尚未落盘的主线判断时才 fork 更多聊天。完成后只回流：
 
 - 结论。
 - 依据。
@@ -121,7 +121,7 @@ Execute phase 中，执行 work package 的工作可以交给分身 Agent 或角
 - 改动文件。
 - 验证结果。
 
-主 Agent 保留用户沟通、目标边界、最终判断和状态写回。
+主 Agent 保留用户沟通、目标边界、最终判断和状态写回，也可以连续执行高耦合内聚模块。派发后同一证据面不重复调查。
 
 ## Close 归档候选：执行和知识库的接口
 

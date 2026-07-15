@@ -1,6 +1,6 @@
 # 多 Agent 协作机制：Claude Code
 
-Claude Code 版本使用 Agent Team 承载 AIPD 的分身 Agent 任务。
+Claude Code 版本在运行时判定需要分身后，使用 Agent Team 承载 AIPD 的隔离或并发工作线。
 
 ## 上下文机制
 
@@ -15,11 +15,11 @@ Agent Team 创建的是独立 Claude Code 实例。它在技术上不能像 Code
 
 1. 读取 `_adoc/case/{case目录}/case.md`，按上下文索引加载必要文档。
 2. 找到下一个未完成 work package；如果没有 work package，回到用户讨论或补充 Design。
-3. 生成完整 prompt，包含角色、work package 文件绝对路径、约束和返回格式。
-4. 创建 Agent Team 分身 Agent。
-5. 等待分身 Agent 返回简洁结果。
-6. 成功则更新 work package、`03-execute/execute.md` 和 case 状态，继续派发下一步。
-7. 失败则告知用户，询问重试、跳过或手动处理。
+3. 根据上下文噪声、真实并发收益、主线耦合和调度成本选择 Main 或 Agent Team 分身。
+4. 选择 Main 时连续完成当前内聚目标，并写回 work package、`03-execute/execute.md` 和 case。
+5. 选择分身时生成最小 prompt，包含角色、work package 文件绝对路径、约束和返回格式，再创建少量正交 Agent Team 工作线。
+6. 等待分身返回压缩结果；Main 不重复执行相同证据面。
+7. 成功或失败都写回 work package、`03-execute/execute.md` 和 case 状态。
 
 ## 分身 Agent Prompt 模板
 
@@ -71,7 +71,8 @@ Work Package {work_package_id} 失败：{原因}
 
 ## 关键约束
 
-- 使用 Agent Team 承载分身 Agent，不使用 Claude Code 内置 Sub Agent 机制。
+- Work Package 是目标、上下文和验收边界，不是默认 Agent Team 派发节点。
+- 判定分身有明确净收益时，使用 Agent Team 承载，不使用 Claude Code 内置 Sub Agent 机制。
 - prompt 必须包含 work package 文件绝对路径和 case 上下文边界。
 - Claude 平台分身不能默认继承主 Agent 当前对话，prompt 必须显式补齐必要上下文。
 - 分身 Agent 的返回必须节制，避免污染主 Agent 上下文。
