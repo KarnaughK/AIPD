@@ -1,0 +1,50 @@
+# Step: wp-01 - 重写 Agent Entry 的分身 Agent 模型
+
+> **所属 Case**: c2-subagent-origin-model
+> **类型**: dev
+> **推荐 Agent**: worker
+> **依赖**: 无
+
+## 目标
+
+把 Agent Entry 中的分身 Agent 协作说明从 `fork_context: false` 和显式派工模型，改为克隆体、局部探索分支和结果回流模型。
+
+## 上下文文档
+
+分身 Agent 必须在执行前读取以下文档：
+
+- Case：`_adoc/case/c2-subagent-origin-model/case.md`
+- 入口模板：`src/core/agent-entry/template.md`
+- 原始经验：`/Users/yangzongru/.codex/sessions/2026/05/11/rollout-2026-05-11T12-20-10-019e1543-923e-73c1-ab90-9925067072da.jsonl`
+
+## 任务清单
+
+- [x] 提炼“穿越/平行世界”类比为短而清晰的协作模型。
+- [x] 更新 `src/core/agent-entry/template.md` 的分身 Agent 模型。
+- [x] 明确 Codex 默认 `fork_context: true`。
+- [x] 明确结果回流格式和过程噪声限制。
+
+## 验收标准
+
+- [x] 文档能让 Agent 从源头理解为什么使用分身 Agent。
+- [x] 文档不再把分身 Agent 描述成低上下文工人。
+- [x] 文档保留 case / step 作为恢复事实源。
+
+## 不做
+
+- 不添加大量场景枚举。
+- 不写入财务项目业务细节。
+
+---
+
+## 执行记录
+
+**完成时间**：2026-05-11
+
+**主要改动**：
+- 更新 `src/core/agent-entry/template.md`，把 Codex 默认策略改为 `fork_context: true`。
+- 新增分身 Agent、克隆体、结果回流模型，并明确不要回传完整过程噪声。
+- 补充说明该逻辑不依赖 case-run，普通 AIPD 对话也可直接 fork 分身 Agent；case 模式只是把分身探索节点固化为 step。
+- 同步更新当前仓库根目录 `AGENTS.md`。
+
+**遇到的问题**：当前运行中的系统级工具规则不允许我主动 spawn 分身 Agent；本 step 由 Main Agent 直接写回，但已按 AIPD case 记录保留可恢复状态。

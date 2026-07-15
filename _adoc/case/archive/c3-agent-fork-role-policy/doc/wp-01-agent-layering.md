@@ -1,0 +1,119 @@
+# c3/wp-01 调研：Codex fork_context 与 custom agent 角色叠加
+
+> 调研时间：2026-05-12
+> 步骤来源：`c3/wp-01-research-codex-agent-layering`
+
+## 结论摘要
+
+当前 Codex 子 Agent 创建机制下，**完整 fork 上下文和指定 custom agent 角色不能同时使用**。
+
+更准确地说：
+
+- `fork_context: true` 会创建“会话分身”：继承 Main Agent 当前完整上下文，但不能同时指定 `agent_type`。
+- `agent_type: aipd_vue_architect` + `fork_context: false` 会创建“角色 Agent”：拥有 Vue 架构角色，但不继承完整会话上下文。
+- 这两者不是同一个启动路径，AIPD2 后续调度策略必须承认这个差异。
+
+## 实测过程
+
+### 实验 A：默认 Agent + `fork_context: true`
+
+启动参数：
+
+```text
+fork_context: true
+agent_type: 未指定
+```
+
+结果：
+
+- 能复述用户刚才引用 AIT 的判断。
+- 能理解当前项目正在讨论 AIPD2 分身 Agent / 克隆体模型。
+- 明确表示自己没有 Vue 架构 Agent 的专门角色身份。
+- 判断自己更像“会话分身”，不是“角色 Agent”。
+
+结论：
+
+`fork_context: true` 能继承主会话上下文，但不会自动叠加 custom agent 角色。
+
+### 实验 B：`aipd_vue_architect` + `fork_context: false`
+
+启动参数：
+
+```text
+agent_type: aipd_vue_architect
+fork_context: false
+```
+
+结果：
+
+- 不知道用户刚才引用 AIT 的判断，无法复述。
+- 只知道一部分 AIPD2 背景。
+- 明确拥有 Vue 架构与实现 Agent 身份。
+- 判断自己更像“角色 Agent”，不是“会话分身”。
+
+结论：
+
+指定 custom agent 角色能获得领域身份，但不会继承完整主会话上下文。
+
+### 实验 C：`aipd_vue_architect` + `fork_context: true`
+
+启动参数：
+
+```text
+agent_type: aipd_vue_architect
+fork_context: true
+```
+
+结果：
+
+工具层直接拒绝：
+
+```text
+Full-history forked agents inherit the parent agent type, model, and reasoning effort; omit agent_type, model, and reasoning_effort, or spawn without a full-history fork.
+```
+
+结论：
+
+当前 Codex 工具层不允许 full-history fork 同时指定 `agent_type`。完整 fork 的 Agent 会继承 parent agent type、model 和 reasoning effort；如果要指定 `agent_type`，就不能使用 full-history fork。
+
+## 可复用判断
+
+AIPD2 不能继续简单写成：
+
+```text
+分身 Agent = fork_context:true + custom agent 角色
+```
+
+应该改成两类不同能力：
+
+1. **上下文分身**
+   - 技术路径：`fork_context: true`
+   - 优点：继承完整会话上下文，最像 Main Agent 克隆体。
+   - 缺点：不能指定 custom agent 角色；如果 Main Agent 本身不是该角色，就没有领域角色的 developer instructions。
+
+2. **角色 Agent**
+   - 技术路径：`agent_type: xxx` + `fork_context: false`
+   - 优点：拥有完整领域角色身份，例如 `aipd_vue_architect`。
+   - 缺点：不继承完整会话上下文，需要通过 prompt、case、step、上下文文档补齐任务背景。
+
+## 对 AIPD2 的影响
+
+后续 case-run 调度策略需要重新设计，不能默认“fork 分身 + 推荐 Agent”两者兼得。
+
+初步方向：
+
+- 上下文不充分、当前对话判断很重要、探索路径依赖主线认知时，优先用 `fork_context: true` 的上下文分身。
+- case / step 已经写清楚，且任务需要强领域判断时，优先用 `agent_type` 角色 Agent，并通过 step 上下文补齐任务信息。
+- 弱智任务、流程性任务、很小的文档或状态更新，未必需要开 Agent，Main Agent 可直接执行或延后到正式 case-run。
+
+## 风险
+
+- 如果 AIPD2 继续把所有分身都描述成“克隆体 + 角色滤镜”，会误导后续 Agent 使用不存在的组合能力。
+- 如果全部改回角色 Agent，又会丢失主会话上下文分身的价值。
+- 需要在 c3/wp-02 里设计更细的调配策略，区分“上下文分身”和“角色 Agent”。
+
+## 建议
+
+- 保留 c2 的“分身 Agent / 克隆体”源头认知，但补充技术边界：Codex 当前不能让完整 fork 和 custom agent 角色同时叠加。
+- 在 `src/platforms/codex/core/agent-guide.md` 中把执行路径拆成两类：上下文分身、角色 Agent。
+- 在 `src/skills/aipd2-case-run/SKILL.md` 中修改推荐 Agent 逻辑：推荐 Agent 不应简单等同于 `fork_context: true` 分身。

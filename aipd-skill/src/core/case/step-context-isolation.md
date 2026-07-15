@@ -10,7 +10,7 @@ Work Package 是 case 内可由 Main 或 Child 执行的目标包，不是微观
 - 如果两个 work package 之间必须共享上一轮未沉淀的临时判断、半成品方案、隐形状态或口头约定，优先合并成一个 work package。
 - 如果确实需要拆开，先把共享判断沉淀到 case.md、`02-design/design.md`、局部 README、架构图、接口说明或上下文索引，再让后续 work package 读取它。
 - 聊天中已经被用户确认、且 work package 会依赖的方案预览、叙事路径、目录草案、接口设计、组件关系、执行策略或关键取舍，也属于必须沉淀的上下文。创建详细 work package 时，应写入“已确认设计输入”或等价区块，不能只留缩略关键词。
-- work package 的依赖关系只表达执行顺序，不承载隐形上下文。`依赖: cX.Y.Z` 不等于“可以记住上一个工作包里的判断”。
+- work package 的依赖关系只表达执行顺序，不承载隐形上下文。`依赖: wp-NN` 不等于“可以记住上一个工作包里的判断”。
 - work package 之间可以共享稳定文档、代码入口和验收口径，但不共享未写入文件的临时过程。
 - 派发给子 Agent 的 prompt 应尽量短，只包含身份 / 指引链接、work package 链接、case 链接和返回格式。任务正文、上下文清单和验收标准应写在 work package 文件里，不在 prompt 里展开。
 

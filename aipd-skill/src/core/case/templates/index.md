@@ -16,7 +16,7 @@ Case 是一次需要 AI 参与处理、带目标契约和上下文索引、按 T
 
 ## 记录规则
 
-- 新 Case 创建在 `_adoc/case/cX.Y-{name}/`。
+- 新 Case 创建在 `_adoc/case/cN-{name}/`。
 - 每个 Case 的入口文件是 `case.md`。
 - 新 Case 默认使用 contract + phase-first 目录：`case.md` 承载 Case Contract，展开材料放入 `01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/`。
 - Work Package 放在 `03-execute/work-packages/`，文件语义是可验收目标包，不是微步骤。

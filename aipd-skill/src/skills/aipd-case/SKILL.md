@@ -44,6 +44,7 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 - 每个 phase 有独立说明文档，进入对应 phase 时才加载。
 - `case.md` 是事实源，包含 `Case Contract` 和 `Case Runtime`：前者记录目标、边界、验收标准和上下文索引；后者记录 `Current Phase`、phase 状态、当前焦点、待确认项、设计摘要、工作包摘要、执行记录和关闭状态。
 - `case.md` 每次进入 case 都必须读取；phase 目录只承载展开材料，不重复承载目标契约。
+- Case ID 使用项目内单调递增的 `cN-slug`，不是版本号；Work Package 使用 Case 内局部的 `wp-NN-slug`，跨 Case 引用写作 `cN/wp-NN`。不要新建 `cA.B` 或 `cA.B.N` 形态。
 - 新建 case 必须使用 contract + phase-first 目录结构，不再生成顶层 `doc/` / `steps/`，也不再生成 `01-goal/`：`01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/`。
 - Work Package 只放在 `03-execute/work-packages/`。遇到旧 `steps/` 或旧 Goal phase 结构时，不做兼容运行，只提示用户是否迁移为当前结构。
 - Step 不再表示“先做 A 再叠 B”的微步骤，而是可验收 work package。一个 work package 可以包含多个横向模块。

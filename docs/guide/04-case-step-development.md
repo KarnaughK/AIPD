@@ -41,7 +41,7 @@ Case 通常记录：
 新建 Case 使用 contract + phase-first 目录结构：
 
 ```text
-_adoc/case/cX.Y-name/
+_adoc/case/cN-name/
 ├── case.md
 ├── 01-think/
 ├── 02-design/

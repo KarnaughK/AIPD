@@ -71,7 +71,7 @@ Codex 项目优先关注 `AGENTS.md`。如果 `_adoc/` 已存在但 `AGENTS.md` 
     "latestUpdate": "2026-03-24"
   },
   "currentCase": {
-    "name": "c0.9-功能名",
+    "name": "c9-功能名",
     "stepsCompleted": 8,
     "stepsTotal": 10
   },

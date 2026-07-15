@@ -1,6 +1,6 @@
-# Work Package: cA.B.N - {工作包名称}
+# Work Package: wp-NN - {工作包名称}
 
-> **所属 Case**: cA.B-{name}
+> **所属 Case**: cN-{name}
 > **Phase**: Execute
 > **类型**: dev / research / review / verify / docs
 > **推荐 Agent**: worker / explorer / aipd_vue_architect / aipd_vue_provider / Main Agent / 留空（仅在运行时决定派发后用于选择 Child 角色；不强制派发）

@@ -22,7 +22,7 @@
 读取主 Agent 指定的 work package 文件。新结构中的默认路径是：
 
 ```text
-_adoc/case/cA.B-{case-name}/03-execute/work-packages/cA.B.C-xxx.md
+_adoc/case/cN-{case-name}/03-execute/work-packages/wp-NN-xxx.md
 ```
 
 用它校准：

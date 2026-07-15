@@ -38,7 +38,7 @@ _adoc/
 │   └── index.md                # 飞书 OKR 入口、必要 ID 和协作边界
 └── case/                       # 事项执行记录
     ├── index.md                # Case 索引
-    ├── c0.1-功能名/
+    ├── c1-功能名/
     │   ├── case.md
     │   ├── 01-think/
     │   │   └── think.md
@@ -47,13 +47,13 @@ _adoc/
     │   ├── 03-execute/
     │   │   ├── execute.md
     │   │   └── work-packages/
-    │   │       └── c0.1.1-工作包名.md
+    │   │       └── wp-01-工作包名.md
     │   ├── 04-verify/
     │   │   └── verify.md
     │   └── 05-close/
     │       └── close.md
     └── archive/
-        └── c0.1-功能名/        # 已归档 case
+        └── c1-功能名/          # 已归档 case
 ```
 
 L6 是具体代码实现，不在 `_adoc/` 目录内单独建层。它随项目类型分布在前端、后端、爬虫、脚本等真实代码目录中；L1-L5 的职责是帮助 AI 理解、定位、管理和修改 L6。

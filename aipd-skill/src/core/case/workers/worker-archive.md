@@ -65,7 +65,7 @@ git diff main
 ## Close 归档候选
 
 来源：case 归档
-相关 case：_adoc/case/c0.x-xxx/
+相关 case：_adoc/case/cN-xxx/
 相关 diff：{关键文件}
 
 已完成且建议交给 aipd-weave 判断：
@@ -109,13 +109,13 @@ rg "{case-dir}" _adoc
 # Case 索引
 
 ## 基础设施
-- [c0.1-init](archive/c0.1-init/) - 项目初始化
+- [c1-init](archive/c1-init/) - 项目初始化
 
 ## 功能模块 A
-- [c0.2-xxx](archive/c0.2-xxx/) - xxx 功能
+- [c2-xxx](archive/c2-xxx/) - xxx 功能
 
 ## 功能模块 B
-- [c0.3-xxx](archive/c0.3-xxx/) - xxx 功能
+- [c3-xxx](archive/c3-xxx/) - xxx 功能
 ```
 
 **如果已存在**，询问用户该 Case 属于哪个模块，然后添加记录：
@@ -131,13 +131,13 @@ rg "{case-dir}" _adoc
 用户回答后，在对应模块下添加：
 
 ```markdown
-- [c0.x-xxx](archive/c0.x-xxx/) - 一句话描述
+- [cN-xxx](archive/cN-xxx/) - 一句话描述
 ```
 
 如果 case 仍处于“完成待归档”，索引记录应指向当前未移动目录，并标注状态；等真正移动 archive 时再更新链接：
 
 ```markdown
-- [c0.x-xxx](c0.x-xxx/) - 一句话描述（完成待归档）
+- [cN-xxx](cN-xxx/) - 一句话描述（完成待归档）
 ```
 
 ### 第 6 步：移动 Case 或标记完成待归档
@@ -145,7 +145,7 @@ rg "{case-dir}" _adoc
 只有在路径引用已经更新、移动不会破坏 map / L3 / L4 / L5 / 后续 case 链接时，才移动整个 Case 目录到 archive：
 
 ```bash
-mv _adoc/case/c0.x-xxx/ _adoc/case/archive/c0.x-xxx/
+mv _adoc/case/cN-xxx/ _adoc/case/archive/cN-xxx/
 ```
 
 如果路径仍被引用，更新 `case.md` / `05-close/close.md` 的 Close 摘要为“完成待归档”，不要移动目录。
@@ -153,7 +153,7 @@ mv _adoc/case/c0.x-xxx/ _adoc/case/archive/c0.x-xxx/
 ### 第 7 步：返回结果
 
 ```
-归档审计 c0.x-xxx 已完成：
+归档审计 cN-xxx 已完成：
 - Case 索引已更新
 - Archive 决策：已移动 / 完成待归档 / 暂不归档
 - 路径引用风险：有 / 无

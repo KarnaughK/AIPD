@@ -2,7 +2,7 @@
 
 ## 来源性质
 
-本资产基于一个真实 Vue3 后台项目中已经长期使用的三类机制重新整理：运行时浮层、页面级表单 controller、搜索会话 controller。来源项目由用户在 AIPD case `c0.13-vue3-context-decoupling-experience` 中指定并授权用于经验提炼。
+本资产基于一个真实 Vue3 后台项目中已经长期使用的三类机制重新整理：运行时浮层、页面级表单 controller、搜索会话 controller。来源项目由用户在 AIPD case `c13-vue3-context-decoupling-experience` 中指定并授权用于经验提炼。
 
 本目录不是来源项目文件的镜像，而是 AIPD canonical reference implementation：
 

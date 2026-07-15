@@ -70,7 +70,7 @@ AIPD-2/
 │   ├── modules/
 │   └── dist/
 ├── docs/              # 面向人的学习文档
-└── aipd-desktop/      # 未来 AIPD Desktop，c0.8 创建
+└── aipd-desktop/      # 未来 AIPD Desktop，c8 创建
 ```
 
 ## README 入口修正

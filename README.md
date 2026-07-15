@@ -148,7 +148,7 @@ AIPD-2/
 │   ├── modules/        # Skill 相关模块材料，当前为空
 │   └── dist/           # Skill 构建产物
 ├── docs/              # 面向用户的学习文档
-└── aipd-desktop/      # 未来 AIPD Desktop，c0.8 创建
+└── aipd-desktop/      # 未来 AIPD Desktop，c8 创建
 ```
 
 ## 适合什么时候用

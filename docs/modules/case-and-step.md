@@ -36,7 +36,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 新建 case 使用 contract + phase-first 结构，不再用顶层 `doc/`、`steps/`、`code/` 按材料类型分层，也不再生成独立 `01-goal/`：
 
 ```text
-_adoc/case/cX.Y-name/
+_adoc/case/cN-name/
 ├── case.md
 ├── 01-think/
 ├── 02-design/
