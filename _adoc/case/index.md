@@ -2,9 +2,7 @@
 
 ## 进行中 Case
 
-| Case | 状态 | 说明 |
-|---|---|---|
-| `c0.13-vue3-context-decoupling-experience` | Execute / WP-05 发布中 | 用户已授权发布；保持 owner / authorized-only，正在隔离提交、推送并验证 GitHub latest / pinned 地址 |
+当前无进行中 Case。
 
 ## 暂停 Case
 
@@ -25,6 +23,7 @@
 | `archive/c0.7-repo-structure-reclassification` | 2026-06-27 | 重划仓库根目录，收拢 AIPD Skill 本体、docs、项目认知和历史材料边界 |
 | `archive/c0.9-aipd-think-system-design` | 2026-06-27 | 旧 Think 一等对象设计 case；Think 问题已被新的 phase-first case 生命周期吸收，作为历史调研和边界参考归档 |
 | `archive/c0.11-aipd-case-design-flow` | 2026-07-10 | 将 Case Design 扩展为需求契约、后端 / 前端设计、上下文解耦、执行切片和 readiness gate，并完成构建与 Codex 安装验证 |
+| `archive/c0.13-vue3-context-decoupling-experience` | 2026-07-15 | 从真实 Vue3 后台项目沉淀上下文解耦经验与可验证源码资产，完成 AIPD 品牌迁移、GitHub latest / pinned 发布和远端验收 |
 
 ## 使用原则
 
