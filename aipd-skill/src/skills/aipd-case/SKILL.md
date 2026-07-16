@@ -15,6 +15,7 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - case/overview.md
+  - case/goal-mode.md
   - case/phases/*
   - case/templates/case.md
   - case/templates/work-package.md
@@ -37,6 +38,8 @@ Case 是一个马上要完成并最终关闭的短周期目标容器。它类似
 Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时，可以带原因回跳：Design 可以回 Think 补调研 / 实验，Execute 可以回 Design 修正方案，Verify 可以回需求契约或 Design 补验收口径。每次回跳都必须写清触发原因、更新了哪个 artifact、哪些下游设计或 work package 受影响。
 
 `Goal` 不再是独立 phase。目标、边界、验收标准和上下文索引是整个 case 的契约，直接写在 `case.md` 顶部的 `Case Contract`。后续所有 phase 都必须以这个契约为上下文；执行中迭代出的“暂时做什么 / 暂时不做什么 / 完成标准变化 / 边界变化”也回写到 `case.md` 的契约区或边界变更记录。
+
+平台目标模式与 Case 是单向依赖：启动目标模式必须绑定一个 Case；创建或推进 Case 不要求启动目标模式。进入 Case 时只在平台存在明确绑定当前 Case 的活动目标时加载 `@references/case/goal-mode.md`；没有明确外部绑定时不加载，也不根据任务特征推断目标模式。Goal Mode 是 Case 外部的运行覆盖层，不改变 Case 本体。
 
 ## 总原则
 
@@ -81,9 +84,9 @@ _adoc/case/{case-dir}/case.md
 检测到这是旧结构 case。新 AIPD Case 不再兼容旧 steps/doc 或独立 Goal phase 运行逻辑。是否需要先把它迁移为当前 contract + phase-first case？
 ```
 
-如果还没有 case，先创建 `case.md` 的 `Case Contract`，写清目标、边界、验收标准和上下文索引；然后根据是否存在未知或架构缺口，把 `Current Phase` 设为 `Think` 或 `Design`。
+如果还没有 case，先创建 `case.md` 的 `Case Contract`，写清目标、边界、验收标准和上下文索引；然后根据是否存在未知或架构缺口，把 `Current Phase` 设为 `Think` 或 `Design`。如果本次入口来自用户或平台明确要求启动目标模式，必须等 Case 创建完成后再创建并绑定平台目标；绑定后可以在 `case.md` 顶部增加一条目标模式恢复提示。普通 Case 不自动启用目标模式。
 
-恢复已有 case 后，不要首轮直接跨 phase 写回。先输出状态卡：文件事实、用户当前认知、冲突点、当前 phase 条件、建议下一步。关键 phase 跳转必须先确认，再写回 case。
+恢复已有 case 后，不要首轮直接跨 phase 写回。先输出状态卡：文件事实、用户当前认知、冲突点、当前 phase 条件、建议下一步。普通 Case 的关键 phase 跳转必须先确认；已加载 Goal Mode 覆盖层时，按覆盖层的 Gate 规则推进。
 
 ### 2. 判断当前 phase
 
@@ -110,7 +113,7 @@ _adoc/case/{case-dir}/case.md
 |---|---|---|
 | Think | `@references/case/phases/think.md` | 信息不足时进行同步、调研、代码实验、数据采样、比较和抉择 |
 | Design | `@references/case/phases/design.md` | 从需求契约到后端 / 前端设计，再到上下文边界、文件边界、work package 和 readiness gate |
-| Execute | `@references/case/phases/execute.md` | 按工作包推进，可用目标模式和执行 Agent |
+| Execute | `@references/case/phases/execute.md` | 按工作包推进，可使用执行 Agent |
 | Verify | `@references/case/phases/verify.md` | 验收目标、设计约束和执行结果 |
 | Close | `@references/case/phases/close.md` | 归档、整理 Close 归档候选、更新索引 |
 

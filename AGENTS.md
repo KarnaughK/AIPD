@@ -106,6 +106,10 @@ Build / Install 边界：
 
 AIPD 的长期任务状态以 case / work package 文件为准，聊天上下文只是临时工作缓存。
 
+### 目标模式与 Case
+
+平台目标模式和 AIPD Case 是单向依赖关系：启动目标模式必须先绑定一个 Case；创建或推进 Case 不要求启动目标模式。检测到平台存在明确绑定当前 Case 的活动目标时，由 `aipd-case` 加载 Goal Mode 覆盖层；Case 本体保持不变。没有明确外部绑定时，不推断目标模式。
+
 当发生上下文压缩、长任务续跑、状态不确定，或聊天记忆与项目文件不一致时，按以下链路恢复任务状态：
 
 ```text
@@ -120,7 +124,7 @@ AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/case/index.md -> 当前 cas
 - 聊天上下文与 case / work package 文件冲突时，先指出冲突，再以 case / work package 文件作为事实来源继续。
 - 每个会改变项目状态的 work package 完成后，必须把可恢复状态写回 work package 执行记录、`03-execute/execute.md` 和 case 状态。
 - `03-execute/work-packages/` 负责目标、上下文和验收边界，不是默认派发节点。每个 work package 进入执行时再按运行时判定选择 Main 或子 Agent；推荐 Agent 只在已经决定派发时用于选择角色。
-- 如果平台提供目标模式，目标模式只作为 case Execute phase 的运行时目标锚点；是否启用由 `aipd-case` 判断，长期状态仍以 case / work package 文件为准。
+- 如果平台提供目标模式，先检查它是否已绑定当前 Case；目标模式的详细运行规则由 `aipd-case` 按外部绑定状态加载。
 
 子 Agent：
 

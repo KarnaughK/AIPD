@@ -31,8 +31,7 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - 判定派发有净收益且平台支持时，创建 Child；平台不可用时由 Main 回退执行。用户明确要求不派 Child 时，遵循用户当前指令。
 - 派发时默认传最小必要上下文，为每条证据面设唯一 owner；Main 不重复执行 Child 已承担的任务，只接收压缩结果。
 - 浏览器已有稳定 SOP 且路径明确时可以派发；新流程、异常状态或路径不确定时，先与用户沟通，不允许 Agent 无边界深入或盲目绕路。
-- 目标模式可以作为运行时锚点，但长期状态仍写回 case.md、`03-execute/execute.md` 和 work package 文件。
-- 长执行、子 Agent 派发、批量验证或目标模式运行前，必须先在 `03-execute/execute.md` 或 work package 文件写执行前 checkpoint：当前 work package、设计输入、执行边界、验收标准、禁止事项、恢复入口和预期返回格式。
+- 长执行、子 Agent 派发或批量验证前，必须先在 `03-execute/execute.md` 或 work package 文件写执行前 checkpoint：当前 work package、设计输入、执行边界、验收标准、禁止事项、恢复入口和预期返回格式。
 - 执行完成、失败、阻塞、回跳或范围变化后，必须写执行后 checkpoint：完成了什么、验证结果、残留风险、受影响设计或下一步。不要只在聊天里汇报结果。
 
 ## 输出

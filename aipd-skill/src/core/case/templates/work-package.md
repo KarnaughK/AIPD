@@ -52,7 +52,7 @@
 
 ## 执行前 checkpoint
 
-> 长执行、子 Agent 派发、批量验证或目标模式运行前先填写。checkpoint 只保留恢复所需的信息，不复制聊天全文。
+> 长执行、子 Agent 派发或批量验证前先填写。checkpoint 只保留恢复所需的信息，不复制聊天全文。
 
 - **当前目标**：{本轮执行具体要交付什么}
 - **恢复入口**：{case.md / execute.md / 本 work package / 相关 design artifact}
