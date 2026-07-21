@@ -6,8 +6,8 @@ Codex 版本使用 Codex 子 agent 技术承载 AIPD 的执行、调研和角色
 
 AIPD 的 Vue 领域规则优先存放在平台无关的核心指引中：
 
-- `aipd-skill/src/core/agent-guides/aipd_vue_architect.md`
-- `aipd-skill/src/core/agent-guides/aipd_vue_provider.md`
+- `@references/agent-guides/aipd_vue_architect.md`
+- `@references/agent-guides/aipd_vue_provider.md`
 
 Codex 的 `.toml` agent 文件只是平台打包格式。`aipd-skill/src/platforms/codex/agents/*.toml` 负责声明 Codex 侧名称、描述和指引源文件；`aipd-skill/scripts/build codex` 再把核心指引注入为 Codex 需要的 `developer_instructions`。
 
@@ -38,21 +38,18 @@ Case Execute 不默认创建子 Agent。运行时先判断 Work Package 由 Main
 
 ## 上下文与调度机制
 
-Codex Agent 有两种上下文方式：
-
-- `fork_context: true`：继承主 Agent 当前上下文，用于上下文继承型子 Agent。
-- `fork_context: false`：不继承主 Agent 当前上下文，依靠短 prompt、case、work package 和显式文件恢复任务；这是上下文隔离或角色执行的优先选择。
+Codex 的具体委派参数会随运行时能力变化。AIPD 只固定上下文契约：默认通过短 prompt、case、work package 和显式文件传递最小必要上下文；只有任务强依赖尚未落盘的主线判断，且当前平台明确支持上下文继承时，才按平台当前接口选择继承更多对话上下文。
 
 Main Agent 根据运行时判定自然选择是否创建子 Agent；平台能力不可用时，由 Main Agent 回退执行。
 
 - 子 Agent 调度是当前任务内部的执行方式，不扩大用户原始任务范围，也不授予额外的外部副作用权限。
 - install、远端写入、删除等有外部副作用的动作，仍遵守各自的确认边界。
 
-AIPD 不把 `fork_context: true` 作为默认规则。Case / Work Package 已承载目标和边界时，优先传最小上下文；只有任务强依赖尚未落盘的主线判断时才继承完整上下文。
+AIPD 不把完整上下文继承作为默认规则。Case / Work Package 已承载目标和边界时，优先传最小上下文；只有任务强依赖尚未落盘的主线判断时才按需继承。
 
 判断是否创建子 Agent 时，同时看四个维度：预计中间上下文噪声、工作线是否真正独立并可并发、与 Main 当前主线的耦合度、启动和合并成本。子 Agent 主要用于高噪声上下文隔离、两条以上独立工作线的并发加速，以及必要的独立复核；不能只因任务涉及多个文件、事实检索、构建或测试就机械派发。
 
-Main Agent 可以连续完成内聚模块、上下文规模可控的跨文件修改，以及需要持续继承设计 / 代码 / 调试判断的高耦合任务。Case、Goal 和 Work Package 已提供恢复能力时，不应仅为防止压缩而派发子 Agent。
+Main Agent 可以连续完成内聚模块、上下文规模可控的跨文件修改，以及需要持续继承设计 / 代码 / 调试判断的高耦合任务。Case 和 Work Package 已提供文件恢复能力，平台 Goal Mode 只提供运行覆盖；不应仅为防止压缩而派发子 Agent。
 
 case / phase / work package 文件是执行阶段的事实源，但 Work Package 是状态与验收边界，不是派发节点。进入 Case Execute 后，先做运行时选择：Main 直接执行时按里程碑写回；决定派发时，再让角色 Agent 读取 work package、case 和上下文文档执行。
 
@@ -69,7 +66,7 @@ case / phase / work package 文件是执行阶段的事实源，但 Work Package
 - Ultra 可能自行增加委派工作线；AIPD 不应再用“每个 Work Package / 每次检索默认派发”叠加第二层 fan-out。只有额外 Child 的上下文隔离或并发净收益仍然明确时才主动创建。
 - 模型模式不改变 Case / Work Package 的状态与验收边界，也不替代运行时 Main / Child 判定。
 
-Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作为长期任务事实来源；任务恢复必须回到 `AGENTS.md -> _adoc/index.md -> _adoc/case/index.md -> 当前 case.md -> 当前 phase 目录 -> 当前 work package`。如果聊天记忆与 case / phase / work package 文件冲突，先提示冲突，再以文件为准。
+Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作为长期任务事实来源；任务恢复必须回到 `AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/case/index.md -> 当前 case.md -> 当前 phase 目录 -> 当前 work package`。如果聊天记忆与 case / phase / work package 文件冲突，先提示冲突，再以文件为准。
 
 ## Codex 目标模式
 
@@ -94,7 +91,7 @@ Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业
 5. 根据上下文噪声、可并发性、主线耦合和调度成本，选择 Main 或 Child。
 6. 选择 Main 时连续完成当前内聚目标，并在里程碑写回 work package、execute.md 和 case。
 7. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。
-8. 只有 work package 强依赖 Main 当前未沉淀的聊天判断时，才使用上下文继承型子 Agent。
+8. 只有 work package 强依赖 Main 当前未沉淀的聊天判断，且平台明确支持时，才按需继承更多上下文。
 9. Child 完成后，Main 只读取压缩结果，不重复执行同一任务；成功或失败都写回 work package、execute.md 和 case。
 
 ## Main Agent 执行边界
@@ -178,7 +175,7 @@ Work Package {work_package_id} 失败：{原因}
 
 - Work Package 是目标、上下文和验收边界，不是默认子 Agent 派发节点。
 - 判定派发有净收益且平台提供可用能力时，创建子 Agent；平台不可用时由 Main Agent 回退执行。用户明确要求不派子 Agent 时，遵循用户当前指令。
-- 只有 work package 强依赖 Main Agent 当前尚未沉淀到 case / phase / work package 文件的聊天判断，或临时探索过程确实不适合留在主线时，才使用 `fork_context: true` 创建上下文继承型子 Agent。
+- 只有 work package 强依赖 Main Agent 当前尚未沉淀到 case / phase / work package 文件的聊天判断，或临时探索过程确实不适合留在主线时，才按平台当前能力选择上下文继承型子 Agent。
 - prompt 必须包含 work package 文件绝对路径。
 - prompt 必须包含已经选择的角色；Work Package 的推荐 Agent 只在决定派发后生效。
 - prompt 必须包含 case 目录或 case.md 路径，以及本 work package 需要遵守的上下文边界。

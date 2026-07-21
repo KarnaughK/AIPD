@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# 所有用户级 / 项目级、安装 / 开发入口共享这一份旧 Skill 清理清单。
+AIPD_LEGACY_SKILLS=(
+    aipd-case-create aipd-case-run aipd-case-archive
+    aipd2 aipd2-case-create aipd2-case-run aipd2-case-archive
+    aipd2-weave aipd2-inbox aipd2-learn aipd2-update aipd2-git-push
+    aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-learn
+    aipd-plan-create aipd-plan-run aipd-plan-archive aipd-plan-learn
+    mermaid-preview
+)

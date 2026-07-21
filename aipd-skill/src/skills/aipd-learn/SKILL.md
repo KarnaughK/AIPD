@@ -1,8 +1,8 @@
 ---
 name: aipd-learn
 description: >
-  AIPD 框架自迭代入口。默认只采集并输出 Codex 会话 ID / transcript path 等最小定位信息；用户明确要求时，再基于当前对话、粘贴经验、case 或补充文件生成 AIPD 框架回流包，并在确认后回写到 AIPD 源码。
-  关键词：经验迭代、经验沉淀、即时反馈、经验回流、回流包、聊天 ID、会话 ID、Codex transcript、同步经验、规则更新、SOP、最小定位卡
+  AIPD 框架自迭代入口。默认按当前平台能力采集并输出会话 ID / transcript 位置等最小定位信息；用户明确要求时，再基于当前对话、粘贴经验、case 或补充文件生成 AIPD 框架回流包，并在确认后回写到 AIPD 源码。
+  关键词：经验迭代、经验沉淀、即时反馈、经验回流、回流包、聊天 ID、会话 ID、transcript、Codex transcript、同步经验、规则更新、SOP、最小定位卡
 allowed-tools:
   - Read
   - Write
@@ -17,6 +17,7 @@ inject-from-core:
   - adoc-structure.md
   - case/overview.md
   - experience/*
+  - learn-session-locator.md
 ---
 
 # AIPD Learn
@@ -32,7 +33,7 @@ inject-from-core:
 
 `aipd-learn` 支持六种经验回流方式：
 
-1. **会话定位卡**：在外部项目中自动采集 thread ID、transcript path、可见时的 turn ID，只输出最小定位信息。这是外部项目默认路径。
+1. **会话定位卡**：在外部项目中按当前平台能力采集会话 ID、transcript 位置和可见的 turn ID；不能自动定位时明确缺口并请求用户提供位置，只输出最小定位信息。这是外部项目默认路径。
 2. **自迭代诊断**：在 AIPD 源项目中，用户贴入定位卡、会话 ID 或 transcript path 后，读取原始 transcript，优先审计用户纠正了 Agent 什么、哪些 skill 行为反复出错、哪些规则需要回写。
 3. **会话回流包**：用户明确要求“生成回流包 / 总结经验 / 整理给 AIPD 吸收”时，才输出结构化回流包。
 4. **即时写回**：如果当前就在 AIPD 源项目，且用户确认要吸收框架经验，先给写回方案，确认后修改 `aipd-skill/src/core/`、`aipd-skill/src/skills/` 或 `aipd-skill/src/platforms/`。
@@ -41,7 +42,7 @@ inject-from-core:
 
 ## 职责边界
 
-**只做**：外部项目中采集当前会话定位信息；AIPD 源项目中基于定位卡 / transcript 审计 AIPD 自身行为；在用户确认后，从当前对话、用户粘贴经验、Codex transcript 引用、用户补充文件、进行中的 case 或已完成 work package 中提炼框架经验，生成诊断或回流包，判断经验归属，并在用户确认后写回 AIPD 源码或实践经验库。
+**只做**：外部项目中按平台能力采集当前会话定位信息；AIPD 源项目中基于定位卡 / transcript 审计 AIPD 自身行为；在用户确认后，从当前对话、用户粘贴经验、平台 transcript 引用、用户补充文件、进行中的 case 或已完成 work package 中提炼框架经验，生成诊断或回流包，判断经验归属，并在用户确认后写回 AIPD 源码或实践经验库。
 
 **不做**：不执行 work package，不归档 case，不移动 case 目录，不合并分支，不主动提交代码，不把当前业务项目经验直接写入项目 `_adoc/`。项目 ADOC 回写用 `aipd-weave`。
 
@@ -133,29 +134,7 @@ experience-assets/{asset-name}/              # 仅在文字不足以可靠复用
 
 优先使用当前聊天上下文和用户刚粘贴的经验记录。如果这些内容已经足够，不要求用户先创建反馈文件。
 
-如果运行在 Codex，先尝试采集会话定位信息：
-
-```bash
-thread_id="${CODEX_THREAD_ID:-}"
-
-if [ -n "$thread_id" ]; then
-  sqlite3 "$HOME/.codex/state_5.sqlite" \
-    "select rollout_path from threads where id='$thread_id';" 2>/dev/null
-fi
-```
-
-如果 SQLite 不可用或没有结果，用文件名兜底：
-
-```bash
-find "$HOME/.codex/sessions" "$HOME/.codex/archived_sessions" \
-  -type f -name "*${CODEX_THREAD_ID}*.jsonl" 2>/dev/null | head -1
-```
-
-可选读取索引：
-
-```bash
-rg -n "\"id\":\"${CODEX_THREAD_ID}\"" "$HOME/.codex/session_index.jsonl" 2>/dev/null
-```
+读取 `@references/learn-session-locator.md`，只使用当前平台明确支持的定位方式。公共 Skill 不假设 Codex 环境变量、SQLite 或目录在其他平台存在；自动定位不可用时输出已知信息并请求用户提供 transcript 位置，不伪造会话 ID。
 
 采集到 transcript path 后，只把它作为“原始上下文引用”。不要默认把完整 transcript 展开到回复里。
 
@@ -201,7 +180,8 @@ find _adoc/case/{case目录}/steps -type f 2>/dev/null
 
 ```md
 【AIPD Learn 定位卡】
-- 会话 ID：{CODEX_THREAD_ID 或未识别}
+- 平台：{Codex / Claude Code / 未识别}
+- 会话 ID：{平台可见 ID 或未识别}
 - transcript path：{本地 JSONL 路径；没有则留空}
 - 当前 turn ID：{如平台可用则填写；没有则留空}
 - 项目路径：{project_root}
@@ -323,7 +303,7 @@ Agent 反应问题：
 - 项目路径：{project_root}
 - Git remote：{origin 或未识别}
 - 当前分支：{branch 或未识别}
-- 会话 ID：{CODEX_THREAD_ID 或未识别}
+- 会话 ID：{平台可见 ID 或未识别}
 - 当前 turn ID：{如平台可用则填写}
 - transcript path：{本地 JSONL 路径；没有则留空}
 - 生成时间：{本地时间}
@@ -365,7 +345,7 @@ Agent 反应问题：
 | aipd 总入口、ADOC 入口、经验回流方式 | AIPD 仓库的 `aipd-skill/src/skills/aipd*/` |
 | 已初始化项目的 AIPD 架构升级、AGENTS.md / map 同步 | AIPD 仓库的 `aipd-skill/src/skills/aipd-update/` |
 | case 生命周期流程经验 | AIPD 仓库的 `aipd-skill/src/skills/aipd-case/` 或 `aipd-skill/src/core/case/` |
-| Codex 会话 ID、transcript、回流包生成 | AIPD 仓库的 `aipd-skill/src/skills/aipd-learn/` 或 `aipd-skill/src/platforms/codex/` |
+| 平台会话 ID、transcript、回流包生成 | 公共行为进入 `aipd-skill/src/skills/aipd-learn/`；定位差异进入 `aipd-skill/src/platforms/{platform}/core/learn-session-locator.md` |
 | Claude/Codex 平台差异 | AIPD 仓库的 `aipd-skill/src/platforms/` |
 
 如果当前工作目录不是 AIPD 源码仓库，但经验属于 AIPD 框架本身，不要硬写目标项目；先整理为“框架回流建议”，让用户切换到 AIPD 仓库后再执行。
@@ -378,7 +358,7 @@ Agent 反应问题：
 
 ```md
 【经验迭代方案】
-来源：当前对话 / 用户粘贴经验 / Codex transcript / 反馈文件 / case / work package
+来源：当前对话 / 用户粘贴经验 / 平台 transcript / 反馈文件 / case / work package
 类型：项目经验 / AIPD 框架经验 / 两者都有
 准备修改：
 - 文件 A：修改原因
@@ -414,13 +394,6 @@ Agent 反应问题：
 
 不要自动提交，除非用户明确要求。
 
-## Codex 当前实现边界
+## 平台定位边界
 
-短期优先支持 Codex：
-
-- `CODEX_THREAD_ID` 通常可从环境变量读取。
-- transcript 通常位于 `~/.codex/sessions/**/rollout-*{thread_id}.jsonl`。
-- `~/.codex/state_5.sqlite` 的 `threads.rollout_path` 可作为 thread ID 到 transcript path 的稳定映射。
-- 同一台机器、同一用户下，另一个项目里的 Agent 也可以读取该 transcript；但必须显式读取本地文件，不是假设平台会自动恢复上下文。
-
-Claude Code 暂不作为第一版强依赖；如果识别不到平台信息，就输出“平台未识别”，让用户粘贴经验或提供 transcript 位置。
+会话定位的真实能力以构建时注入的 `@references/learn-session-locator.md` 为准。任何平台都不得把“当前 Agent 看得到聊天”误写成“另一个项目能自动恢复原对话”；跨项目转交必须依赖显式会话 ID、transcript 位置或用户粘贴内容。

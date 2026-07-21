@@ -8,6 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/legacy-skills"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 DIST_DIR="$PROJECT_ROOT/dist/codex/skills"
 AGENTS_DIST_DIR="$PROJECT_ROOT/dist/codex/agents"
@@ -19,11 +20,7 @@ AGENTS_TARGET_DIR="$1/.codex/agents"
 mkdir -p "$TARGET_DIR"
 mkdir -p "$AGENTS_TARGET_DIR"
 
-for legacy in \
-    aipd2 aipd2-case-create aipd2-case-run aipd2-case-archive aipd2-weave aipd2-inbox aipd2-learn aipd2-update aipd2-git-push \
-    aipd2-plan-create aipd2-plan-run aipd2-plan-archive aipd2-plan-learn \
-    aipd-plan-create aipd-plan-run aipd-plan-archive aipd-plan-learn \
-    mermaid-preview; do
+for legacy in "${AIPD_LEGACY_SKILLS[@]}"; do
     target="$TARGET_DIR/$legacy"
     if [ -e "$target" ] || [ -L "$target" ]; then
         rm -rf "$target"

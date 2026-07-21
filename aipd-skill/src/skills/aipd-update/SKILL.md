@@ -17,10 +17,13 @@ inject-from-core:
   - adoc-structure.md
   - agent-entry/template.md
   - agent-entry/interaction-style.md
+  - agent-guides/aipd_adoc_retriever.md
   - adoc/templates/index.md
   - adoc/templates/map.md
   - case/overview.md
+  - case/templates/index.md
   - case/templates/case.md
+  - case/templates/work-package.md
 ---
 
 # AIPD Update
@@ -38,7 +41,7 @@ inject-from-core:
 
 **只做**：审计当前项目 AIPD 架构 → 对比当前 AIPD 模板和规则 → 输出更新清单 → 用户确认后安全合并更新。
 
-**不做**：不改业务代码，不执行 case step，不归档 case，不自动提交，不覆盖用户项目文档正文，不主动把旧结构作为兼容目标长期保留。
+**不做**：不改业务代码，不执行 Work Package 或推进 Case，不归档 case，不自动提交，不覆盖用户项目文档正文，不主动把旧结构作为兼容目标长期保留。
 
 ## 升级原则
 
@@ -64,7 +67,9 @@ inject-from-core:
 - `_adoc/L4-product/map.md`：是否具备产品功能线总图；不存在时只列建议。
 - `_adoc/L4-product/{feature}/map.md`：如果用户明确指定功能线，检查是否需要创建该功能线 map。
 - `_adoc/L5-dev/index.md`：是否表达“工程实现层”边界，而不是把 L5 当代码细节全集。
-- `_adoc/case/**/case.md`：进行中 case 是否有上下文索引和自迭代观察锚点。
+- `_adoc/case/index.md`：是否使用当前 Case 索引结构，并能区分进行中与 archive。
+- `_adoc/case/**/case.md`：进行中 Case 是否以 Case Contract + Case Runtime 为入口，使用 Think / Design / Execute / Verify / Close 的 phase-first 结构、当前 phase checkpoint 和 `03-execute/work-packages/`。
+- `_adoc/case/**/doc/`、`steps/`、`01-goal/`、顶层 `06-close/`：旧结构候选；只审计并列入破坏性迁移方案，不从旧 Step 继续运行。
 
 按需检查：
 
@@ -74,7 +79,7 @@ inject-from-core:
 
 ## Agent MD 模板等级
 
-`AGENTS.md` / `CLAUDE.md` 不是单一“符合 / 不符合”状态。AIPD Project Entry 是项目级统一入口，应尽量同步到当前 AIPD 2 标准模板；模板等级只决定是否同时安装或同步 Interaction Protocol。
+`AGENTS.md` / `CLAUDE.md` 不是单一“符合 / 不符合”状态。AIPD Project Entry 是项目级统一入口，应尽量同步到当前 AIPD 标准模板；模板等级只决定是否同时安装或同步 Interaction Protocol。
 
 审计时必须单独报告当前 Agent MD 模板等级：
 
@@ -140,6 +145,9 @@ find _adoc -maxdepth 3 -type f | sort
 - L5 被定义为产品功能到代码实现之间的工程实现层，负责跨模块、跨端、跨页面的稳定实现规则。
 - 明确页面、弹窗、组件内部细节放就近 `README.md`，不塞回 L5。
 - case 恢复链路包含 case / work package 文件作为事实源。
+- `_adoc/case/index.md` 能定位当前 Case；`case.md` 顶部包含目标、边界、完成标准和上下文索引组成的 Case Contract。
+- 当前 Case 使用 `01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/`，并在 `Case Runtime` 记录 Current Phase、Phase State、当前游标和 checkpoint。
+- Work Package 位于 `03-execute/work-packages/`，承担目标、上下文、恢复和验收边界；不是旧 Step，也不等于子 Agent 派发节点。
 - 执行概念或项目入口中包含 Weave：讨论、work package 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README 或 map；一次性过程留在 case / work package。
 
 ### 建议项
@@ -162,7 +170,7 @@ find _adoc -maxdepth 3 -type f | sort
 
 - 不凭空生成业务核心概念、产品功能清单或页面 README。
 - 不重写用户已有 `_adoc` 正文。
-- 不迁移历史 case，不批量补所有旧 case，除非用户明确要求。
+- 不迁移历史 case，不批量补所有旧 case，除非用户明确要求。发现 `doc/`、`steps/`、`01-goal/` 或顶层 `06-close/` 时，列为破坏性迁移候选并停止从旧结构继续运行。
 - 不主动保留旧入口作为兼容方案；旧入口只作为过期结构处理。
 
 ## Map 骨架
@@ -288,6 +296,8 @@ flowchart TD
 - `_adoc/L4-product/{feature}/map.md`：{用户指定功能线时，建议创建功能线图，记录页面 / 接口 / 数据对象 / 权限 / L3 / L5}
 - `_adoc/L5-dev/index.md`：{建议补工程实现层边界}
 - `{case}`：{建议补观察锚点}
+- `_adoc/case/index.md`：{当前索引模板 / 缺失入口 / 是否需要同步}
+- `{current case}`：{Case Contract、phase-first、Current Phase、checkpoint、Work Package 位置；旧 doc / steps / 01-goal / 06-close 迁移候选}
 
 可选更新：
 - Agent MD 模板等级：
@@ -318,7 +328,7 @@ flowchart TD
    - 等级 0：不修改 `AGENTS.md` / `CLAUDE.md`，即使审计发现 Interaction Protocol 缺失也不写入。
    - 等级 1：只处理 AIPD Project Entry，不处理 Interaction Protocol。
    - 等级 2：先处理 AIPD Project Entry，再处理 Interaction Protocol。
-   - AIPD Project Entry 应同步到当前 AIPD 2 标准模板；等级 1 和等级 2 都使用同一份 Project Entry。
+   - AIPD Project Entry 应同步到当前 AIPD 标准模板；等级 1 和等级 2 都使用同一份 Project Entry。
    - 如果有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换标记区块；如果替换范围较大，按破坏性更新处理，必须已被用户确认。
    - 如果没有标记但有 AIPD 内容，先说明风险，优先追加新标记区块，不删除原文。
    - 如果不存在，写入当前 `@references/agent-entry/template.md` 并包裹 AIPD 标记。
@@ -343,8 +353,10 @@ flowchart TD
    - 不写页面内部实现细节；细节继续放代码目录 README。
 
 6. 进行中 case
+   - 以 `@references/case/templates/index.md`、`case.md` 和 `work-package.md` 为结构对照，不只检查观察锚点。
    - 默认不批量修改历史 case。
-   - 只在用户确认时，为当前进行中 case 补上下文索引缺口、自迭代观察锚点或 Weave 候选位置。
+   - 当前 Case 缺 Case Contract、phase-first 目录、Current Phase 或 `03-execute/work-packages/` 时，先输出迁移方案；旧 `doc/`、`steps/`、`01-goal/`、顶层 `06-close/` 的移动 / 重命名按破坏性更新确认。
+   - 只有用户确认后，才为当前进行中 Case 补索引、上下文、checkpoint、自迭代观察锚点或 Weave 候选位置；迁移完成前不从旧 Step 继续执行。
 
 7. Interaction Protocol
    - 不作为 AIPD update 必须项。

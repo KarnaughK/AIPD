@@ -1,0 +1,139 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+SRC_SKILLS="$PROJECT_ROOT/src/skills"
+DIST_ROOT="$PROJECT_ROOT/dist"
+EXPECTED_SKILLS=(
+    aipd
+    aipd-case
+    aipd-git-push
+    aipd-inbox
+    aipd-learn
+    aipd-mermaid
+    aipd-okr
+    aipd-update
+    aipd-weave
+)
+ALLOWED_PLATFORM_DIFFS=(
+    aipd-case/references/agent-guide.md
+    aipd-learn/references/learn-session-locator.md
+)
+CHECK_FAILED=0
+
+fail() {
+    echo "FAIL: $*" >&2
+    CHECK_FAILED=1
+}
+
+is_allowed_platform_diff() {
+    local candidate="$1"
+    local allowed
+    for allowed in "${ALLOWED_PLATFORM_DIFFS[@]}"; do
+        if [ "$candidate" = "$allowed" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+check_skill_set() {
+    local platform="$1"
+    local expected_file actual_file
+    expected_file=$(mktemp)
+    actual_file=$(mktemp)
+    printf '%s\n' "${EXPECTED_SKILLS[@]}" | sort > "$expected_file"
+    find "$DIST_ROOT/$platform/skills" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort > "$actual_file"
+    if ! diff -u "$expected_file" "$actual_file" >/dev/null; then
+        fail "$platform Skill 集合不是预期 9 项"
+        diff -u "$expected_file" "$actual_file" || true
+    fi
+    rm -f "$expected_file" "$actual_file"
+}
+
+check_source_sync() {
+    local platform="$1"
+    local skill
+    for skill in "${EXPECTED_SKILLS[@]}"; do
+        if ! cmp -s "$SRC_SKILLS/$skill/SKILL.md" "$DIST_ROOT/$platform/skills/$skill/SKILL.md"; then
+            fail "$platform/$skill 的 SKILL.md 与源码不同步"
+        fi
+    done
+}
+
+check_static_references() {
+    local platform="$1"
+    local skill_root skill_file ref ref_path
+    while IFS= read -r skill_root; do
+        while IFS= read -r skill_file; do
+            while IFS= read -r ref; do
+                [ -n "$ref" ] || continue
+                if [[ "$ref" == *"{"* ]] || [[ "$ref" == *"*"* ]]; then
+                    continue
+                fi
+                ref_path="${ref#@references/}"
+                if [ ! -e "$skill_root/references/$ref_path" ]; then
+                    fail "$platform 缺少引用: ${skill_file#$DIST_ROOT/$platform/skills/} -> $ref"
+                fi
+            done < <(rg -o '@references/[A-Za-z0-9_./{}*-]+' "$skill_file" | sort -u || true)
+        done < <(find "$skill_root" -name '*.md' -type f | sort)
+    done < <(find "$DIST_ROOT/$platform/skills" -mindepth 1 -maxdepth 1 -type d | sort)
+}
+
+check_platform_parity() {
+    local codex_root="$DIST_ROOT/codex/skills"
+    local claude_root="$DIST_ROOT/claude/skills"
+    local codex_files claude_files rel
+    codex_files=$(mktemp)
+    claude_files=$(mktemp)
+    (cd "$codex_root" && find . -type f | sed 's#^./##' | sort) > "$codex_files"
+    (cd "$claude_root" && find . -type f | sed 's#^./##' | sort) > "$claude_files"
+    if ! diff -u "$codex_files" "$claude_files" >/dev/null; then
+        fail "Codex / Claude 产物文件集合不同"
+        diff -u "$codex_files" "$claude_files" || true
+    fi
+    while IFS= read -r rel; do
+        if ! cmp -s "$codex_root/$rel" "$claude_root/$rel" && ! is_allowed_platform_diff "$rel"; then
+            fail "未声明的平台产物差异: $rel"
+        fi
+    done < "$codex_files"
+    rm -f "$codex_files" "$claude_files"
+}
+
+check_semantic_regressions() {
+    local dist_skills="$DIST_ROOT/codex/skills"
+    local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入'
+    if rg -n "$forbidden" "$dist_skills" --glob '*.md'; then
+        fail "最终产物命中当前流程禁止语义"
+    fi
+}
+
+check_cleanup_entrypoints() {
+    local script
+    for script in install install-codex install-project install-project-codex dev dev-codex; do
+        if ! rg -q 'source "\$SCRIPT_DIR/legacy-skills"' "$SCRIPT_DIR/$script"; then
+            fail "$script 未复用共享 legacy cleanup"
+        fi
+    done
+    if ! rg -q 'aipd-case-create aipd-case-run aipd-case-archive' "$SCRIPT_DIR/legacy-skills"; then
+        fail "共享 legacy cleanup 缺少旧 Case Skill"
+    fi
+}
+
+for platform in codex claude; do
+    check_skill_set "$platform"
+    check_source_sync "$platform"
+    check_static_references "$platform"
+done
+
+check_platform_parity
+check_semantic_regressions
+check_cleanup_entrypoints
+
+if [ "$CHECK_FAILED" -ne 0 ]; then
+    echo "AIPD dist 检查失败。" >&2
+    exit 1
+fi
+
+echo "AIPD dist 检查通过：9 个 Skill、源码同步、静态引用、平台差异、关键语义和 cleanup 入口均正常。"

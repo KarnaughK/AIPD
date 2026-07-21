@@ -17,6 +17,7 @@ inject-from-core:
   - adoc-structure.md
   - agent-entry/template.md
   - agent-entry/interaction-style.md
+  - agent-guides/aipd_adoc_retriever.md
   - adoc/templates/index.md
   - adoc/templates/inbox.md
   - adoc/templates/map.md
@@ -29,7 +30,7 @@ inject-from-core:
 
 # AIPD 渐进式总入口
 
-根据用户输入判断入口模式。`aipd` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`，状态扫描细节交给分身 Agent。
+根据用户输入判断入口模式。`aipd` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`。状态扫描先按噪声、并发收益、主线耦合和调度成本判断由 Main 直接完成还是交给分身 Agent。
 
 ## 入口判断
 
@@ -107,7 +108,7 @@ $aipd 总结经验
 $aipd 记一下刚才这段
 ```
 
-此模式保留项目状态入口能力，但状态扫描细节由分身 Agent 读取 `@references/scan-agent.md` 执行，主 Agent 不直接加载完整扫描细节。
+此模式保留项目状态入口能力。扫描范围小、入口明确时由 Main 读取 `@references/scan-agent.md` 直接完成；预计产生大量目录 / 文档噪声且隔离收益明确时，才把同一指南交给分身 Agent。平台能力不可用时回退 Main。
 
 ### 模糊输入
 
@@ -151,7 +152,7 @@ $aipd 看一下合同创建页面
 
 ### 第一步：扫描项目状态
 
-使用分身 Agent 扫描，保持主 Agent 主线干净。分身 Agent 读取 `@references/scan-agent.md`。
+读取 `@references/scan-agent.md`。先做 Main / Child 净收益判断：简单状态检查由 Main 完成；大量项目认知或多条独立状态线会污染主线时才派发分身，并为扫描结果设置单一 owner。
 
 ### 第二步：展示状态面板
 
@@ -190,7 +191,7 @@ mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
 - 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
 - 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
 
-然后安装项目根目录 Agent Entry，并引导用户定义 intent.md（参考 `@references/L1-intent/guide.md`、`@references/L1-intent/intent-writing.md`、`@references/L1-intent/template.md`）。
+然后先确定 Agent MD 模板等级，再按等级决定是否安装项目根目录 Agent Entry；最后引导用户定义 intent.md（参考 `@references/L1-intent/guide.md`、`@references/L1-intent/intent-writing.md`、`@references/L1-intent/template.md`）。
 
 默认壳子写入规则：
 
@@ -198,9 +199,30 @@ mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
 2. 如果目标文件已存在，不覆盖；先提示用户该文件已存在，并基于现有内容继续。
 3. 默认壳子只是入口索引，不代表对应认知已经完成。
 
-#### 安装 Agent Entry
+#### 先选择 Agent MD 等级
 
-初始化时必须把 `@references/agent-entry/template.md` 写入目标项目根目录的默认记忆文件，让后续 Agent 进入项目时自然知道这是 AIPD 项目。
+默认壳子创建后、任何 Agent MD 写入前，询问用户 Agent MD 模板等级。初始化默认推荐等级 1。
+
+| 等级 | 名称 | 内容 |
+|---|---|---|
+| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` / `CLAUDE.md`；不推荐，除非用户明确不想要项目记忆入口 |
+| 1 | AIPD Project Entry | 写入 AIPD 项目入口区块；默认推荐 |
+| 2 | AIPD Project Entry + Interaction Protocol | 写入 AIPD 项目入口区块，并额外写入 AIPD 项目级对话协议 |
+
+建议询问：
+
+```text
+Agent MD 使用哪个模板等级？
+0 不修改 Agent MD
+1 写入 AIPD Project Entry（推荐）
+2 写入 AIPD Project Entry + AIPD 对话协议
+```
+
+如果用户没有明确选择等级，默认按等级 1 继续，并说明 Interaction Protocol 未写入。选择等级 0 时跳过下面所有 Agent Entry / Interaction Protocol 写入。
+
+#### 按选择安装 Agent Entry
+
+等级 1 或 2 时，把 `@references/agent-entry/template.md` 写入目标项目根目录的默认记忆文件，让后续 Agent 进入项目时自然知道这是 AIPD 项目。
 
 **Codex 优先**：默认写入 `AGENTS.md`。
 
@@ -221,28 +243,9 @@ mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
 
 Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd-inbox`、`/aipd-okr`、`/aipd-case`、`/aipd-weave`、`/aipd-learn` 等具体流程 skill。
 
-#### 可选安装 Interaction Protocol
-
-Agent Entry 安装完成后，询问用户 Agent MD 模板等级。初始化默认推荐等级 1。
-
-等级说明：
-
-| 等级 | 名称 | 内容 |
-|---|---|---|
-| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` / `CLAUDE.md`；不推荐，除非用户明确不想要项目记忆入口 |
-| 1 | AIPD Project Entry | 写入 AIPD 项目入口区块；默认推荐 |
-| 2 | AIPD Project Entry + Interaction Protocol | 写入 AIPD 项目入口区块，并额外写入 AIPD 项目级对话协议 |
+#### 等级 2 安装 Interaction Protocol
 
 Interaction Protocol 是项目级对话协议，不是 AIPD 项目认知。它会约束 Agent 的回复结构、讨论 / 执行切换方式和长短答边界，因此必须由用户明确同意后再写入。写入后，它不是可选风格建议；除非用户当前指令明确要求另一种格式，或与更高优先级的平台规则冲突，否则 Agent 必须遵守。
-
-建议询问：
-
-```text
-Agent MD 使用哪个模板等级？
-0 不修改 Agent MD
-1 写入 AIPD Project Entry（推荐）
-2 写入 AIPD Project Entry + AIPD 对话协议
-```
 
 写入规则：
 
@@ -257,7 +260,6 @@ Agent MD 使用哪个模板等级？
    ```
 5. 如果目标文件已有该标记区块，只替换这两个标记之间的内容。
 6. 如果目标文件没有该标记区块，把区块追加到文件末尾，不改动 AIPD 区块和用户原有内容。
-7. 如果用户没有明确选择等级，默认按等级 1 继续，并说明 Interaction Protocol 未写入。
 
 **有 `_adoc/` 但没有 intent.md** → 引导用户定义方向（同上）。
 
