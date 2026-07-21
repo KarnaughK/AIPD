@@ -1,39 +1,57 @@
 # Think
 
-Think 是 AIPD 的高带宽思考缓冲层。它可以在 Case 前，也可以在 Case 内。
+Think 是 Case 内的信息同步、调研、实验、证据收集和抉择阶段。目标已经确定，但仍有关键未知时使用它。
 
-它要解决的问题不是“怎么拆任务”，而是：
+## 什么时候进入 Think
 
-- 这个想法要不要做？
-- 现在适不适合做？
-- 还缺哪些信息？
-- 有哪些选项和取舍？
-- 当前 case 推进不下去的卡点是什么？
-- 讨论中产生的稳定认知是否应该 weave？
+- 外部事实、用户口径或竞品范式不清楚。
+- 技术选型、测试集可信度或数据样本需要比较。
+- Design、Execute、Verify 发现上游证据缺口。
+- 有多个选项，需要明确依据、风险和代价。
 
-## Case 前的 Think
+用户只有模糊想法时，可以先在普通对话中讨论；一旦需要把调研状态持久化并继续推进，先建立 Case Contract，再进入 Think。Think 不再作为 Case 之前的独立持久化 phase。
 
-当用户只有模糊想法、陌生领域、深度调研或方案比较需求时，Think 可以先于 Case 存在。
+## 调研前 checkpoint
 
-它的出口包括：
+Think 很容易把上下文冲散。开始长调研、实验、采样或比较前，先写：
 
-- **Create**：目标清晰且值得执行，写入 case.md 的 Case Contract。
-- **Kill**：不值得做，记录终止原因。
-- **Defer**：值得但不是现在做。
-- **Research**：信息不足，继续调研。
-- **Weave**：产生稳定认知，但不形成执行事项。
-- **Continue**：继续讨论。
+- 当前问题与触发来源。
+- 查什么、不查什么。
+- 预期输出与停止条件。
+- 结论完成后返回 Contract、Design、Execute、Verify 还是 Close 候选。
 
-## Case 内的 Think
+没有停止条件的“再多搜一点”不是有效 Think。
 
-当 case 目标已经确定，但推进中遇到选型、测试集可信度、实验分支、用户取舍或关键未知时，不必膨胀出平级 case，也不必只留在聊天里。
+## 分支怎样组织
 
-这类内容进入当前 case 的 Think phase，产出问题、选项、依据、结论和对 Design / Execute 的输入。
+展开材料放在 `01-think/{branch}/`，而不是全部塞进 `case.md`：
 
-## 和 Design 的关系
+```text
+01-think/
+├── think.md
+└── docs-benchmark/
+    ├── summary.md
+    ├── evidence.md
+    └── data/        # 可选
+```
 
-Think 回答“当前卡点是什么、依据是什么、选哪个方向”。
+每个分支至少记录 branch goal、trigger、scope / stop condition、evidence、conclusion、return to，以及它是否让现有设计或 Work Package 失效。
 
-Design 回答“复杂度爆点在哪里、如何做最小必要解耦、后续 work package 如何横向铺开”。
+## Think 的输出
 
-Think 不替代 Design；Design 也不做无限调研。
+Think 不以“收集了很多资料”结束，而以可回流的判断结束：
+
+- 当前卡点是什么。
+- 有哪些选项。
+- 证据支持什么、不支持什么。
+- 选择了哪个方向，风险是什么。
+- 更新 Contract、Design、Execute、Verify 或 Close 候选中的哪个位置。
+
+如果方向成立且需要固化执行方案，进入 Design；如果目标不成立，进入 Close 并记录停止原因；如果仍缺信息，明确下一轮要查什么。
+
+## 与 Design 的边界
+
+- Think 回答：“依据是什么，选哪个方向？”
+- Design 回答：“需求和规则怎样固化，现有系统改变什么，执行边界怎样切？”
+
+Design 缺证据就回 Think；Think 不替代 requirements、API、状态或文件边界设计。

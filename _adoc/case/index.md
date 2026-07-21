@@ -28,6 +28,7 @@
 | `archive/c13-vue3-context-decoupling-experience` | 2026-07-15 | 从真实 Vue3 后台项目沉淀上下文解耦经验与可验证源码资产，完成 AIPD 品牌迁移、GitHub latest / pinned 发布和远端验收 |
 | `archive/c14-case-identifier-simplification` | 2026-07-15 | 取消 Case 的版本号语义，统一 `cN-slug`、`wp-NN-slug` 和 `cN/wp-NN`，完成 AIPD-2 迁移、构建与 Codex 安装 |
 | `archive/c17-skill-package-audit` | 2026-07-21 | 逐个审计并修复 Codex / Claude 的 9 个最终 Skill 产物，补平台等价语义、知识 owner 边界、共享 cleanup 与 `check-dist`，完成构建、二次验收及用户确认后的 Codex 安装 |
+| `archive/c18-readme-learning-docs-productization` | 2026-07-21 | 将根 README 与完整学习文档作为小产品重做：完成能力盘点、优秀开源文档调研、记忆循环主线、快速体验、六章课程、modules 校准与链接 / Skill / 脚本 / dist 验收 |
 
 ## 使用原则
 

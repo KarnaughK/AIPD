@@ -1,136 +1,116 @@
-# 04 Case / Work Package 开发逻辑
+# 04 用第一个 Case 完成真实目标
 
-知识库解决“Agent 怎么理解项目”。Case / Work Package 解决“Agent 怎么完成一个较大的短周期目标”。
+知识库解决“Agent 应该读什么”。Case 解决另一个问题：一个会持续多轮、经历调研和修改的目标，怎样不被聊天上下文冲散。
 
-真实任务不会一直停留在一句需求里。它会包含讨论、猜测、否定、临时方案、边界确认、执行结果和验收反馈。如果这些都只留在聊天中，Agent 很难稳定恢复。
+## 从一个目标开始，不从模板开始
 
-Case 的目标是把一次事项变成可恢复、可设计、可派发、可验收、可关闭的文件事实源。
-
-## OKR：长期目标
-
-OKR 不直接替代 case。
-
-它回答的是：当前阶段为什么要做这些事项，什么结果算推进了项目方向。
-
-AIPD 里提到 OKR 时，默认就是飞书 OKR。
-
-当项目有多个 case 时，OKR 可以帮助判断：
-
-- 哪些 case 更重要。
-- 当前 work package 是否还在服务阶段目标，而不是变成局部忙碌。
-- 归档时哪些经验值得进入长期知识库。
-
-## Case：短周期目标容器
-
-Case 是一次马上要推进、最终要验收关闭的目标容器。
-
-它类似 OKR，但不是 OKR。OKR 面向长期周期、持续对齐和复盘；Case 面向当前目标的 Think、Design、Execute、Verify 和 Close。
-
-Case 通常记录：
-
-- Case Contract：目标、边界、验收标准和上下文索引。
-- 上下文索引。
-- 本次边界。
-- Think 结论。
-- Design 结论。
-- Work Package。
-- Verify 结果。
-- Close 归档候选。
-- Close 状态。
-
-新建 Case 使用 contract + phase-first 目录结构：
+你可以直接说：
 
 ```text
-_adoc/case/cN-name/
-├── case.md
-├── 01-think/
-├── 02-design/
-├── 03-execute/
-├── 04-verify/
-└── 05-close/
+创建一个 case：把订单退款增加“已发货不可自助退款”的规则。
+先确认产品边界和现有实现，再完成修改、验证和归档。
 ```
 
-`case.md` 是入口、目标契约和状态聚合；phase 目录承载阶段材料。不要再把新 case 的主结构做成顶层 `doc/`、`steps/`、`code/`，也不要再生成独立 `01-goal/`。
+`/aipd-case` 会先建立 Case Contract：
 
-上下文压缩或中断后，恢复链路应该是：
+- 目标是什么，为什么现在做。
+- 本次要做和不做什么。
+- 完成时用什么证据判断。
+- 应读取哪些 L3 / L4 / L5、局部 README 和代码入口。
+
+Case 是一个马上要完成并最终关闭的短周期目标容器，不是长期路线图，也不是把所有待办装进一个目录。
+
+## 生命周期不是瀑布
 
 ```text
-AGENTS.md
--> _adoc/index.md
--> _adoc/map.md
--> _adoc/case/index.md
--> 当前 case.md
--> 当前 phase 目录 / work package
+Case Contract -> Think -> Design -> Execute -> Verify -> Close
 ```
 
-## Think：推进中的未知和抉择
+这是默认导航，不是只许向前的流水线。
 
-Think 可以出现在 Case 前，也可以出现在 Case 内。
+### Think：先解决未知
 
-如果还只是一个想法、方向、陌生领域或“要不要做”的问题，Think 负责把模糊想法变成 Create / Kill / Defer / Research / Weave / Continue 等出口。
+如果“已发货”的事实源、历史兼容或竞品做法不清楚，Think 可以建立调研分支，写明：
 
-如果 case 目标已经确定，但推进中遇到调研、选型、测试集可信度、用户取舍等问题，Think 作为 Case 内 phase 记录问题、选项、依据和结论。
+- 当前问题和触发来源。
+- 查什么、不查什么、何时停止。
+- 证据与结论。
+- 结论返回 Contract、Design、Execute 还是 Verify。
 
-Think 阶段的调研、实验、数据采样或方案比较分支，默认放在 `01-think/{branch}/`。例如模型评测、真实样本采集、竞品调研，都不应先膨胀成平级 case。
+Think 是 Case 内的探索工作台。它不是一个漂浮在 Case 之前的长期对象；Design、Execute、Verify 发现未知时也可以回跳 Think。
 
-## Design：找复杂度爆点
+### Design：先固定规则，再切执行边界
 
-Design 的核心不是完整抽象所有概念，而是找到复杂度爆点，并对爆点做最小必要解耦，再把架构具象化到文件 / 文件夹级边界，让后续执行可以横向铺模块，而不是纵向堆版本。
+Design 不只画目录。它先区分：
 
-搜索列表例子：
+- `confirmed`：用户已明确或项目事实已证明。
+- `assumed`：为了推进暂定，但不能偷偷写成长期事实。
+- `open`：不解决会改变产品规则、接口或执行边界。
+
+然后扫描现有系统，确定改动 delta，必要时设计数据、API、用户状态和文件边界。最后才找复杂度爆点、做最小必要解耦，并规划 Work Package。
+
+### Execute：Work Package 是目标包
+
+Work Package 不是“第一步改接口、第二步改页面”的微步骤清单。它是一个可执行、可恢复、可验收的目标包，必须写清：
+
+- Design 依据和不能破坏的边界。
+- 文件 / 文件夹范围。
+- 不允许固化的假设。
+- 验收标准和不做范围。
+- 执行前后 checkpoint。
+
+一个 Work Package 可以包含多个横向模块；运行时再决定由 Main 连续完成，还是交给 Child Agent。
+
+### Verify：检查目标，不只检查改动
+
+“代码已经提交”不是验收证据。Verify 回到 Case Contract 和 Design 护栏检查：
+
+- 目标用户行为是否成立。
+- 异常、权限和历史路径是否覆盖。
+- 自动测试、构建、截图或人工检查是否支持结论。
+- 是否有 assumed 被误写成事实。
+
+发现缺口可以回到 Contract、Think 或 Design，不需要为了保持 phase 顺序而假装通过。
+
+### Close：让一次事项真正结束
+
+Close 收束完成结果、未解决风险、执行证据和知识回写候选。Case 归档不等于把它删掉，而是从“当前运行状态”移到“可追溯历史”。
+
+## 为什么文件 checkpoint 很重要
+
+聊天中说过“现有接口不改”“先不处理管理员豁免”并不够。只要它会影响后续方向，就应该写入 Case Contract、Design 或当前 Work Package。
+
+一个合格 checkpoint 很短：
 
 ```text
-复杂度爆点：搜索 API 参数组装会随筛选项增加而膨胀
-解耦点：每个 Filter 自治产出 postValue
-特殊节点：Pagination 是带搜索语义的特殊 Filter
-主干职责：Controller 只管触发搜索，不管业务数据
+当前位置：Design / requirements
+已确认：已发货订单不能自助退款
+open：管理员是否允许人工退款
+停止点：不把管理员规则写入接口
+下一步：查现有后台权限后返回 requirements
+恢复入口：02-design/requirements-contract.md
 ```
 
-这比“第一版 list、第二版分页、第三版搜索、第四版筛选”的堆叠方式更适合 Agent。后续新增筛选项时，只横向新增 filter 模块，不把逻辑堆回搜索主函数。
+它不是逐句会议纪要，而是给压缩后的 Agent 一枚“你现在在哪里”的书签。
 
-## Work Package：可验收目标包
+## Goal Mode 和 Case 的关系
 
-Step 的语义调整为 Work Package。
+平台目标模式可以绑定一个明确 Case。绑定后，Agent 在 Contract 边界内自行检查 Think、Design、Execute、Verify、Close 的内部 Gate，通过后写 checkpoint 并继续。
 
-Work Package 不是微步骤，不负责指挥 Agent 先迈左腿还是右腿。它负责给 Agent 一个目标、上下文、设计边界和验收口径。
+Goal Mode 只改变“内部 Gate 由谁确认”，不改变 Case 内容，也不扩大权限。安装、发布、付费、删除、对外发送等副作用仍需要各自的授权。
 
-Work Package 只放在 `03-execute/work-packages/`。旧 `steps/` 和旧 `01-goal/` 不是新结构，也不再作为兼容运行入口；继续推进旧 case 前应先迁移为当前 contract + phase-first case。
+## Main / Child 是运行时选择
 
-一个 Work Package 应该写清：
+子 Agent 不是 Work Package 的默认执行者。AIPD 只在三种收益明确时倾向派发：
 
-- 目标。
-- 设计依据：复杂度爆点、解耦方式、主干职责、特殊节点和设计护栏。
-- 必读上下文。
-- 横向模块。
-- 验收标准。
-- 不做范围。
-- 执行记录。
+- 长文档、长日志、大量页面等高噪声上下文需要隔离。
+- 两条以上真正独立、无写入冲突的工作线可以并发。
+- 高风险结论需要独立复核，且复核者不必继承整条主线。
 
-如果两个 work package 之间必须共享上一轮聊天里的临时判断，说明共享判断还没有沉淀。要么合并成一个 work package，要么先把共享判断写入 case.md、`02-design/design.md`、README 或图里。
+内聚、高耦合、需要连续设计与调试判断的任务，Main 直接完成往往更稳。派发后每条证据面只有一个 owner，Main 不重复调查。
 
-## 分身 Agent：按运行时收益选择
+更完整的字段与边界见 [Case 与 Work Package](../modules/case-and-step.md)、[Think](../modules/think.md)和 [Main / Child Agent](../modules/clone-agents.md)。
 
-Execute phase 中，Work Package 可以由 Main 直接完成，也可以在有明确上下文隔离或并发收益时交给分身 / 角色 Agent。
+下一章处理最后一段：工作完成后，怎样让项目真正学会。
 
-Case / Goal / Work Package 已经承接长期状态，因此上下文可能压缩并不自动等于需要分身。分身默认读取最小必要上下文；只有强依赖尚未落盘的主线判断时才 fork 更多聊天。完成后只回流：
-
-- 结论。
-- 依据。
-- 风险。
-- 建议。
-- 改动文件。
-- 验证结果。
-
-主 Agent 保留用户沟通、目标边界、最终判断和状态写回，也可以连续执行高耦合内聚模块。派发后同一证据面不重复调查。
-
-## Close 归档候选：执行和知识库的接口
-
-Work Package 执行结束后，不一定直接改长期 ADOC。
-
-更稳妥的做法是先把候选写入 case 的 Close 阶段：说明这次任务产生了哪些可能值得回写的信息、当前状态是什么、建议归属哪里。
-
-进行中 case 里的候选默认不进入 L1-L5、局部 README 或 map。只有 case 完成、实现落地并验收后，Close 阶段才把稳定候选交给 `aipd-weave` 判断。
-
-之后由 Weave 判断知识归属、索引更新和旧知识冲突。
-
-这就是第二层和第一层的连接：Case / Work Package 负责执行，Weave 负责让执行经验进入项目知识库。
+[下一章：让项目从完成的工作里学习 →](05-ai-native-code-architecture-experiment.md)
