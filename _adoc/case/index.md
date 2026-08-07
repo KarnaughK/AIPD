@@ -9,8 +9,15 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c8-aipd-desktop-zero` | 已暂停 / Think | AIPD Desktop 暂不推进；未来如恢复，只允许先启动一个有硬边界的 Codex 自主 spike，不自动展开完整桌面端 |
 | `c10-aipd-capability-object-model` | 已暂停 | 原子能力和中间对象模型方向暂不推进；保留 Context Pack、Research Pack、Decision Record、Handoff 等参考材料 |
+
+## 编号占位
+
+本节不是新的 Case 流程状态，只用于解释已经使用但不再保留目录的流水号；编号继续保持单调递增，不复用。
+
+| Case | 处理时间 | 说明 |
+|---|---|---|
+| `c16-desktop-activity-navigation` | 2026-08-07 | 仅存在于 C8 专用工作树的未提交 Desktop 实验子 Case；随桌面端方向取消一并删除，编号保留不复用。 |
 
 ## 已归档 Case
 
@@ -22,6 +29,7 @@
 | `archive/c5-human-docs-architecture` | 2026-06-16 | 设计面向人的 docs 学习文档体系，区分 README、docs 与 _adoc |
 | `archive/c6-human-docs-three-lines` | 2026-06-14 | 将面向用户的教学文档升级为三条主线：知识库、Case / Step、AI 原生代码架构实验 |
 | `archive/c7-repo-structure-reclassification` | 2026-06-27 | 重划仓库根目录，收拢 AIPD Skill 本体、docs、项目认知和历史材料边界 |
+| `archive/c8-aipd-desktop-zero` | 2026-08-07 | 实际试用后确认 Desktop 不是 AIPD 所需产品；删除未提交实验代码、专用工作树和本地分支，以 `stopped / killed` 归档 |
 | `archive/c9-aipd-think-system-design` | 2026-06-27 | 旧 Think 一等对象设计 case；Think 问题已被新的 phase-first case 生命周期吸收，作为历史调研和边界参考归档 |
 | `archive/c11-aipd-case-design-flow` | 2026-07-10 | 将 Case Design 扩展为需求契约、后端 / 前端设计、上下文解耦、执行切片和 readiness gate，并完成构建与 Codex 安装验证 |
 | `archive/c12-codex-gpt-5-6-sol-adaptation` | 2026-07-15 | 完成 GPT-5.6 Sol / Ultra 使用边界与 Main / Child 调度适配，移除授权叙事，完成构建、安装、实际使用验收和 `main` 合并 |

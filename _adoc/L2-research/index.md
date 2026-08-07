@@ -105,17 +105,17 @@ AIPD 自身会持续迭代：Agent Entry、map 结构、case 模板、L3-L5 边�
 
 AIPD 需要 `aipd-update` 这类能力，审计差异、识别旧结构、给出更新方案，并在用户确认后合并新模板和新规则，让已有项目跟随 AIPD 框架升级，同时不破坏项目已有认知。
 
-### 10. Desktop 文件查询与观看
+### 10. AIPD 文件查询与观看
 
 随着 AIPD 使用变大，配套文件会越来越多：L1-L5、case、phase、work package、OKR、Inbox、SOP、MMD、docs、局部 README、执行记录、参考资料。
 
-只靠普通文件树或聊天窗口会越来越难快速查询、定位和观看这些内容。AIPD 需要一个更贴近自身组织方式的桌面端：按 L1-L5、Case、Phase、Work Package、OKR、Inbox、SOP 组织入口，快速查看 MMD、Markdown、case、phase、work package 和参考资料，并在聊天时快速引用当前对象。
+只靠普通文件树或聊天窗口会越来越难快速查询、定位和观看这些内容。这个痛点继续由 map-first 检索、Case 恢复入口、局部 README、现有 IDE 和 Codex 文件能力共同承接，不再单独建设 AIPD Desktop。
 
-### 11. CLI Agent 桌面化使用
+### 11. Agent 桌面化使用观察
 
 当前最强的编程 Agent 很多仍以 CLI 或接近 CLI 的形态存在。Codex 虽然有桌面端，但主要组织形式仍是工作空间下的对话列表；它没有按 AIPD 的 L1-L5、Case、Phase、Work Package、SOP、MMD 等工作对象组织界面。
 
-AIPD Desktop 需要承担一层“桌面化 Agent 使用容器”的需求：保留 Codex / Claude Code / OpenCode 等强 Agent 的执行能力，同时提供更适合 AIPD 的输入、对话、上下文引用和项目对象组织方式。
+2026-08-07 的实际试用表明，为此再维护一套独立桌面壳的成本和产品收益不匹配。AIPD 继续通过文件协议、Skill、Agent Entry、map 和 Case 适配现有 Agent 客户端，不把客户端本身纳入当前产品范围。
 
 ### 12. MMD 高带宽交流
 
@@ -132,19 +132,19 @@ MMD / Mermaid 可以把复杂关系压缩成图，让人和 AI 更快对齐结�
 - Coding Agent：Codex、Claude Code、Cursor Agent。
 - Agent 客户端 / 套壳项目：FanBox、OpenCovibe、codex-app-server-web、Claude Code Web 等。
 - 程序化接口路线：Codex App Server、Codex SDK、`codex exec --json`、Codex MCP server、Claude Agent SDK、OpenCode 原生接口。
-- 桌面技术路线：Electron、Tauri。
+- 桌面技术路线 Electron、Tauri 曾用于 C8 实验，当前不再是 AIPD 产品选型。
 
 这些内容在 L2 中只记录为外部生态观察。具体接入协议、会话模型、adapter 设计和工程选型应进入 L5 或 Desktop case。
 
-## AIPD Desktop 场景来源
+## Desktop 实验结论
 
-AIPD Desktop 目前至少来自三类 L2 需求：
+C8 Desktop 实验最初来自三类 L2 需求：
 
 - **文件体系扩大后的查询与观看**：AIPD 配套文件越来越多，需要更贴近 AIPD 结构的浏览、预览和引用界面。
 - **强 Agent 的桌面化使用**：CLI / 对话列表形态不适合承载 AIPD 的项目对象组织方式。
 - **Case / Work Package 与聊天组织单位不一致**：Codex 桌面端按“聊天”组织工作，AIPD 按 Case / Work Package 组织工作，导致创建 case、执行 case、修改 case、讨论工作包分散在多个聊天里。
 
-因此，AIPD Desktop 不是为了做完整 IDE，而是为了让 AIPD 文件体系和强 Agent 对话能力在一个更适合 AIPD 的桌面工作界面中结合。
+实际实现和试用后，这些需求不足以支撑一套独立桌面产品。Desktop 方向于 2026-08-07 取消；上述痛点继续作为外部场景保留，但默认通过现有 Codex / IDE 能力和 AIPD 自身的知识、检索、Case 协议解决。
 
 ## 不写入 L2 的内容
 
@@ -155,5 +155,5 @@ AIPD Desktop 目前至少来自三类 L2 需求：
 - Inbox 具体收件格式和整理流程，进入 Inbox 模块 / L4 / L5。
 - Learn 具体 transcript 审计规则和回写包格式，进入 Learn 功能线 / L4 / L5。
 - Update 具体审计清单、合并策略和模板差异处理流程，进入 Update 功能线 / L4 / L5。
-- AIPD Desktop 具体功能列表、技术栈、AgentAdapter 接口，进入 L4 / L5 / Desktop case。
+- 已取消的 Desktop 功能列表、技术栈和 AgentAdapter 讨论只保留在归档 C8，不进入现行 L4 / L5。
 - Mermaid 图具体语法、渲染脚本和图形规范，进入 MMD / Mermaid skill、L4 / L5 或局部 README。

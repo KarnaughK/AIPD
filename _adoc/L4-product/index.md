@@ -2,7 +2,7 @@
 
 L4 Product 负责把 L3 的核心成立模型落成用户可见、Agent 可调用、任务可引用的产品能力。
 
-这里的“产品”不只表示 GUI。对 AIPD 当前阶段来说，产品能力主要表现为 skill、项目文件能力、SOP 库、Desktop 方向和围绕它们的用户可见行为。具体工程实现、平台适配、脚本细节和角色 Agent 调度规则进入 L5 或就近源码。
+这里的“产品”不只表示 GUI。对 AIPD 当前阶段来说，产品能力主要表现为 skill、项目文件能力、SOP 库和围绕它们的用户可见行为。具体工程实现、平台适配、脚本细节和角色 Agent 调度规则进入 L5 或就近源码。
 
 ## L4 和 L3 / L5 的边界
 
@@ -30,7 +30,6 @@ L4 Product 负责把 L3 的核心成立模型落成用户可见、Agent 可调�
 | Mermaid / MMD | 用图提高人和 AI 对复杂结构的对齐速度 | `aipd-mermaid`、`.mmd` 文件 | AI 原生代码架构模型、任务执行模型 | 已存在 |
 | Git Push 辅助 | 用低风险固定流程完成当前分支推送 | `aipd-git-push` | 任务执行模型 | 已存在 |
 | SOP 库 | 把可重复项目动作沉淀为以 Agent 为运行时的 AI 原生程序 | `_adoc/sop/`、SOP map | SOP / AI 程序模型 | 壳子 |
-| AIPD Desktop | 用桌面界面组织 AIPD 文件、Case / Work Package、聊天和预览 | `aipd-desktop/` | Map-first 上下文检索模型、任务执行模型、SOP / AI 程序模型 | 规划中 |
 
 ## 能力边界
 
@@ -82,7 +81,7 @@ Update 用来更新已经初始化过 AIPD 的项目。它需要审计旧结构�
 
 ### Mermaid / MMD
 
-Mermaid / MMD 是高带宽交流能力，用于表达架构关系、Case / Work Package 拆解、状态流、模块边界和桌面端结构。
+Mermaid / MMD 是高带宽交流能力，用于表达架构关系、Case / Work Package 拆解、状态流、模块边界和产品结构。
 
 它不是默认渲染工具。用户只要求改图时，应优先修改 `.mmd` 源码；用户明确要求预览、渲染或看图时，才生成图片。
 
@@ -97,12 +96,6 @@ Git Push 是低风险辅助能力，只检查当前分支和提交状态并推�
 SOP 库不是普通知识库目录，也不是单纯脚本集合。它收纳可重复执行的项目动作：目标、输入、步骤、工具调用、Agent 判断、输出和收尾。
 
 某次 SOP 执行可以进入 case；执行后产生的稳定知识再由 weave 判断是否写回 L1-L5、map 或局部 README。
-
-### AIPD Desktop
-
-AIPD Desktop 是规划中的增强客户端。第零版边界是 AIPD 文件树解析和真实 Agent 聊天接入，后续再讨论 Case Workspace、快捷上下文 chip、MMD 预览和多 Agent adapter。
-
-Desktop 不是基础 skill 的运行前提，也不是重型 Agent 编排工厂。
 
 ## 不放入 L4 的内容
 

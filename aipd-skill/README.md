@@ -2,7 +2,7 @@
 
 `aipd-skill/` 是 AIPD 的 Skill 本体工程。它负责维护 AIPD 在 Codex、Claude Code 等 Agent 平台上运行所需的 skill 源码、平台适配、构建脚本和构建产物。
 
-这个目录不是 AIPD Desktop，也不是项目 `_adoc/` 认知库。它更接近一个“可打包的 Agent 能力源码项目”：修改这里会影响用户安装后可调用的 `/aipd`、`/aipd-case-create`、`/aipd-case-run` 等入口。
+这个目录不是项目 `_adoc/` 认知库。它更接近一个“可打包的 Agent 能力源码项目”：修改这里会影响用户安装后可调用的 `/aipd`、`/aipd-case-create`、`/aipd-case-run` 等入口。
 
 ## 一级目录
 

@@ -59,4 +59,4 @@ AIPD 更适合长期迭代、AI 深度参与、存在业务语言、历史取舍
 - 稳定 AIPD Skill 本体，让 `/aipd*` 系列能力能在真实项目中可用。
 - 继续完善项目知识库、Case / Work Package、分身 Agent、Weave 和 SOP 的协作链路。
 - 当前研发和验证优先适配 Codex，同时保留 Claude Code 等平台的可迁移空间。
-- 在 AIPD Desktop 方向上探索更好的 AI 聊天、case 展示、上下文快捷引用和项目文件预览体验，但 Desktop 不应成为 AIPD Skill 的运行前提。
+- AIPD Desktop 实验已于 2026-08-07 取消；不再维护独立桌面产品方向，文件浏览、聊天和上下文引用优先复用 Codex、IDE 与现有 AIPD map / Case 能力。

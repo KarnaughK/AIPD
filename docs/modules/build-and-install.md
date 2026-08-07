@@ -75,8 +75,7 @@ AIPD-2/
 │   ├── scripts/
 │   ├── modules/
 │   └── dist/
-├── docs/              # 面向人的学习文档
-└── aipd-desktop/      # 规划中的 AIPD Desktop，不是基础运行前提
+└── docs/              # 面向人的学习文档
 ```
 
 ## README 入口修正

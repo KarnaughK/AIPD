@@ -19,7 +19,6 @@ L4 只回答“用户可见 / 可调用的产品能力是什么、边界是什�
 | Mermaid / MMD / 画图 / 预览图 / 架构图 | Mermaid / MMD | 已存在 | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | AI 原生代码架构模型、任务执行模型 | `aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md` |
 | git push / 推送当前分支 | Git Push | 已存在 | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | 任务执行模型 | git 状态 |
 | SOP / AI 程序 / 可复用流程 / 查关键词 / 日报 | SOP 库 | 壳子 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP 目录、目标、输入、步骤、工具、输出、收尾 | SOP / AI 程序模型 | `_adoc/sop/` |
-| AIPD Desktop / 桌面端 / 聊天 UI / 文件树 / MMD 预览 | AIPD Desktop | 规划中 | `aipd-desktop/README.md` | AIPD 文件树、聊天、context chip、预览 | Map-first 上下文检索模型、任务执行模型、SOP / AI 程序模型 | 规划 case 仅在 Desktop case 流程中读取 |
 
 ## 源码与文档入口
 
@@ -36,7 +35,6 @@ L4 只回答“用户可见 / 可调用的产品能力是什么、边界是什�
 | Mermaid / MMD | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md`、`aipd-skill/src/core/L5-dev/vue-provider-guide.md` |
 | Git Push | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | git 当前状态 |
 | SOP 库 | `_adoc/sop/index.md`、`_adoc/sop/map.md` | `_adoc/sop/{sop-name}/README.md` |
-| AIPD Desktop | `aipd-desktop/README.md` | Desktop docs、Tauri / Vue bootstrap 文档 |
 
 ## 产品边界索引
 
@@ -53,9 +51,8 @@ L4 只回答“用户可见 / 可调用的产品能力是什么、边界是什�
 | Mermaid / MMD | 写图、改图、评审图、按需预览 | 不因为只是提到 MMD 就默认渲染图片 |
 | Git Push | 检查当前分支和提交状态，推送远端 | 不 add / commit / merge / rebase / stash |
 | SOP 库 | 收纳可重复 Agent 执行程序 | 不收单次聊天、单纯知识判断或独立脚本 |
-| AIPD Desktop | 组织 AIPD 文件、聊天、预览和轻量上下文引用 | 不做完整 IDE，不做重型 Agent 编排工厂 |
 
 ## 兜底搜索
 
 - `rg "aipd-case|case-create|case-run|case-archive|aipd-weave|aipd-learn|aipd-okr|aipd-update|aipd-inbox|aipd-mermaid" aipd-skill/src _adoc`
-- `rg "AIPD Case|Case Design|Work Package|复杂度爆点|Case Create|Case Run|Weave|Learn|OKR|Update|Inbox|Mermaid|Desktop|SOP|初始化|归档" README.md docs _adoc aipd-skill/src`
+- `rg "AIPD Case|Case Design|Work Package|复杂度爆点|Case Create|Case Run|Weave|Learn|OKR|Update|Inbox|Mermaid|SOP|初始化|归档" README.md docs _adoc aipd-skill/src`

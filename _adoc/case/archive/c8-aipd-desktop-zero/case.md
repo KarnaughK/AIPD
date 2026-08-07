@@ -1,27 +1,28 @@
 # Case: c8-aipd-desktop-zero
 
-> **目标**：沉淀并重新判断 AIPD Desktop 第零版边界：以 AIPD 项目结构为外壳，先做文件树可视化和真实 Agent 聊天接入。
-> **当前 Phase**：Think
+> **目标**：关闭已被用户否决的 AIPD Desktop 方向，清理未提交实验代码、专用工作树和当前产品入口，并保留取消决策的历史记录。
+> **当前 Phase**：Close
 
 ## Case Contract
 
 ### 目标
 
-- **目标**：确认 AIPD Desktop 是否继续推进，以及第零版是否仍应限定为 AIPD 文件树解析 + 真实 Agent 聊天接入。
+- **目标**：确认 AIPD Desktop 不再推进，清理 C8 / C16 桌面端实验实现和现行产品入口，并把本 case 以 `stopped / killed` 收口。
 - **方向 / OKR / 项目阶段关联**：AIPD 当前以 Skill / Agent / ADOC 为基础能力；Desktop 只是增强客户端候选，不能成为 AIPD 基础能力的前置依赖。
 
 ### 要做
 
-- 保留旧讨论中已确认的产品定位、技术调研和候选开发包。
-- 将旧 `doc/` / `steps/` case 迁移为 contract + phase-first 新结构。
-- 后续重启时，先在 Think phase 重新判断是否继续做 AIPD Desktop。
+- 删除专用工作树中的全部未提交 Desktop 实验代码和生成产物。
+- 删除仅用于实验的本地分支 `codex/c8-aipd-desktop`。
+- 删除主线 `aipd-desktop/` 占位目录，并撤下长期认知中的现行 Desktop 产品入口。
+- 保留 C8 的调研、设计和取消原因，归档为失败方向的历史证据。
 
 ### 不做
 
-- 当前不实现 AIPD Desktop。
-- 当前不执行候选 work package。
-- 当前不创建或初始化 `aipd-desktop/` 项目。
-- 当前不把旧 Codex 接入资料视为最新事实；真正执行前需要重新核对官方接口。
+- 不保留可运行 Desktop 实现、依赖、构建产物或设计 QA 图片。
+- 不把旧调研和未提交实现反向编织成有效产品知识。
+- 不删除发展日志、历史 case 中已经发生过的 Desktop 讨论。
+- 不修改或清理 `main` 工作区中与 C8 无关的未提交内容。
 
 ### 完成标准
 
@@ -29,27 +30,30 @@
 - [x] 旧调研资料迁移到 Think / Design phase 材料入口。
 - [x] 旧 step 迁移为 `03-execute/work-packages/` 下的候选 work package。
 - [x] case 状态明确为暂停后重开前的 Think 判断，不误导 Agent 直接 Execute。
-- [ ] 如果用户决定继续 Desktop，先完成 Think 复核并更新 Design。
+- [x] 用户确认 Desktop 不是所需方向，决定取消。
+- [x] 专用工作树、实验代码和本地分支已删除。
+- [x] 主线现行 Desktop 产品入口已撤下。
+- [x] case 已归档并更新索引。
 
 ### 上下文索引
 
 #### 层级判断
 
-- **L1 Intent**：涉及 AIPD 是否从 Skill / Agent 约束扩展到桌面工作台，但当前不改方向文件。
+- **L1 Intent**：Desktop 方向已经取消；方向文件只保留取消结论，不再把桌面工作台列为规划中产品。
 - **L3 Core**：涉及 AIPD 的组织单位、Case / Work Package、上下文显性化、Agent 自由度与流程控制边界。
-- **L4 Product**：涉及 AIPD Desktop 的产品形态、第零版 / 第一版边界、左侧导航、聊天区、预览区。
-- **L5 Dev**：涉及 Codex App Server / SDK / `codex exec --json`、Claude Code / OpenCode adapter 可能性；执行前必须重新核对当前官方接口。
-- **局部 README**：`aipd-desktop/README.md` 当前只是占位目录说明。
+- **L4 Product**：现行产品索引已撤下 AIPD Desktop；旧形态、第零版边界和交互设计只保留在本归档 case。
+- **L5 Dev**：Codex App Server / SDK / `codex exec --json`、Claude Code / OpenCode adapter 只作为历史调研，不再构成当前实现路线。
+- **局部 README**：原 `aipd-desktop/README.md` 占位文件已删除。
 - **Case / 历史 Work Package**：本 case 的旧 step 已迁移为候选 work package，只作为后续 Design 参考，不自动执行。
 
 #### 项目认知
 
 - `_adoc/index.md` - AIPD 项目状态、L1-L5 入口、case / OKR / inbox 入口。
-- `_adoc/map.md` - 路由到 AIPD Desktop、AIPD Case、Agent 调度、Weave、Codex 平台适配等入口。
+- `_adoc/map.md` - 已撤下 AIPD Desktop 现行路由，继续提供 AIPD Case、Agent 调度、Weave、Codex 平台适配等入口。
 - `_adoc/L3-core/index.md` - AIPD 核心认知：上下文解耦、黑箱上移、扁平化检索、Case / Work Package 和 Weave。
 - `_adoc/L3-core/horizontal-capabilities.md` - 横向能力：map 检索、Case 系统、Weave、Agent Entry、未来上下文服务。
 - `_adoc/L3-core/vertical-concept-modules.md` - 纵向模块：L1-L6、OKR、Case、Work Package、Agent Entry、Agent 使用方案。
-- `_adoc/L4-product/map.md` - AIPD 产品功能线入口，含 AIPD Desktop。
+- `_adoc/L4-product/map.md` - AIPD 产品功能线入口；已撤下 AIPD Desktop。
 - `_adoc/L5-dev/index.md` - Codex 优先适配、Agent 调度、构建安装等工程语境。
 
 #### Phase 材料入口
@@ -76,37 +80,36 @@
 - 2026-06-27：AIPD Desktop 是否继续做尚不确定，本 case 暂停推进，不进入执行，不创建 `aipd-desktop/`。
 - 2026-07-01：按新 AIPD Case 规则迁移旧结构；顶层 `doc/` 进入 phase 材料，顶层 `steps/` 进入 `03-execute/work-packages/` 候选包。
 - 2026-07-10：用户确认桌面端继续暂停。未来可以考虑由 Codex 独立试做一个受约束 spike，但本次不构成恢复执行授权；必须先固定单一目标、目录边界、停止条件和验收闸门。
+- 2026-08-07：用户实际试用后确认 Desktop 不是 AIPD 所需方向，决定取消；授权删除专用工作树中的全部实验代码及本地分支，并关闭 C8。
 
 ## Case Runtime
 
 ## Current Phase
 
-Think
+Close
 
 ## Phase State
 
-- Think: paused -> `01-think/think.md`
-- Design: pending -> `02-design/design.md`
-- Execute: pending -> `03-execute/execute.md`
-- Verify: pending -> `04-verify/verify.md`
-- Close: pending -> `05-close/close.md`
+- Think: completed / decision killed -> `01-think/think.md`
+- Design: cancelled / historical materials retained -> `02-design/design.md`
+- Execute: cancelled / uncommitted experiment deleted -> `03-execute/execute.md`
+- Verify: completed / cleanup verified -> `04-verify/verify.md`
+- Close: completed / stopped / killed -> `05-close/close.md`
 
 ## 当前焦点
 
-- **当前要解决的问题**：当前不推进；保留未来由 Codex 执行单个受约束 Desktop spike 的候选。
-- **下一步建议**：保持暂停。用户未来明确恢复时，先在 Think 中只选择一个 spike，并确认硬边界后再进入 Design。
-- **待确认项**：
-  - [ ] 是否授权启动单个 Codex 自主 spike。
-  - [ ] 首个 spike 是项目空壳、文件树，还是 Codex App Server 接入验证。
-- **阻塞项**：用户当前无时间推进，且尚未授权恢复或选择具体 spike。
+- **当前要解决的问题**：无；取消、清理、验证和归档已经完成。
+- **下一步建议**：无；若未来出现新的客户端需求，应新建 Case，不恢复 C8 的旧实现。
+- **待确认项**：无；用户已明确授权取消和删除。
+- **阻塞项**：无。
 
 ## 状态卡记录
 
 - **文件事实**：本 case 原为旧结构，包含顶层 `doc/` 和 `steps/`；现已迁移到 contract + phase-first 结构。
-- **用户认知**：用户确认桌面端暂时暂停；未来可让 Codex 自主试做，但担心目标和实现范围失控。
-- **冲突点**：旧结构不能按新 `aipd-case` 继续运行；旧 step 不能作为新流程里的可执行步骤直接推进。
-- **当前 phase 条件**：满足结构迁移；不满足直接进入 Execute。
-- **建议下一步**：维持暂停；未来先确认一个可丢弃、可验收、到闸门即停的 spike，不直接恢复全部 work package。
+- **用户认知**：用户实际试用后确认桌面端不是所需产品，方向不再推进。
+- **冲突点**：已处理；L1 / L2 / L4 / map / README 不再把 Desktop 写成规划中方向。
+- **当前 phase 条件**：清理与验证完成，Case 以 `stopped / killed` 关闭。
+- **建议下一步**：无。
 
 ## 回跳 / 重开记录
 
@@ -116,12 +119,12 @@ Think
 
 ## Think 摘要
 
-- **状态**：paused
+- **状态**：completed / killed
 - **关键问题**：AIPD Desktop 是否继续推进，以及旧第零版边界是否仍成立。
 - **调研 / 比较分支**：
   - `01-think/references/deep-research-agent-client.md` - 旧客户端接入调研，执行前需按当前官方接口复核。
   - `01-think/references/reference-notes.md` - 旧参考资料摘要。
-- **决策结论**：2026-07-10 再次确认暂停；旧结论保留为参考。未来的 Codex 自主试验必须单独授权且限定为一个 spike。
+- **决策结论**：2026-08-07 用户基于实际试用否决 Desktop 方向；不再继续技术路线、模块边界或正式开发包设计。
 
 ## Design 摘要
 
@@ -132,13 +135,11 @@ Think
 - **模式**：frontend-first / desktop-client
 - **理由**：Desktop 首要价值在交互壳、文件树、聊天输入和轻量上下文 chip；但真实 Agent 接入路线会影响前端架构。
 
-### 当前 Design 节点
+### 最终 Design 状态
 
-- **当前节点**：intake
-- **节点状态**：paused
-- **本节点要回答的问题**：是否恢复推进 AIPD Desktop。
-- **本节点停止点**：用户确认继续前，不创建新的正式 work package。
-- **下一节点建议**：确认继续后进入 requirements。
+- **停止节点**：intake
+- **节点状态**：cancelled
+- **停止原因**：用户实际试用后否决 Desktop 方向，不再进入 requirements 或正式 work package 设计。
 
 ### 复杂度爆点
 
@@ -154,7 +155,7 @@ Think
 
 ### 文件 / 文件夹计划
 
-- `aipd-desktop/` - 桌面端候选项目目录；当前仅有占位 README。
+- `aipd-desktop/` - 原桌面端候选项目目录；占位 README 和专用工作树内的实验实现均已删除。
 - `_adoc/case/c8-aipd-desktop-zero/01-think/` - 重启判断和外部资料复核。
 - `_adoc/case/c8-aipd-desktop-zero/02-design/` - 旧设计材料和后续新 Design。
 - `_adoc/case/c8-aipd-desktop-zero/03-execute/work-packages/` - 候选 work package。
@@ -172,38 +173,38 @@ Think
 
 > Execute 详细状态写入 `03-execute/execute.md`。Work Package 只放在 `03-execute/work-packages/`。
 
-- [ ] `03-execute/work-packages/wp-01-project-bootstrap.md` - 创建 Tauri + Vue + TypeScript 项目骨架。（状态：candidate）
-- [ ] `03-execute/work-packages/wp-02-aipd-file-tree-readonly.md` - 实现 AIPD 文件树只读解析和展示。（状态：candidate）
-- [ ] `03-execute/work-packages/wp-03-codex-appserver-spike.md` - 验证 Codex 接入路线。（状态：candidate）
-- [ ] `03-execute/work-packages/wp-04-chat-ui-mvp.md` - 实现基础聊天输入和流式输出。（状态：candidate）
-- [ ] `03-execute/work-packages/wp-05-preview-and-context-chips.md` - 实现预览和轻量上下文 chip。（状态：candidate）
+- [x] `03-execute/work-packages/wp-01-project-bootstrap.md` - 已取消，不执行。
+- [x] `03-execute/work-packages/wp-02-aipd-file-tree-readonly.md` - 已取消，不执行。
+- [x] `03-execute/work-packages/wp-03-codex-appserver-spike.md` - 已取消，不执行。
+- [x] `03-execute/work-packages/wp-04-chat-ui-mvp.md` - 已取消，不执行。
+- [x] `03-execute/work-packages/wp-05-preview-and-context-chips.md` - 已取消，不执行。
 
 ## 后续候选事项
 
-- 复核 Codex App Server / SDK 当前能力和限制。
-- 判断 Desktop 是否仍放在当前仓库 `aipd-desktop/` 内孵化。
-- 重新设计 Case Workspace 与聊天组织关系。
-- 重新命名 UI 中的 step 表述，适配当前 Case / Work Package 语言。
+- 无。未来若出现新的客户端需求，新建 Case 重新定义目标和边界，不继承 C8 候选实现。
 
 ## Verify 摘要
 
 - [x] 顶层 `doc/` / `steps/` 已消失。
 - [x] phase-first 目录已存在。
 - [x] 旧 step 已迁移为候选 work package。
-- [ ] Desktop 方向重启后，重新验证 Design 和 Execute 计划。
+- [x] 专用工作树和其中全部未提交实验内容已删除。
+- [x] 本地分支 `codex/c8-aipd-desktop` 已删除，且没有同名远端分支。
+- [x] 主线 `aipd-desktop/README.md` 占位文件已删除。
+- [x] 现行 L1 / L2 / L4 / map / README 产品入口已撤下。
 
 ### 验收结果
 
-- **状态**：pending
-- **残留风险**：旧调研资料含有可能过期的 Codex 接入判断；执行前必须重新查官方资料。
+- **状态**：passed（仅针对取消与清理验收）
+- **残留风险**：归档资料包含过期接口和未验证设计，不得作为现行产品或工程事实使用。
 
 ## Close 归档候选 / 反向编织候选
 
 | 候选内容 | 触发来源 | 当前状态 | 候选归属 | Close 判断 |
 |---|---|---|---|---|
-| AIPD Desktop 作为增强客户端而非基础依赖 | 旧讨论 / Case Contract | 待重新确认 | L4 Product / map | 待判断 |
-| Case Workspace 作为聊天与执行收纳空间 | 旧讨论 | 未实现 / 待验证 | L3 / L4 | 待判断 |
-| Codex 接入优先 App Server / SDK，PTY 作为 fallback | 旧调研 | 待复核 | L5 Dev / Desktop README | 待判断 |
+| AIPD Desktop 作为增强客户端而非基础依赖 | 旧讨论 / Case Contract | 已否决 | 仅留归档 Case | 不回写；撤下现行入口 |
+| Case Workspace 作为聊天与执行收纳空间 | 旧讨论 | 未实现 | 仅留归档 Case | 不回写 |
+| Codex 接入优先 App Server / SDK，PTY 作为 fallback | 旧调研 | 未验证 | 仅留归档 Case | 不回写 |
 
 ## 自我察觉迭代
 
@@ -220,7 +221,7 @@ Think
 
 ## Close 摘要
 
-- **状态**：待开始
+- **状态**：completed / stopped / killed
 - **创建时间**：2026-06-13
-- **归档时间**：
-- **归档位置**：
+- **归档时间**：2026-08-07
+- **归档位置**：`_adoc/case/archive/c8-aipd-desktop-zero/`

@@ -76,7 +76,6 @@
 | Mermaid / MMD / 架构图 / 预览图 | Mermaid / MMD | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | `_adoc/L3-core/index.md` | `aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md` |
 | git push / 推送当前分支 | Git Push | `_adoc/L4-product/map.md` | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | `_adoc/L3-core/horizontal-capabilities.md` | git 状态 |
 | SOP / AI 程序 / 可复用流程 | SOP 库 | `_adoc/L4-product/map.md` | `_adoc/sop/index.md`、`_adoc/sop/map.md` | SOP 目录、输入、步骤、工具、输出 | `_adoc/L3-core/index.md` | `_adoc/sop/` |
-| AIPD Desktop / 桌面端 / 聊天 UI / 文件树 | AIPD Desktop | `_adoc/L4-product/map.md` | `aipd-desktop/README.md` | AIPD 文件树、聊天、context chip、预览 | `_adoc/L3-core/index.md` | 规划 case 仅在 Desktop case 流程中读取 |
 
 ## L5 工程规则总表
 

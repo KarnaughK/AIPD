@@ -220,8 +220,7 @@ AIPD/
 ├── docs/              # 面向用户的学习、解释和参考
 ├── _adoc/             # AIPD 仓库自身给 Agent 读取的项目认知
 ├── aipd-skill/        # Skill 源码、平台适配、脚本与构建产物
-├── experience-assets/ # 可验证的实践经验源码；不随 Skill 安装
-└── aipd-desktop/      # 规划中的增强客户端，不是基础运行前提
+└── experience-assets/ # 可验证的实践经验源码；不随 Skill 安装
 ```
 
 Codex 与 Claude Code 的构建适配位于 `aipd-skill/src/platforms/`。`aipd-skill/dist/` 是生成产物，不是源码事实源。
