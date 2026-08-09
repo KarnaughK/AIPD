@@ -38,6 +38,7 @@
 - Design 节点仍逐项完成并写回，但不因固化既定范围内的需求、规则、API、数据模型、UI、文件边界或 work package 而逐节点等待用户点击确认。
 - Gate 未通过时，留在当前 phase 或按规则回跳补齐，不把“尚需继续工作”转换成用户确认请求。
 - Verify 中能够依据 Case Contract、测试、报告、截图或其他证据完成的验收由 Agent 自主完成；只有验收标准明确要求用户主观判断或用户独有事实时才询问。
+- 产品类 Case 命中 Attention Contract / Reduction Scan 触发器时，视为内部质量 Gate：记录证据后自主回到 Design，形成 Reduction Delta，修正受影响产物并重新 Verify。迭代次数由触发器和收敛证据决定，不按固定轮数执行，也不因需要内部回跳而暂停等待用户。
 - Case Contract 已明确包含归档时，Verify 通过后可以自主进入 Close 并归档；提交、推送、发布、付费、外部消息等动作仍按原权限边界处理。
 - Case 完成 Close 后，才能把平台目标标记为完成。
 

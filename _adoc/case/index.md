@@ -4,6 +4,8 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
+| `c20-aipd-knowledge-execution-code-topology` | Think / 逐个采集真实项目案例 | 先按时间顺序保存横向能力、纵向模块与复制 / 共享取舍，案例齐备后再分析 AI 友好代码拓扑 |
+| `c19-product-design-prototype-experience` | Verify / 已通过，等待进入 Close | 调研高关注度产品文档与产品原型 Skill，并将注意力契约、触发式减法回跳和自适应停止嵌入 AIPD Case |
 
 ## 暂停 Case
 
@@ -17,6 +19,7 @@
 
 | Case | 处理时间 | 说明 |
 |---|---|---|
+| `c15-superpowers-experience-ingestion` | 2026-07-21 | 原计划调研 Superpowers 是否可由 AIPD 经验系统吸收；止于 Think，未进入 Design / Execute，也未产生代码改动。事项已撤销，case 目录和外部仓库克隆均已删除，编号保留不复用。 |
 | `c16-desktop-activity-navigation` | 2026-08-07 | 仅存在于 C8 专用工作树的未提交 Desktop 实验子 Case；随桌面端方向取消一并删除，编号保留不复用。 |
 
 ## 已归档 Case
@@ -37,9 +40,15 @@
 | `archive/c14-case-identifier-simplification` | 2026-07-15 | 取消 Case 的版本号语义，统一 `cN-slug`、`wp-NN-slug` 和 `cN/wp-NN`，完成 AIPD-2 迁移、构建与 Codex 安装 |
 | `archive/c17-skill-package-audit` | 2026-07-21 | 逐个审计并修复 Codex / Claude 的 9 个最终 Skill 产物，补平台等价语义、知识 owner 边界、共享 cleanup 与 `check-dist`，完成构建、二次验收及用户确认后的 Codex 安装 |
 | `archive/c18-readme-learning-docs-productization` | 2026-07-21 | 将根 README 与完整学习文档作为小产品重做：完成能力盘点、优秀开源文档调研、记忆循环主线、快速体验、六章课程、modules 校准与链接 / Skill / 脚本 / dist 验收 |
+| `archive/c21-interaction-response-protocol` | 2026-08-09 | 将 Agent MD 等级 2 的讨论回复协议固定为“我理解 → 展开说说 → 结论 → 横向拓展 → 下一步”，完成构建、安装、验收与 L4 / map 回写 |
 
 ## 使用原则
 
 - 新事项先创建 contract + phase-first case：目标、边界和验收标准写入 `case.md`，再按 Design 结果拆 work package。
+- 新 Case 创建在 `_adoc/case/cN-{name}/`，入口文件固定为 `case.md`。
+- 展开材料按 `01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/` 组织；Think 分支放在 `01-think/{branch}/`，Design 决策放在 `02-design/`。
 - work package 必须列出显式上下文文档、横向模块和验收标准。
+- Work Package 只放在 `03-execute/work-packages/`，文件语义是可恢复、可验收的目标包，不是微步骤。
 - Work Package 是可恢复、可验收的目标包，不等于子 Agent 派发节点；运行时根据上下文隔离收益、真实并发收益和主线耦合度选择 Main 或子 Agent。
+- 旧 Case 中的 `doc/`、`steps/` 或 `01-goal/` 不再兼容运行；继续推进前必须先迁移为 contract + phase-first 结构。
+- Case 完成并验收后移动到 `_adoc/case/archive/`，索引同步到“已归档 Case”。

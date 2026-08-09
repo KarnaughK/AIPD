@@ -17,8 +17,8 @@
 - `README.md`
 - `docs/guide/01-from-vibe-coding-to-agent-coding.md`
 - `docs/modules/context-decoupling.md`
-- `_adoc/case/c8-aipd-desktop-zero/case.md`
-- `_adoc/case/c8-aipd-desktop-zero/doc/reference-notes.md`
+- `_adoc/case/archive/c8-aipd-desktop-zero/case.md`
+- `_adoc/case/archive/c8-aipd-desktop-zero/01-think/references/reference-notes.md`
 
 ## 3. 当前 L2 现状
 

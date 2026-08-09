@@ -58,7 +58,7 @@ _adoc/case/archive/c7-repo-structure-reclassification/
 - `_adoc/map.md` - 构建 / 安装 / Skill / Codex 平台适配的路由入口。
 - `README.md` - 当前用户侧项目说明和项目结构。
 - `docs/modules/build-and-install.md` - 构建与安装说明。
-- `_adoc/case/c8-aipd-desktop-zero/case.md` - Desktop case，需在本 case 后基于新结构继续迭代。
+- `_adoc/case/archive/c8-aipd-desktop-zero/case.md` - Desktop case，已基于新结构完成首版并归档。
 
 ### 代码 / 文件入口
 

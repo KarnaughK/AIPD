@@ -39,6 +39,8 @@ L4 Product 负责把 L3 的核心成立模型落成用户可见、Agent 可调�
 
 初始化只创建基础 AIPD 结构、Agent Entry、map、case / OKR / inbox 壳子。它不替用户完成完整 L1-L5 建模，也不替代后续 weave 和 case 流程。
 
+用户选择 Agent MD 等级 2 时，还会安装 Interaction Protocol，约束讨论 / 分析类回复按“我理解 → 展开说说 → 结论 → 横向拓展 → 下一步”生成。“我理解”只复述目标和边界，不提前下结论；“横向拓展”只列相邻方向；“下一步”只给一个自然向下动作，不自动把建议解释成执行授权。具体协议以 `aipd-skill/src/core/agent-entry/interaction-style.md` 为准。
+
 ### Map-first 认知加载
 
 Map-first 认知加载是 AIPD 当前最重要的读取能力。它要求 Agent 先读取 `_adoc/index.md` 和 `_adoc/map.md`，用显性 map 命中相关 L3 / L4 / L5 / 局部 README / L6 入口。

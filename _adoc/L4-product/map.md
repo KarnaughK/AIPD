@@ -9,6 +9,7 @@ L4 只回答“用户可见 / 可调用的产品能力是什么、边界是什�
 | 用户说法 / 场景 | 标准功能线 | 状态 | 主要入口 | 数据对象 | 相关 L3 模型 | 相关 L5 / 流程入口 |
 |---|---|---|---|---|---|---|
 | AIPD / 进入项目 / 初始化 / 项目状态 | AIPD 总入口与初始化 | 已存在 | `aipd-skill/src/skills/aipd/SKILL.md` | `AGENTS.md`、`_adoc/`、index / map / inbox / case / okr 模板 | 项目知识库维护模型、Map-first 上下文检索模型 | `_adoc/L5-dev/index.md` |
+| Agent MD 等级 2 / Interaction Protocol / 回复模板 / 我理解 / 展开说说 / 横向拓展 / 下一步 | Interaction Protocol | 已存在 | `aipd-skill/src/core/agent-entry/interaction-style.md` | 五段讨论回复顺序、显式复述、横向方向、自然下一步 | Agent 协作思考模型 | Agent MD 等级 2、`AGENTS.md` / `CLAUDE.md` |
 | 读 map / 加载项目认知 / 找上下文 / 开发前读文档 | Map-first 认知加载 | 已存在 | `aipd-skill/src/skills/aipd/SKILL.md`、`_adoc/map.md` | `_adoc/index.md`、`_adoc/map.md`、L3/L4/L5、局部 README | Map-first 上下文检索模型 | `_adoc/L5-dev/index.md` |
 | inbox / 收件箱 / 先记一下 / 先存一下 | Inbox 临时收件箱 | 已存在 | `aipd-skill/src/skills/aipd-inbox/SKILL.md` | `_adoc/inbox.md` | 项目知识库维护模型 | `aipd-skill/src/core/adoc/templates/inbox.md` |
 | case / 创建 case / Case Contract / 目标边界 / 执行 case / case design / case think / work package / 验收 / 归档 | AIPD Case | 已存在 | `aipd-skill/src/skills/aipd-case/SKILL.md` | case.md、Case Contract、phase-first 目录、phase state、Think、Design、Work Package、执行记录、Close 归档候选 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | `_adoc/case/index.md`、`aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/` |

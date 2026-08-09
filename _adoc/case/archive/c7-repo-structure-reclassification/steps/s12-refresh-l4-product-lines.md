@@ -18,7 +18,7 @@
 - `README.md`
 - `aipd-skill/src/skills/*/SKILL.md`
 - `_adoc/sop/index.md`
-- `_adoc/case/c8-aipd-desktop-zero/case.md`
+- `_adoc/case/archive/c8-aipd-desktop-zero/case.md`
 
 ## 执行判断
 
