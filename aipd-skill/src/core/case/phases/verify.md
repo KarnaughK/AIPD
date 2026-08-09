@@ -7,6 +7,7 @@ Verify phase 负责验收目标是否完成，以及执行结果是否遵守 Des
 - Case Contract 中的目标和验收标准是否完成。
 - Work Package 是否完成。
 - Design Guardrails 是否被破坏。
+- 拓扑敏感 Work Package 的 Code Topology Contract 是否被真实结果满足。
 
 当交付物涉及产品文档、PRD、原型、用户流程、信息架构或用户可见页面时，Verify 还要检查用户注意力是否成立。这里使用触发式审视，不给所有 Case 固定增加多轮流程。
 
@@ -18,6 +19,20 @@ Verify phase 负责验收目标是否完成，以及执行结果是否遵守 Des
 - 是否有未完成风险或用户必须验收的取舍？
 - 是否需要补执行工作包、回到 Design，还是可以 Close？
 - 是否产生稳定认知，需要 Weave？
+
+## 代码拓扑合同审计（条件命中）
+
+如果 Design 或 Work Package 标记 `拓扑敏感: 是`，Verify 必须依据真实 diff、目录结构、依赖关系、测试和文档回写审计项目具体合同；不需要重新加载通用代码拓扑指南。
+
+至少检查：
+
+- 是否出现 Design 未批准的 shared 抽取、跨上下文引用或依赖方向变化。
+- 是否穿透显式组合边界，直接操作其他上下文的内部 service、store、私有组件或中间状态。
+- 是否把参数组装、状态判断或业务分支重新堆回主干。
+- 纵向业务上下文是否仍可独立理解、修改和验收。
+- 合同约定的 L5、局部 README 或 map 是否按稳定程度完成回写。
+
+设计仍成立但实现偏离时回 Execute 修正；真实事实证明合同本身不成立时回 Design，并记录受影响的 Work Package。
 
 ## 产品类交付的 Reduction Scan（条件命中）
 
@@ -49,6 +64,7 @@ Verify phase 负责验收目标是否完成，以及执行结果是否遵守 Des
 - case.md。
 - Work Packages。
 - 执行记录。
+- Design 中的 Code Topology Contract 与 Work Package 代码拓扑护栏（如命中）。
 - 测试、构建、截图、报告或人工验收材料。
 
 ## 输出

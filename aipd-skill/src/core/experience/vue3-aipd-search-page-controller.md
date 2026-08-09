@@ -34,7 +34,7 @@ AIPD 附带源码实现了动态 Filter 注销、Symbol context、可 await 初�
 - 普通搜索需要回第一页，翻页搜索又必须保留当前页。
 - 弹框关闭后的刷新需要保留当前搜索会话。
 
-AipdSearch 把这些变化横向铺到 Filter：
+AipdSearch 把这些变化分散到各个自治 Filter：
 
 ```text
 页面 / Tab

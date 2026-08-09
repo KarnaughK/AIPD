@@ -122,7 +122,7 @@ Main Agent 保护主线连续性，但不局限于调度。以下任务通常由
 2. 读取 work package 文件：{work_package_file_abs_path}
 3. 读取 Case 文件：{case_file_abs_path}
 4. 按 work package 中的「上下文文档」逐一读取，遵守 case 的上下文边界
-5. 按 work package 中的「横向模块」推进
+5. 按 work package 中的「并列工作项」推进
 6. 按 work package 中的「验收标准」自检
 7. 完成后返回简洁结果
 

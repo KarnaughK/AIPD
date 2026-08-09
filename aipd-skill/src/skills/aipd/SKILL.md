@@ -2,7 +2,7 @@
 name: aipd
 description: >
   AIPD 渐进式总入口。根据用户输入在 ADOC 轻量认知加载、项目状态扫描、初始化和 case 流程之间路由。
-  关键词：AIPD、ADOC、_adoc、项目认知、轻量认知加载、项目状态、初始化、case、前端规范、L5、开发前读文档
+  关键词：AIPD、ADOC、_adoc、项目认知、轻量认知加载、项目状态、初始化、case、前端规范、L5、开发前读文档、代码拓扑、横向基座、纵向业务上下文、shared
 allowed-tools:
   - Read
   - Write
@@ -14,6 +14,7 @@ allowed-tools:
   - AskUserQuestion
 inject-from-core:
   - overview.md
+  - ai-friendly-code-topology.md
   - adoc-structure.md
   - agent-entry/template.md
   - agent-entry/interaction-style.md
@@ -59,7 +60,8 @@ $aipd 按项目规范实现一个新表单
 3. 读取 `_adoc/map.md`，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / L6 代码入口；普通任务不要路由到 case / OKR。
 4. 根据检索结果选择入口；日常前端开发不默认只读 L5，必须判断是否还涉及 L3 核心概念、L4 产品功能和局部 README。
 5. 按任务继续下钻，只读相关文档，不全量读取 `_adoc/`。
-6. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
+6. 如果任务命中下述代码拓扑条件，在项目事实清楚后读取 `@references/ai-friendly-code-topology.md`。
+7. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
 
 下钻参考：
 
@@ -76,6 +78,17 @@ $aipd 按项目规范实现一个新表单
 | 业务对象 / 角色 / 主流程 | `_adoc/L3-core/index.md` |
 
 如果目标项目没有对应文档，不要臆造规则；说明缺失，并基于现有代码和用户目标继续处理。
+
+### AI 友好代码拓扑（条件命中）
+
+以下任务在读取目标项目 map、L5、局部 README 和必要代码事实后，再读取 `@references/ai-friendly-code-topology.md`：
+
+- 新增或重划页面、API、网站、游戏或业务模块边界。
+- 决定 service / helper / component / shared 是抽取、上移还是保留局部复制。
+- 调整跨模块依赖方向、组合协议、目录 owner 或上下文边界。
+- 用户明确讨论横向基座、横向共享能力、纵向业务上下文或 AI 友好代码架构。
+
+局部字段修改、样式修复、明确上下文内的 bugfix 和纯文档整理不读取本指南。目标项目已经记录的架构事实优先；除非用户明确要求，不因命中本指南而主动扩大成全局重构。
 
 ### 上下文检索包
 
@@ -132,6 +145,7 @@ $aipd 看一下合同创建页面
 - skill 不复制 `_adoc` 正文，不把项目规范写死在 skill 里。
 - 读完后直接进入用户任务，不输出大段 AIPD 解释。
 - L1-L5 是长期知识库；普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`。只有用户明确要求创建、执行、恢复、归档 case，查看 / 更新 OKR，或当前任务本身就是 `aipd-case` / OKR 对齐时，才进入 case / OKR。
+- 结构性代码任务命中条件时，读取 `@references/ai-friendly-code-topology.md`；简单局部任务不增加这份上下文。
 
 ### 输出要求
 

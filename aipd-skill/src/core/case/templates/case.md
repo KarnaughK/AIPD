@@ -179,7 +179,7 @@ Think / Design / Execute / Verify / Close
 
 ## Design 摘要
 
-> 详细内容写入 `02-design/design.md`。Design 是从需求契约到可执行方案的流程：先固定需求和规则，再设计后端 / 前端，最后做 AIPD 特有的上下文解耦和文件 / 文件夹级边界，让后续执行可以横向铺模块，而不是纵向堆版本。
+> 详细内容写入 `02-design/design.md`。Design 是从需求契约到可执行方案的流程：先固定需求和规则，再设计后端 / 前端，最后做 AIPD 特有的上下文解耦和文件 / 文件夹级边界，让后续执行可以并列扩展，而不是纵向堆版本。
 
 ### Design 模式
 
@@ -245,10 +245,21 @@ Think / Design / Execute / Verify / Close
 ### 架构边界 / 护栏
 
 - {主干职责}
-- {横向模块接入方式}
+- {纵向业务上下文如何使用横向能力，并通过什么显式边界组合}
 - {特殊节点}
 - {允许的局部重复}
 - {禁止把复杂度堆回哪里}
+
+### Code Topology Contract（条件命中）
+
+- **拓扑敏感**：是 / 否
+- **纵向业务上下文**：{本次新增或修改的业务上下文及目录 / 文件 owner}
+- **允许的横向依赖**：{现有横向基座与横向共享能力}
+- **显式组合边界**：{输入输出、事件或协议}
+- **禁止事项**：{跨边界引用、内部穿透、主干回流}
+- **共享变化权限**：{允许新增 / 上移哪些 shared；未明确时默认不允许}
+- **独立验收边界**：{如何独立理解、修改和验证}
+- **认知回写**：{稳定后更新哪个 L5 / 局部 README / map}
 
 ### 设计文档
 
@@ -273,7 +284,7 @@ Think / Design / Execute / Verify / Close
 
 > Execute 详细状态写入 `03-execute/execute.md`。Work Package 只放在 `03-execute/work-packages/`，不是 case 顶层结构。
 
-Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标包。一个 work package 可以包含多个横向模块。
+Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标包。一个 work package 可以包含多个并列工作项。
 
 - **当前执行游标**：{无 / work package path}
 - **最近执行 checkpoint**：{执行前目标 / 执行后结果 / 阻塞 / 回跳}
@@ -333,12 +344,13 @@ Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标�
 - [ ] Think 阶段是否以分支目标推进，并明确结论回流位置。
 - [ ] Design 阶段是否找到了复杂度爆点，并产出文件 / 文件夹级架构边界。
 - [ ] Design 阶段是否先处理需求契约、confirmed / assumed / open、后端 / 前端设计，再做上下文解耦。
+- [ ] 命中代码拓扑条件时，Design 是否形成项目具体合同，拓扑敏感 Work Package 是否携带短护栏。
 - [ ] Design / Execute / Verify 发现上游缺口时，是否记录了回跳原因、更新 artifact 和受影响下游。
 - [ ] Design 产物是否经用户确认后才创建正式 Execute work package。
 - [ ] 大调研、长执行、子 Agent 派发、phase 跳转和用户确认后，是否写了 checkpoint，而不是只留在聊天里。
 - [ ] 压缩后恢复入口是否足以让新 Agent 判断当前游标、已确认结论、open / assumed 和下一步。
-- [ ] Work Package 是否只放在 `03-execute/work-packages/`，并按架构边界横向铺模块。
-- [ ] Verify 是否检查了设计护栏，没有只看代码是否运行。
+- [ ] Work Package 是否只放在 `03-execute/work-packages/`，并按架构边界组织并列工作项。
+- [ ] Verify 是否检查了设计护栏和代码拓扑合同，没有只看代码是否运行。
 - [ ] 如果执行偏离 SOP，能否判断偏离原因：提示词未执行 / map 缺失 / map 命中不清 / skill 流程不够硬 / 文档结构问题。
 
 ## Close 摘要

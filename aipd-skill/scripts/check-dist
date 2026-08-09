@@ -103,9 +103,58 @@ check_platform_parity() {
 
 check_semantic_regressions() {
     local dist_skills="$DIST_ROOT/codex/skills"
-    local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入'
+    local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入|横向铺模块|横向铺开'
     if rg -n "$forbidden" "$dist_skills" --glob '*.md'; then
         fail "最终产物命中当前流程禁止语义"
+    fi
+}
+
+check_code_topology_projection() {
+    local source_file="$PROJECT_ROOT/src/core/ai-friendly-code-topology.md"
+    local platform skill target_file
+
+    if [ ! -f "$source_file" ]; then
+        fail "缺少 AI 友好代码拓扑运行时投影源文件"
+        return
+    fi
+
+    for skill in aipd aipd-case; do
+        if ! rg -q '@references/ai-friendly-code-topology.md' "$SRC_SKILLS/$skill/SKILL.md"; then
+            fail "$skill 缺少代码拓扑条件读取规则"
+        fi
+    done
+
+    for platform in codex claude; do
+        for skill in aipd aipd-case; do
+            target_file="$DIST_ROOT/$platform/skills/$skill/references/ai-friendly-code-topology.md"
+            if [ ! -f "$target_file" ]; then
+                fail "$platform/$skill 缺少代码拓扑运行时投影"
+            elif ! cmp -s "$source_file" "$target_file"; then
+                fail "$platform/$skill 的代码拓扑投影与 core 源文件不同步"
+            fi
+        done
+
+        for skill in "${EXPECTED_SKILLS[@]}"; do
+            if [ "$skill" = "aipd" ] || [ "$skill" = "aipd-case" ]; then
+                continue
+            fi
+            if [ -e "$DIST_ROOT/$platform/skills/$skill/references/ai-friendly-code-topology.md" ]; then
+                fail "$platform/$skill 不应包含代码拓扑运行时投影"
+            fi
+        done
+    done
+
+    if ! rg -q 'Code Topology Contract' "$DIST_ROOT/codex/skills/aipd-case/references/case/phases/design.md"; then
+        fail "Case Design 缺少 Code Topology Contract"
+    fi
+    if ! rg -q '代码拓扑护栏 preflight' "$DIST_ROOT/codex/skills/aipd-case/references/case/phases/execute.md"; then
+        fail "Case Execute 缺少代码拓扑护栏 preflight"
+    fi
+    if ! rg -q '代码拓扑合同审计' "$DIST_ROOT/codex/skills/aipd-case/references/case/phases/verify.md"; then
+        fail "Case Verify 缺少代码拓扑合同审计"
+    fi
+    if ! rg -q '拓扑敏感' "$DIST_ROOT/codex/skills/aipd-case/references/case/templates/work-package.md"; then
+        fail "Work Package 模板缺少拓扑敏感字段"
     fi
 }
 
@@ -129,6 +178,7 @@ done
 
 check_platform_parity
 check_semantic_regressions
+check_code_topology_projection
 check_cleanup_entrypoints
 
 if [ "$CHECK_FAILED" -ne 0 ]; then
@@ -136,4 +186,4 @@ if [ "$CHECK_FAILED" -ne 0 ]; then
     exit 1
 fi
 
-echo "AIPD dist 检查通过：9 个 Skill、源码同步、静态引用、平台差异、关键语义和 cleanup 入口均正常。"
+echo "AIPD dist 检查通过：9 个 Skill、源码同步、静态引用、平台差异、代码拓扑投影、关键语义和 cleanup 入口均正常。"

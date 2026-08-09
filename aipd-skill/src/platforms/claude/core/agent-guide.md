@@ -61,7 +61,7 @@ AGENTS.md / CLAUDE.md
 2. 确认 Case Contract 与 Current Phase
 3. 读取 Work Package：{work_package_file_abs_path}
 4. 读取角色指引：{role_guide_reference}
-5. 按 Work Package 的上下文、横向模块和验收标准执行
+5. 按 Work Package 的上下文、并列工作项和验收标准执行
 6. 返回简洁结果
 
 约束：

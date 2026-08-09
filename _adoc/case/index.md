@@ -4,7 +4,6 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c20-aipd-knowledge-execution-code-topology` | Think / 逐个采集真实项目案例 | 先按时间顺序保存横向能力、纵向模块与复制 / 共享取舍，案例齐备后再分析 AI 友好代码拓扑 |
 | `c19-product-design-prototype-experience` | Verify / 已通过，等待进入 Close | 调研高关注度产品文档与产品原型 Skill，并将注意力契约、触发式减法回跳和自适应停止嵌入 AIPD Case |
 
 ## 暂停 Case
@@ -40,6 +39,7 @@
 | `archive/c14-case-identifier-simplification` | 2026-07-15 | 取消 Case 的版本号语义，统一 `cN-slug`、`wp-NN-slug` 和 `cN/wp-NN`，完成 AIPD-2 迁移、构建与 Codex 安装 |
 | `archive/c17-skill-package-audit` | 2026-07-21 | 逐个审计并修复 Codex / Claude 的 9 个最终 Skill 产物，补平台等价语义、知识 owner 边界、共享 cleanup 与 `check-dist`，完成构建、二次验收及用户确认后的 Codex 安装 |
 | `archive/c18-readme-learning-docs-productization` | 2026-07-21 | 将根 README 与完整学习文档作为小产品重做：完成能力盘点、优秀开源文档调研、记忆循环主线、快速体验、六章课程、modules 校准与链接 / Skill / 脚本 / dist 验收 |
+| `archive/c20-aipd-knowledge-execution-code-topology` | 2026-08-10 | 从千里马、Page One、Guessword 三个案例形成 AI 友好代码拓扑；完成 L3 主事实源、Skill 公共投影、双入口条件加载、三段代码拓扑合同、两平台构建与 Codex 安装 |
 | `archive/c21-interaction-response-protocol` | 2026-08-09 | 将 Agent MD 等级 2 的讨论回复协议固定为“我理解 → 展开说说 → 结论 → 横向拓展 → 下一步”，完成构建、安装、验收与 L4 / map 回写 |
 
 ## 使用原则

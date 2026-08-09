@@ -2,7 +2,7 @@
 name: aipd-case
 description: >
   推进 AIPD case 的统一入口。按 case 当前 phase 渐进加载 Think / Design / Execute / Verify / Close 文档，完成短周期目标闭环。
-  关键词：case、目标、边界、think、design、execute、verify、close、工作包、需求契约、回跳、复杂度爆点、上下文解耦
+  关键词：case、目标、边界、think、design、execute、verify、close、工作包、需求契约、回跳、复杂度爆点、上下文解耦、代码拓扑、横向基座、纵向业务上下文
 allowed-tools:
   - Read
   - Write
@@ -14,6 +14,7 @@ allowed-tools:
   - AskUserQuestion
 inject-from-core:
   - overview.md
+  - ai-friendly-code-topology.md
   - case/overview.md
   - case/goal-mode.md
   - case/phases/*
@@ -50,7 +51,7 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 - Case ID 使用项目内单调递增的 `cN-slug`，不是版本号；Work Package 使用 Case 内局部的 `wp-NN-slug`，跨 Case 引用写作 `cN/wp-NN`。不要新建 `cA.B` 或 `cA.B.N` 形态。
 - 新建 case 必须使用 contract + phase-first 目录结构，不再生成顶层 `doc/` / `steps/`，也不再生成 `01-goal/`：`01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/`。
 - Work Package 只放在 `03-execute/work-packages/`。遇到旧 `steps/` 或旧 Goal phase 结构时，不做兼容运行，只提示用户是否迁移为当前结构。
-- Step 不再表示“先做 A 再叠 B”的微步骤，而是可验收 work package。一个 work package 可以包含多个横向模块。
+- Step 不再表示“先做 A 再叠 B”的微步骤，而是可验收 work package。一个 work package 可以包含多个并列工作项。
 - Agent 需要目标、架构边界、上下文和验收口径，不需要被指挥先迈哪条腿。
 - Think 是调研、实验、数据采样、方案比较和证据沉淀的探索工作台，可以被 Design / Execute / Verify 回跳触发。
 - Design 是从需求契约到可执行方案的流程：需求和规则 -> brownfield delta -> 后端 / 前端设计 -> 上下文解耦 -> work package -> readiness gate。
@@ -118,6 +119,16 @@ _adoc/case/{case-dir}/case.md
 | Close | `@references/case/phases/close.md` | 归档、整理 Close 归档候选、更新索引 |
 
 不要一次加载所有 phase 细则。只有当当前 phase 完成并切换到下一 phase 时，再加载下一份文档。
+
+#### Design 的代码拓扑条件加载
+
+当前 phase 是 Design，且 Case 会新增或调整模块 / 文件夹边界、shared / domain / utils 上移、跨上下文依赖、显式组合协议或独立验收边界时：
+
+1. 先完成目标项目 brownfield、后端和前端必要事实检索。
+2. 在 Context Boundary 固化前读取 `@references/ai-friendly-code-topology.md`。
+3. 把采用的判断写成项目具体的 `Code Topology Contract`，再进入 Work Package / Readiness Gate。
+
+Think、Execute、Verify 默认不重复加载完整指南。拓扑敏感 Work Package 在 Execute 携带短的代码拓扑护栏；Verify 对照真实结果审计合同。若 Execute 发现需要改变合同，回到 Design，不在开发阶段临场重做拓扑决策。
 
 ### 2.5 读取实践经验索引
 

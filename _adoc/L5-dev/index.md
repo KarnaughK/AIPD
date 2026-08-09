@@ -35,6 +35,14 @@ AIPD 仓库同时有面向用户的学习文档、面向 Agent 的项目认知�
 - 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；构建和安装脚本不得把它复制进 `aipd-skill/dist` 或 Agent Skill 目录。
 - install 会改写用户级或项目级 Agent 运行环境。build 完成后，必须主动问用户是否执行 install；不能只说明“可能需要 install”。只有用户明确确认后，才执行 `./aipd-skill/scripts/install`、`./aipd-skill/scripts/install-codex`、`./aipd-skill/scripts/install-project` 或 `./aipd-skill/scripts/install-project-codex`。
 
+## AI 友好代码拓扑运行时投影
+
+- `_adoc/L3-core/ai-friendly-code-topology.md` 是长期抽象认知主事实源；`aipd-skill/src/core/ai-friendly-code-topology.md` 是供外部 Agent 消费的精简运行时投影，不逐字复制研究过程。
+- `aipd` 与 `aipd-case` 通过 `inject-from-core` 获得同一 reference。普通结构性开发和 Case Design 条件加载；无关任务以及 Case Execute / Verify 默认不重复加载完整 guide。
+- Case Design 把通用判断编译为项目具体的 `Code Topology Contract`；拓扑敏感 Work Package 在 Execute 携带短护栏；Verify 根据真实 diff、目录、依赖和文档回写反查合同。
+- `aipd-skill/scripts/check-dist` 验证 Codex / Claude 两个平台的两个目标 Skill 都包含同一投影、其他 Skill 不包含、两个入口有静态读取规则，并检查三段合同闭环与旧空间术语。
+- build 产物位于 `aipd-skill/dist/{platform}/skills/{aipd,aipd-case}/references/ai-friendly-code-topology.md`，只由 build 生成，不手改。
+
 ## 当前已知 Agent
 
 | Agent | 用途 | 源码 |

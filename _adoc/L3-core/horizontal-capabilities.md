@@ -4,6 +4,8 @@
 
 纵向模块负责分类，横向功能负责串联。
 
+本文的“横向”专指 AIPD 知识与流程系统中的串联能力，不等同于代码拓扑中的“横向基座 / 横向共享能力”。真实代码的横纵边界见 `_adoc/L3-core/ai-friendly-code-topology.md`。
+
 ## 核心判断
 
 AIPD 的核心工作不是只维护一组文档目录，而是基于 L1-L6 长期知识库、OKR / Case / Work Package 流程状态、Agent Entry 等纵向模块，提供 Agent 可用的项目级上下文能力。
@@ -70,7 +72,7 @@ Think 不再作为独立 `_adoc/think/` 系统或独立 `aipd-think` skill 推�
 
 - Think 解决“要不要做、做什么、做到什么程度、还缺什么信息”。
 - Case Contract 写在 `case.md` 顶部，解决“这个短周期目标是什么、完成标准是什么、需要哪些上下文和边界”。
-- Case Design 解决“复杂度爆点在哪里、如何最小必要解耦、工作包如何横向铺开”。
+- Case Design 解决“复杂度爆点在哪里、如何最小必要解耦、工作包如何围绕架构边界并列扩展”。
 - Case Execute / Verify 解决“按 work package 执行、验证和回写状态”。
 
 Think 的核心出口应至少包括：

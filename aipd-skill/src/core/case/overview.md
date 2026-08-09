@@ -55,7 +55,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 ## Phase-first 目录结构
 
-Case 内部也要遵守横向平摊原则。新建 case 不再按材料类型拆成顶层 `doc/`、`steps/`、`code/`，也不再把目标拆成独立 `01-goal/` 目录，而是把目标契约放在 `case.md`，其余展开材料按 phase 平铺：
+Case 内部按 phase 解耦。新建 case 不再按材料类型拆成顶层 `doc/`、`steps/`、`code/`，也不再把目标拆成独立 `01-goal/` 目录，而是把目标契约放在 `case.md`，其余展开材料按 phase 平铺：
 
 ```text
 _adoc/case/cN-name/
@@ -78,7 +78,7 @@ _adoc/case/cN-name/
 
 ## Case 文件的价值
 
-Case 不只是任务清单。它的价值是把本次事项的目标、上下文索引、关键决策、设计边界、横向工作包、验收状态和 Close 归档候选固定成文件事实源。
+Case 不只是任务清单。它的价值是把本次事项的目标、上下文索引、关键决策、设计边界、Work Package、验收状态和 Close 归档候选固定成文件事实源。
 
 `case.md` 可以同时放“目标边界”和“任务推进”，但必须分区：
 
@@ -122,6 +122,7 @@ Design 在 AIPD Case 里不是单纯“架构设计”，也不是完整视觉�
 - 复杂度爆点和最小必要解耦是什么？
 - 文件 / 文件夹如何组织，哪些局部重复可接受？
 - work package 如何切成可派发、可验收、可恢复的目标包？
+- 如果涉及模块边界或 shared 变化，Code Topology Contract 是否写清纵向业务上下文、允许的横向依赖和显式组合边界？
 
 例如搜索列表的复杂度爆点可能不是表格渲染，而是 API 调用前的参数组装：
 
@@ -133,7 +134,9 @@ Design 在 AIPD Case 里不是单纯“架构设计”，也不是完整视觉�
 -> 页面 onSearch 只收集参数并调用 API
 ```
 
-这种设计让后续新增筛选项时横向增加 filter 模块，而不是在旧搜索函数上继续堆逻辑。AIPD 的 Design phase 仍要找到这种爆点，并把它落到文件 / 文件夹级架构边界；只是这个动作应建立在需求、规则、后端和前端设计足够清楚之后。
+这种设计让后续新增筛选项时并列增加自治 filter，而不是在旧搜索函数上继续堆逻辑。AIPD 的 Design phase 仍要找到这种爆点，并把它落到文件 / 文件夹级架构边界；只是这个动作应建立在需求、规则、后端和前端设计足够清楚之后。
+
+当 Case 会新增或调整模块 / 文件夹边界、shared / domain / utils 上移或跨上下文组合时，Design 还要形成项目具体的 `Code Topology Contract`。通用指南只帮助判断；合同必须明确本次纵向业务上下文、允许依赖的横向基座 / 共享能力、显式组合边界、禁止穿透、shared 变化权限、独立验收和认知回写位置。
 
 Design 复杂 case 可按需展开：
 
@@ -152,7 +155,7 @@ Design 复杂 case 可按需展开：
 
 Step 的语义调整为 Work Package：一个可验收、可派发、可恢复的目标包。
 
-Work Package 不再表示“先做 list，再加分页，再加搜索，再加筛选”的堆叠式微步骤。它应围绕 Design phase 的架构边界列出一个或多个横向模块，让执行 Agent 依据目标、上下文、设计护栏和验收口径推进。
+Work Package 不再表示“先做 list，再加分页，再加搜索，再加筛选”的堆叠式微步骤。它应围绕 Design phase 的架构边界列出一个或多个并列工作项，让执行 Agent 依据目标、上下文、设计护栏和验收口径推进。
 
 一个 Work Package 应包含：
 
@@ -160,7 +163,8 @@ Work Package 不再表示“先做 list，再加分页，再加搜索，再加�
 - 设计输入：requirements、domain rules、brownfield delta、backend / frontend design、context boundary、readiness gate。
 - 不允许固化的假设。
 - 设计依据：复杂度爆点、文件 / 文件夹级架构、主干职责、特殊节点和设计护栏。
-- 横向模块。
+- 拓扑敏感标记和项目具体的代码拓扑护栏（条件命中）。
+- 并列工作项。
 - 必读上下文。
 - 验收标准。
 - 不做范围。
@@ -240,8 +244,8 @@ Close 归档候选是 case 内部的待复核清单，不是长期知识库内�
 5. Design 是从需求契约到可执行方案的设计流程，不只是架构设计；复杂度爆点和文件边界是后半段的 AIPD 特有增量。
 6. Case 内部使用 contract + phase-first 目录结构，不用顶层 `doc/` / `steps/` / `01-goal/` 作为新结构。
 7. Work Package 是 Execute phase 的目标包，不是微步骤。
-8. Execute 按架构横向铺模块，不纵向堆版本；如果执行发现设计不成立，回到 Design。
-9. Verify 要检查设计护栏，不只检查代码是否运行。
+8. Execute 在架构边界内推进并列工作项，不纵向堆版本；拓扑合同变化必须回到 Design。
+9. Verify 要检查设计护栏和代码拓扑合同，不只检查代码是否运行。
 10. Close 前必须保证 case 是完整闭环；没完成就回到对应 phase。
 11. 可复用知识先进入 Close 归档候选；只有 case 完成、实现落地并验收后，才由 `aipd-weave` 判断是否进入长期知识库。
 12. 旧 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `aipd-case`，不再作为独立 skill 暴露。

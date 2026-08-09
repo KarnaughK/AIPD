@@ -40,6 +40,7 @@
 - AIPD 方向、边界、定位：`_adoc/L1-intent/intent.md`
 - AIPD 历史演进 / 长期回顾 / 是否肿歪审计：`_adoc/development-log.md`
 - AIPD 纵向概念模块与横向功能能力：`_adoc/L3-core/index.md`、`_adoc/L3-core/vertical-concept-modules.md`、`_adoc/L3-core/horizontal-capabilities.md`
+- AI 友好代码拓扑 / 横向基座 / 横向共享能力 / 纵向业务上下文 / 显式组合边界：`_adoc/L3-core/ai-friendly-code-topology.md`
 - Think / AIPD Think / 前置讨论 / 要不要做 / 从模糊到清晰：`_adoc/L3-core/index.md`、`_adoc/L3-core/horizontal-capabilities.md`、`_adoc/L4-product/index.md`、`_adoc/L4-product/map.md`
 - AIPD 产品能力、功能边界和入口地图：`_adoc/L4-product/index.md`、`_adoc/L4-product/map.md`
 - 上下文检索：`_adoc/map.md`

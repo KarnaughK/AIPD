@@ -2,13 +2,13 @@
 
 Execute phase 按 Design phase 产出的 work package 推进。
 
-执行不是按微步骤堆版本，而是让 Agent 围绕目标、架构边界和验收口径完成一个或多个横向模块。
+执行不是按微步骤堆版本，而是让 Agent 围绕目标、架构边界和验收口径完成一个或多个并列工作项。
 
 ## 要回答的问题
 
 - 当前要执行哪个 work package？
 - 它依赖哪个 Design 结论？
-- 它包含哪些横向模块？
+- 它包含哪些并列工作项？
 - 哪些上下文必须读取？
 - 哪些行为禁止做？
 - 如何自检？
@@ -20,6 +20,17 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - 当前 `03-execute/work-packages/` 下的 work package 文件。
 - Design Summary 和 Design Guardrails。
 - work package 列出的上下文文档。
+
+## 代码拓扑护栏 preflight（条件命中）
+
+Work Package 标记 `拓扑敏感: 是` 时，Execute 在修改代码前必须检查：
+
+- Work Package 是否携带项目具体的 `代码拓扑护栏`，而不只是引用通用理念。
+- 允许修改的纵向业务上下文、目录 / 文件 owner、横向依赖和显式组合边界是否清楚。
+- 禁止的跨边界引用、内部穿透、主干回流和 shared 变化是否清楚。
+- 独立验收边界与稳定认知回写位置是否可执行。
+
+缺少上述合同视为 Design 缺口，不能凭执行 Agent 自行推断后继续。执行中如果需要新增 Design 未批准的共享层、跨上下文依赖、内部穿透或改变组合协议，应停止相关变化并回到 Design。Execute 默认不重新加载完整代码拓扑指南。
 
 ## 执行方式
 
@@ -44,6 +55,7 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - case.md 的 Work Packages 状态。
 - Execution Record。
 - Verification Notes。
+- 拓扑敏感 Work Package 的合同符合性与偏差记录。
 - Close 归档候选。
 - 最近 checkpoint：当前执行游标、下一步、是否需要回到 Design / Think / Verify。
 
