@@ -18,8 +18,8 @@ Agent 应先读取：
 
 ```text
 AGENTS.md
--> _adoc/index.md
--> _adoc/map.md
+-> _aipd/index.md
+-> _aipd/map.md
 ```
 
 然后再根据任务进入 `aipd-skill/scripts/`、`aipd-skill/src/skills/`、`aipd-skill/src/platforms/` 等入口。
@@ -64,22 +64,33 @@ Agent 修改 AIPD 源码后，可以直接运行 `./aipd-skill/scripts/build` �
 
 `check-dist` 不修改安装环境，也不替代 build。它验证九个 Skill、源码 / 产物同步、静态 references、Codex / Claude 的已声明差异，以及安装脚本的历史残留清理接入。
 
+## 旧项目一次性迁移
+
+Knowledge Schema v2 不提供运行时双读。仍使用 `_adoc/` 与 L1-L5 目录的项目，需要先用一次性迁移器原子切换；迁移和 dry-run 要求目标 Git 工作树干净。AIPD Workspace、带 AIPD 标记的根 Agent Entry 和项目级 AIPD Agent 配置必须纳入 Git，不能被 ignore。
+
+在 AIPD 源码仓库中执行：
+
+```bash
+./aipd-skill/scripts/migrate-project-schema --dry-run /absolute/project/path
+./aipd-skill/scripts/migrate-project-schema /absolute/project/path
+./aipd-skill/scripts/migrate-project-schema --check /absolute/project/path
+```
+
+构建时同一脚本也会打包进 `aipd` Skill 的 `scripts/migrate-project-schema`，因此用户级或项目级安装后，Agent 可以相对当前 Skill 目录定位它，不依赖 AIPD 源码 checkout。迁移器会整块升级带标记的 `AGENTS.md` / `CLAUDE.md` AIPD 区块，并重命名项目级上下文检索 Agent 配置；常见旧分类组合会自动改写，无法可靠判定的裸编号语义会在 dry-run 阶段硬拒绝并给出文件位置，留给人工重新归类。它还会拒绝新旧双根、半迁移结构、非法额外目录、ignored AIPD 文件、Workspace symlink、目标碰撞和错误 manifest。`--check` 只读、允许检查尚未暂存的 v2 工作树，并以 Git `HEAD` 与 index 的并集发现迁移文件丢失。
+
 ## 仓库结构
 
 ```text
 AIPD-2/
-├── _adoc/             # AIPD 仓库自身的项目认知
+├── _aipd/             # AIPD 仓库自身的项目认知
 ├── experience-assets/ # 实践经验附带源码；不进入 Skill 构建产物
 ├── aipd-skill/        # AIPD Skill 本体源码、脚本和构建产物
 │   ├── src/
 │   ├── scripts/
-│   ├── modules/
 │   └── dist/
 └── docs/              # 面向人的学习文档
 ```
 
-## README 入口修正
+## 项目 Map 入口
 
-旧 README 和 README 草稿中曾出现 `_adoc/context-map.md`。
-
-当前项目正式入口是 `_adoc/map.md`。构建、安装、Codex 适配和 Skill 相关任务都应先从 `_adoc/map.md` 路由。
+当前项目正式入口是 `_aipd/map.md`。构建、安装、Codex 适配和 Skill 相关任务都应先从这里路由。

@@ -37,15 +37,15 @@ AIPD 把这类信息放进项目本身，并给 Agent 一条稳定的读写路�
 
 ```text
 任务前：找到正确认知
-  AGENTS.md -> _adoc/index.md -> _adoc/map.md
-                              -> L3 / L4 / L5 / 局部 README / L6 代码
+  AGENTS.md -> _aipd/index.md -> _aipd/map.md
+                              -> Knowledge / 局部 README / 真实代码
 
 任务中：让目标和状态留在文件里
   Case Contract -> Think -> Design -> Execute -> Verify -> Close
                                   -> Work Package -> Main / Child Agent
 
 任务后：把稳定经验留给下一次
-  Close 候选 -> Weave -> _adoc / map / 局部 README
+  Close 候选 -> Weave -> Knowledge / map / 局部 README
 ```
 
 这不是要求把项目写成文档海洋。AIPD 只保留两类真正有用的信息：
@@ -64,7 +64,7 @@ AIPD 当前是一个可构建的 Skill 源码项目，不是双击即用的应�
 用 Codex 或 Claude Code 打开本仓库，然后说：
 
 ```text
-请阅读本仓库的 AGENTS.md、_adoc/index.md 和 _adoc/map.md，
+请阅读本仓库的 AGENTS.md、_aipd/index.md 和 _aipd/map.md，
 把 AIPD 构建并安装到我当前使用的 Agent 平台。
 ```
 
@@ -78,11 +78,13 @@ AIPD 当前是一个可构建的 Skill 源码项目，不是双击即用的应�
 /aipd
 ```
 
-如果项目还没有 AIPD，Agent 会先创建最小结构：`AGENTS.md`、`_adoc/index.md`、`_adoc/map.md`，以及 Case、Inbox、OKR、SOP 等流程入口。初始化不是让你一次填完所有知识；它只是先建立一条能用、以后可以持续维护的路径。
+如果项目还没有 AIPD，Agent 会先创建最小结构：`AGENTS.md`、`_aipd/index.md`、`_aipd/map.md`、`_aipd/knowledge/`，以及 Case、Inbox、OKR、SOP 等流程入口。初始化不是让你一次填完所有知识；它只是先建立一条能用、以后可以持续维护的路径。
+
+如果旧项目仍使用 `_adoc/` 与 L1-L5 目录，AIPD 不会双读或覆盖初始化，而会要求先运行随 `aipd` Skill 打包的一次性迁移器。迁移命令和安全边界见[构建与安装：旧项目一次性迁移](docs/modules/build-and-install.md#旧项目一次性迁移)。
 
 ### 3. 用一个真实目标开始
 
-不用先背 L1-L6，也不用手写模板。直接描述你当前要完成的事：
+不用先背目录结构，也不用手写模板。直接描述你当前要完成的事：
 
 ```text
 创建一个 case：把现有登录流程增加邮箱验证码，
@@ -97,9 +99,11 @@ Agent 会把目标、要做、不做、验收标准和上下文索引写进 Case
 
 ### 1. 项目认知有自己的位置
 
-`_adoc/` 保存代码里不容易表达的长期认知：方向、外部世界、核心模型、产品规则和跨模块工程约定。L6 就是项目真实代码，不在 `_adoc/` 里复制一份“伪代码层”。
+`_aipd/knowledge/` 保存代码里不容易表达的长期认知：方向、外部世界、核心模型、产品规则和跨模块工程约定。真实代码继续留在项目源码目录，不在 Knowledge 中复制一份“伪代码层”。
 
-`_adoc/map.md` 是 Agent 的第一跳。它把“会员导出”“权限”“某个弹窗”等用户语言，路由到该读的 L3 / L4 / L5、局部 README 和代码入口。全文搜索是兜底；搜索发现了稳定入口，再把入口写回 map。
+`_aipd/map.md` 是 Agent 的第一跳。它把“会员导出”“权限”“某个弹窗”等用户语言，路由到该读的 Knowledge、SOP、局部 README 和代码入口。全文搜索是兜底；搜索发现了稳定入口，再把入口写回 Map。
+
+Map 有三种分辨率：项目总图、业务线 / 功能线 / shared capability 的上下文 Map、代码就近局部实现图。三级表示范围精度，不是必须逐层点击的固定流程；高频任务可以从项目总图直接命中局部入口。
 
 ### 2. 长任务有文件化生命周期
 
@@ -122,9 +126,11 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 任务完成后，Weave 判断哪些信息已经稳定：
 
-- 新核心概念进入 L3。
-- 新产品边界进入 L4。
-- 新跨模块实现规则进入 L5。
+- 用户确认的长期方向与边界进入 `knowledge/intent`。
+- 带来源和时间边界的稳定外部结论进入 `knowledge/research`。
+- 新核心概念进入 `knowledge/core`。
+- 新产品边界进入 `knowledge/product`。
+- 新跨模块实现规则进入 `knowledge/engineering`。
 - 页面或组件入口进入就近 README。
 - 高频检索路径进入 map。
 - 一次性过程继续留在 Case / Work Package。
@@ -139,7 +145,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 |---|---|---|
 | `/aipd` | 第一次进入项目、查看状态或不知道该从哪里开始 | 初始化或加载最小认知，并路由到下一能力 |
 | `/aipd-case` | 要完成一个有边界、需要验证和关闭的目标 | 推进 Case Contract / Think / Design / Execute / Verify / Close |
-| `/aipd-weave` | 已完成的工作产生了稳定新知识 | 回写 `_adoc`、map 或局部 README |
+| `/aipd-weave` | 已完成的工作产生了稳定新知识 | 回写 Knowledge、map 或局部 README |
 
 ### 认知维护
 
@@ -210,7 +216,7 @@ AIPD 可以从最小的 index + map 开始，不要求第一天就采用完整�
 - **想先完成一次**：读[第一次完整使用 AIPD](docs/guide/06-first-complete-flow.md)。
 - **想系统理解**：从[为什么 Agent Coding 需要项目记忆](docs/guide/01-from-vibe-coding-to-agent-coding.md)开始六章学习路径。
 - **正在工作中查能力**：进入[学习文档索引](docs/README.md)的“按问题查阅”。
-- **要维护 AIPD 源码**：先读[构建与安装](docs/modules/build-and-install.md)，再从项目 `_adoc/map.md` 路由到当前 Skill、平台与脚本入口。
+- **要维护 AIPD 源码**：先读[构建与安装](docs/modules/build-and-install.md)，再从项目 `_aipd/map.md` 路由到当前 Skill、平台与脚本入口。
 
 ## 仓库结构
 
@@ -218,7 +224,7 @@ AIPD 可以从最小的 index + map 开始，不要求第一天就采用完整�
 AIPD/
 ├── README.md          # 项目首页：第一次理解和决策
 ├── docs/              # 面向用户的学习、解释和参考
-├── _adoc/             # AIPD 仓库自身给 Agent 读取的项目认知
+├── _aipd/             # AIPD 工作区：Knowledge、Map、Case、SOP、OKR 与 Inbox
 ├── aipd-skill/        # Skill 源码、平台适配、脚本与构建产物
 └── experience-assets/ # 可验证的实践经验源码；不随 Skill 安装
 ```

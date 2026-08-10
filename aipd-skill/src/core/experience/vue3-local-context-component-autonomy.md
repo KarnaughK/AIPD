@@ -2,7 +2,7 @@
 
 ## 来源
 
-- 来源类型：真实 Vue3 后台项目的 L5 规范、代码使用面审计和用户技术经验回流。
+- 来源类型：真实 Vue3 后台项目的 Engineering 知识域规范、代码使用面审计和用户技术经验回流。
 - 真实规模：排除 ModalBox、AipdForm、AipdSearch 三套 controller 后，项目中仍有 21 个成对的普通 `provideXxx / injectXxx` 上下文 Hook。
 - 经验性质：Vue3 代码实践经验。保留真实命名、生命周期和选择边界，不把它压缩成“多用 provide / inject”这一句口号。
 

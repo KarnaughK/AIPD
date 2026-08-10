@@ -11,12 +11,12 @@ allowed-tools:
   - Glob
   - Grep
 inject-from-core:
-  - adoc/templates/inbox.md
+  - workspace/templates/inbox.md
 ---
 
 # AIPD Inbox
 
-`aipd-inbox` 是 AIPD 的低承诺度收件箱入口。它只负责 capture：把用户明确要求暂存的信息追加到 `_adoc/inbox.md`，不自动归类、不创建 case、不执行 weave。
+`aipd-inbox` 是 AIPD 的低承诺度收件箱入口。它只负责 capture：把用户明确要求暂存的信息追加到 `_aipd/inbox.md`，不自动归类、不创建 case、不执行 weave。
 
 ## 触发边界
 
@@ -36,7 +36,8 @@ inject-from-core:
 
 **只做**：
 
-- 确认 `_adoc/inbox.md` 是否存在；不存在时用 `@references/adoc/templates/inbox.md` 创建。
+- 先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止，不创建或写入收件箱。
+- 确认 `_aipd/inbox.md` 是否存在；不存在时用 `@references/workspace/templates/inbox.md` 创建。
 - 把本次临时信息追加为一条 inbox 条目。
 - 保留来源、原始记录和最少待判断问题。
 - 用户要求查看时，读取并简要列出 inbox 条目。
@@ -46,12 +47,12 @@ inject-from-core:
 - 不创建 case。
 - 不拆 work package。
 - 不执行 weave 回写。
-- 不把条目写入 L1-L5。
+- 不把条目自动写入五类长期知识域。
 - 不把 inbox 条目自动变成 OKR、候选 case 或稳定认知。
 
 ## 写入格式
 
-追加到 `_adoc/inbox.md` 的 `## 条目` 下方：
+追加到 `_aipd/inbox.md` 的 `## 条目` 下方：
 
 ```md
 ### {YYYY-MM-DD} - {一句话标题}
@@ -75,12 +76,14 @@ inject-from-core:
 
 用户明确要求“整理 inbox / 看看第 X 条该放哪 / 清理收件箱”时，只输出建议，不默认迁移：
 
-- 可能进 L2：外部世界、竞品、行业/玩法范式、市场观察。
-- 可能进 L3：已经形成项目内部长期模型或核心认知。
-- 可能进 L4：已经确认要成为用户可见产品能力。
-- 可能进 L5：已经形成跨模块工程规则或调试经验。
+- 可能进 Intent：用户明确确认的长期方向、目标、边界或取舍；未确认设想不得进入。
+- 可能进 Research：已有可追溯来源、采集时间和有效性边界的外部世界事实或调研结论；未核实材料继续留在 Inbox 或 Case。
+- 可能进 Core：已经形成项目内部长期模型或核心认知。
+- 可能进 Product：已经确认要成为用户可见产品能力。
+- 可能进 Engineering：已经形成跨模块工程规则或调试经验。
+- 可能进 SOP：已经形成可重复、可执行、可检查的 Agent 项目动作。
 - 可能进 OKR：可能成为阶段目标。
 - 可能进 Case：已经有明确要推进的问题或事项。
 - 可删除：只是过期或无价值材料。
 
-需要迁移时，先给方案，等用户确认后把写入交给对应 owner：稳定项目认知走 `aipd-weave`，明确事项走 `aipd-case`，OKR 走 `aipd-okr`。Inbox 自身不直接修改目标文件；目标流程完成后，Inbox 只负责按用户确认删除或标记原条目。
+需要迁移时，先给方案，等用户确认后把写入交给对应 owner：稳定项目认知与可复用 SOP 候选走 `aipd-weave`，明确事项走 `aipd-case`，OKR 走 `aipd-okr`。Inbox 自身不直接修改目标文件；目标流程完成后，Inbox 只负责按用户确认删除或标记原条目。

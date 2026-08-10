@@ -24,30 +24,31 @@ inject-from-core:
 
 **只做**：
 
-- 读取当前项目的 `_adoc/index.md`、`_adoc/map.md` 和 `_adoc/okr/index.md`，确认本项目 OKR 入口和协作边界。
+- 先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止，不继续读写项目 OKR 入口。
+- 读取当前项目的 `_aipd/index.md`、`_aipd/map.md` 和 `_aipd/okr/index.md`，确认本项目 OKR 入口和协作边界。
 - 按需读取 `@references/okr/guide.md`，理解 AIPD 的飞书 OKR 规则。
 - 涉及飞书 OKR 或 `lark-cli` 时，读取 `@references/okr/feishu-cli.md`。
 - 查看、创建、同步、删除或解释飞书 OKR。
 - 把高噪声远端查询、CLI 输出和跨项目核对压缩成 OKR 经验包，交给主 Agent 决策。
-- 写回 `_adoc/okr/index.md` 中必要的飞书入口、周期 ID、目标 ID、协作边界或操作经验。
+- 写回 `_aipd/okr/index.md` 中必要的飞书入口、周期 ID、目标 ID、协作边界或操作经验。
 
 **不做**：
 
 - 不把 OKR 当 todo 列表，也不替代 case / work package。
-- 不默认读取 `_adoc/case/`；只有用户明确要求 OKR 与 case 对齐，或当前任务本身需要判断某个 case 是否推进目标时才读取。
+- 不默认读取 `_aipd/case/`；只有用户明确要求 OKR 与 case 对齐，或当前任务本身需要判断某个 case 是否推进目标时才读取。
 - 不把完整飞书 JSON、CLI 长日志、调试输出贴回主 Agent。
 - 不在用户未确认时执行远端写入或删除。
 
 ## 默认流程
 
-1. 读取当前项目 `_adoc/index.md` 和 `_adoc/map.md`。
-2. 如果存在 `_adoc/okr/index.md`，读取它；如果不存在，只说明当前项目还没有记录飞书 OKR 入口。
+1. 验证 `_aipd/manifest.json`，再读取当前项目 `_aipd/index.md` 和 `_aipd/map.md`。
+2. 如果存在 `_aipd/okr/index.md`，读取它；如果不存在，只说明当前项目还没有记录飞书 OKR 入口。
 3. 判断用户任务类型：
    - **只读查看 / 解释 / 对齐讨论**：读取 `@references/okr/guide.md`，必要时查询远端。
    - **飞书操作 / lark-cli / 周期查询**：读取 `@references/okr/feishu-cli.md`。
    - **写入 / 删除**：先给操作方案、影响范围和待确认命令，用户确认后执行。
 4. 输出压缩结果或 OKR 经验包。
-5. 如果产生稳定飞书入口或 ID，询问是否写回 `_adoc/okr/index.md`；用户确认后再写。
+5. 如果产生稳定飞书入口或 ID，询问是否写回 `_aipd/okr/index.md`；用户确认后再写。
 
 ## 子 Agent 与经验包
 
@@ -64,11 +65,11 @@ inject-from-core:
 
 ```md
 【OKR 经验包】
-- 来源：飞书 OKR / lark-cli / 用户讨论 / 子项目 ADOC / _adoc/okr 入口索引
+- 来源：飞书 OKR / lark-cli / 用户讨论 / 子项目 AIPD 知识 / _aipd/okr 入口索引
 - 任务：查看 / 创建 / 同步 / 删除 / 对齐 / 能力探测
 - 已读上下文：...
 - 远端状态：周期、O/KR 数量、关键 ID、必要链接；不贴完整 JSON
-- AIPD 入口状态：_adoc/okr/index.md 是否记录飞书入口和关键 ID
+- AIPD 入口状态：_aipd/okr/index.md 是否记录飞书入口和关键 ID
 - 判断：本次应该怎么处理，以及为什么
 - 风险：权限、周期错配、重复 O/KR、远端写入风险、安装版 skill 版本差
 - 建议动作：...
@@ -86,7 +87,7 @@ inject-from-core:
 
 ## AIPD 记录规则
 
-`_adoc/okr/index.md` 只保存对后续 Agent 有用的飞书 OKR 索引信息：
+`_aipd/okr/index.md` 只保存对后续 Agent 有用的飞书 OKR 索引信息：
 
 - 飞书 OKR 入口。
 - 周期 ID。

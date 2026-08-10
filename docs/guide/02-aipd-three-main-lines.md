@@ -8,15 +8,15 @@ AIPD 用一个持续循环解决它：任务前读认知，任务中把状态留
 
 ```text
 任务前：找到正确认知
-  AGENTS.md -> _adoc/index.md -> _adoc/map.md
-                              -> L3 / L4 / L5 / 局部 README / L6
+  AGENTS.md -> _aipd/index.md -> _aipd/map.md
+                              -> Map 命中的必要 Knowledge / SOP / 局部 README / 真实代码
 
 任务中：让目标和状态留在文件里
   Case Contract -> Think -> Design -> Execute -> Verify -> Close
                                   -> Work Package -> Main / Child
 
 任务后：把稳定经验留给下一次
-  Close 候选 -> Weave -> _adoc / map / 局部 README
+  Close 候选 -> Weave -> Knowledge / map / 局部 README
 ```
 
 它不是三个互不相干的子系统。一次真实任务会依次经过这三段。
@@ -26,19 +26,19 @@ AIPD 用一个持续循环解决它：任务前读认知，任务中把状态留
 Agent 进入项目后先看到 `AGENTS.md`。它不承载所有项目知识，只规定第一跳：
 
 ```text
-AGENTS.md -> _adoc/index.md -> _adoc/map.md
+AGENTS.md -> _aipd/index.md -> _aipd/map.md
 ```
 
-`index.md` 说明项目认知有哪些区域；`map.md` 把用户自然语言、业务词和工程词路由到当前任务真正需要的 L3 / L4 / L5、局部 README 和 L6 代码。
+`index.md` 说明项目认知有哪些区域；`map.md` 把用户自然语言、业务词和工程词路由到当前任务真正需要的 Knowledge、SOP、局部 README 和真实代码。Intent / Research / Core / Product / Engineering 都是候选，但实际读取由任务决定，不机械全读。
 
 例如“会员导出权限”可能命中：
 
-- L3 的组织、成员和套餐关系。
-- L4 的导出功能边界与用户可见失败行为。
-- L5 的权限校验和前后端协作规则。
+- Core 的组织、成员和套餐关系。
+- Product 的导出功能边界与用户可见失败行为。
+- Engineering 的权限校验和前后端协作规则。
 - 导出页面就近 README 和真实接口代码。
 
-Agent 不需要先读完整个 `_adoc`。Map-first 的目标就是用最少上下文找到下一跳；路径缺失时再搜索，并把稳定新入口修回地图。
+Agent 不需要先读完整个 `_aipd`。Map-first 的目标就是用最少上下文找到下一跳；路径缺失时再搜索，并把稳定新入口修回地图。
 
 ## 任务中：聊天继续流动，文件承接状态
 
@@ -66,9 +66,11 @@ Case Contract 固定目标、要做、不做、完成标准和上下文索引。
 
 | 新信息 | 稳定位置 |
 |---|---|
-| 核心概念、关系、常见误解 | L3 |
-| 产品功能边界和用户可见规则 | L4 |
-| 跨模块工程约定和实现逻辑 | L5 |
+| 用户确认的长期方向、边界和取舍 | Intent |
+| 带来源和时间边界的外部事实、调研结论 | Research |
+| 核心概念、关系、常见误解 | Core |
+| 产品功能边界和用户可见规则 | Product |
+| 跨模块工程约定和实现逻辑 | Engineering |
 | 页面、弹窗、组件内部入口 | 就近 README |
 | 高频检索路径 | 总 map 或细节 map |
 | 一次性过程、未实现设计 | Case / Work Package |

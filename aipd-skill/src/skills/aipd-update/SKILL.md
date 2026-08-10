@@ -1,8 +1,8 @@
 ---
 name: aipd-update
 description: >
-  更新已初始化项目中的 AIPD 架构。审计 AGENTS.md、_adoc/index.md、_adoc/map.md、L3/L4/L5 map、case 模板和索引是否符合当前 AIPD 规则，先输出差异清单和更新方案，用户确认后再安全合并更新。
-  关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、补 map、同步新模板、检查 AIPD 架构、项目 AIPD 迁移、L3 map、L4 feature map
+  更新已初始化项目中的 AIPD 架构。审计 manifest、AGENTS.md、_aipd/index.md、_aipd/map.md、五类 Knowledge 目录、Case 模板和索引是否符合当前规则，先输出差异清单和更新方案，用户确认后再安全合并更新。
+  关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、补 map、同步新模板、检查 AIPD 架构、项目 AIPD 更新、Knowledge Schema
 allowed-tools:
   - Read
   - Write
@@ -10,16 +10,16 @@ allowed-tools:
   - Bash
   - Glob
   - Grep
-  - Agent
   - AskUserQuestion
 inject-from-core:
   - overview.md
-  - adoc-structure.md
+  - aipd-project-structure.md
   - agent-entry/template.md
   - agent-entry/interaction-style.md
-  - agent-guides/aipd_adoc_retriever.md
-  - adoc/templates/index.md
-  - adoc/templates/map.md
+  - agent-guides/aipd_context_retriever.md
+  - workspace/templates/manifest.json
+  - workspace/templates/index.md
+  - workspace/templates/map.md
   - case/overview.md
   - case/templates/index.md
   - case/templates/case.md
@@ -28,393 +28,173 @@ inject-from-core:
 
 # AIPD Update
 
-`aipd-update` 用于把一个已经初始化过 AIPD 的项目，升级到当前 AIPD 的最新项目入口、项目记忆地图和 case 观察锚点规则。
-
-它不是初始化入口，也不是经验回流入口：
-
-- 初始化新项目用 `aipd`。
-- 当前项目 ADOC 经验回写用 `aipd-weave`。
-- 从会话和 transcript 提炼 AIPD 框架经验用 `aipd-learn`。
-- 已有项目同步 AIPD 新结构、新模板、新 map 规则，用 `aipd-update`。
+`aipd-update` 只更新已经使用 Knowledge Schema v2 的项目。它先做只读审计，输出差异和安全合并方案，用户确认后才写入。
 
 ## 职责边界
 
-**只做**：审计当前项目 AIPD 架构 → 对比当前 AIPD 模板和规则 → 输出更新清单 → 用户确认后安全合并更新。
+**只做**：
 
-**不做**：不改业务代码，不执行 Work Package 或推进 Case，不归档 case，不自动提交，不覆盖用户项目文档正文，不主动把旧结构作为兼容目标长期保留。
+- 验证 `_aipd/manifest.json` 为 `aipd-project` v2。
+- 审计 `_aipd/index.md`、`_aipd/map.md` 和 `knowledge/{intent,research,core,product,engineering}/` 的边界与索引结构。
+- 审计 `_aipd/{sop,case,okr}/`、`_aipd/inbox.md` 是否保持独立流程职责。
+- 审计 `AGENTS.md` / `CLAUDE.md` 的 AIPD Project Entry，并在用户明确选择等级 2 时同步 Interaction Protocol。
+- 审计进行中 Case 是否使用 Case Contract + phase-first + `03-execute/work-packages/` 结构。
+- 优先合并缺失区块，不覆盖用户正文。
 
-## 升级原则
+**不做**：
 
-`aipd-update` 的目标是把项目升级到当前 AIPD 标准结构，不是做兼容性维护。
+- 不初始化全新项目。
+- 不识别、读取或写入任何非 Knowledge Schema v2 工作区；这类项目交给一次性 Schema 迁移器。
+- 不重写项目方向、调研结论、核心模型、产品规则或工程正文。
+- 不从进行中 Case 把未验收结论直接写入 Knowledge。
+- 不执行 install、远程写入、git commit 或 push。
 
-- **最新结构优先**：发现旧结构时，默认把它识别为“过期结构”，给出迁移、删除或替换方案；不把旧结构继续作为读取兜底。
-- **不主动兼容**：除非用户明确要求保留旧入口或旧格式，否则 update 不主动提出“兼容旧结构”的目标。
-- **先沟通再写入**：只要升级涉及多个入口文件、目录结构变化、模板替换或 case 规则变化，必须先列出将修改哪些文件、为什么改、怎么合并。
-- **写入前硬确认**：审计后把“是否执行、破坏性更新策略、Agent MD 处理等级”打包成 2～3 个互斥的完整方案。每个方案都要写清三类选择；用户回复对应的大写字母后，才进入写入。
-- **字母确认优先**：使用 `A / B / C`，不要使用 `1 / 2 / 3`，避免与 Agent MD 等级 `0 / 1 / 2` 或中文语境中的“1 = 确认”混淆。不要再要求用户手工拼接长确认口令。
-- **状态变化重新确认**：方案只对展示时的审计结果有效。写入前若文件、分支、破坏性项目或 Agent MD 状态发生实质变化，原字母选择失效，必须重新展示方案。
-- **破坏性更新可跳过**：删除文件、重命名入口、大块替换模板、移除旧读取链路等属于破坏性更新。用户可以选择跳过；如果跳过，最终结果必须说明项目哪些部分没有升级到最新 AIPD。
-- **跳过不伪装完成**：用户跳过某项破坏性更新时，不写“已完全升级”，只写“已完成非破坏性更新，以下旧结构仍保留”。
+## 与其他 Skill 的分工
 
-## 更新对象
+- 新项目初始化：`aipd`。
+- 一次性 Schema 切换：当前 `aipd` Skill 随包携带的 `scripts/migrate-project-schema`；AIPD 源码仓库中的等价入口是 `aipd-skill/scripts/migrate-project-schema`。
+- 当前项目稳定知识回写：`aipd-weave`。
+- AIPD 框架自迭代和 transcript 诊断：`aipd-learn`。
+- Case 创建、执行、验收和归档：`aipd-case`。
 
-优先检查：
+## 总流程
 
-- `AGENTS.md`：分开检查 AIPD Project Entry 和已选择启用的 Interaction Protocol，不能只因 AIPD 区块符合就判定 Agent MD 整体已是最新。
-- `AGENTS.md` 的 AIPD Project Entry：AIPD 项目入口区块是否包含最新记忆读取、L3/L5 边界和恢复链路。
-- `_adoc/index.md`：是否声明 `_adoc/map.md`、L3 核心概念、L4 功能线、L5 工程实现层和读取原则。
-- `_adoc/map.md`：是否存在，是否包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点和 Weave 反向编织锚点。
-- `_adoc/context-map.md`：过期入口；存在时检查稳定入口是否已经进入 `_adoc/map.md`，并把删除列为破坏性更新候选，不继续兼容读取。
-- `_adoc/L3-core/map.md`：是否具备核心概念图骨架；不存在时只列建议，不默认凭空生成业务概念。
-- `_adoc/L4-product/map.md`：是否具备产品功能线总图；不存在时只列建议。
-- `_adoc/L4-product/{feature}/map.md`：如果用户明确指定功能线，检查是否需要创建该功能线 map。
-- `_adoc/L5-dev/index.md`：是否表达“工程实现层”边界，而不是把 L5 当代码细节全集。
-- `_adoc/case/index.md`：是否使用当前 Case 索引结构，并能区分进行中与 archive。
-- `_adoc/case/**/case.md`：进行中 Case 是否以 Case Contract + Case Runtime 为入口，使用 Think / Design / Execute / Verify / Close 的 phase-first 结构、当前 phase checkpoint 和 `03-execute/work-packages/`。
-- `_adoc/case/**/doc/`、`steps/`、`01-goal/`、顶层 `06-close/`：旧结构候选；只审计并列入破坏性迁移方案，不从旧 Step 继续运行。
-
-按需检查：
-
-- `CLAUDE.md`：如果项目使用 Claude Code 或已有该文件，检查其中 AIPD 区块。
-- `AGENTS.md` / `CLAUDE.md` 中的 `<!-- AIPD-INTERACTION-STYLE:START -->` 区块：这是用户明确选择后启用的 AIPD 项目级对话协议，不作为 AIPD 架构必须项。
-- 局部 `README.md`：只检查是否存在与本次更新相关的入口，不批量改页面/组件 README。
-
-## Agent MD 模板等级
-
-`AGENTS.md` / `CLAUDE.md` 不是单一“符合 / 不符合”状态。AIPD Project Entry 是项目级统一入口，应尽量同步到当前 AIPD 标准模板；模板等级只决定是否同时安装或同步 Interaction Protocol。
-
-审计时必须单独报告当前 Agent MD 模板等级：
-
-| 等级 | 名称 | 内容 | 适用情况 |
-|---|---|---|---|
-| 0 | 不修改 Agent MD | 不写入或同步任何 Agent MD 区块 | 用户不想让项目记忆文件变化，或只想更新 `_adoc` |
-| 1 | AIPD Project Entry | 只写入 / 同步 `<!-- AIPD:START -->` AIPD 项目入口区块 | 强推荐；让 Agent 知道项目使用 AIPD、如何读取 `_adoc` |
-| 2 | AIPD Project Entry + Interaction Protocol | 同步 AIPD 区块，并额外写入 / 同步 `<!-- AIPD-INTERACTION-STYLE:START -->` 项目级对话协议区块 | 用户希望 Agent 被明确约束回复结构、讨论 / 执行切换和长短答边界 |
-
-审计规则：
-
-- 即使 AIPD Project Entry 已经符合，也要继续检查 Interaction Protocol 是否存在。
-- 如果 Interaction Protocol 不存在，不能写“AGENTS.md 已完全符合”；应写“AGENTS.md 的 AIPD Project Entry 符合；Interaction Protocol 未安装，可选是否升级到等级 2”。
-- 如果用户没有单独选择等级，默认只输出审计和方案；每个可执行方案必须内嵌本方案采用的 Agent MD 处理等级。
-- 用户回复方案字母，等同于确认该方案中写明的 Agent MD 处理等级；不要再要求用户重复输入等级。
-- 如果用户只说“按你建议来 / 开搞 / 执行上述更新”，但没有回复已展示的方案字母，应提示其回复 `A / B / C`，不要进入写入阶段。
-- 如果用户或项目偏好声明了默认等级（例如个人项目默认等级 2），审计输出可以把它作为推荐等级，但写入前仍必须向用户展示目标等级并获得本轮确认。
-
-## 写入前确认门槛
-
-在进入“第四步：用户确认后写入”前，选中的方案必须明确覆盖以下三类选择。三类选择是“并且”关系，但不要求用户分别作答：
-
-1. **是否执行更新**：用户明确同意从审计进入写入阶段。
-2. **破坏性更新策略**：用户明确选择执行哪些破坏性更新、跳过哪些破坏性更新。没有破坏性更新时也要写明“本次无破坏性更新”。
-3. **Agent MD 目标等级**：用户明确选择 0 / 1 / 2。项目或个人默认等级只能作为推荐值，不能替代本轮确认。
-
-用户回复有效方案字母，即同时确认该方案中的以上三项。不要再让用户回复类似“执行更新；D1 执行，D2、D3 跳过；Agent MD 等级 2”的长串参数。
-
-### 方案化确认规则
-
-- 根据审计结果只展示 2～3 个真正有差异的方案，不为了凑数制造无意义选项。
-- `A｜推荐更新`：执行非破坏性更新，按审计建议逐项处理破坏性更新，并采用推荐的 Agent MD 等级。
-- `B｜保守更新`：只执行非破坏性更新，跳过全部破坏性更新，本轮按等级 0 不修改 Agent MD。
-- `C｜暂不更新`：保留审计结果，不写入任何文件。只有在 A / B 确实构成不同更新路径时才提供 C；如果只有一个有意义的更新路径，使用 A / B 两个方案即可，其中 B 表示暂不更新。
-- 每个方案都必须展开完整效果，不能只写 `执行 D1`；至少写成 `执行 D1（同步 AGENTS Project Entry）`，让用户无需回看编号含义。
-- 方案之间必须互斥。用户如需其他组合，先重新生成一组完整方案，再让用户回复字母，不在旧方案上追加零散口令。
-
-破坏性更新包括但不限于：
-
-- 大块替换 `AGENTS.md` / `CLAUDE.md` 的 AIPD Project Entry。
-- 安装、替换或删除 Interaction Protocol 区块。
-- 删除、重命名或弃用旧入口文件。
-- 移除旧读取链路或旧兼容说明。
-
-只有用户回复当前审计结果下已展示的有效方案字母，才算通过硬确认。其他含糊回复先引导用户选择字母，不写入。
-
-## 第一步：判断项目状态
-
-先读取：
-
-```bash
-pwd
-git status --short
-test -f AGENTS.md && sed -n '1,260p' AGENTS.md
-test -f _adoc/index.md && sed -n '1,220p' _adoc/index.md
-test -f _adoc/map.md && sed -n '1,260p' _adoc/map.md
-find _adoc -maxdepth 3 -type f | sort
+```text
+验证 manifest
+-> 读取 index / map / Agent Entry / Knowledge 入口 / 流程索引
+-> 输出差异清单与风险分级
+-> 输出更新方案和 Agent MD 等级
+-> 等待用户确认
+-> 按已确认范围安全合并
+-> 执行结构与链接验证
 ```
 
-如果没有 `_adoc/`，停止并建议使用 `aipd` 初始化，不要把 update 当初始化用。
+## 阶段 1：只读审计
 
-如果工作区有未提交改动，继续审计可以进行，但在输出中标记风险；执行写入前提醒用户当前工作区已有改动。
+### 1. Schema Gate
 
-## 第二步：审计差异
+先读取 `_aipd/manifest.json`：
 
-对照当前 AIPD 注入模板和规则审计，不要求逐字一致，重点看能力是否存在。
+- 按路径项存在性识别新旧根；损坏 symlink 和同名普通文件也算存在。拒绝双根、symlink 工作区和工作区内 symlink。
+- `_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件；manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。
+- 工作区缺失、任一路径类型不符，或 manifest 缺失、多字段、值不匹配时，立即停止，不继续扫描、不创建目录、不猜测修复。
 
-### 必须项
+### 2. 工作区结构
 
-- `AGENTS.md` 有 AIPD 标记区块，或有明确 AIPD 项目入口。
-- 入口链路包含 `_adoc/index.md`。
-- 入口链路包含 `_adoc/map.md`，并说明缺失时的兜底检索策略。
-- L3 被定义为核心对象、领域语言、核心流程、数据模型和系统成立方式。
-- L4 被定义为产品功能线、业务边界、交互规则和实现入口地图的承载层。
-- L5 被定义为产品功能到代码实现之间的工程实现层，负责跨模块、跨端、跨页面的稳定实现规则。
-- 明确页面、弹窗、组件内部细节放就近 `README.md`，不塞回 L5。
-- case 恢复链路包含 case / work package 文件作为事实源。
-- `_adoc/case/index.md` 能定位当前 Case；`case.md` 顶部包含目标、边界、完成标准和上下文索引组成的 Case Contract。
-- 当前 Case 使用 `01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/`，并在 `Case Runtime` 记录 Current Phase、Phase State、当前游标和 checkpoint。
-- Work Package 位于 `03-execute/work-packages/`，承担目标、上下文、恢复和验收边界；不是旧 Step，也不等于子 Agent 派发节点。
-- 执行概念或项目入口中包含 Weave：讨论、work package 结果、case 归档、diff、错误日志和外部资料中的稳定信息，应通过 `aipd-weave` 回写项目 ADOC、局部 README 或 map；一次性过程留在 case / work package。
+审计必要入口：
 
-### 建议项
-
-- `_adoc/map.md` 包含高频任务入口、L3 核心概念总表、L4 产品功能线总表、L5 工程规则总表、自迭代观察锚点和 Weave 反向编织锚点。
-- `_adoc/L3-core/map.md` 有核心概念图骨架。
-- `_adoc/L4-product/map.md` 有产品功能线总图骨架。
-- 用户明确指定的 L4 功能线有 `_adoc/L4-product/{feature}/map.md`，并能记录页面、接口、数据对象、权限码、相关 L3/L5。
-- `_adoc/L5-dev/index.md` 有跨模块工程规则索引。
-- 进行中 case 有“层级判断、必读文档、代码入口、兜底搜索、风险边界、自迭代观察锚点、Weave 候选位置”。
-
-### 可选项
-
-- `AGENTS.md` / `CLAUDE.md` 可以包含独立的 Interaction Protocol 区块，用于约束 Agent 的回复结构和讨论 / 执行切换方式。
-- 该区块不属于 AIPD Project Entry 必须能力；只有用户明确同意时，才使用 `@references/agent-entry/interaction-style.md` 写入。
-- 如果已有 Interaction Protocol 区块，检查是否需要同步到当前模板；如果没有，只在更新清单里询问用户是否需要补充。
-- 审计输出必须显示当前 Agent MD 模板等级和可选升级目标，不要把 Interaction Protocol 混入 AIPD 必须项。
-
-### 不自动改项
-
-- 不凭空生成业务核心概念、产品功能清单或页面 README。
-- 不重写用户已有 `_adoc` 正文。
-- 不迁移历史 case，不批量补所有旧 case，除非用户明确要求。发现 `doc/`、`steps/`、`01-goal/` 或顶层 `06-close/` 时，列为破坏性迁移候选并停止从旧结构继续运行。
-- 不主动保留旧入口作为兼容方案；旧入口只作为过期结构处理。
-
-## Map 骨架
-
-当用户明确要求补 L3 / L4 map，或审计清单确认后需要创建空骨架，使用下面的最小结构。骨架只提供 AI 检索入口，不替用户编造业务事实。
-
-### L3 核心概念 map
-
-文件建议：`_adoc/L3-core/map.md`
-
-````md
-# L3 核心概念地图
-
-## 核心概念总表
-
-| 用户说法 / 黑话 | 标准概念 | 含义 | 细节文档 | 相关 L4 功能线 | 常见误解 |
-|---|---|---|---|---|---|
-| {待补} | {待补} | {待补} | {待补} | {待补} | {待补} |
-
-## 对象关系
-
-```mermaid
-flowchart TD
-    A["核心对象 A"] --> B["核心对象 B"]
+```text
+_aipd/
+├── manifest.json
+├── index.md
+├── map.md
+├── inbox.md
+├── knowledge/
+│   ├── intent/
+│   ├── research/
+│   ├── core/
+│   ├── product/
+│   └── engineering/
+├── sop/
+├── case/
+└── okr/
 ```
 
-## 兜底搜索
+工作区只承载知识与流程，不在 `knowledge/` 中创建代码目录。
 
-- `rg "{核心词|别名}" .`
-````
+### 3. 项目入口与 map
 
-### L4 产品功能线总 map
+审计 `_aipd/index.md`：
 
-文件建议：`_adoc/L4-product/map.md`
+- 是否声明 `_aipd/map.md` 为第一跳检索入口。
+- 是否将 Intent / Research / Core / Product / Engineering 表达为五类并列知识域。
+- 是否说明 SOP / Case / OKR / Inbox 不属于 Knowledge 正文。
+- 是否说明代码位于真实源码目录，局部实现地图贴近 README。
 
-````md
-# L4 产品功能线地图
+审计 `_aipd/map.md`：
 
-## 功能线总表
+- 是否具备高频任务入口、五类知识域路由、流程入口、局部 README / 代码入口和兜底搜索。
+- 是否明确普通任务不路由到 Case / OKR，只有显式流程任务才进入。
+- 是否包含自迭代观察锚点和 Weave 反向编织锚点。
 
-| 用户说法 / 场景 | 标准功能线 | 功能线 map | 前端入口 | 后端入口 | 数据对象 | 相关 L3 | 相关 L5 |
-|---|---|---|---|---|---|---|---|
-| {待补} | {待补} | `_adoc/L4-product/{feature}/map.md` | {待补} | {待补} | {待补} | {待补} | {待补} |
+### 4. 五类 Knowledge 入口
 
-## 兜底搜索
+- Intent：检查 `intent.md` 或对应索引是否保留长期方向、目标与取舍；不自动补写项目方向。
+- Research：检查调研入口是否能保留来源、观察日期和时间边界；不伪造外部事实。
+- Core：检查 index / map 骨架是否可承载核心概念、对象关系、领域语言和项目成立模型。
+- Product：检查功能线 map 是否能记录产品能力、业务规则、用户可见行为和相关实现入口。
+- Engineering：检查 index / map 是否承载跨模块实现逻辑、协作约定和长期工程规则，而不是空泛的代码细节全集。
 
-- `rg "{功能线关键词|页面名|接口名}" .`
-````
+对于缺失的业务正文，只列建议和骨架，不凭空定稿。
 
-### L4 单功能线 map
+### 5. Case / SOP / OKR / Inbox
 
-文件建议：`_adoc/L4-product/{feature}/map.md`
+- `_aipd/case/index.md` 是否能区分进行中与 archive。
+- 进行中 `case.md` 是否以 Case Contract + Case Runtime 为入口，使用 Think / Design / Execute / Verify / Close 和 `03-execute/work-packages/`。
+- `_aipd/sop/index.md` / `map.md` 是否存在，SOP 是否承载可重复的 Agent 程序而非知识正文。
+- `_aipd/okr/index.md` 和 `_aipd/inbox.md` 是否保持各自入口语义。
 
-````md
-# {功能线名} Map
+### 6. Agent MD 等级
 
-## 功能线边界
+| 等级 | 内容 | 更新边界 |
+|---|---|---|
+| 0 | 不修改 Agent MD | 用户明确不想更改项目记忆文件 |
+| 1 | AIPD Project Entry | 同步 `<!-- AIPD:START -->` 区块；默认推荐 |
+| 2 | Entry + Interaction Protocol | 额外同步项目级对话协议；必须用户明确选择 |
 
-- 要解决的问题：{待补}
-- 包含场景：{待补}
-- 不包含场景：{待补}
+检查现有 `AGENTS.md` / `CLAUDE.md` 标记区块是否完整，区块外内容永不覆盖。
 
-## 实现入口
+## 阶段 2：差异报告与方案
 
-| 场景 | 前端入口 | 后端入口 | 数据对象 | 权限码 | 说明 |
-|---|---|---|---|---|---|
-| {待补} | {待补} | {待补} | {待补} | {待补} | {待补} |
-
-## 相关认知
-
-- L3：{核心概念 map}
-- L5：{工程规则 map}
-- 局部 README：{页面 / 弹窗 / 组件 README}
-
-## 流程图
-
-```mermaid
-flowchart TD
-    A["开始"] --> B["待补"]
-```
-
-## 兜底搜索
-
-- `rg "{功能线关键词|接口名|权限码}" .`
-````
-
-## 第三步：输出更新清单
-
-默认只输出清单，不写文件。
+只读审计后输出：
 
 ```md
 【AIPD Update 审计结果】
 
-项目：
-- 路径：{project_root}
-- 分支：{branch}
-- 工作区：{clean / dirty}
+Schema：passed / blocked
 
-总体判断：
-- 当前 AIPD 状态：已初始化 / 部分初始化 / 不是 AIPD 项目
-- 建议动作：无需更新 / 建议补齐 / 需要升级 / 存在可跳过的破坏性更新
+已符合：
+- ...
 
-升级原则：
-- 是否发现过期结构：{否 / 是，列出路径}
-- 是否存在破坏性更新：{否 / 是，必须列入下一节}
-- 是否存在用户可跳过项：{否 / 是，跳过后的影响是什么}
-
-破坏性更新：
-- `{path}`：{删除 / 重命名 / 大块替换 / 安装或替换 Interaction Protocol / 移除旧读取链路；为什么属于破坏性更新；建议动作；跳过影响}
-
-需要更新：
-- `AGENTS.md`：
-  - AIPD Project Entry：{符合 / 缺什么 / 为什么要改 / 计划怎么合并}
-  - Interaction Protocol：{未安装 / 已安装但需同步 / 已是当前模板 / 可选跳过}
-- `_adoc/index.md`：{缺什么；为什么要改；计划怎么合并}
-- `_adoc/map.md`：{不存在 / 缺章节 / 需要补路由 / 是否需要吸收过期 context-map 的稳定入口}
-- `_adoc/context-map.md`：{不存在 / 作为过期结构存在；是否列入破坏性更新删除项}
-- `AGENTS.md / _adoc/index.md / _adoc/map.md`：{是否缺 Weave 概念、反向编织锚点或 `/aipd-weave` 路由}
+缺失 / 过期：
+- `path`：缺什么，影响是什么
 
 建议更新：
-- `_adoc/L3-core/map.md`：{建议补核心概念图骨架；如果用户指定概念，可先列候选，不擅自定稿}
-- `_adoc/L4-product/map.md`：{建议补功能线总图骨架}
-- `_adoc/L4-product/{feature}/map.md`：{用户指定功能线时，建议创建功能线图，记录页面 / 接口 / 数据对象 / 权限 / L3 / L5}
-- `_adoc/L5-dev/index.md`：{建议补工程实现层边界}
-- `{case}`：{建议补观察锚点}
-- `_adoc/case/index.md`：{当前索引模板 / 缺失入口 / 是否需要同步}
-- `{current case}`：{Case Contract、phase-first、Current Phase、checkpoint、Work Package 位置；旧 doc / steps / 01-goal / 06-close 迁移候选}
+- `path`：准备合并什么
 
-可选更新：
-- Agent MD 模板等级：
-  - 当前等级：{0 / 1 / 2}
-  - 推荐等级：{通常为 1；如果项目或用户默认启用回复约束，可推荐 2}
-  - 推荐理由：{为什么推荐该等级；如果来自用户个人默认档位，要明说它只是推荐值}
-  - 可选动作：{不改 Agent MD / 只同步 AIPD Project Entry / 同步 AIPD Project Entry + Interaction Protocol}
-  - 风险提示：AIPD Project Entry 大块替换、Interaction Protocol 安装或替换都可能改变后续 Agent 行为，需用户明确同意
+风险：
+- additive：...
+- semantic：...
+- destructive：...
 
-不处理：
-- {明确不碰哪些业务文档、代码、历史 case}
+Agent MD 建议等级：0 / 1 / 2
 
-请选择本轮更新方案（回复一个字母即可）：
-
-> A / B / C 是互斥方案。回复字母会同时确认是否执行、破坏性更新策略和 Agent MD 处理等级。
-
-**A｜推荐更新**
-- 是否执行：是
-- 非破坏性更新：{列出全部}
-- 破坏性更新：{逐项写明“执行 / 跳过 + 编号 + 名称 + 影响”}
-- Agent MD：等级 {0 / 1 / 2}，{说明动作}
-- 完成后状态：{完全升级 / 仍保留哪些旧结构}
-
-**B｜保守更新**
-- 是否执行：是
-- 非破坏性更新：{列出全部}
-- 破坏性更新：全部跳过，{列出保留影响}
-- Agent MD：等级 0，本轮不修改
-- 完成后状态：仅完成非破坏性更新，不算完全升级
-
-**C｜暂不更新**
-- 是否执行：否
-- 保留本次审计结果，不写入文件
-
-如果审计结果没有必要区分“推荐更新 / 保守更新”，只展示 A / B：A 执行推荐更新，B 暂不更新。
+待确认：
+- 是否按上述范围执行？
 ```
 
-## 第四步：用户确认后写入
+风险分级：
 
-只有用户回复有效方案字母后才修改文件。进入写入前，再检查一次：方案是否同时覆盖“是否执行更新、破坏性更新策略、Agent MD 目标等级”，以及当前文件、分支和审计结果是否仍与方案一致。若状态发生实质变化，停止写入并重新展示方案。
+- **additive**：新增缺失目录、索引区块或模板壳，不覆盖用户正文。
+- **semantic**：修改一段现有规则或路由语义，必须说清影响。
+- **destructive**：删除、移动或覆盖文件；必须精确列出目标并单独确认。
 
-写入规则：
+## 阶段 3：用户确认后执行
 
-1. `AGENTS.md`
-   - 先按用户确认的 Agent MD 模板等级决定是否修改。
-   - 等级 0：不修改 `AGENTS.md` / `CLAUDE.md`，即使审计发现 Interaction Protocol 缺失也不写入。
-   - 等级 1：只处理 AIPD Project Entry，不处理 Interaction Protocol。
-   - 等级 2：先处理 AIPD Project Entry，再处理 Interaction Protocol。
-   - AIPD Project Entry 应同步到当前 AIPD 标准模板；等级 1 和等级 2 都使用同一份 Project Entry。
-   - 如果有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换标记区块；如果替换范围较大，按破坏性更新处理，必须已被用户确认。
-   - 如果没有标记但有 AIPD 内容，先说明风险，优先追加新标记区块，不删除原文。
-   - 如果不存在，写入当前 `@references/agent-entry/template.md` 并包裹 AIPD 标记。
+1. 再次校验 manifest，防止执行期状态变化。
+2. 按确认的 Agent MD 等级编辑标记区块，不改区块外内容。
+3. 只新建方案明确列出的目录和模板壳。
+4. 更新 `_aipd/index.md` 和 `_aipd/map.md` 时，优先追加缺失区块或表格行，不重写用户已有正文。
+5. 知识域中只写经确认的结构骨架；项目事实和稳定知识交给 Weave。
+6. 破坏性操作只执行用户单独确认的精确目标。
 
-2. `_adoc/index.md`
-   - 已存在时只补缺失章节或关键规则，不覆盖项目状态、OKR、case 等项目事实。
-   - 不存在时使用 `@references/adoc/templates/index.md` 创建。
+## 验证
 
-3. `_adoc/map.md`
-   - 不存在时使用 `@references/adoc/templates/map.md` 创建。
-   - 已存在时只补缺失的标准章节，不删除用户已有路由。
-   - 如果缺少 Weave 反向编织锚点，只补锚点和 `/aipd-weave` 路由，不写具体业务经验。
-   - 如果发现 `_adoc/context-map.md`，先确认其中稳定入口已进入 `_adoc/map.md`，把删除旧文件列为破坏性更新；只有用户确认执行该破坏性更新时才删除。新架构不再兼容读取它。
+- manifest 仍为 `aipd-project` v2。
+- `_aipd/index.md` / `map.md` 和五类 Knowledge 目录链接可定位。
+- SOP / Case / OKR / Inbox 没有被混入 Knowledge。
+- Case 索引能定位进行中 Case，恢复链可用。
+- Agent MD 标记成对，区块外内容保持不变。
+- 新增 Markdown 链接和模板引用均存在。
 
-4. `_adoc/L3-core/map.md` / `_adoc/L4-product/map.md` / `_adoc/L5-dev/map.md`
-   - 不凭空生成业务内容。
-   - 可以补一个空骨架或边界说明，但必须先在更新清单中列明，等用户确认。
-
-5. `_adoc/L4-product/{feature}/map.md`
-   - 只有用户明确指定功能线或审计发现已有功能线目录时才建议创建。
-   - 功能线 map 可以记录稳定入口：前端页面、后端接口、数据对象、权限码、相关 L3 概念、相关 L5 工程规则、局部 README。
-   - 不写页面内部实现细节；细节继续放代码目录 README。
-
-6. 进行中 case
-   - 以 `@references/case/templates/index.md`、`case.md` 和 `work-package.md` 为结构对照，不只检查观察锚点。
-   - 默认不批量修改历史 case。
-   - 当前 Case 缺 Case Contract、phase-first 目录、Current Phase 或 `03-execute/work-packages/` 时，先输出迁移方案；旧 `doc/`、`steps/`、`01-goal/`、顶层 `06-close/` 的移动 / 重命名按破坏性更新确认。
-   - 只有用户确认后，才为当前进行中 Case 补索引、上下文、checkpoint、自迭代观察锚点或 Weave 候选位置；迁移完成前不从旧 Step 继续执行。
-
-7. Interaction Protocol
-   - 不作为 AIPD update 必须项。
-   - 只有用户明确同意“写入 / 同步 Interaction Protocol”或选择 Agent MD 等级 2 时才处理。
-   - 读取 `@references/agent-entry/interaction-style.md`。
-   - 安装、替换或删除 Interaction Protocol 都可能改变后续 Agent 回复方式，应在破坏性更新策略或 Agent MD 等级确认中明确列出。
-   - 用独立标记包裹：
-     ```md
-     <!-- AIPD-INTERACTION-STYLE:START -->
-     {interaction-style}
-     <!-- AIPD-INTERACTION-STYLE:END -->
-     ```
-   - 如果目标文件已有该标记区块，只替换标记之间内容。
-   - 如果目标文件没有该标记区块，追加到文件末尾，不改动 AIPD 区块和用户原有内容。
-
-## 第五步：完成后说明
-
-返回：
-
-- 修改了哪些文件。
-- Agent MD 最终采用哪个等级。
-- 是否写入或跳过 Interaction Protocol。
-- 执行了哪些破坏性更新；哪些破坏性更新被用户跳过。
-- 如果用户跳过破坏性更新，说明项目还保留哪些过期结构，以及它为什么不算完全升级。
-- 哪些建议没有执行，为什么。
-- 是否需要重新运行 `aipd-case`、`aipd-weave` 或 `aipd-learn`。
-- 是否建议提交当前改动。
-
-不要自动提交。
+完成后返回改动文件、验证结果和未处理风险。不自动提交、push 或 install。

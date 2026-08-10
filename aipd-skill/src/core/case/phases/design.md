@@ -167,7 +167,7 @@ AIPD 大多数 case 是修改现有系统。Design 必须先知道本 case 改�
 输出：
 
 - 当前实现事实。
-- 受影响 L3 / L4 / L5 / README / L6 入口。
+- 受影响的 Intent / Research / Core / Product / Engineering 知识域、README 和真实代码入口。
 - delta scope：ADDED / MODIFIED / REMOVED。
 - 不能破坏的旧行为。
 - root cause / behavior contract，适用于 bugfix。

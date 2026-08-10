@@ -21,7 +21,7 @@ AI 运行仍按 case 流程推进：Think -> Design -> Execute -> Verify -> Clos
 | Vue3 AipdModalBox 上下文解耦浮层 | Design / Execute | 代码实践经验 | Vue3 / Nuxt 前端 / Dialog / Drawer / 运行时挂载 | 复杂浮层需要按需创建、独立上下文、结果回传、关闭销毁或被多个入口复用时 | `experience/vue3-aipd-modal-box.md` |
 | Vue3 AipdForm 页面级 Controller | Design / Execute | 代码实践经验 | Vue3 / Nuxt 前端 / 复杂表单 / Controller | 复杂表单页面或弹框需要 FormItem 自治、统一校验取值和跨字段事实通知时 | `experience/vue3-aipd-form-page-controller.md` |
 | Vue3 AipdSearch 复杂检索页 | Design / Execute | 代码实践经验 | Vue3 / Nuxt 前端 / 搜索 / Filter / Pagination | 多筛选项、分页、异步初始化、Tab 搜索会话或弹框后原位刷新使检索页开始膨胀时 | `experience/vue3-aipd-search-page-controller.md` |
-| Vue3 复杂页面局部认知入口与架构图 | Design / Execute / Verify | 代码认知经验 | Vue3 / Nuxt 前端 / README / Mermaid / L6 | 复杂页面、弹框、Tab、Step 或多组件区块需要用局部入口和架构图承接设计与代码理解时 | `experience/vue3-page-local-cognition-map.md` |
+| Vue3 复杂页面局部认知入口与架构图 | Design / Execute / Verify | 代码认知经验 | Vue3 / Nuxt 前端 / README / Mermaid / 真实代码 | 复杂页面、弹框、Tab、Step 或多组件区块需要用局部入口和架构图承接设计与代码理解时 | `experience/vue3-page-local-cognition-map.md` |
 | 教学文档产品化与用户旅程组织 | Think / Design / Execute / Verify | 文档产品经验 | 开源项目 / README / 教程 / 信息架构 | 重写项目首页、学习路径、教程与参考文档，尤其是当项目能力演进已造成叙事漂移时 | `experience/teaching-docs-as-product.md` |
 | 产品设计注意力编排与触发式减法 | Design / Execute / Verify | 产品设计经验 | 产品文档 / PRD / 原型 / UI / 信息架构 / 简化 | 产品类 Case 需要 AI 自主设计与迭代，或用户反馈“太多、太复杂、重点不清”，需要让简化判断跨页面传播时 | `experience/product-design-attention-reduction.md` |
 | 部署型 SEO 网站 Close 检查 | Verify / Close | 部署验收经验 | SEO 网站 / 上线部署 / 域名切换 | case 涉及上线部署，且目标是 SEO 网站、内容站、工具站或游戏站时 | `experience/deployment-seo-site-close-checklist.md` |
@@ -33,7 +33,7 @@ AI 运行仍按 case 流程推进：Think -> Design -> Execute -> Verify -> Clos
 - **部署验收经验**：上线、域名、预发环境、运行时配置、API smoke test、SEO 基础入口和回滚边界等验证经验。常在 Verify / Close 阶段读取。
 - **文档产品经验**：面向首次访问、连续学习和工作时查阅的文档职责、用户旅程、渐进披露和验收方法。常跨 Think / Design / Execute / Verify 读取。
 - **产品设计经验**：面向产品文档、原型和用户界面的注意力路径、信息层级、自我推翻边界、触发式回跳和收敛判断。常跨 Design / Execute / Verify 读取。
-- **工具 / SOP 经验**：某个经验已经变成可重复执行动作时，应进入 `_adoc/sop/` 或对应 SOP 模板；本索引只保留“什么时候用它”的经验入口。
+- **工具 / SOP 经验**：某个经验已经变成可重复执行动作时，应进入 `_aipd/sop/` 或对应 SOP 模板；本索引只保留“什么时候用它”的经验入口。
 
 ## 收录原则
 

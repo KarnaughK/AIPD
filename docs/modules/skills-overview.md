@@ -10,7 +10,7 @@ AIPD 当前构建九个 Skill。它们不是九个彼此孤立的对象，而是
 |---|---|---|
 | `aipd` | 进入项目、初始化、查看状态、不知道从哪里开始 | 加载最小认知并路由下一能力 |
 | `aipd-case` | 创建、恢复、推进、验收或关闭短周期目标 | Case Contract / Think / Design / Execute / Verify / Close 闭环 |
-| `aipd-weave` | 完成事项产生了稳定新知识 | 回写 L3 / L4 / L5、map 或局部 README |
+| `aipd-weave` | 完成事项产生了稳定新知识 | 判断并回写五类 Knowledge、map 或局部 README |
 
 ## 认知维护
 
@@ -36,7 +36,7 @@ Weave 面向当前项目；Learn 面向 AIPD 框架自身。Update 只升级结�
 
 ```text
 /aipd
--> 初始化或读取 AGENTS.md / _adoc/index.md / _adoc/map.md
+-> 初始化或读取 AGENTS.md / _aipd/index.md / _aipd/map.md
 -> 继续普通任务，或进入 /aipd-case
 ```
 
@@ -79,10 +79,10 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 ## Skill 之外的支撑能力
 
 - **Agent Entry**：`AGENTS.md` 规定进入项目和恢复任务的第一跳。
-- **角色 Agent / 领域指引**：为 ADOC 检索、requirements、Vue 架构和 provider 等稳定边界提供执行支持；不自动派发。
+- **角色 Agent / 领域指引**：为上下文检索、requirements、Vue 架构和 provider 等稳定边界提供执行支持；不自动派发。
 - **实践经验库**：`aipd-skill/src/core/experience/` 保存真实项目跑过的具象经验。
 - **经验源码资产**：根级 `experience-assets/` 保存只靠文字不足以可靠复用的可验证实现，不随 Skill 打包。
-- **SOP**：`_adoc/sop/` 收纳以 Agent 为运行时的可重复项目动作；SOP 不是单纯脚本或知识条目。
+- **SOP**：`_aipd/sop/` 收纳以 Agent 为运行时的可重复项目动作；SOP 不是单纯脚本或知识条目。
 
 ## 源码与产物
 

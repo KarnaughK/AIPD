@@ -10,17 +10,19 @@ allowed-tools:
   - Glob
   - Grep
 inject-from-core:
-  - L5-dev/vue-architecture-diagram-guide.md
-  - L5-dev/vue-provider-guide.md
+  - knowledge/engineering/vue-architecture-diagram-guide.md
+  - knowledge/engineering/vue-provider-guide.md
 ---
 
 # AIPD Mermaid
 
 面向 AIPD 项目的 Mermaid / `.mmd` 图写作、修改、评审和按需预览入口。
 
+使用项目 map 前先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止 AIPD 路由，不猜测其他工作区。
+
 ## 先判断用户要什么
 
-- **写图 / 改图**：读取目标 `.mmd`、相关 `_adoc/map.md`、就近 README / 代码入口，再修改 Mermaid 源码。
+- **写图 / 改图**：读取目标 `.mmd`、相关 `_aipd/map.md`、就近 README / 代码入口，再修改 Mermaid 源码。
 - **评审图**：按当前图的领域规范检查边界、节点职责、线条语义、是否过度塞细节。
 - **预览图**：只有用户明确说“预览、渲染、看图、生成 PNG”时才运行渲染脚本。
 
@@ -30,9 +32,9 @@ inject-from-core:
 
 先用用户描述、文件路径、图内容和项目 map 判断图属于哪类：
 
-- Vue / Nuxt / 前端组件架构图：读取 `@references/L5-dev/vue-architecture-diagram-guide.md`。
-- Vue `useXxx.ts/js`、provide / inject、provider、controller 数据源边界：再读 `@references/L5-dev/vue-provider-guide.md`。
-- 后端 / 通用软件设计图：优先读项目 `_adoc/map.md`，再读相关 L3 / L4 / L5 和就近 README；没有稳定规范时，不要硬套 Vue 图规则。
+- Vue / Nuxt / 前端组件架构图：读取 `@references/knowledge/engineering/vue-architecture-diagram-guide.md`。
+- Vue `useXxx.ts/js`、provide / inject、provider、controller 数据源边界：再读 `@references/knowledge/engineering/vue-provider-guide.md`。
+- 后端 / 通用软件设计图：优先读项目 `_aipd/map.md`，再读相关 Core / Product / Engineering 知识和就近 README；没有稳定规范时，不要硬套 Vue 图规则。
 
 ## 写图原则
 

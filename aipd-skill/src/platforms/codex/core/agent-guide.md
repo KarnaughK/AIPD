@@ -19,7 +19,7 @@ Codex 的 `.toml` agent 文件只是平台打包格式。`aipd-skill/src/platfor
 
 - **worker**：执行开发、修复、文件修改、验证等生产任务。
 - **explorer**：执行只读调研、代码定位、方案分析等探索任务。
-- **aipd_adoc_retriever**：如果项目已安装 `.codex/agents/aipd_adoc_retriever.toml`，用于从 L1-L5、SOP 和必要的次级流程文档中检索并压缩项目认知。
+- **aipd_context_retriever**：如果项目已安装 `.codex/agents/aipd_context_retriever.toml`，用于按当前任务从五类知识域、SOP、必要的流程状态、README 和代码入口中检索并压缩上下文。
 - **aipd_vue_architect**：如果项目已安装 `.codex/agents/aipd_vue_architect.toml`，用于 Vue 页面、组件、样式、交互、状态组织和 AI 友好型 Vue 架构任务。
 - **aipd_vue_provider**：如果项目已安装 `.codex/agents/aipd_vue_provider.toml`，用于 Vue `useXxx.ts/js`、provide/inject、页面数据源、API 字段对齐和局部 controller 边界任务。
 
@@ -30,7 +30,7 @@ Codex 子 agent 在技术上仍叫子 agent，AIPD 语义中要区分两类用�
 
 Case Execute 不默认创建子 Agent。运行时先判断 Work Package 由 Main 还是 Child 执行；只有决定派发后，才按任务选择 `worker`、`explorer`、`aipd_vue_architect` 或 `aipd_vue_provider`。
 
-普通 AIPD 对话先由 Main 按 map 做最小路由。已知入口少、上下文可控时由 Main 直接读取；需要扫描大量项目认知或多条独立认知线时，优先使用 `aipd_adoc_retriever` 隔离过程。它是 custom agent 身份；身份优先，不要求同时 fork 当前对话上下文。
+普通 AIPD 对话先由 Main 按 map 做最小路由。已知入口少、上下文可控时由 Main 直接读取；需要扫描大量项目知识或多条独立上下文线时，优先使用 `aipd_context_retriever` 隔离过程。它是 custom agent 身份；身份优先，不要求同时 fork 当前对话上下文。
 
 如果运行时已经决定派发，且 work package 明确涉及 Vue 页面、组件拆分、HTML/CSS/Tailwind、Vue 单文件组件、组件通信或前端状态组织，并且 `aipd_vue_architect` 可用，优先使用 `aipd_vue_architect`。项目上下文读取顺序由 Agent Entry、case、work package 和派发 prompt 负责，不写死在 custom agent 身份里。
 
@@ -66,14 +66,14 @@ case / phase / work package 文件是执行阶段的事实源，但 Work Package
 - Ultra 可能自行增加委派工作线；AIPD 不应再用“每个 Work Package / 每次检索默认派发”叠加第二层 fan-out。只有额外 Child 的上下文隔离或并发净收益仍然明确时才主动创建。
 - 模型模式不改变 Case / Work Package 的状态与验收边界，也不替代运行时 Main / Child 判定。
 
-Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作为长期任务事实来源；任务恢复必须回到 `AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/case/index.md -> 当前 case.md -> 当前 phase 目录 -> 当前 work package`。如果聊天记忆与 case / phase / work package 文件冲突，先提示冲突，再以文件为准。
+Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作为长期任务事实来源；任务恢复必须回到 `AGENTS.md -> _aipd/manifest.json -> _aipd/index.md -> _aipd/map.md -> _aipd/case/index.md -> 当前 case.md -> 当前 phase 目录 -> 当前 work package`。如果聊天记忆与 case / phase / work package 文件冲突，先提示冲突，再以文件为准。
 
 ## Codex 目标模式
 
 Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业务目标或子 Agent。它与 Case 是单向依赖关系：启动 goal 必须绑定一个 Case；创建或推进 Case 不要求启动 goal。
 
 - 只有用户或平台明确要求启动目标模式时才创建 goal；不要因为 Case 较长、work package 较多、可能跨轮次或可能压缩上下文就自动创建。
-- 创建 goal 前，先读取 `_adoc/case/index.md` 定位 Case；没有合适 Case 时，先通过 `aipd-case` 创建 `case.md` 并写好 Case Contract，然后再调用 `create_goal`。
+- 创建 goal 前，先读取 `_aipd/case/index.md` 定位 Case；没有合适 Case 时，先通过 `aipd-case` 创建 `case.md` 并写好 Case Contract，然后再调用 `create_goal`。
 - 一个活动 goal 只绑定一个 Case。goal objective 使用稳定文案，不重复 Case Contract 中的业务目标，也不写会变化的当前 phase 或 work package。
 - 推荐 objective：`推进并关闭 AIPD Case {case-id}（{case.md 路径}）。以该 Case 文件为唯一目标契约和状态事实源，严格按 Think → Design → Execute → Verify → Close 流程完成。`
 - 活动 goal 明确绑定当前 Case 时，加载 `@references/case/goal-mode.md`。平台 goal 是否活动、绑定哪个 Case 是目标模式的权威状态；不要根据 Case 内容或任务特征自行识别。
@@ -84,15 +84,16 @@ Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业
 
 ## 主 Agent 流程
 
-1. 读取 `_adoc/case/index.md`，定位当前或目标 case。
-2. 读取 `_adoc/case/{case目录}/case.md`，按上下文索引加载必要文档。
-3. 读取 `Current Phase`。若处于 Execute，读取 `03-execute/execute.md` 和 `03-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
-4. 如果用户或平台明确要求目标模式，检查 goal 是否绑定当前 Case；没有 Case 时先创建 Case，再创建 goal。绑定成立时加载 Goal Mode 覆盖层；没有活动绑定时按普通 Case 运行，不自动启用。
-5. 根据上下文噪声、可并发性、主线耦合和调度成本，选择 Main 或 Child。
-6. 选择 Main 时连续完成当前内聚目标，并在里程碑写回 work package、execute.md 和 case。
-7. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。
-8. 只有 work package 强依赖 Main 当前未沉淀的聊天判断，且平台明确支持时，才按需继承更多上下文。
-9. Child 完成后，Main 只读取压缩结果，不重复执行同一任务；成功或失败都写回 work package、execute.md 和 case。
+1. 按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；验证 `_aipd/manifest.json`、`index.md`、`map.md` 是非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止。
+2. 读取 `_aipd/case/index.md`，定位当前或目标 case。
+3. 读取 `_aipd/case/{case目录}/case.md`，按上下文索引加载必要文档。
+4. 读取 `Current Phase`。若处于 Execute，读取 `03-execute/execute.md` 和 `03-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
+5. 如果用户或平台明确要求目标模式，检查 goal 是否绑定当前 Case；没有 Case 时先创建 Case，再创建 goal。绑定成立时加载 Goal Mode 覆盖层；没有活动绑定时按普通 Case 运行，不自动启用。
+6. 根据上下文噪声、可并发性、主线耦合和调度成本，选择 Main 或 Child。
+7. 选择 Main 时连续完成当前内聚目标，并在里程碑写回 work package、execute.md 和 case。
+8. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。
+9. 只有 work package 强依赖 Main 当前未沉淀的聊天判断，且平台明确支持时，才按需继承更多上下文。
+10. Child 完成后，Main 只读取压缩结果，不重复执行同一任务；成功或失败都写回 work package、execute.md 和 case。
 
 ## Main Agent 执行边界
 

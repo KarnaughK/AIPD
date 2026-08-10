@@ -1,8 +1,8 @@
 ---
 name: aipd
 description: >
-  AIPD 渐进式总入口。根据用户输入在 ADOC 轻量认知加载、项目状态扫描、初始化和 case 流程之间路由。
-  关键词：AIPD、ADOC、_adoc、项目认知、轻量认知加载、项目状态、初始化、case、前端规范、L5、开发前读文档、代码拓扑、横向基座、纵向业务上下文、shared
+  AIPD 渐进式总入口。根据用户输入在任务上下文轻量加载、项目状态扫描、初始化和 case 流程之间路由。
+  关键词：AIPD、_aipd、knowledge、项目认知、任务上下文、轻量认知加载、项目状态、初始化、case、开发前读文档、代码拓扑、横向基座、纵向业务上下文、shared
 allowed-tools:
   - Read
   - Write
@@ -15,286 +15,162 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - ai-friendly-code-topology.md
-  - adoc-structure.md
+  - aipd-project-structure.md
   - agent-entry/template.md
   - agent-entry/interaction-style.md
-  - agent-guides/aipd_adoc_retriever.md
-  - adoc/templates/index.md
-  - adoc/templates/inbox.md
-  - adoc/templates/map.md
-  - adoc/templates/sop-index.md
-  - adoc/templates/sop-map.md
+  - agent-guides/aipd_context_retriever.md
+  - workspace/templates/manifest.json
+  - workspace/templates/index.md
+  - workspace/templates/inbox.md
+  - workspace/templates/map.md
+  - workspace/templates/sop-index.md
+  - workspace/templates/sop-map.md
   - case/templates/index.md
   - okr/templates/index.md
-  - L1-intent/*
+  - knowledge/intent/*
 ---
 
 # AIPD 渐进式总入口
 
-根据用户输入判断入口模式。`aipd` 自身只做路由和少量上下文选择，不承载完整项目规则；具体项目认知继续放在 `_adoc/`。状态扫描先按噪声、并发收益、主线耦合和调度成本判断由 Main 直接完成还是交给分身 Agent。
+`aipd` 只做路由、Schema 识别和少量上下文选择；具体项目知识继续由 `_aipd/` 工作区维护。五类长期知识域为 `knowledge/{intent,research,core,product,engineering}`，它们是并列分类，不是固定读取顺序。
+
+## Schema 识别
+
+进入任何读取或写入前，先判断项目状态：
+
+1. 先按路径项存在性分别检查新旧根：`test -e _aipd || test -L _aipd`，以及 `test -e _adoc || test -L _adoc`。损坏的 symlink 和同名普通文件也算“存在”；两边同时存在就是双根混合状态，立即停止。
+2. 只有当前根路径项时，`_aipd` 必须是真实目录而不是 symlink，且工作区内不得存在 symlink；`manifest.json`、`index.md` 与 `map.md` 必须是非 symlink 的普通文件。manifest 必须仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`，否则视为未知状态并停止。
+3. 不存在当前根路径项时，旧根检查只作为拒绝性哨兵。若旧根路径项存在，立即停止，不读取、路由或写入其中内容；定位当前 `aipd` Skill 目录中随安装包提供的 `scripts/migrate-project-schema`，先以 `--dry-run /absolute/project/path` 预检，用户确认后再以 `/absolute/project/path` 执行。若当前就在 AIPD 源码仓库开发，可使用 `aipd-skill/scripts/migrate-project-schema` 这一等价源码入口。
+4. 新旧根路径项均不存在时，才视为未初始化的新项目。
+
+日常运行时只识别 Knowledge Schema v2，不双读、不 fallback、不使用迁移器兜底。
 
 ## 入口判断
 
 触发后先判断用户是否带着明确任务。
 
-如果用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd-inbox`。这是独立 capture 入口，只负责把临时信息写入 `_adoc/inbox.md`，不要把这套判断扩散到 case、weave、learn 等其他 skill。
+- 用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd-inbox`。
+- 用户明确说“OKR / 飞书 OKR / lark-cli / 周期 / O / KR / OKR 经验包”，进入 `aipd-okr`。
+- 用户带着具体开发、分析、讨论或修改任务，进入“任务上下文轻量加载”。
+- 用户没有明确任务，或明确要看状态、初始化、Case、归档、复盘或总结经验，进入“项目状态与流程”。
 
-如果用户明确说“OKR / 飞书 OKR / lark-cli / 目标 / 周期 / O / KR / 子项目目标 / OKR 经验包”，进入 `aipd-okr`。这是独立 OKR 入口，负责查看、创建、同步、删除或压缩飞书 OKR 经验包；不要让主入口直接翻 AIPD 源码或把完整 CLI 输出带入主上下文。
+用户有明确对象但没有动作时，先轻量读取入口文档，给出简短理解，再询问要分析、修改还是创建 Case；不直接全量扫描工作区。
 
-### 进入 ADOC 轻量认知模式
+## 模式 A：任务上下文轻量加载
 
-当用户带着具体开发、分析、讨论或修改任务时，进入此模式，例如：
+### 读取策略
 
-```text
-$aipd 我要改合同创建 Step1 的 README
-$aipd 修一下合同列表搜索条件
-$aipd 看看这个弹框为什么保存后没刷新
-$aipd 讨论一下这个页面 README 怎么拆
-$aipd 按项目规范实现一个新表单
-```
-
-执行原则：
-
-1. 确认 `_adoc/` 是否存在。
-2. 读取 `_adoc/index.md`，判断当前项目的认知结构和裁剪模式。
-3. 读取 `_adoc/map.md`，把用户自然语言路由到 L3 / L4 / L5 / 局部 README / L6 代码入口；普通任务不要路由到 case / OKR。
-4. 根据检索结果选择入口；日常前端开发不默认只读 L5，必须判断是否还涉及 L3 核心概念、L4 产品功能和局部 README。
-5. 按任务继续下钻，只读相关文档，不全量读取 `_adoc/`。
-6. 如果任务命中下述代码拓扑条件，在项目事实清楚后读取 `@references/ai-friendly-code-topology.md`。
-7. 用 3-6 条说明本次任务相关约束，然后继续执行用户任务。
+1. 读取 `_aipd/index.md`。
+2. 读取 `_aipd/map.md`，把用户自然语言路由到相关知识域、SOP、局部 README 和代码入口。
+3. 按任务下钻，只读命中文档；不全量读取 `_aipd/`。
+4. 普通开发、找代码、查业务规则、页面或组件实现时，不读取 Case / OKR；只有用户明确要求相应流程或任务本身处于该流程时才进入。
+5. 如果 map 命中不清楚，用 `rg` 搜索 README、核心词、功能线名、页面名、接口名、权限码和 Agent 名。
 
 下钻参考：
 
 | 任务类型 | 优先读取 |
 |---|---|
-| 任务入口不清楚 / 用户只给一句自然语言 | `_adoc/map.md`；不存在则读 `_adoc/index.md` 后用 `rg` 搜索 README、核心词、功能线名、页面名、接口名、权限码 |
-| 核心概念 / 领域语言 / 黑话 / 名词解释 | `_adoc/L3-core/index.md` |
-| README / map / 逻辑地图 | `_adoc/L5-dev/dev-conventions/readme-guide.md` |
-| 表单 / 字段 / 校验 / 提交映射 | `_adoc/L5-dev/dev-conventions/form-guide.md` |
-| 列表 / 搜索 / 表格 | `_adoc/L5-dev/dev-conventions/list-guide.md` |
-| 权限 / 路由 / 菜单 / 前后端约定 / 跨模块工程规则 | `_adoc/L5-dev/index.md` 及其索引到的专题文档 |
-| provide / inject / 显隐 / 禁用 / 回填 / 组件协作 | `_adoc/L5-dev/dev-conventions/component-autonomy-guide.md` 或项目索引指定文档 |
-| 页面职责 / PRD / 原型承接 / 产品边界 | `_adoc/L4-product/index.md` |
-| 业务对象 / 角色 / 主流程 | `_adoc/L3-core/index.md` |
+| 任务入口不清楚 | `_aipd/map.md`；未命中后用 `rg` 兜底 |
+| 项目方向、目标、长期取舍 | `_aipd/knowledge/intent/` |
+| 用户、场景、竞品、行业或玩法范式 | `_aipd/knowledge/research/` |
+| 核心概念、领域语言、对象关系、项目成立模型 | `_aipd/knowledge/core/` |
+| 产品功能、业务规则、页面职责、用户可见行为 | `_aipd/knowledge/product/` |
+| 权限、路由、插件、前后端约定、跨模块工程规则 | `_aipd/knowledge/engineering/` |
+| 页面、弹窗、组件或模块内部实现 | 代码就近 `README.md` 和真实代码入口 |
 
-如果目标项目没有对应文档，不要臆造规则；说明缺失，并基于现有代码和用户目标继续处理。
+如果目标项目没有对应文档，不臆造规则；说明缺失，并基于现有代码和用户目标继续。
 
 ### AI 友好代码拓扑（条件命中）
 
-以下任务在读取目标项目 map、L5、局部 README 和必要代码事实后，再读取 `@references/ai-friendly-code-topology.md`：
+以下任务在读取 map、相关 Engineering 知识、局部 README 和必要代码事实后，再读取 `@references/ai-friendly-code-topology.md`：
 
 - 新增或重划页面、API、网站、游戏或业务模块边界。
 - 决定 service / helper / component / shared 是抽取、上移还是保留局部复制。
 - 调整跨模块依赖方向、组合协议、目录 owner 或上下文边界。
 - 用户明确讨论横向基座、横向共享能力、纵向业务上下文或 AI 友好代码架构。
 
-局部字段修改、样式修复、明确上下文内的 bugfix 和纯文档整理不读取本指南。目标项目已经记录的架构事实优先；除非用户明确要求，不因命中本指南而主动扩大成全局重构。
+局部字段修改、样式修复、明确上下文内的 bugfix 和纯文档整理不读取该指南。
 
 ### 上下文检索包
 
-当任务涉及代码修改、case 创建、跨模块规则或用户表达较模糊时，先形成一个极简上下文检索包，再继续工作。检索包可以在回复中简短展示，也可以作为内部判断，但创建 case 时必须写入 case。
+任务涉及代码修改、Case 创建、跨模块规则或用户表达较模糊时，先形成极简检索包：
 
 ```md
-【本次采用的项目认知】
-- 层级判断：L3 / L4 / L5 / 局部 README / L6；只有明确流程任务才包含 case / OKR
+【本次采用的项目上下文】
+- 知识域：Intent / Research / Core / Product / Engineering；只有明确流程任务才包含 SOP / Case / OKR
 - 必读文档：...
-- 代码入口：...
+- README / 代码入口：...
 - 兜底搜索：...
 - 边界风险：...
 ```
 
-检索包不是执行计划。它只回答“本次任务应该先看什么、依据是什么、找不到时怎么兜底”。
-
-### 进入状态与流程模式
-
-当用户没有明确任务，或明确要看状态、初始化、case、归档、复盘、总结经验时，进入此模式，例如：
-
-```text
-$aipd
-$aipd 看一下项目
-$aipd 当前状态
-$aipd 初始化
-$aipd 更新 AIPD
-$aipd case
-$aipd 归档
-$aipd 总结经验
-$aipd 记一下刚才这段
-```
-
-此模式保留项目状态入口能力。扫描范围小、入口明确时由 Main 读取 `@references/scan-agent.md` 直接完成；预计产生大量目录 / 文档噪声且隔离收益明确时，才把同一指南交给分身 Agent。平台能力不可用时回退 Main。
-
-### 模糊输入
-
-当用户有明确对象但没有明确动作时，例如：
-
-```text
-$aipd 看一下合同创建页面
-```
-
-优先按 ADOC 轻量认知模式读取入口文档，给出简短理解，然后询问用户要分析、修改还是创建 case。不要直接进入完整状态面板，也不要全量扫描 `_adoc/`。
-
-## 模式 A：ADOC 轻量认知加载
-
-这是有任务时的默认模式。它的目标是让 AI 带着项目认知继续工作，而不是展示 AIPD 状态。
-
-### 读取策略
-
-- 先读 `_adoc/index.md`。
-- 第二步读取 `_adoc/map.md`；没有时才按 `_adoc/index.md` 的任务入口和 `rg` 兜底。
-- 按检索结果读取 L3 / L4 / L5 / 局部 README。前端任务不等于只读 L5；涉及业务词先读 L3，涉及功能边界先读 L4，涉及跨模块工程实现先读 L5，涉及页面内部细节先读就近 README。
-- skill 不复制 `_adoc` 正文，不把项目规范写死在 skill 里。
-- 读完后直接进入用户任务，不输出大段 AIPD 解释。
-- L1-L5 是长期知识库；普通开发、找代码、查业务规则、查页面或组件实现时，不读取 `_adoc/case/` 或 `_adoc/okr/`。只有用户明确要求创建、执行、恢复、归档 case，查看 / 更新 OKR，或当前任务本身就是 `aipd-case` / OKR 对齐时，才进入 case / OKR。
-- 结构性代码任务命中条件时，读取 `@references/ai-friendly-code-topology.md`；简单局部任务不增加这份上下文。
-
-### 输出要求
-
-进入任务前只输出极短上下文判断：
-
-```md
-【本次采用的项目认知】
-- ...
-- ...
-- ...
-```
-
-然后继续分析、讨论或修改。
+检索包只回答“本次任务应该先看什么”，不是执行计划。读完后直接继续用户任务，不输出大段 AIPD 解释。
 
 ## 模式 B：项目状态与初始化
 
-这是无明确任务或流程类请求时的模式。
+### 扫描状态
 
-### 第一步：扫描项目状态
+读取 `@references/scan-agent.md`。扫描范围小、入口明确时由 Main 直接执行；预计会产生大量文档噪声或多条真实独立工作线时，才派发子 Agent。
 
-读取 `@references/scan-agent.md`。先做 Main / Child 净收益判断：简单状态检查由 Main 完成；大量项目认知或多条独立状态线会污染主线时才派发分身，并为扫描结果设置单一 owner。
+状态面板可简短展示：
 
-### 第二步：展示状态面板
-
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  AIPD 项目状态
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  _adoc/     : ✅ 已初始化
-  AgentEntry : ✅ AGENTS.md 已安装
-  Intent     : ✅ 已定义
-  当前 OKR   : O1 - 目标名
-  当前 Case  : c2-功能名（8/10 工作包完成）
-  已归档     : 3 个 Case
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  推荐下一步：/aipd-case
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```text
+AIPD 项目状态
+_aipd/      : ✅ Knowledge Schema v2
+Agent Entry : ✅ AGENTS.md 已安装
+Intent      : ✅ 已定义
+当前 OKR   : ...
+当前 Case  : ...
+推荐下一步：...
 ```
 
-### 第三步：根据状态执行
+### 初始化新项目
 
-**没有 `_adoc/`** → 直接执行初始化：
+只有 Schema 识别确认当前是全新项目时才初始化：
 
 ```bash
-mkdir -p _adoc/L1-intent _adoc/L2-research _adoc/L3-core
-mkdir -p _adoc/L4-product _adoc/L5-dev
-mkdir -p _adoc/sop _adoc/case/archive _adoc/okr
+mkdir -p _aipd/knowledge/intent _aipd/knowledge/research
+mkdir -p _aipd/knowledge/core _aipd/knowledge/product _aipd/knowledge/engineering
+mkdir -p _aipd/sop _aipd/case/archive _aipd/okr
 ```
 
-创建默认文档壳子：
+创建默认文档壳：
 
-- 将 `@references/adoc/templates/index.md` 写入 `_adoc/index.md`
-- 将 `@references/adoc/templates/inbox.md` 写入 `_adoc/inbox.md`
-- 将 `@references/adoc/templates/map.md` 写入 `_adoc/map.md`
-- 将 `@references/adoc/templates/sop-index.md` 写入 `_adoc/sop/index.md`
-- 将 `@references/adoc/templates/sop-map.md` 写入 `_adoc/sop/map.md`
-- 将 `@references/case/templates/index.md` 写入 `_adoc/case/index.md`
-- 将 `@references/okr/templates/index.md` 写入 `_adoc/okr/index.md`
+- 将 `@references/workspace/templates/manifest.json` 写入 `_aipd/manifest.json`。
+- 将 `@references/workspace/templates/index.md` 写入 `_aipd/index.md`。
+- 将 `@references/workspace/templates/inbox.md` 写入 `_aipd/inbox.md`。
+- 将 `@references/workspace/templates/map.md` 写入 `_aipd/map.md`。
+- 将 `@references/workspace/templates/sop-index.md` 写入 `_aipd/sop/index.md`。
+- 将 `@references/workspace/templates/sop-map.md` 写入 `_aipd/sop/map.md`。
+- 将 `@references/case/templates/index.md` 写入 `_aipd/case/index.md`。
+- 将 `@references/okr/templates/index.md` 写入 `_aipd/okr/index.md`。
 
-然后先确定 Agent MD 模板等级，再按等级决定是否安装项目根目录 Agent Entry；最后引导用户定义 intent.md（参考 `@references/L1-intent/guide.md`、`@references/L1-intent/intent-writing.md`、`@references/L1-intent/template.md`）。
+目标文件已存在时不覆盖，先提示用户并基于现有内容继续。默认壳只是入口索引，不代表对应知识已完成。
 
-默认壳子写入规则：
-
-1. 如果目标文件不存在，直接写入模板。
-2. 如果目标文件已存在，不覆盖；先提示用户该文件已存在，并基于现有内容继续。
-3. 默认壳子只是入口索引，不代表对应认知已经完成。
-
-#### 先选择 Agent MD 等级
-
-默认壳子创建后、任何 Agent MD 写入前，询问用户 Agent MD 模板等级。初始化默认推荐等级 1。
+然后先询问 Agent MD 模板等级，再决定是否写入项目根 Agent Entry；最后引导用户定义 `_aipd/knowledge/intent/intent.md`（参考 `@references/knowledge/intent/guide.md`、`intent-writing.md` 和 `template.md`）。
 
 | 等级 | 名称 | 内容 |
 |---|---|---|
-| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` / `CLAUDE.md`；不推荐，除非用户明确不想要项目记忆入口 |
+| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` / `CLAUDE.md` |
 | 1 | AIPD Project Entry | 写入 AIPD 项目入口区块；默认推荐 |
-| 2 | AIPD Project Entry + Interaction Protocol | 写入 AIPD 项目入口区块，并额外写入 AIPD 项目级对话协议 |
+| 2 | Entry + Interaction Protocol | 额外写入 AIPD 项目级对话协议 |
 
-建议询问：
+等级 1 或 2 时，用 `@references/agent-entry/template.md` 更新 `<!-- AIPD:START -->` / `<!-- AIPD:END -->` 区块；没有标记时追加，不覆盖用户原有内容。等级 2 再读取 `@references/agent-entry/interaction-style.md`，用独立标记区块安装。
 
-```text
-Agent MD 使用哪个模板等级？
-0 不修改 Agent MD
-1 写入 AIPD Project Entry（推荐）
-2 写入 AIPD Project Entry + AIPD 对话协议
-```
+### 已初始化项目的路由
 
-如果用户没有明确选择等级，默认按等级 1 继续，并说明 Interaction Protocol 未写入。选择等级 0 时跳过下面所有 Agent Entry / Interaction Protocol 写入。
-
-#### 按选择安装 Agent Entry
-
-等级 1 或 2 时，把 `@references/agent-entry/template.md` 写入目标项目根目录的默认记忆文件，让后续 Agent 进入项目时自然知道这是 AIPD 项目。
-
-**Codex 优先**：默认写入 `AGENTS.md`。
-
-**Claude Code**：如果用户明确在 Claude Code 项目中初始化，或项目已有 `CLAUDE.md`，同一内容也可写入 `CLAUDE.md`。
-
-写入规则：
-
-1. 读取 `@references/agent-entry/template.md`。
-2. 用标记包裹模板内容：
-   ```md
-   <!-- AIPD:START -->
-   {template}
-   <!-- AIPD:END -->
-   ```
-3. 如果目标文件不存在，创建文件并写入该区块。
-4. 如果目标文件已有 `<!-- AIPD:START -->` 和 `<!-- AIPD:END -->`，只替换这两个标记之间的 AIPD 区块。
-5. 如果目标文件存在但没有 AIPD 标记，把 AIPD 区块追加到文件末尾，不覆盖用户原有内容。
-
-Agent Entry 只是 AIPD 的轻量认知壳，不替代 `/aipd-inbox`、`/aipd-okr`、`/aipd-case`、`/aipd-weave`、`/aipd-learn` 等具体流程 skill。
-
-#### 等级 2 安装 Interaction Protocol
-
-Interaction Protocol 是项目级对话协议，不是 AIPD 项目认知。它会约束 Agent 的回复结构、讨论 / 执行切换方式和长短答边界，因此必须由用户明确同意后再写入。写入后，它不是可选风格建议；除非用户当前指令明确要求另一种格式，或与更高优先级的平台规则冲突，否则 Agent 必须遵守。
-
-写入规则：
-
-1. 用户选择等级 0 时，不写入 `AGENTS.md` / `CLAUDE.md`。
-2. 用户选择等级 1 时，只按上文规则写入 AIPD Project Entry。
-3. 用户选择等级 2 时，先写入 AIPD Project Entry，再读取 `@references/agent-entry/interaction-style.md`。
-4. Interaction Protocol 用独立标记包裹内容：
-   ```md
-   <!-- AIPD-INTERACTION-STYLE:START -->
-   {interaction-style}
-   <!-- AIPD-INTERACTION-STYLE:END -->
-   ```
-5. 如果目标文件已有该标记区块，只替换这两个标记之间的内容。
-6. 如果目标文件没有该标记区块，把区块追加到文件末尾，不改动 AIPD 区块和用户原有内容。
-
-**有 `_adoc/` 但没有 intent.md** → 引导用户定义方向（同上）。
-
-**有 `_adoc/`，但用户要升级 / 同步 / 检查 AIPD 架构** → 推荐 `/aipd-update`。`aipd` 不直接迁移已有项目，避免初始化入口误覆盖用户文档。
-
-**有 `_adoc/` 但没有 case** → 推荐 `/aipd-case` 创建 `case.md` 的 Case Contract，再进入 Think / Design。
-
-**有进行中的 case** → 推荐 `/aipd-case`，由它按 `Current Phase` 继续。
-
-**case 全部完成待归档** → 推荐 `/aipd-case` 进入 Close phase。
-
-**用户想把当前项目里的讨论、work package 结果、case 结论、diff、错误日志或外部资料沉淀回 `_adoc/`、局部 README 或 map** → 推荐 `/aipd-weave`。
-
-**用户想查看、创建、同步、删除或讨论 OKR，尤其是飞书 OKR / lark-cli / O/KR / 周期 / 子项目目标对齐** → 推荐 `/aipd-okr`。
-
-**用户想采集会话定位信息，或诊断 AIPD 框架自身的 skill、模板、Agent 行为规则** → 推荐 `/aipd-learn`。
+- 缺少 Intent 主文档：引导用户定义方向。
+- 用户要升级、同步或检查 AIPD 架构：推荐 `aipd-update`。
+- 没有 Case 或有进行中 Case：推荐 `aipd-case`创建或按 `Current Phase` 续跑。
+- Case 已完成待归档：推荐 `aipd-case` 进入 Close。
+- 用户要把稳定实现、Case 结论、diff、错误日志或外部资料沉淀回知识域、README 或 map：推荐 `aipd-weave`。
+- 用户要查看、创建、同步、删除或讨论飞书 OKR：推荐 `aipd-okr`。
+- 用户要采集会话定位信息或诊断 AIPD 框架本身的 Skill、模板或 Agent 规则：推荐 `aipd-learn`。
 
 ## 设计原则
 
-1. **一个总入口**：不新增 `aipd-adoc`、`aipd-l5` 等碎片化入口。
-2. **skill 是路由器**：`aipd/SKILL.md` 负责判断模式和选择读取策略，不承载完整项目规则。
-3. **渐进式披露**：有任务时轻量加载 `_adoc` 并按需下钻；无任务时才进入状态与流程模式。
-4. **任务优先**：用户带着明确任务触发 AIPD 时，不先输出完整状态面板。
-5. **项目规则在项目里**：具体规范由 `_adoc/` 维护，skill 只说明什么时候读哪里。
+1. 一个总入口：不新增按知识域切碎的入口。
+2. Skill 是路由器：只判断模式和读取策略，不复制项目正文。
+3. 渐进式披露：有任务时按 map 轻量加载；无任务时才进入状态与流程模式。
+4. 任务优先：用户带着明确任务时，不先输出完整状态面板。
+5. 项目规则在项目里：具体规范由 `_aipd/` 维护，Skill 只说明什么时候读哪里。

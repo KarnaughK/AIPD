@@ -1,6 +1,6 @@
 # OKR 目标管理 — 基础指引
 
-## 这一层在做什么
+## 本能力做什么
 
 AIPD 里的 OKR 默认指飞书 OKR。OKR 管理项目的中短期目标，并用于定期复盘执行情况。
 
@@ -72,4 +72,4 @@ lark-cli okr +batch-create --cycle-id <cycle_id> --input '[{"text":"O","krs":[{"
 lark-cli okr objectives delete --objective-id <objective_id> --yes
 ```
 
-项目级可复用流程见 `_adoc/sop/feishu-okr-cli/README.md`。
+项目级可复用流程见 `_aipd/sop/feishu-okr-cli/README.md`。

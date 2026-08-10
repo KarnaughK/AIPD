@@ -17,7 +17,7 @@
 用 Agent 打开 AIPD 仓库并说：
 
 ```text
-请先读取 AGENTS.md、_adoc/index.md 和 _adoc/map.md，
+请先读取 AGENTS.md、_aipd/index.md 和 _aipd/map.md，
 确认当前平台和安装边界，然后构建 AIPD。
 构建完成后先告诉我将安装到哪里，等我确认再安装。
 ```
@@ -36,8 +36,8 @@
 
 ```text
 AGENTS.md
-_adoc/index.md
-_adoc/map.md
+_aipd/index.md
+_aipd/map.md
 ```
 
 它们不需要立刻完整，但必须能够回答：Agent 先读哪里、当前项目的核心认知在哪里、常见任务下一跳去哪里。
@@ -52,7 +52,7 @@ _adoc/map.md
 缺失的入口请指出，但先不要改文件。
 ```
 
-如果 Agent 只能全仓搜索，说明 map 还没有最小价值。补高频入口，不要为了完整性扩写所有层级。
+如果 Agent 只能全仓搜索，说明 map 还没有最小价值。补高频入口，不要为了完整性扩写所有知识域和模块。
 
 ## 4. 创建并绑定第一个 Case
 
@@ -72,7 +72,7 @@ _adoc/map.md
 - 目标是否是一个短周期结果。
 - 要做 / 不做是否足以阻止顺手扩张。
 - 完成标准是否能用证据判断。
-- 上下文索引是否命中 L3 / L4 / L5 / README / 代码，而不是全量扫描。
+- 上下文索引是否命中当前任务必要的 Knowledge、SOP、README 和代码，而不是全量扫描。
 
 ## 5. 让 Case 自己承接长任务
 
@@ -104,9 +104,11 @@ case.md
 Case Close 后，检查哪些信息值得被下一次继承：
 
 ```text
-新核心关系         -> L3
-新产品边界         -> L4
-新跨模块工程规则   -> L5
+长期方向 / 边界      -> Intent（需用户确认）
+外部事实 / 调研结论  -> Research（保留来源与时间）
+新核心关系         -> Core
+新产品边界         -> Product
+新跨模块工程规则   -> Engineering
 新页面 / 组件入口  -> 就近 README
 新高频路径         -> map
 一次性过程         -> 留在 Case
@@ -134,7 +136,7 @@ Case Close 后，检查哪些信息值得被下一次继承：
 
 ## 接下来按问题深入
 
-- 读不懂 L1-L6 的边界：[ADOC 分层](../modules/adoc-layers.md)
+- 不知道信息应进入哪个知识域：[Knowledge 知识域](../modules/knowledge-domains.md)
 - map 总是太长或命不中：[Map 与检索](../modules/maps-and-retrieval.md)
 - Case 需要回跳或拆目标包：[Case 与 Work Package](../modules/case-and-step.md)
 - 不知道是否该派子 Agent：[Main / Child Agent](../modules/clone-agents.md)

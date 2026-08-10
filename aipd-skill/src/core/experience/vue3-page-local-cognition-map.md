@@ -4,7 +4,7 @@
 
 - 来源类型：真实 Vue3 后台项目的页面 README、`_map.md`、Mermaid 架构图覆盖审计，以及 AIPD 当前 Vue 架构图规则校准。
 - 真实规模：`src/views` 中有 83 个 `index.vue`、20 张正式组件架构图；约 11 张被 README / `_map.md` 明确索引，其余图的入口可发现性不足。
-- 经验性质：Vue3 / Nuxt 前端的 L6 局部认知实践。它说明什么时候需要局部入口和图，不复制详细 Mermaid 语法。
+- 经验性质：Vue3 / Nuxt 前端的真实代码局部认知实践。它说明什么时候需要局部入口和图，不复制详细 Mermaid 语法。
 
 ## 适用场景
 
@@ -37,7 +37,7 @@
 
 ## 图在 AIPD 生命周期中的位置
 
-架构图不是 L5 通用知识正文，它描述的是当前页面真实 L6 文件结构。
+架构图不是 Engineering 知识域的通用知识正文，它描述的是当前页面的真实代码文件结构。
 
 推荐流转：
 
@@ -107,7 +107,7 @@ Nuxt 页面图除了普通 Vue 组件关系，还应在确实影响边界时标�
 
 节点图形、HTML label、provider 圆柱、controller 六边形、AipdForm update 模块和粒度检查等详细规范，以 AIPD 内部文件为唯一事实源：
 
-`aipd-skill/src/core/L5-dev/vue-architecture-diagram-guide.md`
+`aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md`
 
 实践经验只负责告诉 Agent 什么时候读它、图应落在哪里、什么时候维护，不复制整套模板形成双事实源。
 

@@ -11,7 +11,7 @@ Case 是一个马上要完成并最终关闭的短周期目标容器。它类似
 - 目标与方向关联。
 - 本次要做 / 不做。
 - 完成标准。
-- L1-L6、局部 README 和必要流程材料的上下文索引。
+- 必要 Knowledge、真实代码、局部 README 和流程材料的上下文索引。
 - 执行中的边界变更记录。
 
 Goal 不再是独立 phase。Contract 是所有 phase 共同遵守的事实源。
@@ -36,7 +36,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 ## 标准目录
 
 ```text
-_adoc/case/cN-name/
+_aipd/case/cN-name/
 ├── case.md
 ├── 01-think/
 ├── 02-design/
@@ -104,9 +104,9 @@ Goal Mode 不改变 Case Contract、phase、Work Package 或验收标准，也�
 
 ```text
 AGENTS.md
--> _adoc/index.md
--> _adoc/map.md
--> _adoc/case/index.md
+-> _aipd/index.md
+-> _aipd/map.md
+-> _aipd/case/index.md
 -> 当前 case.md
 -> 当前 phase
 -> 当前 Work Package / artifact

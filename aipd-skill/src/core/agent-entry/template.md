@@ -1,155 +1,91 @@
 # AIPD Project Entry
 
-本项目使用 AIPD 维护项目认知。
+本项目使用 AIPD 维护项目认知与协作流程。
 
-AIPD 是面向 AI 协作的软件项目认知框架。它把项目从方向、调研、核心模型、产品结构到研发实现的关键判断沉淀下来，让 AI 不只看到代码结果，也能理解为什么这样设计。
+AIPD 是面向 AI 协作的软件项目认知框架。它把长期知识、检索地图和 Case / SOP / OKR 等流程状态放进同一个 `_aipd/` 工作区，让 AI 不只看到代码结果，也能理解为什么这样设计。
 
-## 认知层级
+## 五类并列知识域
 
-- **L1 Intent**：项目方向、目标和长期取舍。
-- **L2 Research**：方向所处的外部世界，包括用户、场景、需求、痛点、竞品、行业/玩法范式和调研结论。
-- **L3 Core**：项目内部靠哪些核心模型成立，包括核心对象、领域语言、核心流程、数据模型、增长模型或商业模型。
-- **L4 Product**：把 L3 核心模型落成产品功能、功能边界、业务规则、用户可见行为和相关实现入口。
-- **L5 Dev**：产品功能落到代码时的跨模块业务实现逻辑和工程规则，如权限、路由、第三方插件、前后端约定。
-- **L6 Code**：具体代码实现，不在 `_adoc/` 内；随项目类型分布在前端、后端、爬虫、脚本等代码目录中。
+- **Intent / `knowledge.intent`**：项目方向、目标和长期取舍。
+- **Research / `knowledge.research`**：方向所处的外部世界，包括用户、场景、需求、痛点、竞品、行业或玩法范式和调研结论。
+- **Core / `knowledge.core`**：项目内部赖以成立的核心模型，包括核心对象、领域语言、主流程、数据、增长或商业模型。
+- **Product / `knowledge.product`**：产品功能、功能边界、业务规则、用户可见行为和相关实现入口。
+- **Engineering / `knowledge.engineering`**：产品能力落到代码时的跨模块业务实现逻辑和工程规则，如权限、路由、第三方插件和前后端约定。
 
-任务处在哪个层级，就读取对应层级及必要上下游认知。
+五类知识域是并列分类，不是固定的递进读取顺序。具体代码仍分布在项目的真实源码目录中，不放进 `knowledge/`。
 
 ## 上下文检索
 
-AIPD 的工作不是直接“读某一层”，而是先检索任务需要的上下文。
+`_aipd/map.md` 是项目给 AI 准备的第一跳检索地图。它把用户说法、业务词和工程词路由到相关知识域、SOP、局部 README 和真实代码入口。
 
-`_adoc/map.md` 是本项目给 AI 准备的最快索引，不是额外任务。用户用自然语言描述需求时，通常不会同时给出准确代码路径；map 的作用就是用最少 token 把“用户说法 / 业务词 / 功能线 / 工程词”路由到相关 L3 / L4 / L5 / 局部 README / L6 代码入口，减少盲搜和误改。
+进入任何 AIPD 读取或写入前，先执行 Schema gate：按路径项存在性识别新旧根，因此损坏 symlink 和同名普通文件也不是“缺失”；双根、symlink 工作区或工作区内 symlink 均停止。当前 `_aipd` 必须是真实目录，`manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时，不猜测补全，回到 `aipd` 入口判定初始化或一次性迁移。
 
-L1-L5 是长期知识库，不是 case / OKR 的索引层。普通开发、找代码、查业务规则、查页面或组件实现时，默认只沿 L3 / L4 / L5 / 局部 README / L6 下钻，不读取 `_adoc/case/` 或 `_adoc/okr/`。只有用户明确要求创建、执行、恢复、归档 case，查看 / 更新 OKR，或当前任务本身就是 case Execute / case Close / OKR 对齐时，才进入 case / OKR。
-
-因此，读取 map 是为了更快、更准地完成用户当前命令，而不是覆盖用户命令。除非用户明确说“不要读取 AIPD 文档 / 不要查 map / 直接按我给的文件改”，否则涉及业务功能、页面、弹窗、权限、接口、核心概念或跨模块规则时，都应先用 map 做第一跳定位。
+Map 可以有三种分辨率：项目总图、业务线 / 功能线 / shared capability 的上下文 Map、代码就近局部实现图。它们是读取视图，不是新的知识分类，也不是每次都要走完的固定三级流程。
 
 进入任务后按以下顺序取上下文：
 
-1. 先读 `_adoc/index.md`。
-2. 读取 `_adoc/map.md`，用它把用户自然语言路由到 L3 / L4 / L5 / 局部 README / L6 代码入口；不要把普通任务路由到 case / OKR。
-3. 按任务需要读取 L3 核心概念、L4 产品功能、L5 工程实现规则和代码目录就近 README。
-4. 如果地图缺失或命中不清楚，用 `rg` 搜索 README、核心词、页面名、接口名和权限码等线索；仍不确定时先向用户确认边界。
+1. 先读 `_aipd/manifest.json` 和 `_aipd/index.md`。
+2. 读取 `_aipd/map.md`，用它把用户自然语言路由到相关知识域、SOP、局部 README 和代码入口。
+3. 按任务需要读取 `knowledge/{intent,research,core,product,engineering}/` 中的必要上下文以及代码就近 README。
+4. 地图缺失或命中不清楚时，用 `rg` 搜索 README、核心词、页面名、接口名和权限码等线索；仍不确定时再向用户确认边界。
 
-上下文地图只负责引路，不承载完整正文。关键路径要尽量扁平暴露，避免让 Agent 通过多层链接自行猜测。
+普通开发、找代码、查业务规则、页面或组件实现时，默认不读取 `_aipd/case/` 或 `_aipd/okr/`。只有用户明确要求创建、执行、恢复、归档 Case，查看或更新 OKR，或当前任务本身就在相应流程中，才进入这些目录。
 
-## 文档位置
+## 工作区位置
 
-- `_adoc/index.md` 是项目认知入口。
-- `_adoc/map.md` 是项目级记忆地图，负责把用户意图、业务词、工程词路由到具体认知和代码入口。
-- `_adoc/L1-*` 到 `_adoc/L5-*` 存放项目级认知，服务于 L6 代码实现。
-- `_adoc/L1-*` 到 `_adoc/L5-*` 不描述具体 case、当前 case 状态、OKR 执行状态或一次性过程；这些只放在 `_adoc/case/`、`_adoc/okr/` 或执行记录中。
-- L6 是具体代码实现，不写入 `_adoc/`，按项目类型分布在真实代码目录中。
-- 代码模块、页面、组件的局部认知，优先放在模块根目录或页面目录的 `README.md`。
-- `_adoc/L2-research/` 应维护方向所处的外部世界，痛点只是 L2 的一部分，竞品、玩法范式、市场观察、流量和变现资料也属于 L2 候选。
-- `_adoc/L3-core/` 应维护核心概念和项目成立模型，列出标准名、黑话/别名、关系、常见误解和细节文档入口。
-- `_adoc/L5-dev/` 更适合放产品功能到代码实现之间的跨模块业务实现逻辑、工程规则、前后端协作约定和索引。
-- `_adoc/sop/` 存放以 Agent 为运行时的可复用 AI 原生程序；SOP 不属于 L1-L5 知识库正文，也不是单纯脚本。
-- 具体页面、弹窗、组件内部的最后一层实现地图，放代码目录就近 `README.md`，不要塞回 L5。
+- `_aipd/manifest.json` 是工作区 Schema 标识。
+- `_aipd/index.md` 是项目认知入口。
+- `_aipd/map.md` 是任务上下文检索地图。
+- `_aipd/knowledge/` 存放五类长期知识。
+- `_aipd/sop/` 存放以 Agent 为运行时的可复用项目动作。
+- `_aipd/case/`、`_aipd/okr/` 和 `_aipd/inbox.md` 分别承载短周期事项、阶段目标和未整理信息，不属于长期知识正文。
+- 页面、弹窗、组件或模块内部的最后一层实现地图放在代码就近 `README.md`。
 
 ## 执行概念
 
-- **Case**：一次马上要推进并最终关闭的短周期目标容器；`case.md` 记录 Case Contract（目标、边界、验收标准、上下文索引）以及 Think / Design / Execute / Verify / Close 状态、设计边界、工作包和归档信息。
-- **Work Package / Step**：Case Execute phase 内可由 Main Agent 或子 Agent 执行的目标包；它负责可执行、可恢复和可验收的成果边界，不等于子 Agent 派发节点。新建 work package 放在 `03-execute/work-packages/`。`Step` 只作为旧称识别；旧 `steps/` 和旧 `01-goal/` 结构不再兼容运行，需先迁移为当前 contract + phase-first case。
-- **SOP**：以 Agent 为运行时的可复用 AI 原生程序，记录项目动作如何按步骤重复执行。
+- **Case**：一次马上要推进并最终关闭的短周期目标容器；`case.md` 记录 Case Contract 与 Think / Design / Execute / Verify / Close 状态。
+- **Work Package**：Case Execute phase 内可执行、可恢复、可验收的目标包，放在 `03-execute/work-packages/`；它不等于子 Agent 派发节点。
+- **SOP**：以 Agent 为运行时的可复用 AI 原生程序。
 - **OKR**：阶段目标，用来判断工作是否推进了项目方向。
-- **Weave**：把已完成、已实现、已验收的稳定信息，编织回项目 `_adoc/`、局部 README 或 map；未完成 case 中的候选先留在 Close 归档候选，一次性过程留在 case / work package。
+- **Weave**：把已完成、已实现、已验收的稳定信息编织回五类知识域、局部 README 或 Map；未完成 Case 中的候选先留在 Close phase。
+
+Weave 回写时，Intent 只接收用户明确确认的长期方向和边界；Research 只接收带来源与时间边界的稳定外部事实或调研结论；Core、Product、Engineering 只接收已确认或已验证的项目事实。
 
 ## Main / 子 Agent 调度
 
-AIPD 不把子 Agent 当成每个任务的默认步骤。Case / Goal / Work Package 负责目标连续性和压缩后恢复；运行时是否派发子 Agent，单独根据上下文隔离收益、真实并发收益、主线耦合度和调度成本判断。
+AIPD 不把子 Agent 当成每个任务的默认步骤。Main Agent 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本决定是否派发。
 
-不要只凭“这是调研 / 文件修改 / 构建 / 测试 / 多入口任务”机械派发。子 Agent 的收益应大于启动、上下文继承、协调、等待、合并和重复工作的成本。
+### AIPD 上下文检索 Agent
 
-### Codex 默认调度
+Main Agent 先按 `_aipd/map.md` 做最小路由。已知入口少、上下文可控时直接读取；需扫描大量项目知识、SOP 或多条独立上下文线时，优先使用 `aipd_context_retriever` 隔离检索过程。
 
-Main Agent 根据上述运行时判定自然选择是否创建子 Agent；平台能力不可用时，由 Main Agent 回退执行。
+- 检索 Agent 默认检索五类知识域、`_aipd/sop/`、必要 README 和代码入口。
+- Inbox、OKR 和 Case 是次级流程检索，只有用户明确提到或任务明显需要时才读取。
+- 如果 custom agent 不可用，降级为普通子 Agent，并由已安装的 `aipd-case` Skill 加载 `@references/agent-guides/aipd_context_retriever.md` 作为领域指引。
 
-- 子 Agent 调度是完成当前任务的内部执行方式，不扩大用户原始任务范围，也不授予额外的外部副作用权限。
-- install、远端写入、删除等有外部副作用的动作，仍遵守各自的确认边界，不能因为派发了子 Agent 而跳过。
-
-### ADOC 检索 Agent
-
-Main Agent 先按 `_adoc/map.md` 做最小路由。已知入口少、上下文可控时可直接读取；预计要扫描大量 `_adoc`、SOP 或多条独立认知线时，优先使用 `aipd_adoc_retriever` 隔离检索过程。
-
-- 判定 retriever 有明确净收益且当前平台支持时，Main Agent 创建 `aipd_adoc_retriever`；平台不可用时回退为 Main 直接检索。
-- 如果可以指定 custom agent 身份，优先使用 `aipd_adoc_retriever`；该身份优先于完整上下文继承，不要求同时 fork 当前对话上下文。
-- 派发时只传用户任务摘要、当前工作目录、必要边界和返回格式；不要把长对话或长文档复制进 prompt。
-- `aipd_adoc_retriever` 默认检索 L1-L5 和 `_adoc/sop/`；Inbox、OKR、Case 属于次级流程检索，只有用户明确提到或任务明显需要时才读取。
-- 如果 custom agent 不可用，降级为普通子 Agent，并由已安装的 `aipd-case` Skill 加载其包内 `@references/agent-guides/aipd_adoc_retriever.md` 作为领域指引；不要假设目标项目存在 AIPD 源码 checkout。
-
-Main Agent：
-
-- 负责用户沟通、意图判断、任务边界确认、子 Agent 调度、方案审核、验收、状态写回和结果汇总。
-- 先做最小路由，判断任务层级、事实入口、主线耦合度和是否存在值得隔离或并发的工作线。
-- 可以直接完成上下文规模可控、需要连续继承设计 / 代码 / 调试判断的内聚任务，并在里程碑把状态写回 case / work package。
-- 派发后不重复执行子 Agent 已承担的证据面，只吸收压缩后的结论、依据、风险、建议和必要文件路径。
+Main Agent 负责用户沟通、意图判断、边界确认、调度、验收和状态写回。派发后每条证据面只有一个 owner，Main 不重复调查，只吸收压缩结论、依据、风险、建议和必要文件路径。
 
 Build / Install 边界：
 
-- 修改 AIPD 源码后，可以直接运行 build 做低风险打包验证。
-- build 完成后，必须主动问用户是否执行 install；不要只说明“可能需要 install”。
-- install 会改写用户级或项目级 Agent 运行环境，只有用户明确确认后才执行安装命令。
-
-运行时判定：
-
-- **优先 Main**：单一路径或内聚模块；实现、调试与前序判断高度耦合；上下文规模可控；Case / Work Package 已足以承接压缩恢复；派发与合并成本预计高于收益。
-- **优先子 Agent 做上下文隔离**：长文档、长日志、大量页面结构、批量扫描或其他高噪声过程，且 Main 最终只需要少量结论。
-- **优先子 Agent 做并发加速**：存在两条以上真正独立、可同时推进、不会产生写入冲突的工作线，且墙钟时间收益明显。
-- **可选独立复核**：高风险结论需要第二视角，并且复核者无需重复继承整条主线。
-- 用户明确要求不派子 Agent，或平台不可用时，由 Main 回退执行。
-- 浏览器新流程、异常状态或路径不确定时，先与用户沟通再决定是否继续探索或派发；不要让 Agent 无边界深入或盲目绕路。
+- 修改 AIPD 源码后可以直接运行 build 做低风险打包验证。
+- build 完成后必须主动询问用户是否 install；install 只能在用户明确确认后执行。
 
 ## Case 锚定执行
 
-AIPD 的长期任务状态以 case / work package 文件为准，聊天上下文只是临时工作缓存。
-
-### 目标模式与 Case
-
-平台目标模式和 AIPD Case 是单向依赖关系：启动目标模式必须先绑定一个 Case；创建或推进 Case 不要求启动目标模式。检测到平台存在明确绑定当前 Case 的活动目标时，由 `aipd-case` 加载 Goal Mode 覆盖层；Case 本体保持不变。没有明确外部绑定时，不推断目标模式。
-
-项目 Agent 不应把长期连续性建立在聊天记忆上。每个会影响后续恢复路径的小步确认、状态变化、调研边界、设计决策、phase 跳转、work package 派发或执行结果，都应及时写回 `case.md`、当前 phase artifact、work package、局部 README 或 map。判断标准是恢复价值：压缩后丢失会改变后续方向的信息要落文件；不改变状态的解释、闲聊和未采纳想法不要膨胀文档。
-
-当发生上下文压缩、长任务续跑、状态不确定，或聊天记忆与项目文件不一致时，按以下链路恢复任务状态：
+AIPD 的长期任务状态以 Case / Work Package 文件为准，聊天上下文只是临时工作缓存。当发生上下文压缩、长任务续跑或状态不确定时，按以下链路恢复：
 
 ```text
-AGENTS.md -> _adoc/index.md -> _adoc/map.md -> _adoc/case/index.md -> 当前 case.md -> 当前 phase 目录 -> 当前 work package
+AGENTS.md -> _aipd/manifest.json -> _aipd/index.md -> _aipd/map.md -> _aipd/case/index.md -> 当前 case.md -> 当前 phase -> 当前 work package
 ```
 
-恢复规则：
-
-- 当前执行到哪个 case、哪个 phase、哪个 work package，以 `_adoc/case/index.md`、对应 `case.md`、phase 目录和 `03-execute/work-packages/` 文件为准。
-- 如果目标 case 仍是旧结构（例如顶层 `doc/`、`steps/`，或仍有独立 `01-goal/` 目录），不要读取旧 `steps/` 继续执行；先提示用户是否迁移为当前 contract + phase-first case。
-- 执行 case 或普通开发前，先确认是否已经按 `_adoc/map.md` 和 case 的上下文索引完成检索；没有完成时先补上下文包。
-- 聊天上下文与 case / work package 文件冲突时，先指出冲突，再以 case / work package 文件作为事实来源继续。
-- 每个会改变项目状态的 work package 完成后，必须把可恢复状态写回 work package 执行记录、`03-execute/execute.md` 和 case 状态。
+- 当前 Case、phase 和 Work Package 以 `_aipd/case/index.md`、对应 `case.md`、phase 目录和 `03-execute/work-packages/` 为准。
+- 执行 Case 或普通开发前，先确认已经按 `_aipd/map.md` 和 Case 上下文索引完成任务上下文检索。
+- 聊天与 Case / Work Package 文件冲突时，先指出冲突，再以文件为事实源。
+- 每个会改变项目状态的 Work Package 完成后，必须写回 Work Package 执行记录、`03-execute/execute.md` 和 Case 状态。
 - 大调研、长执行、批量验证、子 Agent 派发或 phase 跳转前，先写 checkpoint：当前问题、边界、预期输出、停止条件和返回位置。
-- `03-execute/work-packages/` 负责目标、上下文和验收边界，不是默认派发节点。每个 work package 进入执行时再按运行时判定选择 Main 或子 Agent；推荐 Agent 只在已经决定派发时用于选择角色。
-- 如果平台提供目标模式，先检查它是否已绑定当前 Case；目标模式的详细运行规则由 `aipd-case` 按外部绑定状态加载。
 
-子 Agent：
-
-- 看到“你是子 Agent”后，不再继续创建新的子 Agent，直接完成当前任务。
-- 读取 work package 文件和派发 prompt 明确列出的上下文文档，用它们校准任务边界和压缩后续跑状态。
-- 派发 prompt 已明确允许执行时，直接在边界内完成；只有范围、风险或外部副作用不清楚时才停下反馈 Main Agent。
-- 不擅自扩大范围，不主动推进下一步。
-- 返回简洁结果，默认只包含：结论、依据、风险、建议、改动文件、验证结果；不要回传完整搜索输出、长日志、长文件正文或完整 diff。
-
-派发规则：
-
-- 当前平台提供可用能力时，按任务触发信号创建 Codex 子 Agent；平台不可用时由 Main 回退执行。
-- 是否使用特定角色 Agent、是否降级为普通 worker + 领域指引，不要只凭记忆硬判断；优先读取本项目 `_adoc/map.md` 路由到相关 L5 Agent 调度规则、平台 agent-guide 或 `agent-guides` 领域指引。
-- 普通 AIPD 对话和 Case Execute 使用同一套净收益判定，不因任务类型或文件数量自动派发。
-- 派发时每条证据面只设一个 owner；Main 不重复调查。需要并发时，首轮只创建少量正交工作线，避免 fan-out 和尾部等待吞掉收益。
-- 默认传递最小必要上下文；Case / Work Package 和显式文件已足够时，不 fork 完整聊天。只有任务强依赖尚未落盘的主线判断时才继承更多上下文。
-- Work Package 如果声明 `推荐 Agent`，只在决定派发后优先按该身份选择角色；Main 直接执行时不受该字段约束。
-- 如果平台不支持某个推荐 Agent 身份，或工具层提示找不到该 Agent，不要因此阻塞任务；应查找项目中是否有对应领域指引文档，并在派发 prompt 中要求执行 Agent 先读取该指引。
-- 如果当前消息明确声明“你是 AIPD 子 Agent”，进入子 Agent 模式。
-- 否则默认 Main Agent 模式。
+子 Agent 看到“你是子 Agent”后不再创建新的子 Agent，而是读取 Work Package、Case 和派发 prompt 列出的上下文，只在边界内完成任务，并压缩返回结论、依据、风险、建议、改动文件和验证结果。
 
 ## 冲突规则
 
-用户当前指令定义本次任务目标。AIPD 提供项目默认认知和历史判断。
-
-当用户指令与 AIPD 认知冲突时，先指出冲突和风险，再继续。
+用户当前指令定义本次任务目标，AIPD 提供项目默认认知和历史判断。当两者冲突时，先指出冲突和风险，再继续。

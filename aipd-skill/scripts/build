@@ -31,6 +31,12 @@ build_platform() {
         cp -r "$skill_dir" "$dest"
         mkdir -p "$dest/references"
 
+        if [ "$skill_name" = "aipd" ]; then
+            mkdir -p "$dest/scripts"
+            cp "$SCRIPT_DIR/migrate-project-schema" "$dest/scripts/migrate-project-schema"
+            chmod +x "$dest/scripts/migrate-project-schema"
+        fi
+
         local in_inject=false
         while IFS= read -r line; do
             if [[ "$line" =~ ^inject-from-core: ]]; then

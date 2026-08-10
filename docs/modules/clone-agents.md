@@ -54,7 +54,7 @@ Work Package 定义的是目标、上下文、恢复和验收边界。它可以�
 
 AIPD 当前包含：
 
-- `aipd_adoc_retriever`：大量项目认知或多条独立认知线的检索与压缩。
+- `aipd_context_retriever`：从 Knowledge、SOP、必要流程状态、局部 README 和代码入口中检索并压缩当前任务上下文。
 - `aipd_product_manager`：Design requirements 的目标、规则、confirmed / assumed / open 梳理。
 - `aipd_vue_architect`：Vue 页面、组件、交互、状态与整体架构。
 - `aipd_vue_provider`：Vue `useXxx`、provide / inject、API 数据源和字段对齐。
@@ -65,5 +65,5 @@ AIPD 当前包含：
 
 具体平台怎样 fork 或传递上下文属于平台实现，不写成 AIPD 的通用承诺。通用原则只有两个：
 
-1. 已落盘的 Case / Work Package / `_adoc` 足以恢复时，优先传最小文件上下文。
+1. 已落盘的 Case / Work Package / `_aipd` 足以恢复时，优先传最小文件上下文。
 2. 任务强依赖尚未落盘的主线判断时，才增加会话上下文继承。

@@ -222,8 +222,8 @@ for (const reference of localAssetReferences) {
 
 const formalBrandRoots = [
   join(repositoryRoot, 'README.md'),
-  join(repositoryRoot, '_adoc', 'map.md'),
-  join(repositoryRoot, '_adoc', 'L5-dev'),
+  join(repositoryRoot, '_aipd', 'map.md'),
+  join(repositoryRoot, '_aipd', 'knowledge', 'engineering'),
   join(repositoryRoot, 'aipd-skill', 'src'),
   assetsRoot,
 ]

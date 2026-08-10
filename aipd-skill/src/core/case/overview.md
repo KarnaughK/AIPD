@@ -58,7 +58,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 Case 内部按 phase 解耦。新建 case 不再按材料类型拆成顶层 `doc/`、`steps/`、`code/`，也不再把目标拆成独立 `01-goal/` 目录，而是把目标契约放在 `case.md`，其余展开材料按 phase 平铺：
 
 ```text
-_adoc/case/cN-name/
+_aipd/case/cN-name/
 ├── case.md
 ├── 01-think/
 ├── 02-design/
@@ -194,7 +194,7 @@ Case 运行要有节奏感，不应一恢复就直接跨 phase 推进。
 - Think -> Design、Design -> Execute、Verify -> Close 这类关键跳转需要用户确认。
 - Design 产物没有得到用户确认前，不创建正式 Execute work package。
 - 执行中发现边界变化、架构变化或实现偏差时，先回到对应层处理，不把偏差直接混进执行记录。
-- 执行中想到“以后可能要反向编织”的内容，先记入 Close phase 的归档候选；case 未完成前不写入 L1-L5、README 或 map。
+- 执行中想到“以后可能要反向编织”的内容，先记入 Close phase 的归档候选；case 未完成前不写入五类知识域、README 或 map。
 
 ## Close 归档候选
 

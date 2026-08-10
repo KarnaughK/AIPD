@@ -31,7 +31,7 @@
    建立任务前读认知、任务中承接状态、任务后回写经验的完整心智模型。
 
 3. [先建立最小认知闭环](guide/03-knowledge-base-minimum-loop.md)
-   理解 `_adoc`、L1-L6、map 和初始化后第一次有效读取。
+   理解 `_aipd`、五类 Knowledge、map 和初始化后第一次有效读取。
 
 4. [用第一个 Case 完成真实目标](guide/04-case-step-development.md)
    走过 Case Contract、Think、Design、Work Package、Verify 与 Close。
@@ -46,7 +46,7 @@
 
 ### Agent 怎么读懂项目
 
-- [ADOC 分层](modules/adoc-layers.md)：L1-L5 长期认知、L6 代码和流程状态如何分工。
+- [Knowledge 知识域](modules/knowledge-domains.md)：五类长期认知、真实代码和流程状态如何分工。
 - [Map 与检索](modules/maps-and-retrieval.md)：为什么先走 map，再用搜索兜底。
 - [Agent Entry](modules/agent-entry.md)：Agent 进入项目和恢复 Case 时的第一跳规则。
 
@@ -60,7 +60,7 @@
 ### 信息怎么捕获和写回
 
 - [Inbox](modules/inbox.md)：先记一下，但不提前当成项目事实。
-- [Weave](modules/weave.md)：把已完成、已验证的信息写回正确层级。
+- [Weave](modules/weave.md)：把已完成、已验证的信息写回正确知识域。
 - [Skill 概览](modules/skills-overview.md)：九个入口各自负责什么，常见组合是什么。
 
 ### 代码和工程怎么继续深入
@@ -74,6 +74,6 @@
 |---|---|---|
 | 根 `README.md` | 第一次看到项目的人 | 判断 AIPD 是什么、是否适合、怎样开始 |
 | `docs/` | 学习和使用 AIPD 的人 | 完成教程、理解原理、工作时查能力 |
-| `_adoc/` | 进入当前项目工作的 Agent | 读取项目长期事实、任务上下文和恢复状态 |
+| `_aipd/` | 进入当前项目工作的 Agent | 读取项目 Knowledge、任务上下文和恢复状态 |
 
-`docs/` 不能替代 `_adoc`，`_adoc` 也不是写给人从头通读的用户手册。
+`docs/` 不能替代 `_aipd`，`_aipd` 也不是写给人从头通读的用户手册。

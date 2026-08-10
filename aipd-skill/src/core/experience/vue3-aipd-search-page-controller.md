@@ -2,7 +2,7 @@
 
 ## 来源
 
-- 来源类型：真实 Vue3 后台项目的搜索会话 controller、L5 列表规则和使用面审计。
+- 来源类型：真实 Vue3 后台项目的搜索会话 controller、Engineering 知识域列表规则和使用面审计。
 - 真实规模：20 个 SearchController、83 个 Filter、13 个 Pagination，114 个源码文件导入相关资产。
 - 经验性质：来源架构模式已经大规模使用，不是试验思路；AIPD reference implementation 是重写实现，当前通过核心单测与编译 smoke，不等于已经大规模生产运行。
 

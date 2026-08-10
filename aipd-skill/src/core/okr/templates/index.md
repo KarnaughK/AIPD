@@ -19,6 +19,6 @@ OKR 用来记录项目阶段目标，帮助判断 Case 是否真的推进了项�
 ## 推荐结构
 
 ```text
-_adoc/okr/
+_aipd/okr/
 └── index.md
 ```

@@ -28,7 +28,7 @@ for legacy in "${AIPD_LEGACY_SKILLS[@]}"; do
     fi
 done
 
-for legacy in frontend-architect aipd-frontend-architect aipd-vue-architect aipd-vue-provider; do
+for legacy in "${AIPD_LEGACY_AGENTS[@]}"; do
     target="$AGENTS_TARGET_DIR/$legacy.toml"
     if [ -e "$target" ] || [ -L "$target" ]; then
         rm -rf "$target"

@@ -38,7 +38,7 @@
 - **禁止的边界穿透**：{不允许出现的跨目录引用、内部状态访问或主干回流}
 - **共享变化权限**：{允许新增 / 上移哪些 shared；默认不允许}
 - **独立验收边界**：{怎样证明当前上下文可独立理解、修改和验证}
-- **认知回写**：{实现稳定后更新哪个 L5 / 局部 README / map；无则写无}
+- **认知回写**：{实现稳定后更新哪些 Intent / Research / Core / Product / Engineering 知识域、局部 README 或 map；无则写无}
 
 ## 不允许固化的假设
 
@@ -61,7 +61,7 @@
 - `{case.md}`
 - `{02-design/design.md 或 case.md Design 摘要}`
 - `{02-design/requirements-contract.md / backend-design.md / frontend-design.md / context-boundary.md / readiness-gate.md，如存在}`
-- `{相关 L3 / L4 / L5 / README / 代码入口}`
+- `{相关五类知识域、README、真实代码入口}`
 
 ## 执行前 checkpoint
 

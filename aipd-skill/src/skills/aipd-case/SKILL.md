@@ -67,16 +67,17 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 
 每次进入 `aipd-case`，先读取：
 
-1. `_adoc/index.md`
-2. `_adoc/map.md`
-3. `_adoc/case/index.md`
+1. 先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时立即停止，不猜测补全。
+2. `_aipd/index.md`
+3. `_aipd/map.md`
+4. `_aipd/case/index.md`
 
 如果用户指定 case，读取指定 case。若未指定且只有一个进行中 case，默认使用该 case。若有多个候选 case，先询问用户选择。
 
 读取目标 case：
 
 ```text
-_adoc/case/{case-dir}/case.md
+_aipd/case/{case-dir}/case.md
 ```
 
 如果目标 case 仍是旧结构（例如存在顶层 `doc/`、`steps/`，或仍使用 `01-goal/` 到 `06-close/` 的旧 Goal phase 结构），停止当前推进，不读取旧 `steps/` 继续执行，只提示：
@@ -158,15 +159,15 @@ Think、Execute、Verify 默认不重复加载完整指南。拓扑敏感 Work P
 若当前 phase 内容太长，不要把全过程塞进 case.md。把展开材料写到对应 phase 目录：
 
 ```text
-_adoc/case/{case-dir}/case.md
-_adoc/case/{case-dir}/01-think/think.md
-_adoc/case/{case-dir}/01-think/{research-or-decision-branch}/summary.md
-_adoc/case/{case-dir}/02-design/design.md
-_adoc/case/{case-dir}/02-design/decision-log.md
-_adoc/case/{case-dir}/03-execute/execute.md
-_adoc/case/{case-dir}/03-execute/work-packages/{work-package}.md
-_adoc/case/{case-dir}/04-verify/verify.md
-_adoc/case/{case-dir}/05-close/close.md
+_aipd/case/{case-dir}/case.md
+_aipd/case/{case-dir}/01-think/think.md
+_aipd/case/{case-dir}/01-think/{research-or-decision-branch}/summary.md
+_aipd/case/{case-dir}/02-design/design.md
+_aipd/case/{case-dir}/02-design/decision-log.md
+_aipd/case/{case-dir}/03-execute/execute.md
+_aipd/case/{case-dir}/03-execute/work-packages/{work-package}.md
+_aipd/case/{case-dir}/04-verify/verify.md
+_aipd/case/{case-dir}/05-close/close.md
 ```
 
 case.md 保留 Case Contract、Case Runtime、压缩后的 phase 摘要和链接，不承载 phase 展开过程。

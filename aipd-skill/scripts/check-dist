@@ -16,6 +16,11 @@ EXPECTED_SKILLS=(
     aipd-update
     aipd-weave
 )
+EXPECTED_CODEX_AGENTS=(
+    aipd_context_retriever
+    aipd_vue_architect
+    aipd_vue_provider
+)
 ALLOWED_PLATFORM_DIFFS=(
     aipd-case/references/agent-guide.md
     aipd-learn/references/learn-session-locator.md
@@ -62,6 +67,44 @@ check_source_sync() {
     done
 }
 
+check_codex_agent_set() {
+    local source_agents="$PROJECT_ROOT/src/platforms/codex/agents"
+    local dist_agents="$DIST_ROOT/codex/agents"
+    local expected_file source_file dist_file agent
+    expected_file=$(mktemp)
+    source_file=$(mktemp)
+    dist_file=$(mktemp)
+
+    printf '%s\n' "${EXPECTED_CODEX_AGENTS[@]}" | sort > "$expected_file"
+    find "$source_agents" -mindepth 1 -maxdepth 1 -type f -name '*.toml' \
+        -exec basename {} .toml \; | sort > "$source_file"
+    find "$dist_agents" -mindepth 1 -maxdepth 1 -type f -name '*.toml' \
+        -exec basename {} .toml \; | sort > "$dist_file"
+
+    if ! diff -u "$expected_file" "$source_file" >/dev/null; then
+        fail "Codex Agent 源码集合不是预期 3 项"
+        diff -u "$expected_file" "$source_file" || true
+    fi
+    if ! diff -u "$expected_file" "$dist_file" >/dev/null; then
+        fail "Codex Agent 产物集合不是预期 3 项"
+        diff -u "$expected_file" "$dist_file" || true
+    fi
+
+    for agent in "${EXPECTED_CODEX_AGENTS[@]}"; do
+        if ! rg -q "^name = \"$agent\"$" "$source_agents/$agent.toml"; then
+            fail "Codex Agent 源码名称不匹配: $agent"
+        fi
+        if ! rg -q "^name = \"$agent\"$" "$dist_agents/$agent.toml"; then
+            fail "Codex Agent 产物名称不匹配: $agent"
+        fi
+    done
+
+    if find "$source_agents" "$dist_agents" -name 'aipd_adoc_retriever.toml' -print -quit | rg -q .; then
+        fail "旧 aipd_adoc_retriever Agent 仍存在于源码或产物"
+    fi
+    rm -f "$expected_file" "$source_file" "$dist_file"
+}
+
 check_static_references() {
     local platform="$1"
     local skill_root skill_file ref ref_path
@@ -103,7 +146,7 @@ check_platform_parity() {
 
 check_semantic_regressions() {
     local dist_skills="$DIST_ROOT/codex/skills"
-    local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入|横向铺模块|横向铺开'
+    local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入|横向铺模块|横向铺开|L1-intent|L2-research|L3-core|L4-product|L5-dev|aipd_adoc_retriever'
     if rg -n "$forbidden" "$dist_skills" --glob '*.md'; then
         fail "最终产物命中当前流程禁止语义"
     fi
@@ -168,6 +211,95 @@ check_cleanup_entrypoints() {
     if ! rg -q 'aipd-case-create aipd-case-run aipd-case-archive' "$SCRIPT_DIR/legacy-skills"; then
         fail "共享 legacy cleanup 缺少旧 Case Skill"
     fi
+    if ! rg -q 'aipd_adoc_retriever' "$SCRIPT_DIR/legacy-skills"; then
+        fail "共享 legacy cleanup 缺少旧 aipd_adoc_retriever Agent"
+    fi
+    for script in install-codex install-project-codex dev-codex; do
+        if ! rg -q 'AIPD_LEGACY_AGENTS' "$SCRIPT_DIR/$script"; then
+            fail "$script 未复用共享 legacy Agent cleanup"
+        fi
+    done
+}
+
+check_schema_migrator() {
+    local platform packaged_migrator
+    if [ ! -x "$SCRIPT_DIR/migrate-project-schema" ]; then
+        fail "migrate-project-schema 缺失或不可执行"
+        return
+    fi
+    if [ ! -x "$SCRIPT_DIR/check-schema-migrator" ]; then
+        fail "check-schema-migrator 缺失或不可执行"
+        return
+    fi
+    if ! "$SCRIPT_DIR/check-schema-migrator"; then
+        fail "AIPD Schema migrator fixture 校验失败"
+    fi
+
+    for platform in codex claude; do
+        packaged_migrator="$DIST_ROOT/$platform/skills/aipd/scripts/migrate-project-schema"
+        if [ ! -x "$packaged_migrator" ]; then
+            fail "$platform/aipd 缺少可执行的一次性 Schema migrator"
+        elif ! cmp -s "$SCRIPT_DIR/migrate-project-schema" "$packaged_migrator"; then
+            fail "$platform/aipd 的 Schema migrator 与源码不同步"
+        fi
+    done
+}
+
+check_schema_manifest_contract() {
+    local source_manifest="$PROJECT_ROOT/src/core/workspace/templates/manifest.json"
+    local expected_manifest platform dist_manifest
+    expected_manifest=$(mktemp)
+    printf '%s\n' '{' '  "schema": "aipd-project",' '  "schemaVersion": 2' '}' > "$expected_manifest"
+
+    if ! cmp -s "$expected_manifest" "$source_manifest"; then
+        fail "Schema manifest 模板不符合 aipd-project v2 精确合同"
+    fi
+    if ! rg -q '@references/workspace/templates/manifest.json' "$SRC_SKILLS/aipd/SKILL.md"; then
+        fail "aipd 初始化入口未读取 Schema manifest 模板"
+    fi
+
+    for platform in codex claude; do
+        dist_manifest="$DIST_ROOT/$platform/skills/aipd/references/workspace/templates/manifest.json"
+        if ! cmp -s "$source_manifest" "$dist_manifest"; then
+            fail "$platform/aipd 的 Schema manifest 模板未与源码同步"
+        fi
+    done
+    rm -f "$expected_manifest"
+}
+
+check_schema_runtime_gates() {
+    local file
+    local gate_files=(
+        "$SRC_SKILLS/aipd/SKILL.md"
+        "$SRC_SKILLS/aipd/references/scan-agent.md"
+        "$SRC_SKILLS/aipd-case/SKILL.md"
+        "$SRC_SKILLS/aipd-inbox/SKILL.md"
+        "$SRC_SKILLS/aipd-learn/SKILL.md"
+        "$SRC_SKILLS/aipd-mermaid/SKILL.md"
+        "$SRC_SKILLS/aipd-okr/SKILL.md"
+        "$SRC_SKILLS/aipd-update/SKILL.md"
+        "$SRC_SKILLS/aipd-weave/SKILL.md"
+        "$PROJECT_ROOT/src/core/agent-entry/template.md"
+        "$PROJECT_ROOT/src/core/agent-guides/aipd_context_retriever.md"
+        "$PROJECT_ROOT/src/platforms/codex/core/agent-guide.md"
+        "$PROJECT_ROOT/src/platforms/claude/core/agent-guide.md"
+    )
+
+    for file in "${gate_files[@]}"; do
+        if ! rg -q '路径项存在性' "$file"; then
+            fail "Schema runtime gate 未声明路径项存在语义: ${file#$PROJECT_ROOT/}"
+        fi
+        if ! rg -q 'symlink' "$file"; then
+            fail "Schema runtime gate 未声明 symlink 拒绝规则: ${file#$PROJECT_ROOT/}"
+        fi
+    done
+
+    if ! rg -Fq '`test -e _aipd || test -L _aipd`' "$SRC_SKILLS/aipd/SKILL.md"; then
+        fail "aipd 主入口未以 path-entry 语义识别当前工作区"
+    fi
+    if ! rg -Fq '`test -e _adoc || test -L _adoc`' "$SRC_SKILLS/aipd/SKILL.md"; then
+        fail "aipd 主入口未以 path-entry 语义识别旧根拒绝性哨兵"
+    fi
 }
 
 for platform in codex claude; do
@@ -177,13 +309,17 @@ for platform in codex claude; do
 done
 
 check_platform_parity
+check_codex_agent_set
 check_semantic_regressions
 check_code_topology_projection
 check_cleanup_entrypoints
+check_schema_migrator
+check_schema_manifest_contract
+check_schema_runtime_gates
 
 if [ "$CHECK_FAILED" -ne 0 ]; then
     echo "AIPD dist 检查失败。" >&2
     exit 1
 fi
 
-echo "AIPD dist 检查通过：9 个 Skill、源码同步、静态引用、平台差异、代码拓扑投影、关键语义和 cleanup 入口均正常。"
+echo "AIPD dist 检查通过：9 个 Skill、3 个 Codex Agent、源码同步、静态引用、平台差异、Schema migrator、代码拓扑投影、关键语义和 cleanup 入口均正常。"

@@ -1,0 +1,1253 @@
+#!/usr/bin/env node
+
+const { spawnSync } = require('node:child_process')
+const {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  renameSync,
+  rmdirSync,
+  rmSync,
+  writeFileSync,
+} = require('node:fs')
+const {
+  dirname,
+  isAbsolute,
+  join,
+  posix,
+  relative,
+  resolve,
+  sep,
+} = require('node:path')
+
+const SCHEMA_MANIFEST = Object.freeze({
+  schema: 'aipd-project',
+  schemaVersion: 2,
+})
+
+const LEGACY_ROOT = '_adoc'
+const CURRENT_ROOT = '_aipd'
+const REQUIRED_ROOT_FILES = ['index.md', 'map.md', 'inbox.md']
+const REQUIRED_PROCESS_DIRECTORIES = ['sop', 'case', 'okr']
+const IGNORABLE_WORKSPACE_FILE_NAMES = new Set(['.DS_Store'])
+const KNOWLEDGE_MAPPINGS = Object.freeze([
+  ['L1-intent', 'intent'],
+  ['L2-research', 'research'],
+  ['L3-core', 'core'],
+  ['L4-product', 'product'],
+  ['L5-dev', 'engineering'],
+])
+
+const PROJECT_AGENT_PATH_MAPPINGS = Object.freeze([
+  [
+    '.codex/agents/aipd_adoc_retriever.toml',
+    '.codex/agents/aipd_context_retriever.toml',
+  ],
+  [
+    '.claude/agents/aipd_adoc_retriever.md',
+    '.claude/agents/aipd_context_retriever.md',
+  ],
+])
+
+const REPOSITORY_PATH_MAPPINGS = Object.freeze([
+  ...KNOWLEDGE_MAPPINGS.map(([legacy, current]) => [
+    `${LEGACY_ROOT}/${legacy}`,
+    `${CURRENT_ROOT}/knowledge/${current}`,
+  ]),
+  ...PROJECT_AGENT_PATH_MAPPINGS,
+  [LEGACY_ROOT, CURRENT_ROOT],
+].sort(([left], [right]) => right.length - left.length))
+
+const KNOWLEDGE_TERM_MAPPINGS = Object.freeze([
+  ['L3 / L4 / L5 / L6', 'Core / Product / Engineering / 真实代码'],
+  ['L3/L4/L5/L6', 'Core/Product/Engineering/真实代码'],
+  ['L3 / L4 / L5', 'Core / Product / Engineering'],
+  ['L3/L4/L5', 'Core/Product/Engineering'],
+  ['L1-L6', '五类 Knowledge 与真实代码'],
+  ['L1-L5', '五类 Knowledge'],
+  ['L1 到 L5', '五类 Knowledge'],
+  ['L1 Intent', 'Intent knowledge domain (`knowledge.intent`)'],
+  ['L2 Research', 'Research knowledge domain (`knowledge.research`)'],
+  ['L3 Core', 'Core knowledge domain (`knowledge.core`)'],
+  ['L4 Product', 'Product knowledge domain (`knowledge.product`)'],
+  ['L5 Dev', 'Engineering knowledge domain (`knowledge.engineering`)'],
+  ['L6 Code', 'real project code (outside `_aipd/`)'],
+  ['认知层级', '并列知识域'],
+  ['知识层级', '知识域'],
+  ['对应层级', '对应知识域'],
+])
+
+const STANDALONE_KNOWLEDGE_NAME_MAPPINGS = Object.freeze([
+  ['L1-intent', '`knowledge.intent`'],
+  ['L2-research', '`knowledge.research`'],
+  ['L3-core', '`knowledge.core`'],
+  ['L4-product', '`knowledge.product`'],
+  ['L5-dev', '`knowledge.engineering`'],
+])
+
+const TEXT_REWRITE_MAPPINGS = Object.freeze([
+  ...REPOSITORY_PATH_MAPPINGS,
+  ...KNOWLEDGE_TERM_MAPPINGS,
+  ['aipd_adoc_retriever', 'aipd_context_retriever'],
+])
+
+const LEGACY_KNOWLEDGE_NAMES = KNOWLEDGE_MAPPINGS.map(([legacy]) => legacy)
+const RELATIVE_KNOWLEDGE_PATH_EXPRESSION = new RegExp(
+  `(^|[^A-Za-z0-9_.-])((?:(?:\\.\\.?)/)+)(${LEGACY_KNOWLEDGE_NAMES.join('|')})(?=$|[^A-Za-z0-9_-])`,
+  'gu',
+)
+const BARE_RELATIVE_KNOWLEDGE_PATH_EXPRESSION = new RegExp(
+  `(^|[^A-Za-z0-9_./-])(${LEGACY_KNOWLEDGE_NAMES.join('|')})(?=/)`,
+  'gu',
+)
+
+const MIGRATION_TOOL_PATHS = new Set([
+  'aipd-skill/scripts/check-dist',
+  'aipd-skill/scripts/check-schema-migrator',
+  'aipd-skill/scripts/legacy-skills',
+  'aipd-skill/scripts/migrate-project-schema',
+])
+
+const ALLOWED_RESIDUAL_FRAGMENTS = new Map([
+  ['README.md', ['旧项目仍使用 `_adoc/` 与 L1-L5 目录']],
+  [`${CURRENT_ROOT}/map.md`, ['旧 `_adoc` / L1-L5']],
+  [`${CURRENT_ROOT}/knowledge/product/index.md`, [
+    '旧 `_adoc` / L1-L5',
+  ]],
+  [`${CURRENT_ROOT}/knowledge/product/map.md`, [
+    '旧 `_adoc` / L1-L5',
+  ]],
+  [`${CURRENT_ROOT}/knowledge/core/workspace-modules.md`, [
+    '过去把 L1-L5 同时当成推导过程、存储结构和读取顺序',
+  ]],
+  ['docs/modules/build-and-install.md', [
+    '仍使用 `_adoc/` 与 L1-L5 目录',
+  ]],
+  ['aipd-skill/src/skills/aipd/SKILL.md', ['`test -e _adoc || test -L _adoc`']],
+])
+
+const WORKSPACE_REPLACEMENT_PATHS = new Map([
+  [
+    `${CURRENT_ROOT}/knowledge/core/vertical-concept-modules.md`,
+    `${CURRENT_ROOT}/knowledge/core/workspace-modules.md`,
+  ],
+])
+
+const LEGACY_HISTORY_PATHS = Object.freeze([
+  `${LEGACY_ROOT}/development-log.md`,
+  `${CURRENT_ROOT}/development-log.md`,
+])
+
+// Archive files are non-executable historical snapshots. The active c22 Case is
+// the migration contract itself; both may describe the legacy schema literally.
+const LEGACY_HISTORY_PATH_PREFIXES = Object.freeze([
+  `${LEGACY_ROOT}/case/archive/`,
+  `${CURRENT_ROOT}/case/archive/`,
+  `${LEGACY_ROOT}/case/c22-aipd-knowledge-schema/`,
+  `${CURRENT_ROOT}/case/c22-aipd-knowledge-schema/`,
+])
+
+const EXCLUDED_TEXT_DIRECTORY_NAMES = new Set([
+  '.git',
+  '.cache',
+  '.next',
+  '.nuxt',
+  '.output',
+  '.pnpm-store',
+  '.venv',
+  'Pods',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+  'out',
+  'target',
+  'vendor',
+  'venv',
+])
+
+const scriptPath = realpathSync(__filename)
+const textDecoder = new TextDecoder('utf-8', { fatal: true })
+const AGENT_ENTRY_START = '<!-- AIPD:START -->'
+const AGENT_ENTRY_END = '<!-- AIPD:END -->'
+
+class MigrationError extends Error {}
+
+function usage() {
+  return [
+    '用法:',
+    '  migrate-project-schema --dry-run /absolute/project/path',
+    '  migrate-project-schema /absolute/project/path',
+    '  migrate-project-schema --check /absolute/project/path',
+  ].join('\n')
+}
+
+function fail(message) {
+  throw new MigrationError(message)
+}
+
+function readAgentEntryTemplate() {
+  const candidates = [
+    resolve(dirname(scriptPath), '..', 'references', 'agent-entry', 'template.md'),
+    resolve(dirname(scriptPath), '..', 'src', 'core', 'agent-entry', 'template.md'),
+  ]
+  const templatePath = candidates.find((path) => existsSync(path))
+  if (!templatePath) {
+    fail('迁移器缺少当前 Agent Entry 模板；请从已安装的 aipd Skill 或 AIPD 源码仓库运行。')
+  }
+  return readFileSync(templatePath, 'utf8').trim()
+}
+
+const agentEntryTemplate = readAgentEntryTemplate()
+
+function parseArguments(argumentsList) {
+  let mode = 'migrate'
+  let projectArgument = null
+
+  for (const argument of argumentsList) {
+    if (argument === '--dry-run' || argument === '--check') {
+      if (mode !== 'migrate') fail('只能指定一个模式：--dry-run 或 --check。')
+      mode = argument === '--dry-run' ? 'dry-run' : 'check'
+      continue
+    }
+    if (argument === '--help' || argument === '-h') {
+      console.log(usage())
+      process.exit(0)
+    }
+    if (argument.startsWith('-')) fail(`未知选项：${argument}`)
+    if (projectArgument !== null) fail('只能指定一个项目路径。')
+    projectArgument = argument
+  }
+
+  if (projectArgument === null) fail('必须显式指定项目绝对路径。')
+  if (!isAbsolute(projectArgument)) fail(`项目路径必须是绝对路径：${projectArgument}`)
+
+  return {
+    mode,
+    projectRoot: resolve(projectArgument),
+  }
+}
+
+function runGit(projectRoot, args, { binary = false } = {}) {
+  const result = spawnSync('git', ['-C', projectRoot, ...args], {
+    encoding: binary ? undefined : 'utf8',
+    maxBuffer: 32 * 1024 * 1024,
+    shell: false,
+  })
+
+  if (result.error) fail(`无法执行 git：${result.error.message}`)
+  if (result.status !== 0) {
+    const detail = binary
+      ? result.stderr?.toString('utf8').trim()
+      : result.stderr?.trim()
+    fail(detail || `git ${args.join(' ')} 执行失败。`)
+  }
+  return result.stdout
+}
+
+function assertGitRoot(projectRoot) {
+  if (!existsSync(projectRoot)) fail(`项目路径不存在：${projectRoot}`)
+
+  const rootStat = lstatSync(projectRoot)
+  if (rootStat.isSymbolicLink()) fail(`项目根不能是 symlink：${projectRoot}`)
+  if (!rootStat.isDirectory()) fail(`项目路径不是目录：${projectRoot}`)
+
+  const canonicalRoot = realpathSync(projectRoot)
+
+  const gitRootOutput = runGit(projectRoot, ['rev-parse', '--show-toplevel'])
+  const gitRoot = realpathSync(gitRootOutput.trim())
+  if (gitRoot !== canonicalRoot) {
+    fail(`指定路径不是 Git 工作树根：${projectRoot}（实际根：${gitRoot}）`)
+  }
+  return canonicalRoot
+}
+
+function assertCleanWorktree(projectRoot) {
+  const status = runGit(
+    projectRoot,
+    ['status', '--porcelain=v1', '-z', '--untracked-files=all'],
+    { binary: true },
+  )
+  if (status.length > 0) {
+    fail('Git 工作树不干净；请先提交、暂存到其他工作树或移除改动后再迁移。')
+  }
+}
+
+function parseTrackedEntries(projectRoot) {
+  const output = runGit(projectRoot, ['ls-files', '-s', '-z'], { binary: true })
+  const entries = []
+
+  for (const record of output.toString('utf8').split('\0')) {
+    if (!record) continue
+    const tabIndex = record.indexOf('\t')
+    if (tabIndex === -1) fail('无法解析 git ls-files 输出。')
+    const metadata = record.slice(0, tabIndex).split(' ')
+    entries.push({
+      mode: metadata[0],
+      path: record.slice(tabIndex + 1),
+    })
+  }
+  return entries
+}
+
+function parseHeadEntries(projectRoot) {
+  const headCheck = spawnSync(
+    'git',
+    ['-C', projectRoot, 'rev-parse', '--verify', 'HEAD'],
+    { encoding: 'utf8', shell: false },
+  )
+  if (headCheck.error) fail(`无法执行 git：${headCheck.error.message}`)
+  if (headCheck.status !== 0) return []
+
+  const output = runGit(
+    projectRoot,
+    ['ls-tree', '-r', '-z', 'HEAD'],
+    { binary: true },
+  )
+  const entries = []
+  for (const record of output.toString('utf8').split('\0')) {
+    if (!record) continue
+    const tabIndex = record.indexOf('\t')
+    if (tabIndex === -1) fail('无法解析 git ls-tree 输出。')
+    entries.push({
+      mode: record.slice(0, tabIndex).split(' ')[0],
+      path: record.slice(tabIndex + 1),
+    })
+  }
+  return entries
+}
+
+function mergeTrackedEntries(...entrySets) {
+  const mergedEntries = []
+  const seenPaths = new Set()
+  for (const entries of entrySets) {
+    for (const entry of entries) {
+      if (seenPaths.has(entry.path)) continue
+      seenPaths.add(entry.path)
+      mergedEntries.push(entry)
+    }
+  }
+  return mergedEntries
+}
+
+function parseUntrackedEntries(projectRoot) {
+  const output = runGit(
+    projectRoot,
+    ['ls-files', '--others', '--exclude-standard', '-z'],
+    { binary: true },
+  )
+  return output.toString('utf8').split('\0').filter(Boolean).map((path) => ({
+    mode: '100644',
+    path,
+  }))
+}
+
+function assertNoIgnoredWorkspaceEntries(projectRoot, workspaceRoot) {
+  const output = runGit(
+    projectRoot,
+    [
+      'ls-files',
+      '--others',
+      '--ignored',
+      '--exclude-standard',
+      '-z',
+      '--',
+      workspaceRoot,
+    ],
+    { binary: true },
+  )
+  const ignoredPath = output.toString('utf8').split('\0').find((path) => (
+    path && !IGNORABLE_WORKSPACE_FILE_NAMES.has(posix.basename(path))
+  ))
+  if (ignoredPath) {
+    fail(
+      `AIPD Workspace 含 Git ignored 文件：${ignoredPath}；`
+      + '请先取消忽略并纳入版本控制，再执行迁移或检查。',
+    )
+  }
+}
+
+function assertNoIgnoredAgentEntries(projectRoot) {
+  const output = runGit(
+    projectRoot,
+    [
+      'ls-files',
+      '--others',
+      '--ignored',
+      '--exclude-standard',
+      '-z',
+      '--',
+      'AGENTS.md',
+      'CLAUDE.md',
+      ...PROJECT_AGENT_PATH_MAPPINGS.flat(),
+    ],
+    { binary: true },
+  )
+  for (const repositoryPath of output.toString('utf8').split('\0').filter(Boolean)) {
+    if (PROJECT_AGENT_PATH_MAPPINGS.flat().includes(repositoryPath)) {
+      fail(
+        `AIPD Agent 配置被 Git ignored：${repositoryPath}；`
+        + '请先取消忽略并纳入版本控制，再执行迁移或检查。',
+      )
+    }
+    const path = join(projectRoot, repositoryPath)
+    if (!existsSync(path) || !lstatSync(path).isFile()) continue
+    const text = readFileSync(path, 'utf8')
+    if (
+      text.includes(AGENT_ENTRY_START)
+      || text.includes(AGENT_ENTRY_END)
+      || containsLegacyToken(text, repositoryPath)
+    ) {
+      fail(
+        `AIPD Agent Entry 被 Git ignored：${repositoryPath}；`
+        + '请先取消忽略并纳入版本控制，再执行迁移或检查。',
+      )
+    }
+  }
+}
+
+function assertNoSymlinkedAipdAgentEntries(projectRoot) {
+  for (const repositoryPath of [
+    'AGENTS.md',
+    'CLAUDE.md',
+    ...PROJECT_AGENT_PATH_MAPPINGS.flat(),
+  ]) {
+    const path = join(projectRoot, repositoryPath)
+    let stat
+    try {
+      stat = lstatSync(path)
+    } catch (error) {
+      if (error.code === 'ENOENT') continue
+      throw error
+    }
+    if (!stat.isSymbolicLink()) continue
+    if (PROJECT_AGENT_PATH_MAPPINGS.flat().includes(repositoryPath)) {
+      fail(`AIPD Agent 配置不能是 symlink：${repositoryPath}`)
+    }
+    let text
+    try {
+      text = readFileSync(path, 'utf8')
+    } catch {
+      continue
+    }
+    if (
+      text.includes(AGENT_ENTRY_START)
+      || text.includes(AGENT_ENTRY_END)
+      || containsLegacyToken(text, repositoryPath)
+    ) {
+      fail(
+        `AIPD Agent Entry 不能是 symlink：${repositoryPath}；`
+        + '请先改为项目内普通文件，再执行迁移或检查。',
+      )
+    }
+  }
+}
+
+function assertNoSymlinkedProjectAgentPaths(projectRoot) {
+  for (const repositoryPath of PROJECT_AGENT_PATH_MAPPINGS.flat()) {
+    let currentPath = projectRoot
+    for (const pathPart of repositoryPath.split('/')) {
+      currentPath = join(currentPath, pathPart)
+      let stat
+      try {
+        stat = lstatSync(currentPath)
+      } catch (error) {
+        if (error.code === 'ENOENT') break
+        throw error
+      }
+      if (stat.isSymbolicLink()) {
+        fail(
+          `AIPD Agent 配置路径不能经过 symlink：`
+          + `${relative(projectRoot, currentPath)}`,
+        )
+      }
+    }
+  }
+}
+
+function assertNoLegacyTextThroughTrackedSymlinks(projectRoot, trackedEntries) {
+  for (const entry of trackedEntries) {
+    if (entry.mode !== '120000') continue
+    const path = join(projectRoot, entry.path)
+    let contents
+    try {
+      contents = readFileSync(path)
+    } catch {
+      continue
+    }
+    if (contents.includes(0)) continue
+    let text
+    try {
+      text = textDecoder.decode(contents)
+    } catch {
+      continue
+    }
+    const targetPath = targetRepositoryPath(entry.path)
+    if (containsLegacyToken(text, targetPath)) {
+      fail(`Git symlink 目标仍含旧 Schema 语义：${entry.path}`)
+    }
+  }
+}
+
+function walkWithoutFollowingSymlinks(root, visitor) {
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    const path = join(root, entry.name)
+    const stat = lstatSync(path)
+    visitor(path, stat)
+    if (stat.isDirectory()) walkWithoutFollowingSymlinks(path, visitor)
+  }
+}
+
+function assertNoWorkspaceSymlinks(workspaceRoot, projectRoot) {
+  walkWithoutFollowingSymlinks(workspaceRoot, (path, stat) => {
+    if (stat.isSymbolicLink()) {
+      fail(`迁移拒绝工作区 symlink：${relative(projectRoot, path)}`)
+    }
+  })
+}
+
+function assertRegularFile(path, label) {
+  if (!existsSync(path)) fail(`Schema 不完整，缺少 ${label}。`)
+  const stat = lstatSync(path)
+  if (stat.isSymbolicLink()) fail(`Schema 路径不能是 symlink：${label}`)
+  if (!stat.isFile()) fail(`Schema 路径必须是文件：${label}`)
+}
+
+function assertDirectory(path, label) {
+  if (!existsSync(path)) fail(`Schema 不完整，缺少 ${label}/。`)
+  const stat = lstatSync(path)
+  if (stat.isSymbolicLink()) fail(`Schema 路径不能是 symlink：${label}/`)
+  if (!stat.isDirectory()) fail(`Schema 路径必须是目录：${label}/`)
+}
+
+function readManifest(manifestPath) {
+  assertRegularFile(manifestPath, `${CURRENT_ROOT}/manifest.json`)
+
+  let manifest
+  try {
+    manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
+  } catch (error) {
+    fail(`${CURRENT_ROOT}/manifest.json 不是有效 JSON：${error.message}`)
+  }
+
+  const keys = Object.keys(manifest).sort()
+  if (
+    keys.length !== 2
+    || keys[0] !== 'schema'
+    || keys[1] !== 'schemaVersion'
+    || manifest.schema !== SCHEMA_MANIFEST.schema
+    || manifest.schemaVersion !== SCHEMA_MANIFEST.schemaVersion
+  ) {
+    fail(
+      `${CURRENT_ROOT}/manifest.json 必须精确声明 `
+      + JSON.stringify(SCHEMA_MANIFEST),
+    )
+  }
+  return manifest
+}
+
+function pathEntryExists(path) {
+  try {
+    lstatSync(path)
+    return true
+  } catch (error) {
+    if (error.code === 'ENOENT') return false
+    throw error
+  }
+}
+
+function detectSchemaState(projectRoot) {
+  const legacyPath = join(projectRoot, LEGACY_ROOT)
+  const currentPath = join(projectRoot, CURRENT_ROOT)
+  const hasLegacy = pathEntryExists(legacyPath)
+  const hasCurrent = pathEntryExists(currentPath)
+
+  if (hasLegacy && hasCurrent) {
+    fail(`检测到 ${LEGACY_ROOT}/ 与 ${CURRENT_ROOT}/ 双根；这是混合状态，迁移已停止。`)
+  }
+  if (!hasLegacy && !hasCurrent) {
+    fail(`未找到 ${LEGACY_ROOT}/ 或 ${CURRENT_ROOT}/；无法判定 AIPD Schema。`)
+  }
+  return hasLegacy ? 'legacy' : 'current'
+}
+
+function validateLegacyStructure(projectRoot) {
+  const legacyPath = join(projectRoot, LEGACY_ROOT)
+  assertDirectory(legacyPath, LEGACY_ROOT)
+  assertNoWorkspaceSymlinks(legacyPath, projectRoot)
+
+  for (const file of REQUIRED_ROOT_FILES) {
+    assertRegularFile(join(legacyPath, file), `${LEGACY_ROOT}/${file}`)
+  }
+  for (const directory of REQUIRED_PROCESS_DIRECTORIES) {
+    assertDirectory(join(legacyPath, directory), `${LEGACY_ROOT}/${directory}`)
+  }
+  for (const [legacyDirectory] of KNOWLEDGE_MAPPINGS) {
+    assertDirectory(
+      join(legacyPath, legacyDirectory),
+      `${LEGACY_ROOT}/${legacyDirectory}`,
+    )
+  }
+
+  const topLevelNames = readdirSync(legacyPath)
+  if (topLevelNames.some((name) => name.toLowerCase() === 'knowledge')) {
+    fail(`${LEGACY_ROOT}/knowledge 会与新知识根碰撞；迁移已停止。`)
+  }
+  if (topLevelNames.some((name) => name.toLowerCase() === 'manifest.json')) {
+    fail(`${LEGACY_ROOT}/manifest.json 会与 Schema v2 manifest 碰撞；迁移已停止。`)
+  }
+
+  const expectedLegacyNames = new Set(KNOWLEDGE_MAPPINGS.map(([legacy]) => legacy))
+  const unexpectedLegacyDirectory = topLevelNames.find((name) => (
+    /^L[1-5]-/.test(name) && !expectedLegacyNames.has(name)
+  ))
+  if (unexpectedLegacyDirectory) {
+    fail(`检测到未定义的旧知识目录 ${LEGACY_ROOT}/${unexpectedLegacyDirectory}；迁移已停止。`)
+  }
+
+  const allowedLegacyDirectories = new Set([
+    ...REQUIRED_PROCESS_DIRECTORIES,
+    ...LEGACY_KNOWLEDGE_NAMES,
+  ])
+  const unexpectedWorkspaceDirectory = readdirSync(
+    legacyPath,
+    { withFileTypes: true },
+  ).find((entry) => entry.isDirectory() && !allowedLegacyDirectories.has(entry.name))
+  if (unexpectedWorkspaceDirectory) {
+    fail(
+      `旧 Workspace 目录无法映射到 Schema v2：`
+      + `${LEGACY_ROOT}/${unexpectedWorkspaceDirectory.name}`,
+    )
+  }
+}
+
+function validateCurrentStructure(projectRoot) {
+  const currentPath = join(projectRoot, CURRENT_ROOT)
+  assertDirectory(currentPath, CURRENT_ROOT)
+  assertNoWorkspaceSymlinks(currentPath, projectRoot)
+  readManifest(join(currentPath, 'manifest.json'))
+
+  for (const file of REQUIRED_ROOT_FILES) {
+    assertRegularFile(join(currentPath, file), `${CURRENT_ROOT}/${file}`)
+  }
+  for (const directory of REQUIRED_PROCESS_DIRECTORIES) {
+    assertDirectory(join(currentPath, directory), `${CURRENT_ROOT}/${directory}`)
+  }
+  for (const [, currentDirectory] of KNOWLEDGE_MAPPINGS) {
+    assertDirectory(
+      join(currentPath, 'knowledge', currentDirectory),
+      `${CURRENT_ROOT}/knowledge/${currentDirectory}`,
+    )
+  }
+
+  const allowedWorkspaceDirectories = new Set([
+    'knowledge',
+    ...REQUIRED_PROCESS_DIRECTORIES,
+  ])
+  const unexpectedWorkspaceDirectory = readdirSync(
+    currentPath,
+    { withFileTypes: true },
+  ).find((entry) => entry.isDirectory() && !allowedWorkspaceDirectories.has(entry.name))
+  if (unexpectedWorkspaceDirectory) {
+    fail(
+      `Schema v2 不允许额外 Workspace 目录：`
+      + `${CURRENT_ROOT}/${unexpectedWorkspaceDirectory.name}`,
+    )
+  }
+
+  const knowledgePath = join(currentPath, 'knowledge')
+  const legacyDirectory = [
+    ...readdirSync(currentPath).map((name) => `${CURRENT_ROOT}/${name}`),
+    ...readdirSync(knowledgePath).map((name) => `${CURRENT_ROOT}/knowledge/${name}`),
+  ].find((path) => /^L[1-5]-/.test(path.split('/').pop()))
+  if (legacyDirectory) {
+    fail(`检测到半迁移目录 ${legacyDirectory}；迁移已停止。`)
+  }
+
+  const expectedKnowledgeDirectories = new Set(
+    KNOWLEDGE_MAPPINGS.map(([, currentDirectory]) => currentDirectory),
+  )
+  const unexpectedKnowledgeDirectory = readdirSync(
+    knowledgePath,
+    { withFileTypes: true },
+  ).find((entry) => entry.isDirectory() && !expectedKnowledgeDirectories.has(entry.name))
+  if (unexpectedKnowledgeDirectory) {
+    fail(
+      `Schema v2 只允许五类 Knowledge，检测到额外目录：`
+      + `${CURRENT_ROOT}/knowledge/${unexpectedKnowledgeDirectory.name}`,
+    )
+  }
+
+}
+
+function targetRepositoryPath(repositoryPath) {
+  const normalizedPath = repositoryPath.split(sep).join('/')
+  for (const [legacyPath, currentPath] of REPOSITORY_PATH_MAPPINGS) {
+    if (normalizedPath === legacyPath) return currentPath
+    if (normalizedPath.startsWith(`${legacyPath}/`)) {
+      return `${currentPath}${normalizedPath.slice(legacyPath.length)}`
+    }
+  }
+  return normalizedPath
+}
+
+function legacyRepositoryPath(repositoryPath) {
+  const normalizedPath = repositoryPath.split(sep).join('/')
+  for (const [legacyPath, currentPath] of REPOSITORY_PATH_MAPPINGS) {
+    if (normalizedPath === currentPath) return legacyPath
+    if (normalizedPath.startsWith(`${currentPath}/`)) {
+      return `${legacyPath}${normalizedPath.slice(currentPath.length)}`
+    }
+  }
+  return normalizedPath
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function replaceExactToken(text, legacy, current) {
+  const expression = new RegExp(
+    `(^|[^A-Za-z0-9_-])${escapeRegExp(legacy)}(?=$|[^A-Za-z0-9_-])`,
+    'gu',
+  )
+  return text.replace(expression, (_, prefix) => `${prefix}${current}`)
+}
+
+function rewriteRelativeKnowledgePaths(text, sourceRepositoryPath, targetFilePath) {
+  return text.replace(
+    RELATIVE_KNOWLEDGE_PATH_EXPRESSION,
+    (match, prefix, relativePrefix, legacyKnowledgeName) => {
+      const legacyTarget = posix.normalize(posix.join(
+        posix.dirname(sourceRepositoryPath),
+        relativePrefix,
+        legacyKnowledgeName,
+      ))
+      const currentTarget = targetRepositoryPath(legacyTarget)
+      if (currentTarget === legacyTarget) return match
+
+      let rewrittenPath = posix.relative(posix.dirname(targetFilePath), currentTarget)
+      if (!rewrittenPath) rewrittenPath = '.'
+      if (relativePrefix.startsWith('./') && !rewrittenPath.startsWith('.')) {
+        rewrittenPath = `./${rewrittenPath}`
+      }
+      return `${prefix}${rewrittenPath}`
+    },
+  )
+}
+
+function rewriteBareRelativeKnowledgePaths(text, sourceRepositoryPath, targetFilePath) {
+  return text.replace(
+    BARE_RELATIVE_KNOWLEDGE_PATH_EXPRESSION,
+    (match, prefix, legacyKnowledgeName) => {
+      const legacyTarget = posix.normalize(posix.join(
+        posix.dirname(sourceRepositoryPath),
+        legacyKnowledgeName,
+      ))
+      const currentTarget = targetRepositoryPath(legacyTarget)
+      if (currentTarget === legacyTarget) return match
+
+      let rewrittenPath = posix.relative(posix.dirname(targetFilePath), currentTarget)
+      if (!rewrittenPath) rewrittenPath = '.'
+      return `${prefix}${rewrittenPath}`
+    },
+  )
+}
+
+function rewriteTrackedText(text, sourceRepositoryPath, targetFilePath) {
+  let rewritten = rewriteAgentEntryBlock(text, sourceRepositoryPath)
+  for (const [legacy, current] of TEXT_REWRITE_MAPPINGS) {
+    rewritten = replaceExactToken(rewritten, legacy, current)
+  }
+  rewritten = rewriteRelativeKnowledgePaths(
+    rewritten,
+    sourceRepositoryPath,
+    targetFilePath,
+  )
+  rewritten = rewriteBareRelativeKnowledgePaths(
+    rewritten,
+    sourceRepositoryPath,
+    targetFilePath,
+  )
+  for (const [legacy, current] of STANDALONE_KNOWLEDGE_NAME_MAPPINGS) {
+    const expression = new RegExp(
+      `(^|[^A-Za-z0-9_./-])${escapeRegExp(legacy)}(?=$|[^A-Za-z0-9_./-])`,
+      'gu',
+    )
+    rewritten = rewritten.replace(expression, (_, prefix) => `${prefix}${current}`)
+  }
+  return rewritten
+}
+
+function rewriteAgentEntryBlock(text, repositoryPath) {
+  if (repositoryPath !== 'AGENTS.md' && repositoryPath !== 'CLAUDE.md') {
+    return text
+  }
+
+  const hasStart = text.includes(AGENT_ENTRY_START)
+  const hasEnd = text.includes(AGENT_ENTRY_END)
+  if (!hasStart && !hasEnd) return text
+  if (!hasStart || !hasEnd) {
+    fail(`${repositoryPath} 的 AIPD Agent Entry 标记不完整。`)
+  }
+
+  const startIndex = text.indexOf(AGENT_ENTRY_START)
+  const endIndex = text.indexOf(AGENT_ENTRY_END, startIndex + AGENT_ENTRY_START.length)
+  if (
+    endIndex === -1
+    || text.indexOf(AGENT_ENTRY_START, startIndex + AGENT_ENTRY_START.length) !== -1
+    || text.indexOf(AGENT_ENTRY_END, endIndex + AGENT_ENTRY_END.length) !== -1
+  ) {
+    fail(`${repositoryPath} 必须且只能包含一个 AIPD Agent Entry 区块。`)
+  }
+
+  return [
+    text.slice(0, startIndex),
+    AGENT_ENTRY_START,
+    '\n',
+    agentEntryTemplate,
+    '\n',
+    AGENT_ENTRY_END,
+    text.slice(endIndex + AGENT_ENTRY_END.length),
+  ].join('')
+}
+
+function containsResolvableRelativeLegacyPath(text, currentFilePath) {
+  const legacyFilePath = legacyRepositoryPath(currentFilePath)
+  let containsLegacyPath = false
+  RELATIVE_KNOWLEDGE_PATH_EXPRESSION.lastIndex = 0
+  text.replace(
+    RELATIVE_KNOWLEDGE_PATH_EXPRESSION,
+    (match, prefix, relativePrefix, legacyKnowledgeName) => {
+      const legacyTarget = posix.normalize(posix.join(
+        posix.dirname(legacyFilePath),
+        relativePrefix,
+        legacyKnowledgeName,
+      ))
+      if (targetRepositoryPath(legacyTarget) !== legacyTarget) {
+        containsLegacyPath = true
+      }
+      return match
+    },
+  )
+  RELATIVE_KNOWLEDGE_PATH_EXPRESSION.lastIndex = 0
+  BARE_RELATIVE_KNOWLEDGE_PATH_EXPRESSION.lastIndex = 0
+  text.replace(
+    BARE_RELATIVE_KNOWLEDGE_PATH_EXPRESSION,
+    (match, prefix, legacyKnowledgeName) => {
+      const legacyTarget = posix.normalize(posix.join(
+        posix.dirname(legacyFilePath),
+        legacyKnowledgeName,
+      ))
+      if (targetRepositoryPath(legacyTarget) !== legacyTarget) {
+        containsLegacyPath = true
+      }
+      return match
+    },
+  )
+  BARE_RELATIVE_KNOWLEDGE_PATH_EXPRESSION.lastIndex = 0
+  return containsLegacyPath
+}
+
+function containsLegacyToken(text, repositoryPath) {
+  const containsMappedToken = TEXT_REWRITE_MAPPINGS.some(([legacy]) => {
+    const expression = new RegExp(
+      `(^|[^A-Za-z0-9_-])${escapeRegExp(legacy)}(?=$|[^A-Za-z0-9_-])`,
+      'u',
+    )
+    return expression.test(text)
+  })
+  if (containsMappedToken) return true
+  if (containsResolvableRelativeLegacyPath(text, repositoryPath)) return true
+  return containsUnresolvedKnowledgeLevel(text, repositoryPath)
+}
+
+function removeAllowedResidualFragments(text, repositoryPath) {
+  let sanitizedText = text
+  for (const fragment of ALLOWED_RESIDUAL_FRAGMENTS.get(repositoryPath) || []) {
+    sanitizedText = sanitizedText.replaceAll(
+      fragment,
+      '[allowed legacy migration or history reference]',
+    )
+  }
+  return sanitizedText
+}
+
+function containsUnresolvedKnowledgeLevel(text, repositoryPath) {
+  const normalizedPath = repositoryPath.split(sep).join('/')
+  if (
+    !/\.mdx?$/iu.test(normalizedPath)
+    && normalizedPath !== 'AGENTS.md'
+    && normalizedPath !== 'CLAUDE.md'
+  ) {
+    return false
+  }
+  if (/(^|[^A-Za-z0-9_-])L[1-6](?=$|[^A-Za-z0-9_-])/u.test(text)) {
+    return true
+  }
+  return STANDALONE_KNOWLEDGE_NAME_MAPPINGS.some(([legacy]) => (
+    new RegExp(
+      `(^|[^A-Za-z0-9_./-])${escapeRegExp(legacy)}(?=$|[^A-Za-z0-9_./-])`,
+      'u',
+    ).test(text)
+  ))
+}
+
+function isExcludedTextPath(projectRoot, repositoryPath) {
+  const pathParts = repositoryPath.split('/')
+  if (pathParts.slice(0, -1).some((part) => EXCLUDED_TEXT_DIRECTORY_NAMES.has(part))) {
+    return true
+  }
+  if (MIGRATION_TOOL_PATHS.has(repositoryPath)) return true
+  if (LEGACY_HISTORY_PATHS.includes(repositoryPath)) return true
+  if (LEGACY_HISTORY_PATH_PREFIXES.some((prefix) => repositoryPath.startsWith(prefix))) {
+    return true
+  }
+
+  const absolutePath = resolve(projectRoot, repositoryPath)
+  return existsSync(absolutePath) && realpathSync(absolutePath) === scriptPath
+}
+
+function decodeTrackedText(path) {
+  const contents = readFileSync(path)
+  if (contents.includes(0)) return null
+  try {
+    return {
+      contents,
+      text: textDecoder.decode(contents),
+    }
+  } catch {
+    return null
+  }
+}
+
+function prepareTextEdits(projectRoot, trackedEntries) {
+  const edits = []
+
+  for (const entry of trackedEntries) {
+    if (entry.mode !== '100644' && entry.mode !== '100755') continue
+    if (isExcludedTextPath(projectRoot, entry.path)) continue
+
+    const sourcePath = join(projectRoot, entry.path)
+    if (!existsSync(sourcePath)) {
+      fail(`Git 跟踪文件在工作树中缺失：${entry.path}`)
+    }
+    const decoded = decodeTrackedText(sourcePath)
+    if (!decoded) continue
+
+    const targetPath = targetRepositoryPath(entry.path)
+    const rewrittenText = rewriteTrackedText(decoded.text, entry.path, targetPath)
+    const validatedText = removeAllowedResidualFragments(rewrittenText, targetPath)
+    if (containsLegacyToken(validatedText, targetPath)) {
+      fail(
+        `无法安全自动改写的旧知识层级语义或 Schema 引用：${entry.path}`,
+      )
+    }
+    if (rewrittenText === decoded.text) continue
+    edits.push({
+      sourceRepositoryPath: entry.path,
+      targetRepositoryPath: targetPath,
+      originalContents: decoded.contents,
+      rewrittenText,
+    })
+  }
+  return edits
+}
+
+function prepareMoves(projectRoot) {
+  const legacyPath = join(projectRoot, LEGACY_ROOT)
+  const currentPath = join(projectRoot, CURRENT_ROOT)
+  const knowledgeNames = new Map(KNOWLEDGE_MAPPINGS)
+  const moves = readdirSync(legacyPath)
+    .map((name) => ({
+      source: join(legacyPath, name),
+      sourceRepositoryPath: `${LEGACY_ROOT}/${name}`,
+      target: knowledgeNames.has(name)
+        ? join(currentPath, 'knowledge', knowledgeNames.get(name))
+        : join(currentPath, name),
+      targetRepositoryPath: knowledgeNames.has(name)
+        ? `${CURRENT_ROOT}/knowledge/${knowledgeNames.get(name)}`
+        : `${CURRENT_ROOT}/${name}`,
+      mappedKnowledge: knowledgeNames.has(name),
+    }))
+    .sort((left, right) => (
+      Number(right.mappedKnowledge) - Number(left.mappedKnowledge)
+      || right.sourceRepositoryPath.length - left.sourceRepositoryPath.length
+    ))
+
+  const destinations = new Set()
+  for (const move of moves) {
+    const collisionKey = move.targetRepositoryPath.toLocaleLowerCase('en-US')
+    if (destinations.has(collisionKey) || existsSync(move.target)) {
+      fail(`迁移目标碰撞：${move.targetRepositoryPath}`)
+    }
+    destinations.add(collisionKey)
+  }
+  return moves
+}
+
+function prepareRepositoryFileMoves(projectRoot, trackedEntries) {
+  const moves = []
+  for (const entry of trackedEntries) {
+    const targetPath = targetRepositoryPath(entry.path)
+    if (targetPath === entry.path) continue
+    if (
+      entry.path === LEGACY_ROOT
+      || entry.path.startsWith(`${LEGACY_ROOT}/`)
+      || entry.path === CURRENT_ROOT
+      || entry.path.startsWith(`${CURRENT_ROOT}/`)
+    ) {
+      continue
+    }
+
+    if (entry.mode === '120000') {
+      fail(`AIPD Agent 配置不能是 symlink：${entry.path}`)
+    }
+
+    const source = join(projectRoot, entry.path)
+    const target = join(projectRoot, targetPath)
+    if (!existsSync(source)) {
+      fail(`Git 跟踪文件在工作树中缺失：${entry.path}`)
+    }
+    if (existsSync(target)) fail(`迁移目标碰撞：${targetPath}`)
+    moves.push({
+      source,
+      sourceRepositoryPath: entry.path,
+      target,
+      targetRepositoryPath: targetPath,
+    })
+  }
+  return moves
+}
+
+function validateNoLegacyText(projectRoot, trackedEntries) {
+  for (const entry of trackedEntries) {
+    if (entry.mode !== '100644' && entry.mode !== '100755') continue
+    if (isExcludedTextPath(projectRoot, entry.path)) continue
+    const path = join(projectRoot, entry.path)
+    // --check is intentionally dirty-safe; deleted or renamed index entries are
+    // absent from the worktree and their current targets are scanned separately.
+    if (!existsSync(path)) continue
+    const decoded = decodeTrackedText(path)
+    const text = decoded
+      ? removeAllowedResidualFragments(decoded.text, entry.path)
+      : null
+    if (text && containsLegacyToken(text, entry.path)) {
+      fail(`迁移后仍有旧 Schema 路径或 Agent 标识：${entry.path}`)
+    }
+  }
+}
+
+function validateWorkspaceTrackedCoverage(projectRoot, trackedEntries) {
+  for (const entry of trackedEntries) {
+    const sourcePath = entry.path.split(sep).join('/')
+    if (
+      sourcePath !== LEGACY_ROOT
+      && !sourcePath.startsWith(`${LEGACY_ROOT}/`)
+      && sourcePath !== CURRENT_ROOT
+      && !sourcePath.startsWith(`${CURRENT_ROOT}/`)
+    ) {
+      continue
+    }
+
+    const targetPath = targetRepositoryPath(sourcePath)
+    if (existsSync(join(projectRoot, targetPath))) continue
+
+    const replacementPath = WORKSPACE_REPLACEMENT_PATHS.get(targetPath)
+    if (replacementPath && existsSync(join(projectRoot, replacementPath))) continue
+
+    fail(
+      `Git 跟踪的 AIPD 文件在 v2 工作树中缺失：${sourcePath} -> ${targetPath}`,
+    )
+  }
+}
+
+function validateProjectAgentPaths(projectRoot, trackedEntries) {
+  const trackedPaths = new Set(trackedEntries.map((entry) => entry.path))
+  for (const [legacyPath, currentPath] of PROJECT_AGENT_PATH_MAPPINGS) {
+    if (existsSync(join(projectRoot, legacyPath))) {
+      fail(`迁移后仍存在旧 Agent 配置文件：${legacyPath}`)
+    }
+    if (trackedPaths.has(legacyPath) && !existsSync(join(projectRoot, currentPath))) {
+      fail(`Git 跟踪的 Agent 配置在 v2 工作树中缺失：${legacyPath} -> ${currentPath}`)
+    }
+  }
+}
+
+function writeManifest(projectRoot) {
+  const manifestPath = join(projectRoot, CURRENT_ROOT, 'manifest.json')
+  writeFileSync(manifestPath, `${JSON.stringify(SCHEMA_MANIFEST, null, 2)}\n`, {
+    encoding: 'utf8',
+    flag: 'wx',
+  })
+}
+
+function migrate(projectRoot, trackedEntries, moves, fileMoves, edits) {
+  const currentPath = join(projectRoot, CURRENT_ROOT)
+  const knowledgePath = join(currentPath, 'knowledge')
+  const completedMoves = []
+  const completedFileMoves = []
+  const completedEdits = []
+  let manifestWritten = false
+
+  try {
+    mkdirSync(knowledgePath, { recursive: true })
+    for (const move of moves) {
+      mkdirSync(dirname(move.target), { recursive: true })
+      renameSync(move.source, move.target)
+      completedMoves.push(move)
+    }
+    rmdirSync(join(projectRoot, LEGACY_ROOT))
+
+    for (const move of fileMoves) {
+      mkdirSync(dirname(move.target), { recursive: true })
+      renameSync(move.source, move.target)
+      completedFileMoves.push(move)
+    }
+
+    for (const edit of edits) {
+      const targetPath = join(projectRoot, edit.targetRepositoryPath)
+      writeFileSync(targetPath, edit.rewrittenText, 'utf8')
+      completedEdits.push({ ...edit, targetPath })
+    }
+
+    writeManifest(projectRoot)
+    manifestWritten = true
+
+    validateCurrentStructure(projectRoot)
+    const migratedTrackedEntries = trackedEntries.map((entry) => ({
+      ...entry,
+      path: targetRepositoryPath(entry.path),
+    }))
+    validateWorkspaceTrackedCoverage(projectRoot, trackedEntries)
+    validateProjectAgentPaths(projectRoot, trackedEntries)
+    validateNoLegacyText(projectRoot, migratedTrackedEntries)
+  } catch (error) {
+    const rollbackErrors = []
+
+    if (manifestWritten) {
+      try {
+        rmSync(join(currentPath, 'manifest.json'))
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError.message)
+      }
+    }
+    for (const edit of completedEdits.reverse()) {
+      try {
+        writeFileSync(edit.targetPath, edit.originalContents)
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError.message)
+      }
+    }
+    for (const move of completedFileMoves.reverse()) {
+      try {
+        mkdirSync(dirname(move.source), { recursive: true })
+        renameSync(move.target, move.source)
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError.message)
+      }
+    }
+    mkdirSync(join(projectRoot, LEGACY_ROOT), { recursive: true })
+    for (const move of completedMoves.reverse()) {
+      try {
+        mkdirSync(dirname(move.source), { recursive: true })
+        renameSync(move.target, move.source)
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError.message)
+      }
+    }
+    try {
+      if (existsSync(knowledgePath)) rmdirSync(knowledgePath)
+      if (existsSync(currentPath)) rmdirSync(currentPath)
+    } catch (rollbackError) {
+      rollbackErrors.push(rollbackError.message)
+    }
+
+    const rollbackDetail = rollbackErrors.length > 0
+      ? `；回滚也遇到错误：${rollbackErrors.join('; ')}`
+      : '；已回滚到完整旧版结构'
+    fail(`迁移失败：${error.message}${rollbackDetail}`)
+  }
+}
+
+function printPlan(projectRoot, moves, fileMoves, edits) {
+  console.log(`Schema 状态：完整旧版（${LEGACY_ROOT}/）`)
+  console.log(`项目：${projectRoot}`)
+  console.log(`目录迁移：${moves.length} 个顶层入口（五类知识最长路径优先）`)
+  console.log(`Agent 配置重命名：${fileMoves.length} 个项目级文件`)
+  console.log(`文本改写：${edits.length} 个 Git 跟踪 UTF-8 文件`)
+  console.log(`Manifest：${CURRENT_ROOT}/manifest.json -> ${JSON.stringify(SCHEMA_MANIFEST)}`)
+}
+
+function main() {
+  const { mode, projectRoot: requestedProjectRoot } = parseArguments(process.argv.slice(2))
+  const projectRoot = assertGitRoot(requestedProjectRoot)
+  if (mode !== 'check') assertCleanWorktree(projectRoot)
+  const trackedEntries = parseTrackedEntries(projectRoot)
+  const coverageEntries = mergeTrackedEntries(
+    trackedEntries,
+    parseHeadEntries(projectRoot),
+  )
+  const state = detectSchemaState(projectRoot)
+  assertNoIgnoredWorkspaceEntries(
+    projectRoot,
+    state === 'legacy' ? LEGACY_ROOT : CURRENT_ROOT,
+  )
+  assertNoIgnoredAgentEntries(projectRoot)
+  assertNoSymlinkedAipdAgentEntries(projectRoot)
+  assertNoSymlinkedProjectAgentPaths(projectRoot)
+  assertNoLegacyTextThroughTrackedSymlinks(projectRoot, coverageEntries)
+
+  if (state === 'current') {
+    validateCurrentStructure(projectRoot)
+    validateWorkspaceTrackedCoverage(projectRoot, coverageEntries)
+    validateProjectAgentPaths(projectRoot, coverageEntries)
+    const currentTrackedEntries = trackedEntries.map((entry) => ({
+      ...entry,
+      path: targetRepositoryPath(entry.path),
+    }))
+    const currentEntries = [
+      ...currentTrackedEntries,
+      ...parseUntrackedEntries(projectRoot),
+    ].filter((entry, index, entries) => (
+      entries.findIndex((candidate) => candidate.path === entry.path) === index
+    ))
+    validateNoLegacyText(projectRoot, currentEntries)
+    console.log(`Schema 检查通过：${projectRoot} 已是 AIPD Project Schema v2。`)
+    return
+  }
+
+  validateLegacyStructure(projectRoot)
+  if (mode === 'check') {
+    fail(`项目仍是完整旧版 ${LEGACY_ROOT}/；请先运行迁移或 --dry-run。`)
+  }
+
+  const moves = prepareMoves(projectRoot)
+  const fileMoves = prepareRepositoryFileMoves(projectRoot, trackedEntries)
+  const edits = prepareTextEdits(projectRoot, trackedEntries)
+  printPlan(projectRoot, moves, fileMoves, edits)
+
+  if (mode === 'dry-run') {
+    console.log('Dry run 通过：未修改任何文件。')
+    return
+  }
+
+  migrate(projectRoot, trackedEntries, moves, fileMoves, edits)
+  console.log(`迁移完成：${LEGACY_ROOT}/ -> ${CURRENT_ROOT}/（Schema v2）。`)
+  console.log('请审查 git diff，确认后提交迁移结果。')
+}
+
+try {
+  main()
+} catch (error) {
+  if (error instanceof MigrationError) {
+    console.error(`ERROR: ${error.message}`)
+    if (process.argv.length <= 2) console.error(`\n${usage()}`)
+    process.exit(1)
+  }
+  console.error(error.stack || error.message)
+  process.exit(1)
+}

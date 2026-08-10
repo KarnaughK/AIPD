@@ -21,7 +21,7 @@
 读取主 Agent 指定的 Case 目录，理解：
 
 - **Case 目标**：这次做了什么
-- **涉及的模块**：哪些 L4-product / L5-dev 模块
+- **涉及的模块**：哪些 `_aipd/knowledge/product/` / `_aipd/knowledge/engineering/` 模块
 - **完成的工作包**：所有 `03-execute/work-packages/` 文件
 - **验收结论**：`04-verify/verify.md` 是否通过
 - **关闭候选**：`05-close/close.md` 和 `case.md` 是否整理了 Close 归档候选
@@ -49,29 +49,33 @@ git diff main
 
 根据改动内容，判断哪些信息已经完成、已实现、已验收，可能需要交给 `aipd-weave` 回写：
 
-- 新核心概念、标准名、对象关系、常见误解 → 候选 L3。
-- 新产品功能边界、业务规则、用户可见行为 → 候选 L4。
-- 新工程规则、跨模块实现逻辑、调试经验 → 候选 L5。
+- 用户明确确认的长期方向、目标或边界 → 候选 Intent 知识域。
+- 带来源、采集时间和有效性边界的稳定外部事实或调研结论 → 候选 Research 知识域。
+- 新核心概念、标准名、对象关系、常见误解 → 候选 Core 知识域。
+- 新产品功能边界、业务规则、用户可见行为 → 候选 Product 知识域。
+- 新工程规则、跨模块实现逻辑、调试经验 → 候选 Engineering 知识域。
 - 新页面、弹窗、组件内部入口 → 候选局部 README。
-- 新高频检索入口或容易迷路的路径 → 候选 `_adoc/map.md`。
-- 已实现 / 已验证事实和长期 L3 / L4 / L5 / README / map 存在冲突 → 候选长期认知更新。
+- 新高频检索入口或容易迷路的路径 → 候选 `_aipd/map.md`。
+- 已实现 / 已验证事实和任一长期知识域、README 或 map 存在冲突 → 候选长期认知更新。
 - 可复用执行流程、部署验收、调试步骤 → 候选 SOP。
 - AIPD Case 机制、模板、Agent Entry 或 skill 行为问题 → 候选 `aipd-learn` / AIPD 框架自迭代。
-- 一次性执行过程、临时决策、验收记录、未实现设计和未来计划 → 保留 case / work package，不建议回写长期 ADOC。
+- 一次性执行过程、临时决策、验收记录、未实现设计和未来计划 → 保留 case / work package，不建议回写长期知识。
 
-输出一个简洁候选包，不直接更新长期 ADOC：
+输出一个简洁候选包，不直接更新长期知识：
 
 ```md
 ## Close 归档候选
 
 来源：case 归档
-相关 case：_adoc/case/cN-xxx/
+相关 case：_aipd/case/cN-xxx/
 相关 diff：{关键文件}
 
 已完成且建议交给 aipd-weave 判断：
-- L3：{候选；没有写无}
-- L4：{候选；没有写无}
-- L5：{候选；没有写无}
+- Intent 知识域：{候选；没有写无}
+- Research 知识域：{候选；没有写无；有候选时附来源 / 采集时间 / 有效性边界}
+- Core 知识域：{候选；没有写无}
+- Product 知识域：{候选；没有写无}
+- Engineering 知识域：{候选；没有写无}
 - 局部 README：{候选；没有写无}
 - map：{候选；没有写无}
 - SOP：{候选；没有写无}
@@ -86,22 +90,22 @@ git diff main
 Close 前检查已实现事实是否和长期认知一致：
 
 ```bash
-rg "{核心业务词|关键接口|旧字段|旧流程|旧部署路径}" _adoc
+rg "{核心业务词|关键接口|旧字段|旧流程|旧部署路径}" _aipd
 ```
 
-如果长期 L3 / L4 / L5 / README / map 仍保留早期假设、旧入口、旧字段、旧流程或旧部署路径，把它们列为 Close 归档候选，交给主 Agent 判断是否运行 `aipd-weave`。
+如果任一长期知识域、README 或 map 仍保留早期假设、旧入口、旧字段、旧流程或旧部署路径，把它们列为 Close 归档候选，交给主 Agent 判断是否运行 `aipd-weave`。
 
 移动 archive 前检查当前 case 路径是否仍被引用：
 
 ```bash
-rg "{case-dir}" _adoc
+rg "{case-dir}" _aipd
 ```
 
 如果仍有引用，不要移动目录。把 case 标记为“完成待归档”，并返回需要更新的引用位置。等引用批量更新后再移动到 archive。
 
 ### 第 5 步：更新 Case 索引
 
-打开 `_adoc/case/index.md`，在对应模块下添加本 Case 的记录。
+打开 `_aipd/case/index.md`，在对应模块下添加本 Case 的记录。
 
 **如果 `case/index.md` 不存在**，创建它：
 
@@ -142,10 +146,10 @@ rg "{case-dir}" _adoc
 
 ### 第 6 步：移动 Case 或标记完成待归档
 
-只有在路径引用已经更新、移动不会破坏 map / L3 / L4 / L5 / 后续 case 链接时，才移动整个 Case 目录到 archive：
+只有在路径引用已经更新、移动不会破坏 map、任一知识域或后续 case 链接时，才移动整个 Case 目录到 archive：
 
 ```bash
-mv _adoc/case/cN-xxx/ _adoc/case/archive/cN-xxx/
+mv _aipd/case/cN-xxx/ _aipd/case/archive/cN-xxx/
 ```
 
 如果路径仍被引用，更新 `case.md` / `05-close/close.md` 的 Close 摘要为“完成待归档”，不要移动目录。
@@ -167,7 +171,7 @@ mv _adoc/case/cN-xxx/ _adoc/case/archive/cN-xxx/
 
 ### 必须遵守
 
-1. **不直接更新长期 ADOC 正文**：稳定知识交给 `aipd-weave` 判断和回写
+1. **不直接更新长期知识正文**：稳定知识交给 `aipd-weave` 判断和回写
 2. **保持候选简洁**：不写冗余的描述
 3. **返回简洁结果回流**：不要在返回消息中包含大段内容；只回流归档结论、更新文件、风险和需要主 Agent 处理的问题
 4. **询问用户模块归属**：不要自己猜测 Case 属于哪个模块
@@ -176,7 +180,7 @@ mv _adoc/case/cN-xxx/ _adoc/case/archive/cN-xxx/
 ### 禁止行为
 
 - ❌ 重写整个文档（除非文档确实需要重构）
-- ❌ 直接把稳定知识写入 L3 / L4 / L5 / map / 局部 README
+- ❌ 直接把稳定知识写入任一知识域、map 或局部 README
 - ❌ 在返回消息中包含文档内容
 - ❌ 自作主张决定 Case 的模块归属
 
@@ -185,7 +189,7 @@ mv _adoc/case/cN-xxx/ _adoc/case/archive/cN-xxx/
 ## 常见问题
 
 **Q: 不确定某个文档是否需要更新怎么办？**
-A: 保守原则，不确定就不写长期 ADOC。把它放进 Close 归档候选，让主 Agent 和 `aipd-weave` 在 case 完成后判断。
+A: 保守原则，不确定就不写长期知识。把它放进 Close 归档候选，让主 Agent 和 `aipd-weave` 在 case 完成后判断。
 
 **Q: 发现代码有问题怎么办？**
 A: 归档阶段不修改代码，只更新文档。如果发现问题，在返回消息中提一句即可。
@@ -194,7 +198,7 @@ A: 归档阶段不修改代码，只更新文档。如果发现问题，在返�
 A: 询问用户该 Case 主要属于哪个模块，在 `case/index.md` 中只记录一次。
 
 **Q: 文档更新后需要用户确认吗？**
-A: 长期 ADOC 回写需要由 `aipd-weave` 先给方案再确认。归档分身只更新 case 索引、archive 状态，并整理候选。
+A: 长期知识回写需要由 `aipd-weave` 先给方案再确认。归档分身只更新 case 索引、archive 状态，并整理候选。
 
 **Q: case 已完成但仍被其他文档引用怎么办？**
 A: 不移动 archive。先把 case 标记为完成待归档，返回引用位置和需要主 Agent 批量更新的路径；引用更新后再移动。

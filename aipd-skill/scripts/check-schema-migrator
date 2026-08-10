@@ -1,0 +1,770 @@
+#!/usr/bin/env node
+
+const assert = require('node:assert/strict')
+const { spawnSync } = require('node:child_process')
+const {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} = require('node:fs')
+const { dirname, join, resolve } = require('node:path')
+const { tmpdir } = require('node:os')
+
+const scriptDirectory = __dirname
+const migratorPath = join(scriptDirectory, 'migrate-project-schema')
+const fixtureRoot = mkdtempSync(join(tmpdir(), 'aipd-schema-migrator-'))
+const expectedManifest = {
+  schema: 'aipd-project',
+  schemaVersion: 2,
+}
+
+function write(path, contents = '') {
+  mkdirSync(dirname(path), { recursive: true })
+  writeFileSync(path, contents)
+}
+
+function run(command, args, cwd, { expectSuccess = true } = {}) {
+  const result = spawnSync(command, args, {
+    cwd,
+    encoding: 'utf8',
+    maxBuffer: 16 * 1024 * 1024,
+    shell: false,
+  })
+  if (result.error) throw result.error
+
+  if (expectSuccess && result.status !== 0) {
+    throw new Error([
+      `${command} ${args.join(' ')} failed with ${result.status}`,
+      result.stdout,
+      result.stderr,
+    ].filter(Boolean).join('\n'))
+  }
+  return result
+}
+
+function git(repositoryRoot, args) {
+  return run('git', ['-c', 'commit.gpgsign=false', ...args], repositoryRoot)
+}
+
+function commitFixture(repositoryRoot, message = 'fixture') {
+  git(repositoryRoot, ['add', '-A'])
+  git(repositoryRoot, ['commit', '-q', '-m', message])
+}
+
+function initializeRepository(name, createContents) {
+  const repositoryRoot = join(fixtureRoot, name)
+  mkdirSync(repositoryRoot, { recursive: true })
+  git(repositoryRoot, ['init', '-q'])
+  git(repositoryRoot, ['config', 'user.name', 'AIPD Fixture'])
+  git(repositoryRoot, ['config', 'user.email', 'aipd-fixture@example.invalid'])
+  createContents(repositoryRoot)
+  commitFixture(repositoryRoot)
+  return repositoryRoot
+}
+
+function createLegacySchema(repositoryRoot) {
+  const legacyRoot = join(repositoryRoot, '_adoc')
+  const knowledgeDirectories = [
+    'L1-intent',
+    'L2-research',
+    'L3-core',
+    'L4-product',
+    'L5-dev',
+  ]
+
+  write(
+    join(legacyRoot, 'index.md'),
+    '# Index\n\n`_adoc/map.md`\n\n[Core](L3-core/index.md)\n[Product](L4-product/index.md)\n',
+  )
+  write(join(legacyRoot, 'map.md'), '# Map\n\n`_adoc/L3-core/guide.md`\n')
+  write(join(legacyRoot, 'inbox.md'), '# Inbox\n')
+  for (const directory of knowledgeDirectories) {
+    write(join(legacyRoot, directory, 'index.md'), `# ${directory}\n`)
+  }
+  write(
+    join(legacyRoot, 'L3-core', 'guide.md'),
+    [
+      '`../L4-product/index.md`',
+      '`_adoc/L5-dev/index.md`',
+      '',
+    ].join('\n'),
+  )
+  write(
+    join(legacyRoot, 'L3-core', 'legacy-terms.md'),
+    [
+      '# 认知层级',
+      'L1-L5 与 L1-L6。',
+      '按 L3 / L4 / L5 / L6 检索。',
+      '目录名 L1-intent、L2-research、L3-core、L4-product、L5-dev。',
+      '',
+    ].join('\n'),
+  )
+  write(join(legacyRoot, 'L3-core', 'must-survive.md'), '# Must survive\n')
+  write(
+    join(legacyRoot, 'case', 'c1-fixture', 'case.md'),
+    '`../../L3-core/guide.md`\n',
+  )
+  write(
+    join(legacyRoot, 'case', 'archive', 'c0-history', 'case.md'),
+    'Historical schema: `_adoc/L3-core/guide.md` and `aipd_adoc_retriever`.\n',
+  )
+  write(join(legacyRoot, 'case', 'index.md'), '# Cases\n')
+  write(join(legacyRoot, 'sop', 'index.md'), '# SOP\n')
+  write(join(legacyRoot, 'okr', 'index.md'), '# OKR\n')
+
+  write(
+    join(repositoryRoot, 'README.md'),
+    [
+      '`_adoc/L1-intent/index.md`',
+      '`_adoc/L2-research/index.md`',
+      '`_adoc/L3-core/index.md`',
+      '`_adoc/L4-product/index.md`',
+      '`_adoc/L5-dev/index.md`',
+      '`aipd_adoc_retriever`',
+      '`L1 Intent` / `L2 Research` / `L3 Core` / `L4 Product` / `L5 Dev` / `L6 Code`',
+      '`_adocument` must remain unchanged.',
+      '`../L3-core/unrelated.md` resolves outside the AIPD workspace and must remain unchanged.',
+      '`L3-core/external.md` is also outside the AIPD workspace and must remain unchanged.',
+      '',
+    ].join('\n'),
+  )
+  write(
+    join(repositoryRoot, 'AGENTS.md'),
+    [
+      '# Local prefix',
+      '<!-- AIPD:START -->',
+      '# Legacy AIPD Entry',
+      '## 认知层级',
+      '- **L1 Intent** 到 **L6 Code**。',
+      '- 从 `_adoc/L1-*` 到 `_adoc/L5-*`，按 L3 / L4 / L5 / L6 和必要上下游读取。',
+      '<!-- AIPD:END -->',
+      '<!-- AIPD-INTERACTION-STYLE:START -->',
+      'keep custom interaction protocol',
+      '<!-- AIPD-INTERACTION-STYLE:END -->',
+      '',
+    ].join('\n'),
+  )
+  write(join(repositoryRoot, 'dist', 'generated.md'), '`_adoc/L1-intent/index.md`\n')
+  write(
+    join(repositoryRoot, 'aipd-skill', 'scripts', 'migrate-project-schema'),
+    "const LEGACY_ROOT = '_adoc'\n",
+  )
+  write(
+    join(repositoryRoot, 'aipd-skill', 'scripts', 'legacy-skills'),
+    'aipd_adoc_retriever\n',
+  )
+  write(join(repositoryRoot, 'binary.dat'), Buffer.from([0x00, 0x5f, 0x61, 0x64, 0x6f, 0x63]))
+  write(
+    join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml'),
+    'name = "aipd_adoc_retriever"\n',
+  )
+}
+
+function createCurrentSchema(repositoryRoot, { manifest = expectedManifest, omit = null } = {}) {
+  const currentRoot = join(repositoryRoot, '_aipd')
+  const directories = [
+    'knowledge/intent',
+    'knowledge/research',
+    'knowledge/core',
+    'knowledge/product',
+    'knowledge/engineering',
+    'sop',
+    'case',
+    'okr',
+  ]
+
+  write(join(currentRoot, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  write(join(currentRoot, 'index.md'), '# Index\n')
+  write(join(currentRoot, 'map.md'), '# Map\n')
+  write(join(currentRoot, 'inbox.md'), '# Inbox\n')
+  for (const directory of directories) {
+    if (directory === omit) continue
+    write(join(currentRoot, directory, '.fixture'), '')
+  }
+}
+
+function runMigrator(repositoryRoot, args, { expectSuccess = true, errorPattern = null } = {}) {
+  const result = run(
+    process.execPath,
+    [migratorPath, ...args],
+    repositoryRoot,
+    { expectSuccess },
+  )
+  if (!expectSuccess) {
+    assert.notEqual(result.status, 0, `migrator unexpectedly succeeded: ${args.join(' ')}`)
+    if (errorPattern) {
+      assert.match(`${result.stdout}\n${result.stderr}`, errorPattern)
+    }
+  }
+  return result
+}
+
+function assertClean(repositoryRoot) {
+  const status = git(repositoryRoot, ['status', '--porcelain=v1']).stdout
+  assert.equal(status, '')
+}
+
+function verifySuccessfulMigration() {
+  const repositoryRoot = initializeRepository('successful-migration', createLegacySchema)
+
+  runMigrator(repositoryRoot, ['--dry-run', repositoryRoot])
+  assertClean(repositoryRoot)
+  assert.ok(existsSync(join(repositoryRoot, '_adoc')))
+  assert.equal(existsSync(join(repositoryRoot, '_aipd')), false)
+
+  runMigrator(repositoryRoot, [repositoryRoot])
+  assert.equal(existsSync(join(repositoryRoot, '_adoc')), false)
+  assert.deepEqual(
+    JSON.parse(readFileSync(join(repositoryRoot, '_aipd', 'manifest.json'), 'utf8')),
+    expectedManifest,
+  )
+  assert.equal(
+    existsSync(join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml')),
+    false,
+  )
+  assert.match(
+    readFileSync(
+      join(repositoryRoot, '.codex', 'agents', 'aipd_context_retriever.toml'),
+      'utf8',
+    ),
+    /aipd_context_retriever/,
+  )
+  for (const directory of ['intent', 'research', 'core', 'product', 'engineering']) {
+    assert.ok(existsSync(join(repositoryRoot, '_aipd', 'knowledge', directory, 'index.md')))
+  }
+
+  const readme = readFileSync(join(repositoryRoot, 'README.md'), 'utf8')
+  assert.match(readme, /_aipd\/knowledge\/intent\/index\.md/)
+  assert.match(readme, /_aipd\/knowledge\/engineering\/index\.md/)
+  assert.match(readme, /aipd_context_retriever/)
+  assert.match(readme, /Intent knowledge domain \(`knowledge\.intent`\)/)
+  assert.match(readme, /Engineering knowledge domain \(`knowledge\.engineering`\)/)
+  assert.match(readme, /real project code \(outside `_aipd\/`\)/)
+  assert.doesNotMatch(readme, /L[1-6] (?:Intent|Research|Core|Product|Dev|Code)/)
+  assert.match(readme, /_adocument/)
+  assert.match(readme, /\.\.\/L3-core\/unrelated\.md/)
+  assert.match(readme, /L3-core\/external\.md/)
+  assert.doesNotMatch(readme, /_adoc\//)
+
+  const migratedIndex = readFileSync(join(repositoryRoot, '_aipd', 'index.md'), 'utf8')
+  assert.match(migratedIndex, /\(knowledge\/core\/index\.md\)/)
+  assert.match(migratedIndex, /\(knowledge\/product\/index\.md\)/)
+
+  const agentEntry = readFileSync(join(repositoryRoot, 'AGENTS.md'), 'utf8')
+  assert.match(agentEntry, /^# Local prefix/m)
+  assert.match(agentEntry, /## 五类并列知识域/)
+  assert.match(agentEntry, /knowledge\.intent/)
+  assert.match(agentEntry, /_aipd\/manifest\.json/)
+  assert.match(agentEntry, /keep custom interaction protocol/)
+  assert.doesNotMatch(agentEntry, /认知层级|_adoc|L1 Intent|L6 Code/)
+
+  const coreGuide = readFileSync(
+    join(repositoryRoot, '_aipd', 'knowledge', 'core', 'guide.md'),
+    'utf8',
+  )
+  assert.match(coreGuide, /\.\.\/product\/index\.md/)
+  assert.match(coreGuide, /_aipd\/knowledge\/engineering\/index\.md/)
+
+  const migratedTerms = readFileSync(
+    join(repositoryRoot, '_aipd', 'knowledge', 'core', 'legacy-terms.md'),
+    'utf8',
+  )
+  assert.match(migratedTerms, /并列知识域/)
+  assert.match(migratedTerms, /五类 Knowledge 与真实代码/)
+  assert.match(migratedTerms, /Core \/ Product \/ Engineering \/ 真实代码/)
+  assert.doesNotMatch(migratedTerms, /L[1-6]/)
+
+  const caseFile = readFileSync(
+    join(repositoryRoot, '_aipd', 'case', 'c1-fixture', 'case.md'),
+    'utf8',
+  )
+  assert.match(caseFile, /\.\.\/\.\.\/knowledge\/core\/guide\.md/)
+
+  assert.match(
+    readFileSync(join(repositoryRoot, 'dist', 'generated.md'), 'utf8'),
+    /_adoc\/L1-intent/,
+  )
+  assert.match(
+    readFileSync(join(repositoryRoot, 'aipd-skill', 'scripts', 'migrate-project-schema'), 'utf8'),
+    /_adoc/,
+  )
+  assert.deepEqual(
+    readFileSync(join(repositoryRoot, 'binary.dat')),
+    Buffer.from([0x00, 0x5f, 0x61, 0x64, 0x6f, 0x63]),
+  )
+
+  assert.match(
+    readFileSync(
+      join(repositoryRoot, '_aipd', 'case', 'archive', 'c0-history', 'case.md'),
+      'utf8',
+    ),
+    /_adoc\/L3-core\/guide\.md.*aipd_adoc_retriever/,
+  )
+
+  // --check must understand a valid v2 worktree before Git rename entries are staged.
+  runMigrator(repositoryRoot, ['--check', repositoryRoot])
+
+  const productIndexPath = join(
+    repositoryRoot,
+    '_aipd',
+    'knowledge',
+    'product',
+    'index.md',
+  )
+  const productIndex = readFileSync(productIndexPath)
+  rmSync(productIndexPath)
+  runMigrator(repositoryRoot, ['--check', repositoryRoot], {
+    expectSuccess: false,
+    errorPattern: /Git 跟踪的 AIPD 文件在 v2 工作树中缺失/,
+  })
+  writeFileSync(productIndexPath, productIndex)
+
+  appendFileSync(
+    join(repositoryRoot, 'README.md'),
+    '\n如果旧项目仍使用 `_adoc/` 与 L1-L5 目录，请运行一次性迁移器。\n',
+  )
+  runMigrator(repositoryRoot, ['--check', repositoryRoot])
+  appendFileSync(join(repositoryRoot, 'README.md'), '\nruntime: `_adoc/map.md`\n')
+  runMigrator(repositoryRoot, ['--check', repositoryRoot], {
+    expectSuccess: false,
+    errorPattern: /迁移后仍有旧 Schema 路径或 Agent 标识/,
+  })
+  const allowedMigrationReadme = readFileSync(join(repositoryRoot, 'README.md'), 'utf8')
+    .replace('\nruntime: `_adoc/map.md`\n', '\n')
+  writeFileSync(join(repositoryRoot, 'README.md'), allowedMigrationReadme)
+  runMigrator(repositoryRoot, ['--check', repositoryRoot])
+
+  commitFixture(repositoryRoot, 'migrate schema')
+  runMigrator(repositoryRoot, ['--check', repositoryRoot])
+
+  const stagedDeletionPath = join(
+    repositoryRoot,
+    '_aipd',
+    'knowledge',
+    'core',
+    'must-survive.md',
+  )
+  const stagedDeletionContents = readFileSync(stagedDeletionPath)
+  rmSync(stagedDeletionPath)
+  git(repositoryRoot, ['add', '-A'])
+  runMigrator(repositoryRoot, ['--check', repositoryRoot], {
+    expectSuccess: false,
+    errorPattern: /Git 跟踪的 AIPD 文件在 v2 工作树中缺失/,
+  })
+  writeFileSync(stagedDeletionPath, stagedDeletionContents)
+  git(repositoryRoot, ['add', '-A'])
+  runMigrator(repositoryRoot, ['--check', repositoryRoot])
+
+  runMigrator(repositoryRoot, [repositoryRoot])
+  assertClean(repositoryRoot)
+
+  appendFileSync(join(repositoryRoot, 'README.md'), '\ndirty but valid\n')
+  runMigrator(repositoryRoot, ['--check', repositoryRoot])
+  runMigrator(repositoryRoot, ['--dry-run', repositoryRoot], {
+    expectSuccess: false,
+    errorPattern: /不干净/,
+  })
+}
+
+function verifyRejectedStates() {
+  const fullLegacy = initializeRepository('check-legacy', createLegacySchema)
+  runMigrator(fullLegacy, ['--check', fullLegacy], {
+    expectSuccess: false,
+    errorPattern: /仍是完整旧版/,
+  })
+
+  const doubleRoot = initializeRepository('double-root', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, '_aipd', 'manifest.json'), '{}\n')
+  })
+  runMigrator(doubleRoot, ['--dry-run', doubleRoot], {
+    expectSuccess: false,
+    errorPattern: /双根/,
+  })
+
+  const currentWithBrokenLegacyRoot = initializeRepository(
+    'current-with-broken-legacy-root',
+    (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot)
+      symlinkSync('missing-legacy-root', join(repositoryRoot, '_adoc'))
+    },
+  )
+  runMigrator(currentWithBrokenLegacyRoot, ['--check', currentWithBrokenLegacyRoot], {
+    expectSuccess: false,
+    errorPattern: /双根/,
+  })
+
+  const legacyWithBrokenCurrentRoot = initializeRepository(
+    'legacy-with-broken-current-root',
+    (repositoryRoot) => {
+      createLegacySchema(repositoryRoot)
+      symlinkSync('missing-current-root', join(repositoryRoot, '_aipd'))
+    },
+  )
+  runMigrator(legacyWithBrokenCurrentRoot, ['--dry-run', legacyWithBrokenCurrentRoot], {
+    expectSuccess: false,
+    errorPattern: /双根/,
+  })
+
+  const halfLegacy = initializeRepository('half-legacy', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    rmSync(join(repositoryRoot, '_adoc', 'L5-dev'), { recursive: true })
+  })
+  runMigrator(halfLegacy, ['--dry-run', halfLegacy], {
+    expectSuccess: false,
+    errorPattern: /L5-dev/,
+  })
+
+  const extraLegacyDirectory = initializeRepository('extra-legacy-directory', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, '_adoc', 'custom-dir', 'index.md'), '# Custom\n')
+  })
+  runMigrator(extraLegacyDirectory, ['--dry-run', extraLegacyDirectory], {
+    expectSuccess: false,
+    errorPattern: /无法映射到 Schema v2/,
+  })
+  runMigrator(extraLegacyDirectory, [extraLegacyDirectory], {
+    expectSuccess: false,
+    errorPattern: /无法映射到 Schema v2/,
+  })
+
+  const unresolvedLegacyLevel = initializeRepository('unresolved-legacy-level', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(
+      join(repositoryRoot, '_adoc', 'L3-core', 'unresolved.md'),
+      '这个规则需要同时读取 L3 与 L4。\n',
+    )
+  })
+  runMigrator(unresolvedLegacyLevel, ['--dry-run', unresolvedLegacyLevel], {
+    expectSuccess: false,
+    errorPattern: /无法安全自动改写的旧知识层级语义/,
+  })
+
+  const unresolvedReadmeLevel = initializeRepository('unresolved-readme-level', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    appendFileSync(join(repositoryRoot, 'README.md'), '\n新核心概念进入 L3。\n')
+  })
+  runMigrator(unresolvedReadmeLevel, ['--dry-run', unresolvedReadmeLevel], {
+    expectSuccess: false,
+    errorPattern: /无法安全自动改写的旧知识层级语义.*README\.md/,
+  })
+
+  const halfCurrent = initializeRepository('half-current', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot, { omit: 'knowledge/engineering' })
+  })
+  runMigrator(halfCurrent, ['--check', halfCurrent], {
+    expectSuccess: false,
+    errorPattern: /knowledge\/engineering/,
+  })
+
+  const mixedCurrentKnowledge = initializeRepository('mixed-current-knowledge', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot)
+    write(join(repositoryRoot, '_aipd', 'knowledge', 'L3-core', 'legacy.md'), '# legacy\n')
+  })
+  runMigrator(mixedCurrentKnowledge, ['--check', mixedCurrentKnowledge], {
+    expectSuccess: false,
+    errorPattern: /半迁移目录/,
+  })
+
+  const extraCurrentKnowledge = initializeRepository('extra-current-knowledge', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot)
+    write(join(repositoryRoot, '_aipd', 'knowledge', 'code', 'index.md'), '# Code\n')
+  })
+  runMigrator(extraCurrentKnowledge, ['--check', extraCurrentKnowledge], {
+    expectSuccess: false,
+    errorPattern: /只允许五类 Knowledge/,
+  })
+
+  const codeInsideWorkspace = initializeRepository('code-inside-workspace', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot)
+    write(join(repositoryRoot, '_aipd', 'code', 'index.md'), '# Code\n')
+  })
+  runMigrator(codeInsideWorkspace, ['--check', codeInsideWorkspace], {
+    expectSuccess: false,
+    errorPattern: /不允许额外 Workspace 目录/,
+  })
+
+  const wrongManifest = initializeRepository('wrong-manifest', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot, {
+      manifest: { schema: 'aipd-project', schemaVersion: 1 },
+    })
+  })
+  runMigrator(wrongManifest, ['--check', wrongManifest], {
+    expectSuccess: false,
+    errorPattern: /精确声明/,
+  })
+
+  const extraManifestField = initializeRepository('extra-manifest-field', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot, {
+      manifest: { ...expectedManifest, compatibility: 'legacy' },
+    })
+  })
+  runMigrator(extraManifestField, ['--check', extraManifestField], {
+    expectSuccess: false,
+    errorPattern: /精确声明/,
+  })
+
+  const collision = initializeRepository('collision', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, '_adoc', 'knowledge', 'note.md'), '# collision\n')
+  })
+  runMigrator(collision, ['--dry-run', collision], {
+    expectSuccess: false,
+    errorPattern: /碰撞/,
+  })
+
+  const agentCollision = initializeRepository('agent-collision', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(
+      join(repositoryRoot, '.codex', 'agents', 'aipd_context_retriever.toml'),
+      'name = "collision"\n',
+    )
+  })
+  runMigrator(agentCollision, ['--dry-run', agentCollision], {
+    expectSuccess: false,
+    errorPattern: /迁移目标碰撞/,
+  })
+
+  const symlink = initializeRepository('symlink', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    symlinkSync('../index.md', join(repositoryRoot, '_adoc', 'L1-intent', 'link.md'))
+  })
+  runMigrator(symlink, ['--dry-run', symlink], {
+    expectSuccess: false,
+    errorPattern: /symlink/,
+  })
+
+  const externalSymlink = initializeRepository('external-symlink', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, 'shared-source.md'), '# Shared source\n')
+    symlinkSync('shared-source.md', join(repositoryRoot, 'shared-link.md'))
+  })
+  runMigrator(externalSymlink, ['--dry-run', externalSymlink])
+
+  const externalLegacyTarget = join(fixtureRoot, 'external-legacy-target.md')
+  write(externalLegacyTarget, 'Active pointer: `_adoc/map.md`\n')
+  const externalLegacySymlink = initializeRepository(
+    'external-legacy-symlink',
+    (repositoryRoot) => {
+      createLegacySchema(repositoryRoot)
+      symlinkSync('../external-legacy-target.md', join(repositoryRoot, 'active-doc.md'))
+    },
+  )
+  runMigrator(externalLegacySymlink, ['--dry-run', externalLegacySymlink], {
+    expectSuccess: false,
+    errorPattern: /Git symlink 目标仍含旧 Schema 语义/,
+  })
+
+  const symlinkedAgentConfig = initializeRepository('symlinked-agent-config', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    rmSync(join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml'))
+    write(
+      join(repositoryRoot, 'agent-config-target.toml'),
+      'name = "aipd_adoc_retriever"\n',
+    )
+    symlinkSync(
+      '../../agent-config-target.toml',
+      join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml'),
+    )
+  })
+  runMigrator(symlinkedAgentConfig, ['--dry-run', symlinkedAgentConfig], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent 配置不能是 symlink/,
+  })
+
+  const symlinkedLegacyAgentDirectory = initializeRepository(
+    'symlinked-legacy-agent-directory',
+    (repositoryRoot) => {
+      createLegacySchema(repositoryRoot)
+      rmSync(join(repositoryRoot, '.codex', 'agents'), { recursive: true })
+      write(
+        join(repositoryRoot, 'legacy-agent-directory', 'aipd_adoc_retriever.toml'),
+        'name = "legacy"\n',
+      )
+      symlinkSync('../legacy-agent-directory', join(repositoryRoot, '.codex', 'agents'))
+    },
+  )
+  runMigrator(symlinkedLegacyAgentDirectory, ['--dry-run', symlinkedLegacyAgentDirectory], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent 配置路径不能经过 symlink/,
+  })
+
+  const symlinkedCurrentAgentDirectory = initializeRepository(
+    'symlinked-current-agent-directory',
+    (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot)
+      mkdirSync(join(repositoryRoot, '.codex'), { recursive: true })
+      write(
+        join(repositoryRoot, 'current-agent-directory', 'aipd_context_retriever.toml'),
+        'name = "current"\n',
+      )
+      symlinkSync('../current-agent-directory', join(repositoryRoot, '.codex', 'agents'))
+    },
+  )
+  runMigrator(symlinkedCurrentAgentDirectory, ['--check', symlinkedCurrentAgentDirectory], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent 配置路径不能经过 symlink/,
+  })
+
+  const dirty = initializeRepository('dirty', createLegacySchema)
+  appendFileSync(join(dirty, 'README.md'), '\ndirty\n')
+  runMigrator(dirty, ['--dry-run', dirty], {
+    expectSuccess: false,
+    errorPattern: /不干净/,
+  })
+
+  const ignoredWorkspace = initializeRepository('ignored-workspace', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, '.gitignore'), '_adoc/ignored.md\n')
+    write(join(repositoryRoot, '_adoc', 'ignored.md'), '`_adoc/L3-core/index.md`\n')
+  })
+  runMigrator(ignoredWorkspace, ['--dry-run', ignoredWorkspace], {
+    expectSuccess: false,
+    errorPattern: /Workspace 含 Git ignored 文件/,
+  })
+
+  const ignoredAgentEntry = initializeRepository('ignored-agent-entry', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, '.gitignore'), 'AGENTS.md\n')
+    write(
+      join(repositoryRoot, 'AGENTS.md'),
+      '<!-- AIPD:START -->\nlegacy `_adoc/map.md`\n<!-- AIPD:END -->\n',
+    )
+  })
+  runMigrator(ignoredAgentEntry, ['--dry-run', ignoredAgentEntry], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent Entry 被 Git ignored/,
+  })
+
+  const ignoredUnmarkedAgentEntry = initializeRepository(
+    'ignored-unmarked-agent-entry',
+    (repositoryRoot) => {
+      createLegacySchema(repositoryRoot)
+      write(join(repositoryRoot, '.gitignore'), 'AGENTS.md\n')
+      write(join(repositoryRoot, 'AGENTS.md'), 'Read `_adoc/map.md` before work.\n')
+    },
+  )
+  runMigrator(ignoredUnmarkedAgentEntry, ['--dry-run', ignoredUnmarkedAgentEntry], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent Entry 被 Git ignored/,
+  })
+
+  const ignoredAgentConfig = initializeRepository('ignored-agent-config', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, '.gitignore'), '.codex/agents/\n')
+  })
+  runMigrator(ignoredAgentConfig, ['--dry-run', ignoredAgentConfig], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent 配置被 Git ignored/,
+  })
+
+  const ignoredSymlinkedAgentConfig = initializeRepository(
+    'ignored-symlinked-agent-config',
+    (repositoryRoot) => {
+      createLegacySchema(repositoryRoot)
+      rmSync(join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml'))
+      write(join(repositoryRoot, '.gitignore'), '.codex/agents/\n')
+      write(join(repositoryRoot, 'ignored-agent-target.toml'), 'name = "legacy"\n')
+      symlinkSync(
+        '../../ignored-agent-target.toml',
+        join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml'),
+      )
+    },
+  )
+  runMigrator(ignoredSymlinkedAgentConfig, ['--dry-run', ignoredSymlinkedAgentConfig], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent 配置被 Git ignored/,
+  })
+
+  const currentSymlinkedAgentConfig = initializeRepository(
+    'current-symlinked-agent-config',
+    (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot)
+      write(join(repositoryRoot, 'current-agent-target.toml'), 'name = "current"\n')
+      mkdirSync(join(repositoryRoot, '.codex', 'agents'), { recursive: true })
+      symlinkSync(
+        '../../current-agent-target.toml',
+        join(repositoryRoot, '.codex', 'agents', 'aipd_context_retriever.toml'),
+      )
+    },
+  )
+  runMigrator(currentSymlinkedAgentConfig, ['--check', currentSymlinkedAgentConfig], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent 配置不能是 symlink/,
+  })
+
+  const ignoredCurrentSymlinkedAgentConfig = initializeRepository(
+    'ignored-current-symlinked-agent-config',
+    (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot)
+      write(join(repositoryRoot, '.gitignore'), '.codex/agents/\n')
+      write(join(repositoryRoot, 'ignored-current-agent-target.toml'), 'name = "current"\n')
+      mkdirSync(join(repositoryRoot, '.codex', 'agents'), { recursive: true })
+      symlinkSync(
+        '../../ignored-current-agent-target.toml',
+        join(repositoryRoot, '.codex', 'agents', 'aipd_context_retriever.toml'),
+      )
+    },
+  )
+  runMigrator(
+    ignoredCurrentSymlinkedAgentConfig,
+    ['--check', ignoredCurrentSymlinkedAgentConfig],
+    {
+      expectSuccess: false,
+      errorPattern: /AIPD Agent 配置被 Git ignored/,
+    },
+  )
+
+  const symlinkedAgentEntry = initializeRepository('symlinked-agent-entry', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    rmSync(join(repositoryRoot, 'AGENTS.md'))
+    write(
+      join(repositoryRoot, 'linked-agent-entry.md'),
+      '<!-- AIPD:START -->\nlegacy `_adoc/map.md`\n<!-- AIPD:END -->\n',
+    )
+    symlinkSync('linked-agent-entry.md', join(repositoryRoot, 'AGENTS.md'))
+  })
+  runMigrator(symlinkedAgentEntry, ['--dry-run', symlinkedAgentEntry], {
+    expectSuccess: false,
+    errorPattern: /AIPD Agent Entry 不能是 symlink/,
+  })
+  runMigrator(dirty, [dirty], {
+    expectSuccess: false,
+    errorPattern: /不干净/,
+  })
+
+  const nested = initializeRepository('nested-root', (repositoryRoot) => {
+    createLegacySchema(repositoryRoot)
+    write(join(repositoryRoot, 'nested', '.fixture'), '')
+  })
+  runMigrator(nested, ['--dry-run', join(nested, 'nested')], {
+    expectSuccess: false,
+    errorPattern: /不是 Git 工作树根/,
+  })
+
+  const nonGit = join(fixtureRoot, 'not-git')
+  mkdirSync(nonGit)
+  runMigrator(nonGit, ['--dry-run', nonGit], {
+    expectSuccess: false,
+    errorPattern: /not a git repository|不是 git 仓库/i,
+  })
+
+  runMigrator(fullLegacy, ['--dry-run', 'relative/project'], {
+    expectSuccess: false,
+    errorPattern: /绝对路径/,
+  })
+}
+
+try {
+  assert.ok(existsSync(migratorPath), `missing migrator: ${migratorPath}`)
+  verifySuccessfulMigration()
+  verifyRejectedStates()
+  console.log('AIPD Schema migrator fixtures 通过：迁移、只读检查与拒绝状态均符合合同。')
+} finally {
+  rmSync(resolve(fixtureRoot), { recursive: true, force: true })
+}

@@ -27,10 +27,10 @@
 
 - 当前 `case.md` 的 Case Contract。
 - 用户原始需求和最新澄清。
-- 相关 L3 / L4 / L5 / README 或现有产品行为摘要。
+- Map 命中的必要 Intent / Research / Core / Product / Engineering 知识、局部 README 或现有产品行为摘要；不机械全读五域。
 - 如有外部参考、竞品、截图、错误日志或历史 case，读取其压缩摘要。
 
-不要自行全量扫描代码。需要现有系统事实时，向 Main Agent 请求 brownfield delta 或 ADOC 检索结果。
+不要自行全量扫描代码。需要现有系统事实时，向 Main Agent 请求 brownfield delta 或 AIPD 任务上下文检索结果。
 
 ## 工作方式
 

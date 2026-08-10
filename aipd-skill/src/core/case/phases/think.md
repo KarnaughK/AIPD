@@ -67,7 +67,7 @@ Think 最容易把上下文冲散。进入大调研、代码实验、数据采�
 - return to：结论回到 Case Contract、Design artifact、work package、Verify 还是 Close 候选。
 - invalidates：是否使已有设计、work package 或验收标准失效。
 
-如果 Think 产生未来可能沉淀的外部世界资料，先记录到 Close 归档候选。只有 case 完成并进入 Close 后，才由 `aipd-weave` 判断是否进入 L2 / L3 / L4 / L5。
+如果 Think 产生未来可能沉淀的信息，先记录到 Close 归档候选。只有 case 完成并进入 Close 后，才由 `aipd-weave` 判断是否进入 Intent、Research、Core、Product 或 Engineering 知识域；Intent 仅接收用户明确确认的长期方向与边界，Research 仅接收带来源和时间边界的稳定外部事实或调研结论。
 
 ## 下一 phase 判断
 

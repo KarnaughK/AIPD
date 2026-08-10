@@ -5,15 +5,15 @@ AIPD 中的 OKR 默认指飞书 OKR。它回答“当前阶段为什么做这些
 ## OKR、Case 和 Work Package
 
 ```text
-L1 Intent -> 飞书 OKR -> Case -> Work Package -> Verify / Close
+Intent -> 飞书 OKR -> Case -> Work Package -> Verify / Close
 ```
 
-- L1 定长期方向和取舍。
+- Intent 定长期方向和取舍。
 - OKR 定阶段目标、关键结果和对齐关系。
 - Case 固定一个短周期目标的 Contract 与生命周期。
 - Work Package 承接 Execute 内的可执行目标包。
 
-OKR 不是 todo 列表，也不替代产品路线图。具体执行记录留在 Case / Work Package；长期稳定知识进入 L3 / L4 / L5、map 或局部 README。
+OKR 不是 todo 列表，也不替代产品路线图。具体执行记录留在 Case / Work Package；长期稳定知识由 Weave 判断进入对应 Knowledge、map 或局部 README。
 
 ## `/aipd-okr` 做什么
 

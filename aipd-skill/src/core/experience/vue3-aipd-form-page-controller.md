@@ -2,7 +2,7 @@
 
 ## 来源
 
-- 来源类型：真实 Vue3 后台项目的表单 controller 实现、L5 表单规则和使用面审计。
+- 来源类型：真实 Vue3 后台项目的表单 controller 实现、Engineering 知识域表单规则和使用面审计。
 - 真实规模：13 个页面级 controller 根、52 个 FormItem 相关使用点、4 个组件 ref 适配点；52 个点中包含一个只展示 sample code、未做注销的 demo 页面。
 - 经验性质：基于已验证机制重写的复杂表单代码实践经验，AIPD canonical 名称为 `AipdForm`。
 

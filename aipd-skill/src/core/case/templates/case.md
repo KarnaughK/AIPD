@@ -8,7 +8,7 @@
 新建 case 使用 contract + phase-first 结构。目标、边界、验收标准和上下文索引直接写在 `case.md` 的 Case Contract；case 内部不再生成 `01-goal/goal.md`，也不再按 `doc/`、`steps/`、`code/` 这类材料类型分层。
 
 ```text
-_adoc/case/c{N}-{case-name}/
+_aipd/case/c{N}-{case-name}/
 ├── case.md
 ├── 01-think/
 │   ├── think.md
@@ -65,23 +65,24 @@ _adoc/case/c{N}-{case-name}/
 
 > 这里列出本次 case 最强相关的上下文。执行时优先读这些，不全量扫描项目。
 
-#### 层级判断
+#### 知识域判断
 
-- **L2 Research**：{是否涉及用户 / 场景 / 需求 / 痛点 / 竞品 / 行业或玩法范式 / 调研资料}
-- **L3 Core**：{是否涉及核心概念 / 领域语言 / 核心对象关系 / 项目成立模型}
-- **L4 Product**：{是否涉及产品功能 / 业务边界 / 交互规则}
-- **L5 Dev**：{是否涉及跨模块工程实现规则 / 前后端约定 / 调试 SOP}
+- **Intent 知识域**：{是否涉及用户已确认的长期方向 / 目标 / 边界}
+- **Research 知识域**：{是否涉及用户 / 场景 / 需求 / 痛点 / 竞品 / 行业或玩法范式 / 调研资料}
+- **Core 知识域**：{是否涉及核心概念 / 领域语言 / 核心对象关系 / 项目成立模型}
+- **Product 知识域**：{是否涉及产品功能 / 业务边界 / 交互规则}
+- **Engineering 知识域**：{是否涉及跨模块工程实现规则 / 前后端约定 / 调试 SOP}
 - **局部 README**：{是否涉及页面 / 弹窗 / 组件内部实现地图}
 - **Case / 历史 Work Package**：{是否需要读取历史 case 或 work package 执行记录}
 
 #### 项目认知
 
-- `_adoc/map.md` - {本次任务如何命中项目记忆地图；若缺失，说明兜底方式}
-- `_adoc/L1-intent/intent.md` - {为什么需要读取}
-- `_adoc/L2-research/index.md` - {为什么需要读取}
-- `_adoc/L3-core/index.md` - {为什么需要读取}
-- `_adoc/L4-product/{module}/index.md` - {为什么需要读取}
-- `_adoc/L5-dev/{module}/README.md` - {为什么需要读取}
+- `_aipd/map.md` - {本次任务如何命中项目记忆地图；若缺失，说明兜底方式}
+- `_aipd/knowledge/intent/intent.md` - {为什么需要读取}
+- `_aipd/knowledge/research/index.md` - {为什么需要读取}
+- `_aipd/knowledge/core/index.md` - {为什么需要读取}
+- `_aipd/knowledge/product/{module}/index.md` - {为什么需要读取}
+- `_aipd/knowledge/engineering/{module}/README.md` - {为什么需要读取}
 
 #### 页面 / 模块 README
 
@@ -259,7 +260,7 @@ Think / Design / Execute / Verify / Close
 - **禁止事项**：{跨边界引用、内部穿透、主干回流}
 - **共享变化权限**：{允许新增 / 上移哪些 shared；未明确时默认不允许}
 - **独立验收边界**：{如何独立理解、修改和验证}
-- **认知回写**：{稳定后更新哪个 L5 / 局部 README / map}
+- **认知回写**：{稳定后更新哪些 Intent / Research / Core / Product / Engineering 知识域、局部 README 或 map}
 
 ### 设计文档
 
@@ -314,17 +315,18 @@ Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标�
 
 ## Close 归档候选 / 反向编织候选
 
-> 本区只记录 Close 阶段要复核的候选，不是长期知识库内容。进行中 case 里出现“以后可能要回写”的内容，先记在这里；case 未完成前不写入 L1-L5、局部 README 或 map。真正回写长期 ADOC、局部 README 或 map 时，必须等 case Close 后使用 `aipd-weave` 判断。
+> 本区只记录 Close 阶段要复核的候选，不是长期知识库内容。进行中 case 里出现“以后可能要回写”的内容，先记在这里；case 未完成前不写入五类知识域、局部 README 或 map。真正回写长期知识、局部 README 或 map 时，必须等 case Close 后使用 `aipd-weave` 判断。
 
 | 候选内容 | 触发来源 | 当前状态 | 候选归属 | Close 判断 |
 |---|---|---|---|---|
-| {判断、规则、入口或经验} | 用户讨论 / Think / Design / Execute / Verify / work package | 未完成 / 待验证 / 已实现待验收 / 已完成可评估 | L3 / L4 / L5 / README / map / SOP / 仅留 case | 待判断 |
+| {判断、规则、入口或经验} | 用户讨论 / Think / Design / Execute / Verify / work package | 未完成 / 待验证 / 已实现待验收 / 已完成可评估 | 五类知识域 / README / map / SOP / 仅留 case | 待判断 |
 
 默认规则：
 
 - 未完成 case 中的候选不反编织到长期知识库。
 - 未实现设计、未来计划、临时讨论和未完成 work package 继续留在 case。
 - 已完成、已实现、已验收并能描述现有项目事实的候选，Close 时再交给 `aipd-weave` 判断是否回写。
+- Intent 只接收用户明确确认的长期方向、目标和边界；Research 只接收带来源、采集时间和有效性边界的稳定外部事实或调研结论。
 
 ## 自我察觉迭代
 
@@ -337,8 +339,8 @@ Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标�
 
 > 后续用 `aipd-learn` 审计 transcript / session / 执行记录时，检查 Agent 是否按这些锚点执行。
 
-- [ ] Agent 是否读取 `_adoc/map.md`，或说明其缺失并使用 `rg` / README 兜底。
-- [ ] Agent 是否读取本 case 上下文索引中的 L3 / L4 / L5 / 局部 README。
+- [ ] Agent 是否读取 `_aipd/map.md`，或说明其缺失并使用 `rg` / README 兜底。
+- [ ] Agent 是否按上下文索引读取必要的 Intent / Research / Core / Product / Engineering 知识域与局部 README。
 - [ ] Case 是否使用 contract + phase-first 目录结构，而不是回到顶层 `doc/` / `steps/` / `01-goal/`。
 - [ ] 恢复 case 后是否先输出状态卡，没有直接跨 phase 推进。
 - [ ] Think 阶段是否以分支目标推进，并明确结论回流位置。

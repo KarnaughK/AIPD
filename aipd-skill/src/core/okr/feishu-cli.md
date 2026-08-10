@@ -106,8 +106,8 @@ lark-cli okr objectives delete --objective-id <objective_id> --yes --format json
 
 ## AIPD 记录规则
 
-- `_adoc/okr/index.md` 记录飞书 OKR 的入口、周期 ID、目标 ID 或协作边界。
-- Case / Work Package 需要对齐 OKR 时，读取飞书 OKR 或引用 `_adoc/okr/index.md` 中记录的飞书 ID。
+- `_aipd/okr/index.md` 记录飞书 OKR 的入口、周期 ID、目标 ID 或协作边界。
+- Case / Work Package 需要对齐 OKR 时，读取飞书 OKR 或引用 `_aipd/okr/index.md` 中记录的飞书 ID。
 - 一次性测试创建和删除过程不写入长期认知；只有可复用的 CLI 操作经验进入本指引或项目 SOP。
 
 ## 已验证经验

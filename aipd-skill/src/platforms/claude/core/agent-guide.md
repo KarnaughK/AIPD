@@ -17,9 +17,10 @@ Main 和分身都以文件为事实源：
 
 ```text
 AGENTS.md / CLAUDE.md
--> _adoc/index.md
--> _adoc/map.md
--> _adoc/case/index.md
+-> _aipd/manifest.json
+-> _aipd/index.md
+-> _aipd/map.md
+-> _aipd/case/index.md
 -> 当前 case.md（Case Contract + Case Runtime）
 -> Current Phase 对应目录
 -> 当前游标文件 / Work Package
@@ -43,13 +44,14 @@ AGENTS.md / CLAUDE.md
 
 ## 主 Agent 流程
 
-1. 读取 `_adoc/case/index.md` 定位目标 Case。
-2. 读取当前 `case.md` 的 Case Contract、Current Phase、Phase State、当前游标和上下文索引。
-3. 如果平台目标明确绑定当前 Case，加载 Goal Mode；否则按普通 Case 运行。
-4. 进入 Current Phase 对应文档；只有 Execute 才读取 `03-execute/execute.md` 和当前 Work Package。
-5. 按上下文噪声、并发收益、主线耦合和调度成本选择 Main 或分身。
-6. Main 直接执行时按里程碑写回；决定派发时传最小 prompt、case.md、work package、角色 guide 和返回格式。
-7. 分身返回压缩结论后，Main 写回 work package、`03-execute/execute.md` 和 `case.md`；成功、失败、回跳都必须形成 checkpoint。
+1. 按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；验证 `_aipd/manifest.json`、`index.md`、`map.md` 是非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止。
+2. 读取 `_aipd/case/index.md` 定位目标 Case。
+3. 读取当前 `case.md` 的 Case Contract、Current Phase、Phase State、当前游标和上下文索引。
+4. 如果平台目标明确绑定当前 Case，加载 Goal Mode；否则按普通 Case 运行。
+5. 进入 Current Phase 对应文档；只有 Execute 才读取 `03-execute/execute.md` 和当前 Work Package。
+6. 按上下文噪声、并发收益、主线耦合和调度成本选择 Main 或分身。
+7. Main 直接执行时按里程碑写回；决定派发时传最小 prompt、case.md、work package、角色 guide 和返回格式。
+8. 分身返回压缩结论后，Main 写回 work package、`03-execute/execute.md` 和 `case.md`；成功、失败、回跳都必须形成 checkpoint。
 
 ## 分身 Agent Prompt 模板
 
