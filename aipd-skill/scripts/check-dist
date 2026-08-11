@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+REPO_ROOT="$(dirname "$PROJECT_ROOT")"
 SRC_SKILLS="$PROJECT_ROOT/src/skills"
 DIST_ROOT="$PROJECT_ROOT/dist"
 EXPECTED_SKILLS=(
@@ -147,8 +148,29 @@ check_platform_parity() {
 check_semantic_regressions() {
     local dist_skills="$DIST_ROOT/codex/skills"
     local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入|横向铺模块|横向铺开|L1-intent|L2-research|L3-core|L4-product|L5-dev|aipd_adoc_retriever'
+    local retired_execution_forbidden='(_aipd|_adoc)/plan([/`[:space:]]|$)|aipd2?-plan-(create|run|archive|learn)|旧[[:space:]`*_]*(aipd2?[[:space:]`*_]*)?(plan|planning)([^[:alnum:]_-]|$)|(plan|planning)[[:space:]`*_]*(概念|流程|目录|文件夹|模板|指南|体系|执行系统)|plan[[:space:]`*_]*(改|到|->|→)[[:space:]`*_]*case|aipd.{0,16}计划[[:space:]`*_]*流程'
+    local retired_execution_scan_roots=(
+        "$REPO_ROOT/AGENTS.md"
+        "$REPO_ROOT/README.md"
+        "$REPO_ROOT/docs"
+        "$REPO_ROOT/_aipd/index.md"
+        "$REPO_ROOT/_aipd/map.md"
+        "$REPO_ROOT/_aipd/development-log.md"
+        "$REPO_ROOT/_aipd/knowledge"
+        "$PROJECT_ROOT/src/skills"
+        "$PROJECT_ROOT/src/core"
+        "$DIST_ROOT/codex/skills"
+        "$DIST_ROOT/claude/skills"
+    )
     if rg -n "$forbidden" "$dist_skills" --glob '*.md'; then
         fail "最终产物命中当前流程禁止语义"
+    fi
+
+    # 只扫描当前项目认知、公开文档、现行 Skill / 模板及其构建产物。
+    # scripts/legacy-skills 是卸载已退役 Skill 的兼容名单，不是运行时概念来源，
+    # 必须保留在本检查范围之外。
+    if rg -n -i "$retired_execution_forbidden" "${retired_execution_scan_roots[@]}"; then
+        fail "当前项目认知、文档、Skill、模板或构建产物重新引入已退役执行语义"
     fi
 }
 

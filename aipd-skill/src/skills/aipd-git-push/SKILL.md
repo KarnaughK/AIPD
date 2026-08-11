@@ -61,7 +61,7 @@ git log --oneline --decorate -5
 
 ```text
 准备推送 2 个提交：
-- fd93e70：把 AIPD 的计划流程迁移为 Case，并加入 Agent Entry 初始化逻辑。
+- fd93e70：把 AIPD 的执行流程统一为 Case，并加入 Agent Entry 初始化逻辑。
 - 333342a：新增 /aipd-git-push，用来检查状态后推送当前分支。
 ```
 

@@ -8,12 +8,12 @@
 
 ## 总览
 
-AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱动的文档化开发流程：用 `intent/spec/system/plan/runbook` 让 AI 从需求到交付沿文档推进。随后它经历了几次明显转向：
+AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱动的文档化开发流程：用结构化文档让 AI 从理解需求推进到交付。随后它经历了几次明显转向：
 
 1. **文档模板阶段**：重点是“先写文档，再写代码”，让 AI 用结构化文档理解项目。
 2. **分层认知阶段**：从具体模板转向 L1-L5 的项目认知结构，开始区分方向、场景、核心模型、产品功能和技术规则。
 3. **Skill 工程化阶段**：AIPD 从一组 Markdown 指南变成可构建、可安装、可适配 Claude Code / Codex 的 skill 源码项目。
-4. **Plan 到 Case / Step 阶段**：执行系统从迭代计划转向一次事项和可派发 step，更强调恢复、验收、归档和经验回写。
+4. **Case / Step 阶段**：执行系统围绕一次具体事项和可派发 step 建立事实源，更强调恢复、验收、归档和经验回写。
 5. **分身 Agent 阶段**：从普通子 Agent 调度发展到 fork-first / clone agent 模型，明确 Main Agent 保护主线，分身承担探索和执行过程成本。
 6. **Map / Weave / 三条主线阶段**：AIPD 开始把长期知识库、Case / Step 执行逻辑、AI 原生代码架构实验拆成三条主线，并用 map 做第一跳检索、用 Weave 做经验回写。
 7. **AIPD 命名收敛与 Think 前置阶段**：从 AIPD2 收敛回 AIPD，并开始把 Case 之前的模糊讨论、调研和取舍沉淀为 AIPD Think。
@@ -22,16 +22,15 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 ## 大迭代脉络
 
-### 1. 早期文档驱动：`intent/spec/system/plan/runbook`
+### 1. 早期文档驱动：结构化模板体系
 
 时间：2026-02-02 到 2026-02-03
 
-最初的 README 将 AIPD 定义为 AI-Powered Document-Driven Development，核心口号是先写文档再写代码。仓库包含 `skill.md`、`templates/`、`examples/`、`references/`，文档体系围绕：
+最初的 README 将 AIPD 定义为 AI-Powered Document-Driven Development，核心口号是先写文档再写代码。仓库包含 `skill.md`、`templates/`、`examples/`、`references/`，文档体系主要覆盖：
 
 - `intent.md`：项目方向。
 - `spec/`：功能模块设计。
 - `system/`：技术架构约束。
-- `plan/`：迭代计划。
 - `runbook/`：操作手册。
 
 这一阶段的价值是把 AI 的开发入口从“直接改代码”前移到“先理解项目文档”。但它仍然比较像传统文档驱动开发的 AI 化版本，核心对象还是模板和流程。
@@ -40,11 +39,11 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 时间：2026-02-12 到 2026-03-11
 
-这一阶段开始发现 `spec/system/runbook` 容易像固定目录模板，而不是项目真实认知结构。提交 `6a55813` 将文档架构从 `spec/system/runbook` 重构为 `business/tech` 两层，并引入 `index.md` 作为项目入口；后续 3 月的提交移除旧 spec 模板，新增 init / design / plan / execute / archive 五阶段参考文档。
+这一阶段开始发现 `spec/system/runbook` 容易像固定目录模板，而不是项目真实认知结构。提交 `6a55813` 将文档架构从 `spec/system/runbook` 重构为 `business/tech` 两层，并引入 `index.md` 作为项目入口；后续 3 月的提交移除旧 spec 模板，补充覆盖初始化、设计、执行和归档的阶段参考文档。
 
 这说明 AIPD 开始从“模板清单”转向“项目状态和阶段推进”。但当时仍然保留较强的阶段流程味道，距离后来的 L1-L5 和 Case / Step 还没有完全成型。
 
-### 3. 五层认知与 Planning 体系成型
+### 3. 五层认知与 Agent 协作体系成型
 
 时间：2026-04-07 到 2026-04-20
 
@@ -53,7 +52,7 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 这一阶段的重要变化：
 
 - AIPD 不再只围绕文档类型，而是开始沉淀项目认知层级。
-- Planning 从简单计划文件，发展成主 Agent / worker 分工的执行系统。
+- 执行能力从单一文档推进，发展成主 Agent / worker 分工的协作系统。
 - Agent 团队协作开始进入核心设计，不再只是附属说明。
 
 风险也从这里开始出现：层级、角色、阶段、模板同时增加，框架复杂度快速上升。后续是否“肿”，很大程度要看这些结构是否能被 map 和任务入口有效压缩。
@@ -72,13 +71,13 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 这是从“文档仓库”到“可安装工具”的关键转折。AIPD 开始拥有真实 L6 代码形态，而不只是被 AI 阅读的 Markdown。
 
-### 5. Plan 改 Case：执行对象重新定义
+### 5. Case / Step：执行对象重新定义
 
 时间：2026-05-07
 
-`fd93e70` 将 AIPD2 的计划流程改为 Case，删除旧 plan 概念和命名，新增 case 模板与 case-create / case-run / case-archive 技能。这个变化的意义不只是改名：
+`fd93e70` 将 AIPD2 的执行入口统一为 Case，新增 case 模板与 case-create / case-run / case-archive 技能，并收敛此前分散的执行命名。这个变化重新定义了执行对象：
 
-- Plan 更像预设路线；Case 更像一次具体事项的事实源。
+- Case 成为一次具体事项的事实源。
 - Case 能容纳目标、边界、上下文索引、steps、验收和归档。
 - Step 成为更适合派发、恢复和审查的执行单元。
 
@@ -168,7 +167,7 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 ### 2026-02-03
 
 - 持续调整 README 和英文 README，强化价值主张。
-- 更新 plan 指南、plan 模板和 skill 规则。
+- 更新交付阶段指南、模板和 skill 规则。
 - 新增 `.gitignore`。
 
 大迭代判断：小迭代，主要是早期表达和模板校准。
@@ -183,16 +182,16 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 ### 2026-03-07
 
-- 完善 init / design / plan / execute / archive 阶段化文档结构。
+- 完善覆盖 init / design / execute / archive 的阶段化文档结构。
 - 移除旧 spec 示例和模板。
-- 新增 `FUTURE_PLAN.md` 记录未来规划。
+- 新增独立文档记录未来方向。
 
 大迭代判断：阶段化流程成型。
 
 ### 2026-03-10
 
 - 删除 runbook 相关旧结构。
-- 调整 README、phase 文档和 plan 模板。
+- 调整 README、phase 文档和对应模板。
 
 大迭代判断：小迭代，是对阶段化结构的清理。
 
@@ -204,8 +203,8 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 ### 2026-04-07
 
-- 大更新前期存储，引入 Agent team、AIPD init 主 / 子 Agent、Planning worker 体系等材料。
-- 开始把 intent、planning、execute、archive 等能力拆成更明确的角色和参考文档。
+- 大更新前期存储，引入 Agent team、AIPD init 主 / 子 Agent、执行 worker 体系等材料。
+- 开始把 intent、execute、archive 等能力拆成更明确的角色和参考文档。
 
 大迭代判断：从文档阶段向 Agent 协作阶段过渡。
 
@@ -213,10 +212,10 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 - 重排目录，形成 L1 intent、L2 scenario、L3 engine、L4 product arch、L5 tech arch 等认知结构。
 - 增加 OKR、map-adoc-structure、map-skill-structure 等入口。
-- 重组 Planning 结构，按角色分离主 Agent、research worker、dev worker、archive worker。
+- 重组执行协作结构，按角色分离主 Agent、research worker、dev worker、archive worker。
 - 部分旧 phase 文档被删除或迁移。
 
-大迭代判断：五层认知 + Planning 角色体系开始成型。
+大迭代判断：五层认知 + Agent 协作角色体系开始成型。
 
 ### 2026-04-09
 
@@ -227,17 +226,16 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 ### 2026-04-20
 
-- 新增 `v2-plan/`，列出 v0.2 / 2.0 版本迁移计划。
-- 计划项覆盖目录、核心迁移、worker 迁移、init、skill 编写、build script、install script、cleanup、README 等。
+- 梳理 v0.2 / 2.0 版本迁移任务，覆盖目录、核心迁移、worker 迁移、init、skill 编写、build script、install script、cleanup、README 等。
 
-大迭代判断：AIPD2 工程化前的迁移计划。
+大迭代判断：AIPD2 工程化前的迁移准备。
 
 ### 2026-04-28
 
 - 完成 AIPD2 beta 工程化：新增 `src/core`、`src/platforms`、`src/skills`。
 - 新增构建、开发安装、用户安装、项目安装脚本，并覆盖 Claude Code / Codex。
-- 旧材料归档到 `v1/`，v2-plan 进入 archive。
-- skill 拆成 `aipd2`、`aipd2-plan-create`、`aipd2-plan-run`、`aipd2-plan-learn`、`aipd2-plan-archive`。
+- 旧材料和版本迁移记录进入 archive。
+- skill 拆成主入口以及 create、run、learn、archive 等执行能力。
 
 大迭代判断：从文档包转成可安装 skill 工程。
 
@@ -249,13 +247,13 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 ### 2026-05-07
 
-- 将 AIPD2 的 plan 流程统一迁移为 Case。
+- 将 AIPD2 的执行流程统一收敛为 Case。
 - 新增 Agent Entry 模板，初始化时写入项目记忆文件。
 - 新增 case-create、case-run、case-archive、learn 等 skill。
-- 删除旧 v2-plan 执行台账，改用 v2-todo 记录后续讨论。
+- 删除过期的版本迁移执行台账，改用 v2-todo 记录后续讨论。
 - 新增 Git 推送辅助 skill，并补充中文提交说明。
 
-大迭代判断：执行系统核心对象从 Plan 转向 Case / Step。
+大迭代判断：Case / Step 成为执行系统的核心对象。
 
 ### 2026-05-08
 
@@ -412,7 +410,7 @@ AIPD 从 `spec/system/runbook` 发展到 L1-L5，最终把 Intent、Research、C
 
 ### 3. Case / Work Package 是否仍然保留执行价值
 
-Plan 改 Case 的初衷，是让长任务可恢复、可派发、可验收。后续判断 Case 是否变肿，要看：
+Case / Work Package 的初衷，是让长任务可恢复、可派发、可验收。后续判断 Case 是否变肿，要看：
 
 - Case 是否真的承载目标、边界、上下文索引和验收状态。
 - Work Package 是否是可执行、可恢复、可验收的目标包，而不是讨论笔记拆碎后的目录或默认子 Agent 节点。
@@ -451,7 +449,7 @@ AIPD 多次清理 legacy。历史材料有价值，但不能污染当前入口�
 
 观察点：
 
-- 旧 AIPD2、旧 plan、旧 docs 是否还会被 Agent 当成当前规则。
+- 旧 AIPD2 和旧 docs 是否还会被 Agent 当成当前规则。
 - 历史是否通过 Git、日志和归档说明可追溯，而不是散落在主入口。
 - 新增文档是否明确“当前规则”还是“历史参考”。
 
