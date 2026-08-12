@@ -58,7 +58,7 @@ git diff main
 - 新高频检索入口或容易迷路的路径 → 候选 `_aipd/map.md`。
 - 已实现 / 已验证事实和任一长期知识域、README 或 map 存在冲突 → 候选长期认知更新。
 - 可复用执行流程、部署验收、调试步骤 → 候选 SOP。
-- AIPD Case 机制、模板、Agent Entry 或 skill 行为问题 → 候选 `aipd-learn` / AIPD 框架自迭代。
+- AIPD Case 机制、模板、Agent Entry 或 skill 行为问题 → 记录为 AIPD 框架自迭代候选；回到 AIPD 源码仓库后再交给仓库级 `aipd-learn`。
 - 一次性执行过程、临时决策、验收记录、未实现设计和未来计划 → 保留 case / work package，不建议回写长期知识。
 
 输出一个简洁候选包，不直接更新长期知识：

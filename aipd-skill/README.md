@@ -1,8 +1,10 @@
 # AIPD Skill 源码目录
 
-`aipd-skill/` 是 AIPD 的可构建能力源码。它维护平台无关的框架规则、十个 Skill、Codex 适配、角色 Agent、构建脚本和安装产物。
+`aipd-skill/` 是 AIPD 的可构建能力源码。它维护平台无关的框架规则、九个公共 Skill、Codex 适配、角色 Agent、构建脚本和安装产物。AIPD 自身使用的仓库级 `aipd-learn` 位于根目录 `.agents/skills/`，不属于这里的构建和安装集合。
 
 它不是项目 `_aipd/` 工作区：前者定义 AIPD 怎样运行，后者保存某个具体项目的 Knowledge、Map、SOP、Case、OKR 和 Inbox。
+
+本目录只承载需要对外构建和安装的全局 / 公共能力。仅服务 AIPD 源码仓库的项目级 Skill 直接放在仓库根 `.agents/skills/`，目录本身就是源码与运行体，不在本目录建立镜像，也不进入 build、dist 或 install。
 
 ## 目录总览
 
@@ -100,7 +102,7 @@ src/platforms/
 
 ## `src/skills/`
 
-AIPD 当前构建十个 Skill：
+AIPD 当前构建九个公共 Skill：
 
 | Skill | 职责 |
 |---|---|
@@ -110,19 +112,20 @@ AIPD 当前构建十个 Skill：
 | `aipd-inbox` | 捕获尚未整理归属的临时信息 |
 | `aipd-leader` | 仅在用户显式调用时，把当前对话提升为 Leader 并按一个 Case 一个 Codex 任务进行编排 |
 | `aipd-update` | 审计和升级已初始化项目的 AIPD Schema 与入口 |
-| `aipd-learn` | 从 transcript / Case / 经验包回流 AIPD 框架自身 |
 | `aipd-okr` | 管理飞书 OKR 并压缩成主 Agent 可用上下文 |
 | `aipd-mermaid` | 创建、修改、评审和按需渲染 Mermaid 图 |
 | `aipd-git-push` | 检查并推送当前分支，不自动 add / commit / merge / rebase |
 
 每个 Skill 的源码目录至少包含 `SKILL.md`。公共材料只通过 `inject-from-core` 声明注入，不在多个 Skill 中复制维护。
 
+仓库级 `.agents/skills/aipd-learn/` 只服务于 AIPD 源码仓库的框架自迭代。它由 Codex 直接发现，不进入 `src/skills/`、`dist/`、用户级安装或外部项目级安装。
+
 ## `scripts/`
 
 | 脚本 | 作用 |
 |---|---|
 | `build` | 默认构建 Codex 产物；保留多目标扩展能力 |
-| `check-dist` | 校验 Codex Skill 集合、静态 references、产物和旧语义残留 |
+| `check-dist` | 校验九个公共 Codex Skill、仓库级 Learn 隔离、静态 references、产物和旧语义残留 |
 | `migrate-project-schema` | 一次性把旧项目目录转换为 `_aipd/knowledge/*`；不进入日常运行时 |
 | `check-schema-migrator` | 用隔离 fixture 验证迁移成功、重复执行和拒绝状态 |
 | `dev` / `dev-codex` | Codex 用户级开发 symlink 安装；泛名入口为默认，后者为显式别名 |

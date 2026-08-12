@@ -1,8 +1,8 @@
 # Skill 概览
 
-AIPD 当前构建十个 Skill。它们不是十个彼此孤立的对象，而是围绕“主导项目、进入项目、完成目标、维护记忆和处理专用协作”分工。
+AIPD 当前构建九个面向普通项目的公共 Skill。它们不是彼此孤立的对象，而是围绕“主导项目、进入项目、完成目标、维护记忆和处理专用协作”分工。另有一个只在 AIPD 源码仓库内可见的仓库级 `aipd-learn`，负责框架自迭代。
 
-源码位于 `aipd-skill/src/skills/`；构建后默认生成 Codex 可安装产物。平台无关能力与扩展边界仍以 `aipd-skill/src/platforms/` 和构建脚本为准。
+九个公共 Skill 的源码位于 `aipd-skill/src/skills/`；构建后默认生成 Codex 可安装产物。仓库级 Learn 的源码位于 `.agents/skills/aipd-learn/`。平台无关能力与扩展边界仍以 `aipd-skill/src/platforms/` 和构建脚本为准。
 
 ## 显式主导层
 
@@ -26,9 +26,8 @@ Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言�
 |---|---|---|
 | `aipd-inbox` | 先记一下、稍后再判断 | 低承诺度临时记录 |
 | `aipd-update` | 已接入项目需要升级到本机 AIPD 版本，或检查同版本 drift | 读取版本演进和当前权威文档，一次语义收敛并记录结果 |
-| `aipd-learn` | 要从会话、Case 或用户反馈迭代 AIPD 框架 | 最小定位卡或框架回流包 |
 
-Weave 面向当前项目的稳定认知；Learn 面向 AIPD 框架自身。Update 面向项目里的 AIPD 结构与规则版本：项目 manifest 保存已应用版本，本机安装包给出目标版本。它会完整理解两者之间的更新记录，再以本机当前文档为最终态保护性合并；普通安全更新直接执行，只有破坏性或歧义冲突才暂停。
+Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构与规则版本：项目 manifest 保存已应用版本，本机安装包给出目标版本。它会完整理解两者之间的更新记录，再以本机当前文档为最终态保护性合并；普通安全更新直接执行，只有破坏性或歧义冲突才暂停。
 
 ## 专用协作
 
@@ -37,6 +36,14 @@ Weave 面向当前项目的稳定认知；Learn 面向 AIPD 框架自身。Updat
 | `aipd-okr` | 查看、创建、同步、删除或讨论飞书 OKR | OKR 操作或压缩经验包 |
 | `aipd-mermaid` | 创建、修改、评审 Mermaid，或明确要求渲染 | `.mmd` 源码与按需预览 |
 | `aipd-git-push` | 只需检查并推送当前分支 | 推送；不自动 add / commit / merge / rebase / stash |
+
+## AIPD 仓库开发专用
+
+| Skill | 触发场景 | 主要结果 |
+|---|---|---|
+| `aipd-learn` | 已回到 AIPD 源码仓库，要从当前对话、外部 transcript、Case 或用户反馈迭代框架 | 诊断框架行为；用户确认后修改 AIPD Skill、模板、Agent 规则、项目认知或实践经验库 |
+
+`aipd-learn` 的事实源是 `.agents/skills/aipd-learn/`。它不进入 `aipd-skill/src/skills/`、公共 dist、用户级安装或业务项目级安装。外部项目中的 AIPD 框架反馈需要先带回源码仓库；项目自身知识仍使用该项目的 `aipd-weave`。
 
 ## 常见组合
 
@@ -94,7 +101,7 @@ Update 不查询远端最新版。旧 `_adoc` 项目可以先在同一目标下�
 ### AIPD 自身需要从真实使用中学习
 
 ```text
-/aipd-learn
+$aipd-learn
 -> 获取 transcript 定位或生成回流包
 -> 用户确认后再修改框架源码
 ```
@@ -123,6 +130,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 ```text
 aipd-skill/src/skills/{skill}/SKILL.md
+.agents/skills/aipd-learn/SKILL.md       # 仅 AIPD 源码仓库
 aipd-skill/src/core/
 aipd-skill/src/platforms/
 aipd-skill/scripts/

@@ -31,7 +31,7 @@
 | 黑箱上移 | 决策杠杆上移 | 把人的决策位置从局部实现细节上移到边界、输入输出和验收层 | `_aipd/knowledge/core/index.md` | aipd-case | 不等同于传统封装 |
 | 扁平化检索 | Map-first 上下文检索 | 用结构化总图提高 AI 第一跳命中率 | `_aipd/knowledge/core/index.md`、`_aipd/map.md` | AIPD Update、aipd-case、weave | 不是取消分层维护，也不是默认 RAG |
 | 分身 Agent | fork 出来的 Main Agent 克隆体 | 进入局部探索分支并回流结论的同源 Agent | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | case Execute、Agent 调度 | 不是低上下文执行工人 |
-| Weave 反向编织 | 项目知识库更新机制 | 把稳定信息回写到当前项目 Knowledge、局部 README 或 map；一次性过程留在 case / work package | `_aipd/knowledge/core/horizontal-capabilities.md`、`aipd-skill/src/skills/aipd-weave/SKILL.md` | Weave | 它属于项目知识库维护模型；和 `aipd-learn` 分工不同 |
+| Weave 反向编织 | 项目知识库更新机制 | 把稳定信息回写到当前项目 Knowledge、局部 README 或 map；一次性过程留在 case / work package | `_aipd/knowledge/core/horizontal-capabilities.md`、`aipd-skill/src/skills/aipd-weave/SKILL.md` | Weave | 它属于项目知识库维护模型；和仅在 AIPD 源码仓库运行的 `aipd-learn` 分工不同 |
 
 ## 对象关系
 

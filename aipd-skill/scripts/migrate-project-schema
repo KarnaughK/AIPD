@@ -137,9 +137,6 @@ const ALLOWED_RESIDUAL_FRAGMENTS = new Map([
     '`test -e _adoc || test -L _adoc`',
     '只有 `_adoc` 时，不读取、路由或写入其中内容',
   ]],
-  ['aipd-skill/src/skills/aipd-learn/SKILL.md', [
-    '只有 `_adoc` 时返回 `legacy-needs-migration`',
-  ]],
   ['aipd-skill/src/core/updates/current.md', [
     '一次性 `_adoc -> _aipd` 迁移器',
   ]],

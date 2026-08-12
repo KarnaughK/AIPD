@@ -156,7 +156,7 @@ Weave 负责把已完成事项、已实现功能、已验收规则、case 归档
 
 Weave 不要求其他执行型 skill 内置完整文档更新逻辑。`aipd-case` 或普通开发流程只需要把候选放入 Close 归档候选；case 完成后，`aipd-weave` 再统一判断知识归属、索引更新和旧知识冲突。
 
-`aipd-learn` 更偏 AIPD 框架自迭代和 transcript 诊断；`aipd-weave` 更偏当前项目 Knowledge 的反向编织。
+仓库级 `aipd-learn` 只在 AIPD 源码仓库处理框架自迭代和 transcript 诊断；`aipd-weave` 在各业务项目中负责当前项目 Knowledge 的反向编织。
 
 ## Agent Entry 功能
 

@@ -171,7 +171,7 @@ mkdir -p _aipd/sop _aipd/case/archive _aipd/okr
 - Case 已完成待归档：推荐 `aipd-case` 进入 Close。
 - 用户要把稳定实现、Case 结论、diff、错误日志或外部资料沉淀回知识域、README 或 map：推荐 `aipd-weave`。
 - 用户要查看、创建、同步、删除或讨论飞书 OKR：推荐 `aipd-okr`。
-- 用户要采集会话定位信息或诊断 AIPD 框架本身的 Skill、模板或 Agent 规则：推荐 `aipd-learn`。
+- 用户要反馈或诊断 AIPD 框架本身的 Skill、模板或 Agent 规则：提示切回 AIPD 源码仓库，再使用仓库级 `aipd-learn`；业务项目不安装或执行该 Skill。
 
 ## 设计原则
 

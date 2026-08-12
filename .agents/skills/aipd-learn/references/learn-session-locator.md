@@ -1,6 +1,6 @@
 # 会话定位：Codex
 
-Codex 中优先读取当前运行时直接提供的 thread ID。只有 ID 可见时，才尝试把它映射到 transcript：
+优先使用当前运行时直接提供的 thread ID。只有 ID 可见时，才尝试映射 transcript：
 
 ```bash
 thread_id="${CODEX_THREAD_ID:-}"
@@ -23,4 +23,4 @@ fi
 
 - 不输出完整 transcript；只把路径作为原始上下文引用。
 - 找不到 ID 或路径时明确标记“未识别”，不要扩大目录扫描范围。
-- 跨项目读取必须显式打开 transcript 文件，不假设平台自动恢复上下文。
+- 跨项目反馈必须显式提供 transcript path、会话定位卡或粘贴内容；不要假设平台自动恢复另一项目中的上下文。

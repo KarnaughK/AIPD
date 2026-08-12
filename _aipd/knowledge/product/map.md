@@ -15,7 +15,7 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 | `$aipd-leader` / Leader 模式 / AI 主导项目 / Mission / 跨 Case 调度 / Codex task | AIPD Leader | 已存在 | `aipd-skill/src/skills/aipd-leader/SKILL.md` | `_aipd/leader/`、Mission、Case / Codex task 绑定 | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md` |
 | case / 创建 case / Case Contract / 目标边界 / 执行 case / case design / case think / work package / 验收 / 归档 | AIPD Case | 已存在 | `aipd-skill/src/skills/aipd-case/SKILL.md` | case.md、Case Contract、phase-first 目录、phase state、Think、Design、Work Package、执行记录、Close 归档候选 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | `_aipd/case/index.md`、`aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/` |
 | 反向编织 / 更新 Knowledge / 更新 map / 更新局部 README | Weave | 已存在 | `aipd-skill/src/skills/aipd-weave/SKILL.md` | Intent / Research / Core / Product / Engineering / README / Map；未完成 case 候选先留在 Close 归档候选 | 项目知识库维护模型 | `_aipd/map.md`、局部 README |
-| learn / transcript / 回流包 / 框架自迭代 | Learn | 已存在 | `aipd-skill/src/skills/aipd-learn/SKILL.md` | transcript、回流包、AIPD skill / 模板 / 规则 | 项目知识库维护模型、Agent 协作思考模型 | `aipd-skill/src/platforms/codex/` |
+| learn / transcript / 回流包 / 框架自迭代 | Learn（AIPD 仓库级） | 已存在，仅源码仓库 | `.agents/skills/aipd-learn/SKILL.md` | 当前对话、外部 transcript、回流包、AIPD skill / 模板 / 规则 | 项目知识库维护模型、Agent 协作思考模型 | `.agents/skills/aipd-learn/references/learn-session-locator.md` |
 | OKR / 飞书 OKR / lark-cli / 目标 / 周期 / OKR 经验包 | AIPD OKR | 已存在 | `aipd-skill/src/skills/aipd-okr/SKILL.md` | 飞书 O/KR、周期 ID、飞书 ID、OKR 经验包 | 任务执行模型、Agent 协作思考模型 | `_aipd/okr/index.md`、`aipd-skill/src/core/okr/` |
 | 旧 `_adoc` / L1-L5 / 升级 Schema v2 | Project Schema 一次性迁移 | 已存在 | `aipd-skill/scripts/migrate-project-schema`；安装后为 `aipd` Skill 内同名脚本 | 旧项目工作区、新 manifest、五类 Knowledge 目录 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` |
 | AIPD update / 项目版本落后 / unversioned-v2 / 更新 AGENTS / 同步当前模板 / drift repair | AIPD Update | 已存在 | `aipd-skill/src/skills/aipd-update/SKILL.md` | 本机 release catalog、`_aipd/manifest.json#aipdVersion`、Release Records、current authority、`_aipd/update-log.md` | 项目知识库维护模型、Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/updates/`、`aipd-skill/src/core/workspace/templates/` |
@@ -33,7 +33,7 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 | AIPD Leader | `aipd-skill/src/skills/aipd-leader/SKILL.md` | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`_aipd/leader/index.md` |
 | AIPD Case | `aipd-skill/src/skills/aipd-case/SKILL.md` | `aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/work-package.md` |
 | Weave | `aipd-skill/src/skills/aipd-weave/SKILL.md` | `_aipd/map.md`、五类 Knowledge、局部 README |
-| Learn | `aipd-skill/src/skills/aipd-learn/SKILL.md` | Codex transcript、AIPD 源码、观察锚点 |
+| Learn | `.agents/skills/aipd-learn/SKILL.md` | Codex transcript、AIPD 源码、观察锚点；不进入公共 dist / install |
 | AIPD OKR | `aipd-skill/src/skills/aipd-okr/SKILL.md` | `aipd-skill/src/core/okr/guide.md`、`aipd-skill/src/core/okr/feishu-cli.md`、`_aipd/okr/index.md` |
 | Project Schema 一次性迁移 | `aipd-skill/scripts/migrate-project-schema` | `aipd-skill/scripts/check-schema-migrator`、`docs/modules/build-and-install.md` |
 | AIPD Update | `aipd-skill/src/skills/aipd-update/SKILL.md` | `aipd-skill/src/core/updates/`、`aipd-skill/src/core/workspace/project-state.md`、`aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/workspace/templates/`、`aipd-skill/src/core/case/templates/` |
@@ -51,7 +51,7 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 | AIPD Leader | 在一个 active Mission 内探索方向、调度一个 Case 一个 Codex task，并做总验收 | 不自动启动，不替代 Case，不并发多个 Leader / Mission，不扩大外部副作用权限 |
 | AIPD Case | 按 Case Contract / Think / Design / Execute / Verify / Close 推进短周期目标闭环 | 不把目标边界拆成独立 Goal phase，不把每个 phase 拆成独立 skill，不把 work package 当微步骤 |
 | Weave | 判断稳定信息写回哪里 | 不做聊天存档，不处理 AIPD 框架自身 transcript 回流 |
-| Learn | 回流 AIPD 框架自身经验 | 不替代当前项目 weave，不默认直接改源码 |
+| Learn | 在 AIPD 源码仓库回流框架自身经验 | 不安装到业务项目，不替代当前项目 weave，不在方案确认前改源码 |
 | AIPD OKR | 查看、创建、同步、删除或压缩飞书 OKR 经验包 | 不把完整 CLI 输出带回主 Agent，不在用户未确认时执行飞书写入或删除 |
 | Project Schema 一次性迁移 | 把完整旧工作区原子切换为 v2，并提供 dry-run / check | 不进入日常运行时，不双读，不处理 dirty 或混合状态 |
 | AIPD Update | 读取版本演进和本机最终态，一次收敛已接入项目；安全更新默认执行 | 不逐版落盘、不查询远端、不覆盖项目已有认知；破坏性或歧义冲突才暂停 |
@@ -61,5 +61,5 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 
 ## 兜底搜索
 
-- `rg "aipd-leader|aipd-case|case-create|case-run|case-archive|aipd-weave|aipd-learn|aipd-okr|aipd-update|aipd-inbox|aipd-mermaid|aipdVersion|currentAuthority" aipd-skill/src _aipd`
+- `rg "aipd-leader|aipd-case|case-create|case-run|case-archive|aipd-weave|aipd-learn|aipd-okr|aipd-update|aipd-inbox|aipd-mermaid|aipdVersion|currentAuthority" .agents aipd-skill/src _aipd`
 - `rg "AIPD Leader|Mission|Codex task|AIPD Case|Case Design|Work Package|复杂度爆点|Case Create|Case Run|Weave|Learn|OKR|Update|Inbox|Mermaid|SOP|初始化|归档" README.md docs _aipd aipd-skill/src`

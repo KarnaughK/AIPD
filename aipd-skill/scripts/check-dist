@@ -7,13 +7,13 @@ REPO_ROOT="$(dirname "$PROJECT_ROOT")"
 SRC_SKILLS="$PROJECT_ROOT/src/skills"
 DIST_ROOT="$PROJECT_ROOT/dist"
 DEFAULT_PLATFORM="codex"
+REPO_LEARN_SKILL="$REPO_ROOT/.agents/skills/aipd-learn"
 EXPECTED_SKILLS=(
     aipd
     aipd-case
     aipd-git-push
     aipd-inbox
     aipd-leader
-    aipd-learn
     aipd-mermaid
     aipd-okr
     aipd-update
@@ -216,6 +216,43 @@ check_default_dist_scope() {
     done < <(find "$DIST_ROOT" -mindepth 1 -maxdepth 1 -type d | sort)
 }
 
+check_repo_scoped_learn_contract() {
+    local skill_file="$REPO_LEARN_SKILL/SKILL.md"
+    local locator_file="$REPO_LEARN_SKILL/references/learn-session-locator.md"
+
+    if [ ! -d "$REPO_LEARN_SKILL" ] || [ -L "$REPO_LEARN_SKILL" ]; then
+        fail "仓库级 aipd-learn 必须位于 .agents/skills/aipd-learn 的真实目录"
+        return
+    fi
+    if [ ! -f "$skill_file" ] || [ -L "$skill_file" ]; then
+        fail "仓库级 aipd-learn 缺少非 symlink 的 SKILL.md"
+        return
+    fi
+    if [ ! -f "$locator_file" ] || [ -L "$locator_file" ]; then
+        fail "仓库级 aipd-learn 缺少非 symlink 的 Codex 会话定位 reference"
+    fi
+    if [ -e "$SRC_SKILLS/aipd-learn" ] || [ -L "$SRC_SKILLS/aipd-learn" ]; then
+        fail "aipd-learn 不得留在公共 src/skills"
+    fi
+    if [ -e "$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-learn" ] \
+        || [ -L "$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-learn" ]; then
+        fail "aipd-learn 不得进入公共 Codex dist"
+    fi
+
+    for term in \
+        'name: aipd-learn' \
+        'AIPD 源码仓库专用' \
+        '.agents/skills/aipd-learn/' \
+        '不把它构建进 `aipd-skill/dist/`' \
+        '不要把本 Skill 安装或分发到业务项目' \
+        'aipd-skill/src/core/workspace/project-state.md' \
+        'aipd-skill/src/core/updates/catalog.json'; do
+        if ! rg -Fq "$term" "$skill_file"; then
+            fail "仓库级 aipd-learn 缺少关键边界: $term"
+        fi
+    done
+}
+
 check_multi_target_build_contract() {
     local fixture_root
     local fixture_platform="fixture-platform"
@@ -394,6 +431,9 @@ check_cleanup_entrypoints() {
     if ! rg -q 'aipd_adoc_retriever' "$SCRIPT_DIR/legacy-skills"; then
         fail "共享 legacy cleanup 缺少旧 aipd_adoc_retriever Agent"
     fi
+    if ! rg -q '^[[:space:]]+aipd-learn[[:space:]]*$' "$SCRIPT_DIR/legacy-skills"; then
+        fail "共享 legacy cleanup 缺少已退役的公共 aipd-learn"
+    fi
     for script in install-codex install-project-codex dev-codex; do
         if ! rg -q 'AIPD_LEGACY_AGENTS' "$SCRIPT_DIR/$script"; then
             fail "$script 未复用共享 legacy Agent cleanup"
@@ -480,7 +520,6 @@ check_schema_runtime_gates() {
         aipd-case
         aipd-inbox
         aipd-leader
-        aipd-learn
         aipd-mermaid
         aipd-okr
         aipd-update
@@ -574,6 +613,7 @@ check_skill_set "$DEFAULT_PLATFORM"
 check_source_sync "$DEFAULT_PLATFORM"
 check_static_references "$DEFAULT_PLATFORM"
 check_codex_agent_set
+check_repo_scoped_learn_contract
 check_multi_target_build_contract
 check_semantic_regressions
 check_code_topology_projection
@@ -589,4 +629,4 @@ if [ "$CHECK_FAILED" -ne 0 ]; then
     exit 1
 fi
 
-echo "AIPD dist 检查通过：默认 Codex 产物、${#EXPECTED_SKILLS[@]} 个 Skill、3 个 Codex Agent、通用多目标构建、release bundle、Schema migrator、源码同步、静态引用、Leader 显式调用合同、代码拓扑投影、关键语义和 cleanup 入口均正常。"
+echo "AIPD dist 检查通过：默认 Codex 产物、${#EXPECTED_SKILLS[@]} 个公共 Skill、1 个仓库级 aipd-learn、3 个 Codex Agent、通用多目标构建、release bundle、Schema migrator、源码同步、静态引用、Leader 显式调用合同、代码拓扑投影、关键语义和 cleanup 入口均正常。"

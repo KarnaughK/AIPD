@@ -49,7 +49,7 @@ inject-from-core:
 **不做**：
 
 - 不执行开发 Work Package，不归档 Case，不移动 Case 目录，不合并分支。
-- 不替代 `aipd-learn` 做 AIPD 框架自迭代诊断。
+- 不替代 AIPD 源码仓库中的仓库级 `aipd-learn` 做框架自迭代诊断。
 - 不把一次性聊天过程写入长期知识。
 - 不把未完成 Case、未实现设计、未验收结论或未确认的方向写入 Knowledge、README 或 map。
 - 不为了沉淀创建大量零散文档；优先更新已有文件和索引。
@@ -60,7 +60,7 @@ inject-from-core:
 |---|---|---|
 | `aipd` | 入口路由和轻量上下文加载 | 用户说“回写 / 记一下 / weave / 更新 Knowledge”时进入本 Skill |
 | `aipd-case` | 推进 Case / Work Package 并收集结果 | Case 未完成时只记 Close 候选；Close 后再判断是否沉淀 |
-| `aipd-learn` | AIPD 框架自迭代、transcript 诊断和定位卡 | 框架经验走 Learn；当前业务项目知识走 Weave |
+| 仓库级 `aipd-learn` | AIPD 框架自迭代与 transcript 诊断 | 框架经验带回 AIPD 源码仓库处理；当前业务项目知识走 Weave |
 | `aipd-update` | 同步已初始化项目的 AIPD 架构 | 模板同步走 Update；项目经验沉淀走 Weave |
 
 ## 默认流程

@@ -26,7 +26,7 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 | AIPD Leader | 让用户把项目推进责任交给一个显式启动的 AI Leader，由它探索一个 Mission、协调多个 Case task 并总验收 | `aipd-leader`、`_aipd/leader/` | Leader 项目主导编排模型、任务执行模型 | 已存在 |
 | AIPD Case | 以统一入口推进短周期目标：Case Contract / Think / Design / Execute / Verify / Close | `aipd-case`、case phase 文档、case 模板 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | 已存在 |
 | Weave 反向编织 | 把稳定知识回写到五类 Knowledge、局部 README 或 Map | `aipd-weave` | 项目知识库维护模型 | 已存在 |
-| Learn 框架自迭代 | 把真实协作经验回流到 AIPD 框架自身的 skill、模板和规则 | `aipd-learn` | 项目知识库维护模型、Agent 协作思考模型 | 已存在 |
+| Learn 框架自迭代（仓库级） | 把真实协作经验回流到 AIPD 框架自身的 skill、模板和规则 | `.agents/skills/aipd-learn/` | 项目知识库维护模型、Agent 协作思考模型 | 已存在，仅 AIPD 源码仓库 |
 | Project Schema 一次性迁移 | 把旧 `_adoc` / L1-L5 工作区原子切换到 v2，不保留日常兼容 | `migrate-project-schema` | 项目知识库维护模型 | 已存在 |
 | AIPD Update | 把已接入项目一次语义收敛到本机 AIPD 发布快照，同时保护项目已有认知与定制 | `aipd-update`、`_aipd/manifest.json`、`_aipd/update-log.md` | 项目知识库维护模型、Map-first 上下文检索模型 | 已存在 |
 | Mermaid / MMD | 用图提高人和 AI 对复杂结构的对齐速度 | `aipd-mermaid`、`.mmd` 文件 | AI 原生代码架构模型、任务执行模型 | 已存在 |
@@ -81,9 +81,9 @@ Weave 面向当前项目知识库；Learn 面向 AIPD 框架自身迭代。
 
 ### Learn 框架自迭代
 
-Learn 用来采集 transcript、case 经验或用户反馈，并判断是否需要修改 AIPD 框架自己的 skill、模板、Agent 行为规则或项目认知。
+Learn 用来在 AIPD 源码仓库内读取当前对话、外部 transcript、case 经验或用户反馈，并判断是否需要修改 AIPD 框架自己的 skill、模板、Agent 行为规则、项目认知或实践经验库。
 
-它不替代当前项目的 weave，不负责归档 case，也不默认直接改源码。
+它的事实源位于 `.agents/skills/aipd-learn/`，由 Codex 作为仓库级 Skill 发现，不进入公共 build、dist、用户级安装或业务项目级安装。外部项目中的框架反馈需要先带回 AIPD 源码仓库；它不替代业务项目的 weave，不负责归档 case，也不在未确认方案时直接改源码。
 
 ### AIPD Update
 

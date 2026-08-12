@@ -16,7 +16,7 @@ AIPD 是一套面向 AI 协作的软件开发框架。它不替代 Codex，也�
 
 一句话：**Agent 负责执行，AIPD 让项目记住自己。**
 
-[五分钟开始](#五分钟开始) · [完整学习路径](docs/README.md) · [十个 Skill](#十个-skill一套循环) · [构建与安装](docs/modules/build-and-install.md)
+[五分钟开始](#五分钟开始) · [完整学习路径](docs/README.md) · [Skill 循环](#九个公共-skill一套循环) · [构建与安装](docs/modules/build-and-install.md)
 
 ## 没有 AIPD 时，项目会怎样失忆
 
@@ -137,7 +137,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 这让下一次 Agent 继承的是经过验证的项目事实，而不是整段聊天历史。
 
-## 十个 Skill，一套循环
+## 九个公共 Skill，一套循环
 
 ### 显式主导层
 
@@ -161,7 +161,6 @@ Leader 绝不自动启动。普通 AIPD 仍从 Case 执行层开始；只有用�
 |---|---|---|
 | `/aipd-inbox` | 只想先记下一条未整理的信息 | 放进临时收件箱，不提前污染长期知识 |
 | `/aipd-update` | 已接入项目需要升级到本机 AIPD 版本，或修复同版本结构漂移 | 读取版本演进和当前权威文档，一次语义收敛并记录结果；仅破坏性或歧义冲突暂停 |
-| `/aipd-learn` | 要让 AIPD 框架自身吸收真实协作经验 | 定位会话或生成框架回流包；不替代项目 Weave |
 
 ### 专用协作
 
@@ -170,6 +169,14 @@ Leader 绝不自动启动。普通 AIPD 仍从 Case 执行层开始；只有用�
 | `/aipd-okr` | 查看或维护飞书 OKR，并与 Case 对齐 | 获得压缩后的 OKR 经验包，或执行已确认的远端操作 |
 | `/aipd-mermaid` | 需要创建、修改、评审或明确渲染 Mermaid 图 | 得到可维护的架构图源码或按需预览 |
 | `/aipd-git-push` | 只需要检查并推送当前分支 | 推送当前分支；不自动 add、commit、merge 或 rebase |
+
+### AIPD 仓库开发专用
+
+| Skill | 什么时候用 | 结果 |
+|---|---|---|
+| `$aipd-learn` | 仅在 AIPD 源码仓库内，让框架吸收真实协作经验 | 诊断 transcript、Case 或用户反馈；确认后回写 AIPD 自身 |
+
+`aipd-learn` 位于 `.agents/skills/aipd-learn/`，由 Codex 作为仓库级 Skill 发现。它不进入公共 build、dist 或安装包，也不安装到业务项目；外部项目的框架反馈应带回 AIPD 源码仓库后处理。
 
 旧的 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `/aipd-case`。
 

@@ -83,6 +83,6 @@ rg "{case-dir}" _aipd
 Close 输出应明确说明：
 
 - 已更新哪些长期认知入口。
-- 哪些候选延后给 `aipd-weave` / SOP / `aipd-learn` 判断。
+- 哪些候选延后给 `aipd-weave` / SOP 判断，哪些框架候选需要带回 AIPD 源码仓库交给仓库级 `aipd-learn`。
 - 哪些内容只保留在 case。
 - archive 决策和引用风险。

@@ -1,7 +1,7 @@
 # Case: c19-product-design-prototype-experience
 
 > **本次事项目标**：从高关注度开源 Agent Skill 中提炼可指导产品文档与产品原型设计的方法论和强制迭代流程，并判断如何吸收进 AIPD。
-> **当前 Phase**：Verify
+> **当前 Phase**：Close
 
 ## Case Contract
 
@@ -89,7 +89,7 @@
 
 ## Current Phase
 
-Verify
+Close
 
 ## Phase State
 
@@ -97,17 +97,16 @@ Verify
 - Design: completed -> `02-design/design.md`
 - Execute: completed -> `03-execute/execute.md`
 - Verify: completed -> `04-verify/verify.md`
-- Close: pending -> `05-close/close.md`
+- Close: completed -> `05-close/close.md`
 
 ## 当前焦点
 
-- **当前要解决的问题**：Verify 已全部通过；是否进入 Close 完成 Case 归档？
-- **当前游标**：`04-verify/verify.md`
-- **最近 checkpoint**：用户已确认安装；用户级 9 个 AIPD Skill 与 3 个 Agent 模板安装成功，新规则和旧入口清理均验证通过。
-- **下一步建议**：确认后进入 Close，整理最终归档记录并移动到 archive。
-- **压缩后恢复入口**：`case.md#当前焦点` -> `04-verify/verify.md` -> `03-execute/work-packages/wp-01-embed-triggered-reduction-loop.md`
-- **待确认项**：
-  - [ ] 是否进入 Close 归档 c19。
+- **当前要解决的问题**：无；Case 已完成并归档。
+- **当前游标**：`05-close/close.md`
+- **最近 checkpoint**：用户已确认归档；Close 已完成长期认知和路径引用审计，Case 移入 archive。
+- **下一步建议**：无；后续真实产品 Case 出现新证据时，再通过仓库级 `aipd-learn` 评估。
+- **压缩后恢复入口**：`05-close/close.md` -> `04-verify/verify.md` -> `03-execute/work-packages/wp-01-embed-triggered-reduction-loop.md`
+- **待确认项**：无。
 - **阻塞项**：无。
 
 ## 状态卡记录
@@ -128,6 +127,7 @@ Verify
 | 2026-07-22 | Execute -> Verify | 源码落盘 | experience、Design、Verify、Goal Mode 四个落点已实现 | Codex install 尚需用户确认 | build / dist / 安装后产物验证 | `04-verify/verify.md` |
 | 2026-07-22 | Verify | 构建完成 | Claude / Codex 各 9 个 Skill 构建成功；check-dist、diff、目标注入检查通过 | 用户级 Codex 尚未安装 | 询问并执行 install，核验安装产物 | `04-verify/verify.md` |
 | 2026-07-22 | Verify | 用户确认安装 | 用户级 9 个 AIPD Skill、3 个 Agent 模板安装成功；新经验与运行规则检出，旧 Case Skill 已清理 | 无 | 等待进入 Close 确认 | `04-verify/verify.md` |
+| 2026-08-12 | Verify -> Close | 用户确认归档 | Contract、Work Package 和 Verify 均完成；长期认知与路径引用审计通过 | 无 | 写入 Close 并移动到 archive | `05-close/close.md` |
 
 ## 回跳 / 重开记录
 
@@ -159,6 +159,13 @@ Verify
 - **状态**：completed。
 - **已完成**：源码结构和语义审查；build、check-dist、diff、两端最终产物注入检查、Codex install 与用户级安装产物核验。
 - **待完成**：无；等待进入 Close 归档确认。
+
+## Close 摘要
+
+- **状态**：completed / archived。
+- **长期认知审计**：运行规则和实践经验已经写入权威源码，不重复写入五类 Knowledge；外部候选证据仅留 Case。
+- **引用审计**：Case 外只有索引引用，已同步更新；移动 archive 不会造成运行时断链。
+- **后续观察**：首次真实使用出现新证据时，再交给仓库级 `aipd-learn` 评估。
 
 ## Close 归档候选
 

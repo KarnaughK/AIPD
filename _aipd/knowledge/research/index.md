@@ -101,7 +101,7 @@ AIPD 不只是给业务项目沉淀知识，它本身也是一个会在真实使
 
 真实协作里会出现 skill 行为不符合用户真实工作流、`aipd-case` / weave 边界需要调整、Agent 没有按预期读取 map / case / SOP、用户反复纠正同类问题、transcript 暴露框架规则或模板缺口等情况。
 
-AIPD 需要 `aipd-learn` 这类框架自迭代能力，把真实使用经验回流到 AIPD 的 skill、模板、Agent 行为规则和项目认知中。
+AIPD 需要仓库级 `aipd-learn` 这类框架自迭代能力，把真实使用经验带回 AIPD 源码仓库，再回流到 Skill、模板、Agent 行为规则和项目认知中；这项能力不需要安装到业务项目。
 
 ### 9. 已接入项目的 AIPD 架构升级迁移
 

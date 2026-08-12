@@ -337,7 +337,7 @@ Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标�
 
 ## 自迭代观察锚点
 
-> 后续用 `aipd-learn` 审计 transcript / session / 执行记录时，检查 Agent 是否按这些锚点执行。
+> 后续回到 AIPD 源码仓库，用仓库级 `aipd-learn` 审计 transcript / session / 执行记录时，检查 Agent 是否按这些锚点执行。
 
 - [ ] Agent 是否读取 `_aipd/map.md`，或说明其缺失并使用 `rg` / README 兜底。
 - [ ] Agent 是否按上下文索引读取必要的 Intent / Research / Core / Product / Engineering 知识域与局部 README。

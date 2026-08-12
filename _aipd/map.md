@@ -37,7 +37,7 @@
 | case / Case Contract / 目标边界 / case design / case think / work package / 创建 case / 执行 case / 验收 / 归档 | AIPD Case 统一入口 | case 流程 + Core/Product/Engineering 能力文档 | `_aipd/case/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md`、`_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-case/SKILL.md`、`aipd-skill/src/core/case/overview.md`、`aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/work-package.md` | `rg "aipd-case|Case Contract|Case Phase|Work Package|复杂度爆点|case design|case think" aipd-skill/src _aipd/case docs` |
 | 旧 case-create / 旧 case-run / 旧 case-archive | AIPD Case 旧入口迁移 | case 流程 | `_aipd/case/index.md`、相关 case `case.md` | `aipd-skill/src/skills/aipd-case/SKILL.md`、`aipd-skill/src/core/case/overview.md` | `rg "case-create|case-run|case-archive|旧入口|迁移" aipd-skill/src _aipd docs` |
 | Weave / 反向编织 / 项目 Knowledge 回写 / 更新 map / 更新局部 README / Close 归档候选 | Weave 反向编织 | Core + Engineering | `_aipd/knowledge/core/horizontal-capabilities.md`、`_aipd/map.md` | `aipd-skill/src/skills/aipd-weave/SKILL.md` | `rg "weave|反向编织|Close 归档候选|知识回写|更新 Knowledge|更新 map" aipd-skill/src _aipd README.md` |
-| 自迭代 / learn / transcript / 观察锚点 | AIPD Learn | Engineering + 框架自迭代 | `aipd-skill/src/skills/aipd-learn/SKILL.md` | `aipd-skill/src/platforms/codex/` | `rg "观察锚点|transcript|回流|自迭代|learn" aipd-skill/src _aipd` |
+| 自迭代 / learn / transcript / 观察锚点 | AIPD Learn（仓库级） | Product + Engineering + 框架自迭代 | `.agents/skills/aipd-learn/SKILL.md`、`_aipd/knowledge/product/index.md`、`_aipd/knowledge/engineering/index.md` | `.agents/skills/aipd-learn/references/learn-session-locator.md` | `rg "观察锚点|transcript|回流|自迭代|learn" .agents aipd-skill/src _aipd` |
 | 实践经验库 / 附带源码 / experience assets / AipdModalBox / AipdForm / AipdSearch | AIPD 实践经验与源码资产 | Engineering + 仓库级源码资产 | `aipd-skill/src/core/experience/index.md`、`_aipd/knowledge/engineering/index.md` | `experience-assets/README.md`、`experience-assets/vue3-context-decoupling/README.md` | `rg "附带源码|experience-assets|AipdModalBox|AipdForm|AipdSearch" aipd-skill/src experience-assets _aipd` |
 | docs / 学习文档 / README / 教学文档 / 三条主线 / 用户学习路径 | AIPD 面向用户的学习文档体系 | Core + Engineering + docs | `docs/README.md`、`README.md` | `docs/guide/`、`docs/modules/` | `rg "学习文档|三条主线|知识库最小闭环|Case / Work Package|AI 原生代码架构|README" README.md docs _aipd` |
 | Vue 页面 / 组件 / AI 友好前端架构 / 纯前端 case | Vue 角色 Agent 调度 | Engineering + 局部 README | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/knowledge/engineering/vue-case-create-guide.md`、`aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md`、`aipd-skill/src/core/agent-guides/aipd_vue_architect.md` | `aipd-skill/src/platforms/codex/agents/aipd_vue_architect.toml` | `rg "Vue|组件|README|aipd_vue_architect|纯前端|一个文件一个 work package|useXxx" aipd-skill/src _aipd` |
@@ -57,7 +57,7 @@
 | 外部世界 | Research | `_aipd/knowledge/core/workspace-modules.md` | AIPD 初始化、aipd-case | 不只是痛点；竞品、玩法范式、市场观察、流量来源和变现方式也可先放 Research |
 | 项目成立模型 | Core | `_aipd/knowledge/core/index.md` | AIPD 初始化、AIPD Update | 不等于狭义数据模型；也可能是增长模型、内容模型、流量模型、留存模型和商业模型 |
 | 局部 map | 代码就近 README / 局部 map | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/aipd-project-structure.md` | aipd-case、weave | 页面、弹窗、组件内部实现地图不应大老远塞回 Engineering |
-| Weave 反向编织 | `aipd-weave` / 项目 Knowledge 回写 | `_aipd/knowledge/core/horizontal-capabilities.md` | Weave | 和 `aipd-learn` 分工不同；weave 面向当前项目知识库，learn 面向 AIPD 框架自迭代 |
+| Weave 反向编织 | `aipd-weave` / 项目 Knowledge 回写 | `_aipd/knowledge/core/horizontal-capabilities.md` | Weave | 和仓库级 `aipd-learn` 分工不同；weave 面向当前项目知识库，learn 只在 AIPD 源码仓库面向框架自迭代 |
 | 子 Agent | 用于上下文隔离、真实并发或独立复核的执行 / 调研 Agent | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | case Execute、角色 Agent 调度 | 不是默认步骤；按隔离收益、并发收益、主线耦合和调度成本选择，派发不扩大外部副作用权限 |
 | 上下文检索 Agent | `aipd_context_retriever` | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/agent-guides/aipd_context_retriever.md` | Map-first 认知加载、SOP 检索、次级流程检索 | Main 先最小路由；大量项目认知或多条独立认知线才优先派发；Inbox/OKR/Case 只有明确需要时查 |
 | AIPD Leader / Leader 工作记忆 | `$aipd-leader`、`_aipd/leader/` | `_aipd/leader/index.md`、`aipd-skill/src/skills/aipd-leader/SKILL.md` | 显式 Leader 模式、一个 active Mission、一个 Case 一个 Codex task | 不是第六类 Knowledge，也不自动启动；只保存没有更权威归属、但会影响当前判断和恢复的信息 |
@@ -77,7 +77,7 @@
 | 创建 case / Case Contract / 目标边界 / case design / case think / 执行 case / 派发子 Agent / 验收 / 归档 | AIPD Case | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-case/SKILL.md` | case.md、Case Contract、phase state、work package、Agent 指引、Close 归档候选 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/knowledge/engineering/index.md` |
 | 旧创建 case / 旧拆 step / 旧执行 case / 旧归档 case | AIPD Case 旧入口迁移 | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-case/SKILL.md` | 旧命令说法、旧 case 结构迁移提示 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/knowledge/engineering/index.md` |
 | 经验回写 / 反向编织 / Close 归档候选 | Weave | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-weave/SKILL.md` | Intent（仅用户明确确认）/ Research（带来源和时间边界）/ Core / Product / Engineering / README / map；未完成 case 候选先留在 Close 归档候选 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/knowledge/engineering/index.md` |
-| 框架自迭代 / transcript 回流 | Learn | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-learn/SKILL.md` | transcript、回流包、AIPD 源码 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/knowledge/engineering/index.md` |
+| 框架自迭代 / transcript 回流 | Learn（AIPD 仓库级） | `_aipd/knowledge/product/map.md` | `.agents/skills/aipd-learn/SKILL.md` | 当前对话、外部 transcript、回流包、AIPD 源码 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/knowledge/engineering/index.md` |
 | OKR / 飞书 OKR / 目标 / 周期 / OKR 经验包 | AIPD OKR | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-okr/SKILL.md` | 飞书 O/KR、周期 ID、飞书入口、OKR 经验包 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/okr/index.md`、`aipd-skill/src/core/okr/` |
 | 旧 `_adoc` / L1-L5 / Schema v2 迁移 | Project Schema 一次性迁移 | `_aipd/knowledge/product/map.md` | `aipd-skill/scripts/migrate-project-schema` | 旧工作区、新 manifest、五类 Knowledge 目录 | `_aipd/knowledge/core/map.md` | `_aipd/knowledge/engineering/index.md` |
 | 项目更新到本机 AIPD 版本 / 同版本 drift repair | AIPD Update | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-update/SKILL.md` | release catalog、Release Records、current authority、`AGENTS.md`、manifest、update log、项目定制 | `_aipd/knowledge/core/map.md` | `_aipd/knowledge/engineering/index.md` |
@@ -105,7 +105,7 @@
 | skill 源码 | `aipd-skill/src/skills/{skill}/SKILL.md` | skill 执行规则本体 | 对应功能线 |
 | OKR skill | `aipd-skill/src/skills/aipd-okr/SKILL.md` | OKR 触发入口、经验包格式、飞书远端操作边界 | AIPD OKR |
 | case 模板 | `aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/work-package.md` | case / work package 标准结构 | AIPD Case |
-| 实践经验源码资产 | `experience-assets/README.md` | 不随 Skill 打包的实现型经验源码、示例、来源与验证入口 | AIPD Learn、Vue3 代码实践经验 |
+| 实践经验源码资产 | `experience-assets/README.md` | 不随 Skill 打包的实现型经验源码、示例、来源与验证入口 | 仓库级 AIPD Learn、Vue3 代码实践经验 |
 
 ## Map 的三种分辨率
 
@@ -119,7 +119,7 @@
 
 ## 自迭代观察锚点
 
-后续用 `aipd-learn` 审计会话或 transcript 时，观察：
+后续在 AIPD 源码仓库用仓库级 `aipd-learn` 审计会话或 transcript 时，观察：
 
 - Agent 是否先读取 `_aipd/index.md` 和 `_aipd/map.md`，再进入 Map 命中的必要 Knowledge、SOP、局部 README 和真实代码，而不机械全读五域。
 - Agent 是否能从本文件一跳命中功能线或工程规则，而不是依赖多层目录链。
