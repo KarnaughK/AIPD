@@ -23,7 +23,7 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 | AIPD 总入口与初始化 | 让 Agent 进入项目后知道如何读取 AIPD，并在新项目中创建基础结构 | `aipd`、`AGENTS.md`、`_aipd/` templates | 项目知识库维护模型、Map-first 上下文检索模型 | 已存在 |
 | Map-first 认知加载 | 让普通任务先经 `_aipd/map.md` 路由到正确上下文，而不是让 Agent 盲搜 | `aipd`、`_aipd/map.md` | Map-first 上下文检索模型 | 已存在 |
 | Inbox 临时收件箱 | 低承诺度接住未整理信息，避免临时想法散落在聊天里 | `aipd-inbox`、`_aipd/inbox.md` | 项目知识库维护模型 | 已存在 |
-| AIPD Leader | 让用户把项目推进责任交给一个显式启动的 AI Leader，由它探索一个 Mission、协调多个 Case task 并总验收 | `aipd-leader`、`_aipd/leader/` | Leader 项目主导编排模型、任务执行模型 | 已存在 |
+| AIPD Leader | 让用户把项目级监督和推进责任交给一个显式启动的 AI Leader，由它探索 Mission、协调多个 Case、阶段汇报并总验收 | `aipd-leader`、`_aipd/leader/` | Leader 项目主导编排模型、任务执行模型 | 已存在 |
 | AIPD Case | 以统一入口推进短周期目标：Case Contract / Think / Design / Execute / Verify / Close | `aipd-case`、case phase 文档、case 模板 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | 已存在 |
 | Weave 反向编织 | 把稳定知识回写到五类 Knowledge、局部 README 或 Map | `aipd-weave` | 项目知识库维护模型 | 已存在 |
 | Learn 框架自迭代（仓库级） | 把真实协作经验回流到 AIPD 框架自身的 skill、模板和规则 | `.agents/skills/aipd-learn/` | 项目知识库维护模型、Agent 协作思考模型 | 已存在，仅 AIPD 源码仓库 |
@@ -58,6 +58,8 @@ Inbox 只负责 capture。它接住还没有定型的信息，不自动归类、
 ### AIPD Leader
 
 Leader 是用户显式启动的可选项目主导层。它不会因任务复杂、存在多个 Case 或自然语言提到 Leader 而自动激活。启动后，当前对话在一个 active Mission 内负责方向澄清、探索、Case 拆分、同级 Codex task 调度和总验收；每个 Case task 仍通过 `aipd-case` 完成执行闭环。
+
+Leader 是面向用户的受托项目负责人和监督者，Case 是面向目标契约与实现细节的执行者。用户可对主要跟进的项目亲自承担 Leader 责任并直接与 Case 沟通；对无法持续投入精力的项目，则显式委托 AI Leader 掌控状态、处理跨 Case 判断，并在约定节点汇报阶段结果、证据、偏差、风险和待决定事项。AI Leader 已启动时，用户仍可进入 Case 核查细节，但跨 Case 结论必须返回 Leader 汇总。
 
 Leader 默认由用户把当前 task 配置为 `gpt-5.6-sol / max / Fast`，创建的 Case task 使用 `gpt-5.6-sol / high / Fast`。模型和推理等级由创建接口明确传递；接口没有 Fast 字段时只记录继承或未核验状态。
 
