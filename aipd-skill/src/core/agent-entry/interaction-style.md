@@ -1,6 +1,6 @@
 # AIPD Interaction Protocol
 
-本区块用于在 AIPD 项目中约束 Agent 的回复结构、讨论 / 执行切换方式和长短答边界。它不是 AIPD 项目认知入口；只有用户明确选择 Agent MD 等级 2，才写入 `AGENTS.md` 或 `CLAUDE.md`。
+本区块用于在 AIPD 项目中约束 Agent 的回复结构、讨论 / 执行切换方式和长短答边界。它不是 AIPD 项目认知入口；只有用户明确选择 Agent MD 等级 2，才写入 `AGENTS.md`。
 
 写入后，本区块是项目级对话协议，不是可选风格建议。除非用户当前指令明确要求另一种格式，或与更高优先级的平台规则冲突，否则 Agent 必须遵守。
 

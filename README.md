@@ -8,7 +8,7 @@ Coding Agent 已经很会写代码。真正拖慢长期开发的，越来越不�
 - 一次任务聊久以后，目标、假设、否决方案和真实进度混在聊天里。
 - 上一次 Agent 发现的规则没有留下来，下一次又从头踩坑。
 
-AIPD 是一套面向 AI 协作的软件开发框架。它不替代 Codex、Claude Code，也不是新的 Web 框架；它给项目增加一层可维护的认知与执行系统，让 Agent 能够：
+AIPD 是一套面向 AI 协作的软件开发框架。它不替代 Codex，也不是新的 Web 框架；它给项目增加一层可维护的认知与执行系统，让 Agent 能够：
 
 - **任务前读对**：从一句自然语言命中相关产品规则、工程约定和代码入口。
 - **任务中接得住**：把目标、边界、决策、进度和验收写进文件，压缩或换 Agent 后仍能恢复。
@@ -61,7 +61,7 @@ AIPD 当前是一个可构建的 Skill 源码项目，不是双击即用的应�
 
 ### 1. 安装 AIPD Skill
 
-用 Codex 或 Claude Code 打开本仓库，然后说：
+用 Codex 打开本仓库，然后说：
 
 ```text
 请阅读本仓库的 AGENTS.md、_aipd/index.md 和 _aipd/map.md，
@@ -80,7 +80,7 @@ AIPD 当前是一个可构建的 Skill 源码项目，不是双击即用的应�
 
 如果项目还没有 AIPD，Agent 会先创建最小结构：`AGENTS.md`、`_aipd/index.md`、`_aipd/map.md`、`_aipd/knowledge/`，以及 Case、Inbox、OKR、SOP 等流程入口。初始化不是让你一次填完所有知识；它只是先建立一条能用、以后可以持续维护的路径。
 
-如果旧项目仍使用 `_adoc/` 与 L1-L5 目录，AIPD 不会双读或覆盖初始化，而会要求先运行随 `aipd` Skill 打包的一次性迁移器。迁移命令和安全边界见[构建与安装：旧项目一次性迁移](docs/modules/build-and-install.md#旧项目一次性迁移)。
+如果旧项目仍使用 `_adoc/` 与 L1-L5 目录，AIPD 不会双读或覆盖初始化。`aipd-update` 可以先调用随 `aipd` Skill 打包的一次性迁移器完成确定性结构迁移，再继续更新到本机安装的 AIPD 版本；迁移本身不会冒充完整版本更新。迁移命令和安全边界见[构建与安装：旧项目一次性迁移](docs/modules/build-and-install.md#旧项目一次性迁移)。
 
 ### 3. 用一个真实目标开始
 
@@ -152,7 +152,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 | Skill | 什么时候用 | 结果 |
 |---|---|---|
 | `/aipd-inbox` | 只想先记下一条未整理的信息 | 放进临时收件箱，不提前污染长期知识 |
-| `/aipd-update` | 已接入项目需要升级 AIPD 结构 | 审计差异，确认后安全合并新模板和入口 |
+| `/aipd-update` | 已接入项目需要升级到本机 AIPD 版本，或修复同版本结构漂移 | 读取版本演进和当前权威文档，一次语义收敛并记录结果；仅破坏性或歧义冲突暂停 |
 | `/aipd-learn` | 要让 AIPD 框架自身吸收真实协作经验 | 定位会话或生成框架回流包；不替代项目 Weave |
 
 ### 专用协作
@@ -164,6 +164,8 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 | `/aipd-git-push` | 只需要检查并推送当前分支 | 推送当前分支；不自动 add、commit、merge 或 rebase |
 
 旧的 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `/aipd-case`。
+
+`/aipd-update` 的目标版本只来自当前电脑已安装的 AIPD 包，不联网追逐远端最新版。它会理解项目版本到本机版本之间的全部更新记录，但直接合并到本机最终态，不让项目逐个经历已经被后续版本撤销的中间方案。
 
 完整职责和组合方式见 [Skill 概览](docs/modules/skills-overview.md)。
 
@@ -229,4 +231,4 @@ AIPD/
 └── experience-assets/ # 可验证的实践经验源码；不随 Skill 安装
 ```
 
-Codex 与 Claude Code 的构建适配位于 `aipd-skill/src/platforms/`。`aipd-skill/dist/` 是生成产物，不是源码事实源。
+当前 Codex 适配与通用平台扩展结构位于 `aipd-skill/src/platforms/`。`aipd-skill/dist/` 是生成产物，不是源码事实源。

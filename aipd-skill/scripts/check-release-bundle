@@ -1,0 +1,547 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const {
+  lstatSync,
+  readFileSync,
+  readdirSync,
+} = require('node:fs')
+const {
+  dirname,
+  isAbsolute,
+  join,
+  posix,
+  resolve,
+} = require('node:path')
+
+const scriptDirectory = __dirname
+const defaultProjectRoot = dirname(scriptDirectory)
+const CATALOG_SCHEMA = 'aipd-release-catalog'
+const CATALOG_SCHEMA_VERSION = 1
+const PROJECT_SCHEMA = 'aipd-project'
+const PROJECT_SCHEMA_VERSION = 2
+const REQUIRED_CURRENT_AUTHORITY = Object.freeze([
+  'workspace/project-state.md',
+  'workspace/templates/manifest.json',
+  'workspace/templates/update-log.md',
+])
+
+class ReleaseContractError extends Error {}
+
+function fail(message) {
+  throw new ReleaseContractError(message)
+}
+
+function usage() {
+  return [
+    '用法:',
+    '  check-release-bundle [--project-root /absolute/aipd-skill] [--dist-skills /absolute/dist/codex/skills]',
+    '  check-release-bundle [--project-root /absolute/aipd-skill] --select <unversioned|positive-integer>',
+    '',
+    '说明：只读取本机 source / dist，不访问网络。',
+  ].join('\n')
+}
+
+function parseArguments(argumentsList) {
+  let projectRoot = defaultProjectRoot
+  let distSkillsRoot = null
+  let selection = undefined
+
+  for (let index = 0; index < argumentsList.length; index += 1) {
+    const argument = argumentsList[index]
+    if (argument === '--help' || argument === '-h') {
+      return { help: true, projectRoot, distSkillsRoot, selection }
+    }
+    if (argument === '--project-root') {
+      projectRoot = argumentsList[index + 1]
+      if (!projectRoot) fail('--project-root 缺少路径。')
+      index += 1
+      continue
+    }
+    if (argument === '--dist-skills') {
+      distSkillsRoot = argumentsList[index + 1]
+      if (!distSkillsRoot) fail('--dist-skills 缺少路径。')
+      index += 1
+      continue
+    }
+    if (argument === '--select') {
+      selection = argumentsList[index + 1]
+      if (!selection) fail('--select 缺少 unversioned 或正整数。')
+      index += 1
+      continue
+    }
+    fail(`未知参数：${argument}`)
+  }
+
+  if (!isAbsolute(projectRoot)) fail(`AIPD Skill 根必须是绝对路径：${projectRoot}`)
+  if (distSkillsRoot !== null && !isAbsolute(distSkillsRoot)) {
+    fail(`dist skills 根必须是绝对路径：${distSkillsRoot}`)
+  }
+
+  return {
+    help: false,
+    projectRoot: resolve(projectRoot),
+    distSkillsRoot: distSkillsRoot === null ? null : resolve(distSkillsRoot),
+    selection,
+  }
+}
+
+function assertPlainObject(value, label) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    fail(`${label} 必须是 JSON object。`)
+  }
+}
+
+function assertExactKeys(value, expectedKeys, label) {
+  const actualKeys = Object.keys(value).sort()
+  const expected = [...expectedKeys].sort()
+  if (
+    actualKeys.length !== expected.length
+    || actualKeys.some((key, index) => key !== expected[index])
+  ) {
+    fail(`${label} 字段必须精确为 ${expected.join(', ')}。`)
+  }
+}
+
+function assertPositiveInteger(value, label) {
+  if (!Number.isInteger(value) || value <= 0) {
+    fail(`${label} 必须是正整数。`)
+  }
+}
+
+function assertSafeRelativePath(relativePath, label) {
+  if (typeof relativePath !== 'string' || relativePath.length === 0) {
+    fail(`${label} 必须是非空相对路径。`)
+  }
+  if (
+    relativePath.includes('\\')
+    || relativePath.includes('\0')
+    || isAbsolute(relativePath)
+    || posix.normalize(relativePath) !== relativePath
+    || relativePath === '.'
+    || relativePath.startsWith('../')
+    || relativePath.includes('/../')
+  ) {
+    fail(`${label} 不是安全的规范相对路径：${relativePath}`)
+  }
+}
+
+function assertDirectory(path, label) {
+  let stat
+  try {
+    stat = lstatSync(path)
+  } catch (error) {
+    if (error.code === 'ENOENT') fail(`缺少 ${label}：${path}`)
+    throw error
+  }
+  if (stat.isSymbolicLink()) fail(`${label} 不能是 symlink：${path}`)
+  if (!stat.isDirectory()) fail(`${label} 必须是目录：${path}`)
+}
+
+function assertRegularFileWithin(root, relativePath, label) {
+  assertSafeRelativePath(relativePath, label)
+  assertDirectory(root, `${label} 根目录`)
+
+  let cursor = root
+  const parts = relativePath.split('/')
+  for (let index = 0; index < parts.length; index += 1) {
+    cursor = join(cursor, parts[index])
+    let stat
+    try {
+      stat = lstatSync(cursor)
+    } catch (error) {
+      if (error.code === 'ENOENT') fail(`缺少 ${label}：${cursor}`)
+      throw error
+    }
+    if (stat.isSymbolicLink()) fail(`${label} 路径不能经过 symlink：${cursor}`)
+    if (index < parts.length - 1 && !stat.isDirectory()) {
+      fail(`${label} 的父路径必须是目录：${cursor}`)
+    }
+    if (index === parts.length - 1 && !stat.isFile()) {
+      fail(`${label} 必须是普通文件：${cursor}`)
+    }
+  }
+
+  return cursor
+}
+
+function readJsonFileWithin(root, relativePath, label) {
+  const path = assertRegularFileWithin(root, relativePath, label)
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'))
+  } catch (error) {
+    fail(`${label} 不是有效 JSON：${error.message}`)
+  }
+}
+
+function assertFilesEqual(sourcePath, targetPath, label) {
+  const source = readFileSync(sourcePath)
+  const target = readFileSync(targetPath)
+  if (!source.equals(target)) fail(`${label} 与 source 不同步。`)
+}
+
+function assertUpdateOrchestration(sourceRoot) {
+  const updateSkillPath = assertRegularFileWithin(
+    sourceRoot,
+    'skills/aipd-update/SKILL.md',
+    'aipd-update Skill',
+  )
+  const updateSkill = readFileSync(updateSkillPath, 'utf8')
+  const recordsAnchor = updateSkill.indexOf('从 catalog 选择 `(P,I]`')
+  const currentAuthorityAnchor = updateSkill.indexOf('读取 catalog 的 `currentGuide`')
+  const convergenceAnchor = updateSkill.indexOf('而不是逐条重放版本记录')
+
+  if (
+    recordsAnchor < 0
+    || currentAuthorityAnchor < 0
+    || convergenceAnchor < 0
+    || !(recordsAnchor < currentAuthorityAnchor && currentAuthorityAnchor < convergenceAnchor)
+  ) {
+    fail(
+      'aipd-update 必须先读取 (P,I] records，再读取 currentGuide / currentAuthority，'
+      + '最后一次收敛；不得逐版重放。',
+    )
+  }
+  if (!updateSkill.includes('不得把任一中间发布版本写成项目状态')) {
+    fail('aipd-update 缺少“不得写入中间发布版本”的执行护栏。')
+  }
+}
+
+function readCatalog(projectRoot) {
+  const sourceRoot = join(projectRoot, 'src')
+  const coreRoot = join(sourceRoot, 'core')
+  const updatesRoot = join(coreRoot, 'updates')
+  const catalog = readJsonFileWithin(updatesRoot, 'catalog.json', 'release catalog')
+
+  assertPlainObject(catalog, 'release catalog')
+  assertExactKeys(
+    catalog,
+    [
+      'schema',
+      'schemaVersion',
+      'currentVersion',
+      'currentGuide',
+      'releases',
+      'currentAuthority',
+    ],
+    'release catalog',
+  )
+  if (catalog.schema !== CATALOG_SCHEMA) {
+    fail(`release catalog schema 必须是 ${CATALOG_SCHEMA}。`)
+  }
+  if (catalog.schemaVersion !== CATALOG_SCHEMA_VERSION) {
+    fail(`release catalog schemaVersion 必须是 ${CATALOG_SCHEMA_VERSION}。`)
+  }
+  assertPositiveInteger(catalog.currentVersion, 'release catalog currentVersion')
+  if (catalog.currentGuide !== 'current.md') {
+    fail('release catalog currentGuide 必须精确指向 current.md。')
+  }
+  const currentGuidePath = assertRegularFileWithin(
+    updatesRoot,
+    catalog.currentGuide,
+    'current guide',
+  )
+
+  if (!Array.isArray(catalog.releases) || catalog.releases.length === 0) {
+    fail('release catalog releases 必须是非空数组。')
+  }
+
+  const recordPaths = new Set()
+  const releasePaths = []
+  for (let index = 0; index < catalog.releases.length; index += 1) {
+    const release = catalog.releases[index]
+    const expectedVersion = index + 1
+    assertPlainObject(release, `release V${expectedVersion}`)
+    assertExactKeys(release, ['version', 'record'], `release V${expectedVersion}`)
+    assertPositiveInteger(release.version, `release V${expectedVersion} version`)
+    if (release.version !== expectedVersion) {
+      fail(`release 版本必须从 1 连续递增；位置 ${expectedVersion} 得到 V${release.version}。`)
+    }
+    const expectedRecord = `releases/v${release.version}.md`
+    if (release.record !== expectedRecord) {
+      fail(`release V${release.version} record 必须是 ${expectedRecord}。`)
+    }
+    if (recordPaths.has(release.record)) {
+      fail(`release record 重复：${release.record}`)
+    }
+    recordPaths.add(release.record)
+
+    const releasePath = assertRegularFileWithin(
+      updatesRoot,
+      release.record,
+      `release V${release.version} record`,
+    )
+    const firstLine = readFileSync(releasePath, 'utf8').split(/\r?\n/u, 1)[0]
+    const expectedTitle = `# AIPD V${release.version} Release Record`
+    if (firstLine !== expectedTitle) {
+      fail(`release V${release.version} 标题必须精确为 ${expectedTitle}。`)
+    }
+    releasePaths.push(releasePath)
+  }
+
+  if (catalog.currentVersion !== catalog.releases.length) {
+    fail('release catalog currentVersion 必须等于最后一条连续 release 版本。')
+  }
+
+  const releasesDirectory = join(updatesRoot, 'releases')
+  assertDirectory(releasesDirectory, 'release records 目录')
+  const actualReleaseFiles = readdirSync(releasesDirectory, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+    .map((entry) => `releases/${entry.name}`)
+    .sort()
+  const declaredReleaseFiles = [...recordPaths].sort()
+  if (
+    actualReleaseFiles.length !== declaredReleaseFiles.length
+    || actualReleaseFiles.some((path, index) => path !== declaredReleaseFiles[index])
+  ) {
+    fail('releases/ 中的 Markdown record 必须与 catalog 一一对应，不能遗漏或遗留孤儿记录。')
+  }
+
+  if (!Array.isArray(catalog.currentAuthority) || catalog.currentAuthority.length === 0) {
+    fail('release catalog currentAuthority 必须是非空数组。')
+  }
+  const authorityPaths = new Map()
+  for (const authority of catalog.currentAuthority) {
+    assertSafeRelativePath(authority, 'currentAuthority')
+    if (authorityPaths.has(authority)) fail(`currentAuthority 重复：${authority}`)
+    const authorityPath = assertRegularFileWithin(coreRoot, authority, `currentAuthority ${authority}`)
+    authorityPaths.set(authority, authorityPath)
+  }
+  for (const requiredAuthority of REQUIRED_CURRENT_AUTHORITY) {
+    if (!authorityPaths.has(requiredAuthority)) {
+      fail(`currentAuthority 缺少发布关键事实源：${requiredAuthority}`)
+    }
+  }
+
+  const manifest = readJsonFileWithin(
+    coreRoot,
+    'workspace/templates/manifest.json',
+    'workspace manifest template',
+  )
+  assertPlainObject(manifest, 'workspace manifest template')
+  assertExactKeys(
+    manifest,
+    ['schema', 'schemaVersion', 'aipdVersion'],
+    'workspace manifest template',
+  )
+  if (
+    manifest.schema !== PROJECT_SCHEMA
+    || manifest.schemaVersion !== PROJECT_SCHEMA_VERSION
+    || manifest.aipdVersion !== catalog.currentVersion
+  ) {
+    fail(
+      'workspace manifest template 必须声明 '
+      + `${PROJECT_SCHEMA} / schemaVersion ${PROJECT_SCHEMA_VERSION} / `
+      + `aipdVersion ${catalog.currentVersion}。`,
+    )
+  }
+
+  assertUpdateOrchestration(sourceRoot)
+
+  return {
+    projectRoot,
+    sourceRoot,
+    coreRoot,
+    updatesRoot,
+    catalogPath: join(updatesRoot, 'catalog.json'),
+    currentGuidePath,
+    releasePaths,
+    authorityPaths,
+    catalog,
+  }
+}
+
+function sourceSkillInjects(skillFile, corePath) {
+  const source = readFileSync(skillFile, 'utf8')
+  const escapedPath = corePath.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
+  return new RegExp(`^[\\t ]*-[\\t ]+${escapedPath}[\\t ]*$`, 'mu').test(source)
+}
+
+function validateDistBundle(sourceBundle, distSkillsRoot) {
+  assertDirectory(distSkillsRoot, 'dist skills 根')
+  const updateReferencesRoot = join(distSkillsRoot, 'aipd-update', 'references')
+  assertDirectory(updateReferencesRoot, 'aipd-update references')
+
+  const distCatalogPath = assertRegularFileWithin(
+    updateReferencesRoot,
+    'updates/catalog.json',
+    'dist aipd-update release catalog',
+  )
+  assertFilesEqual(sourceBundle.catalogPath, distCatalogPath, 'dist aipd-update release catalog')
+
+  const distCurrentGuidePath = assertRegularFileWithin(
+    updateReferencesRoot,
+    `updates/${sourceBundle.catalog.currentGuide}`,
+    'dist aipd-update current guide',
+  )
+  assertFilesEqual(
+    sourceBundle.currentGuidePath,
+    distCurrentGuidePath,
+    'dist aipd-update current guide',
+  )
+
+  for (let index = 0; index < sourceBundle.catalog.releases.length; index += 1) {
+    const release = sourceBundle.catalog.releases[index]
+    const distRecordPath = assertRegularFileWithin(
+      updateReferencesRoot,
+      `updates/${release.record}`,
+      `dist aipd-update release V${release.version}`,
+    )
+    assertFilesEqual(
+      sourceBundle.releasePaths[index],
+      distRecordPath,
+      `dist aipd-update release V${release.version}`,
+    )
+  }
+
+  for (const [authority, sourcePath] of sourceBundle.authorityPaths) {
+    const distAuthorityPath = assertRegularFileWithin(
+      updateReferencesRoot,
+      authority,
+      `dist aipd-update currentAuthority ${authority}`,
+    )
+    assertFilesEqual(
+      sourcePath,
+      distAuthorityPath,
+      `dist aipd-update currentAuthority ${authority}`,
+    )
+  }
+
+  const sourceSkillsRoot = join(sourceBundle.sourceRoot, 'skills')
+  assertDirectory(sourceSkillsRoot, 'source skills 根')
+  for (const entry of readdirSync(sourceSkillsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    const skillFile = join(sourceSkillsRoot, entry.name, 'SKILL.md')
+    let skillStat
+    try {
+      skillStat = lstatSync(skillFile)
+    } catch (error) {
+      if (error.code === 'ENOENT') continue
+      throw error
+    }
+    if (!skillStat.isFile() || skillStat.isSymbolicLink()) continue
+    if (!sourceSkillInjects(skillFile, 'updates/catalog.json')) continue
+
+    const skillReferencesRoot = join(distSkillsRoot, entry.name, 'references')
+    const skillCatalogPath = assertRegularFileWithin(
+      skillReferencesRoot,
+      'updates/catalog.json',
+      `dist ${entry.name} release catalog`,
+    )
+    assertFilesEqual(
+      sourceBundle.catalogPath,
+      skillCatalogPath,
+      `dist ${entry.name} release catalog`,
+    )
+  }
+
+  for (const skill of ['aipd', 'aipd-update']) {
+    const referencesRoot = join(distSkillsRoot, skill, 'references')
+    for (const authority of [
+      'workspace/templates/manifest.json',
+      'workspace/templates/update-log.md',
+    ]) {
+      const sourcePath = sourceBundle.authorityPaths.get(authority)
+      const distPath = assertRegularFileWithin(
+        referencesRoot,
+        authority,
+        `dist ${skill} ${authority}`,
+      )
+      assertFilesEqual(sourcePath, distPath, `dist ${skill} ${authority}`)
+    }
+  }
+}
+
+function selectReleaseRecords(catalog, projectVersion) {
+  assertPlainObject(catalog, 'release catalog')
+  assertPositiveInteger(catalog.currentVersion, 'release catalog currentVersion')
+  if (!Array.isArray(catalog.releases)) fail('release catalog releases 必须是数组。')
+
+  if (projectVersion === null || projectVersion === 'unversioned') {
+    return {
+      state: 'bootstrap',
+      projectVersion: null,
+      currentVersion: catalog.currentVersion,
+      releases: [...catalog.releases],
+    }
+  }
+
+  assertPositiveInteger(projectVersion, 'project aipdVersion')
+  if (projectVersion > catalog.currentVersion) {
+    fail(
+      `项目 AIPD V${projectVersion} 高于本机 AIPD V${catalog.currentVersion}；`
+      + '不能降级或访问远端猜测新版本。',
+    )
+  }
+  if (projectVersion === catalog.currentVersion) {
+    return {
+      state: 'current',
+      projectVersion,
+      currentVersion: catalog.currentVersion,
+      releases: [],
+    }
+  }
+  return {
+    state: 'stale',
+    projectVersion,
+    currentVersion: catalog.currentVersion,
+    releases: catalog.releases.filter((release) => release.version > projectVersion),
+  }
+}
+
+function parseSelection(value) {
+  if (value === 'unversioned') return null
+  if (!/^[1-9][0-9]*$/u.test(value)) {
+    fail(`--select 必须是 unversioned 或正整数：${value}`)
+  }
+  return Number(value)
+}
+
+function main() {
+  const options = parseArguments(process.argv.slice(2))
+  if (options.help) {
+    console.log(usage())
+    return
+  }
+
+  const sourceBundle = readCatalog(options.projectRoot)
+  if (options.distSkillsRoot !== null) {
+    validateDistBundle(sourceBundle, options.distSkillsRoot)
+  }
+
+  if (options.selection !== undefined) {
+    const result = selectReleaseRecords(
+      sourceBundle.catalog,
+      parseSelection(options.selection),
+    )
+    console.log(JSON.stringify(result, null, 2))
+    return
+  }
+
+  const distSuffix = options.distSkillsRoot === null ? '' : '、Codex dist 同步'
+  console.log(
+    `AIPD release bundle 校验通过：V${sourceBundle.catalog.currentVersion}`
+    + `、连续 records、currentAuthority、manifest${distSuffix}。`,
+  )
+}
+
+if (require.main === module) {
+  try {
+    main()
+  } catch (error) {
+    if (error instanceof ReleaseContractError) {
+      console.error(`ERROR: ${error.message}`)
+      process.exit(1)
+    }
+    console.error(error.stack || error.message)
+    process.exit(1)
+  }
+}
+
+module.exports = {
+  ReleaseContractError,
+  readCatalog,
+  selectReleaseRecords,
+  validateDistBundle,
+}

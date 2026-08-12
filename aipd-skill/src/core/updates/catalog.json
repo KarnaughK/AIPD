@@ -1,0 +1,37 @@
+{
+  "schema": "aipd-release-catalog",
+  "schemaVersion": 1,
+  "currentVersion": 1,
+  "currentGuide": "current.md",
+  "releases": [
+    {
+      "version": 1,
+      "record": "releases/v1.md"
+    }
+  ],
+  "currentAuthority": [
+    "overview.md",
+    "aipd-project-structure.md",
+    "workspace/project-state.md",
+    "workspace/templates/manifest.json",
+    "workspace/templates/index.md",
+    "workspace/templates/inbox.md",
+    "workspace/templates/map.md",
+    "workspace/templates/sop-index.md",
+    "workspace/templates/sop-map.md",
+    "workspace/templates/update-log.md",
+    "knowledge/intent/guide.md",
+    "knowledge/research/guide.md",
+    "knowledge/core/guide.md",
+    "knowledge/product/guide.md",
+    "knowledge/engineering/guide.md",
+    "agent-entry/template.md",
+    "agent-entry/interaction-style.md",
+    "agent-guides/aipd_context_retriever.md",
+    "case/overview.md",
+    "case/templates/index.md",
+    "case/templates/case.md",
+    "case/templates/work-package.md",
+    "okr/templates/index.md"
+  ]
+}

@@ -29,7 +29,7 @@ AI Coding 正从 Vibe Coding 进入 Agent Coding。
 
 早期 AI Coding 更像局部协作：人手动 `@` 文件、贴需求、解释背景，AI 在一个小上下文里写函数、补组件或改脚本。
 
-Codex、Claude Code、Cursor Agent 等工具出现后，Agent 可以自己搜索、读文件、跑命令、定位入口、修改多个文件，甚至把任务拆成多个步骤。执行能力变强后，核心问题不再只是“AI 能不能写代码”，而是：
+Codex、Cursor Agent 等工具出现后，Agent 可以自己搜索、读文件、跑命令、定位入口、修改多个文件，甚至把任务拆成多个步骤。执行能力变强后，核心问题不再只是“AI 能不能写代码”，而是：
 
 - Agent 能不能稳定找到正确上下文。
 - Agent 能不能继承项目历史取舍。
@@ -135,9 +135,9 @@ MMD / Mermaid 可以把复杂关系压缩成图，让人和 AI 更快对齐结�
 
 当前 AIPD 关注的外部工具和范式包括：
 
-- Coding Agent：Codex、Claude Code、Cursor Agent。
-- Agent 客户端 / 套壳项目：FanBox、OpenCovibe、codex-app-server-web、Claude Code Web 等。
-- 程序化接口路线：Codex App Server、Codex SDK、`codex exec --json`、Codex MCP server、Claude Agent SDK、OpenCode 原生接口。
+- Coding Agent：Codex、Cursor Agent 等。
+- Agent 客户端 / 套壳项目：FanBox、OpenCovibe、codex-app-server-web 等。
+- 程序化接口路线：Codex App Server、Codex SDK、`codex exec --json`、Codex MCP server、OpenCode 原生接口。
 - 桌面技术路线 Electron、Tauri 曾用于 C8 实验，当前不再是 AIPD 产品选型。
 
 这些内容在 Research 中只记录为外部生态观察。具体接入协议、会话模型、adapter 设计和工程选型应进入 Engineering 或 Desktop case。

@@ -10,7 +10,7 @@ AIPD 当前的 Core 先收敛为八个核心成立模型。它们回答的不是
 
 | 核心模型 | 核心问题 | 典型落地 |
 |---|---|---|
-| 项目知识库维护模型 | 项目知识如何分类、存储、更新、回写并保持可信 | 五类并列 Knowledge、局部 README、Map、`aipd-weave` |
+| 项目知识库维护模型 | 项目知识与 AIPD 工作区本身如何分类、存储、更新、回写并保持可信 | 五类并列 Knowledge、局部 README、Map、`aipd-weave`、本机发布 catalog、项目 `aipdVersion`、`aipd-update` |
 | Map-first 上下文检索模型 | Agent 如何先通过 Map 命中该读的上下文，而不是默认依赖 RAG、全文搜索或多层目录跳转 | 项目总图、业务线/功能线/共享能力 Map、局部 README、兜底搜索与 Map 回写 |
 | 文件优先上下文承接模型 | 长任务如何不依赖聊天记忆，而是通过文件 checkpoint 承接状态、边界和恢复入口 | case.md、phase artifact、work package、局部 README、map |
 | Think / 任务澄清决策模型 | 模糊想法或 case 推进中的未知如何通过讨论、调研、方案比较和决策出口，变成清晰方向、设计输入或被 kill / defer / research / weave | Case Think phase、discussion / research / options / decision |
@@ -31,6 +31,8 @@ AIPD 当前的 Core 先收敛为八个核心成立模型。它们回答的不是
 - AI 原生代码架构模型回答“真实代码如何适配 AI 协作”。
 
 Inbox、Update、Learn、Desktop、Mermaid 等不是当前 Core 的独立成立模型。它们是这些核心模型在 Product / Engineering / SOP / 流程系统中的功能化结果或工具入口。
+
+其中 Update 属于项目知识库维护模型的框架升级面。每个项目在 manifest 中记录最后成功应用的 `aipdVersion=P`，本机安装包用 release catalog 声明 `currentVersion=I`。`(P,I]` 的 Release Records 只帮助 Agent 理解演进、撤销和保护点；版本 `I` 的 current authority 才定义最终态。Agent 读完两者和项目真实定制后，一次收敛到 `I`，验证成功后才写项目版本与更新日志。`schemaVersion` 只表示 Workspace 数据形状，不替代完整发布版本。
 
 ## 模型底层倾向不能靠上下文临时改写
 

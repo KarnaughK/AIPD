@@ -12,7 +12,7 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 1. **文档模板阶段**：重点是“先写文档，再写代码”，让 AI 用结构化文档理解项目。
 2. **分层认知阶段**：从具体模板转向 L1-L5 的项目认知结构，开始区分方向、场景、核心模型、产品功能和技术规则。
-3. **Skill 工程化阶段**：AIPD 从一组 Markdown 指南变成可构建、可安装、可适配 Claude Code / Codex 的 skill 源码项目。
+3. **Skill 工程化阶段**：AIPD 从一组 Markdown 指南变成可构建、可安装、可扩展平台适配的 skill 源码项目。
 4. **Case / Step 阶段**：执行系统围绕一次具体事项和可派发 step 建立事实源，更强调恢复、验收、归档和经验回写。
 5. **分身 Agent 阶段**：从普通子 Agent 调度发展到 fork-first / clone agent 模型，明确 Main Agent 保护主线，分身承担探索和执行过程成本。
 6. **Map / Weave / 三条主线阶段**：AIPD 开始把长期知识库、Case / Step 执行逻辑、AI 原生代码架构实验拆成三条主线，并用 map 做第一跳检索、用 Weave 做经验回写。
@@ -65,7 +65,7 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 
 - 新增 `src/core/`、`src/platforms/`、`src/skills/`。
 - 新增构建与安装脚本：`scripts/build`、`install`、`dev-codex`、`install-codex` 等。
-- 同时支持 Claude Code 和 Codex 平台。
+- 建立多目标构建结构和平台适配目录。
 - 旧 v1 材料归档到 `v1/`。
 - README 将 AIPD2 定义为“面向软件开发的 AI Harness 框架”。
 
@@ -233,7 +233,7 @@ AIPD 最初不是现在意义上的 AI 原生开发框架，而是一套 AI 驱�
 ### 2026-04-28
 
 - 完成 AIPD2 beta 工程化：新增 `src/core`、`src/platforms`、`src/skills`。
-- 新增构建、开发安装、用户安装、项目安装脚本，并覆盖 Claude Code / Codex。
+- 新增构建、开发安装、用户安装、项目安装脚本；当时覆盖 Claude Code / Codex。
 - 旧材料和版本迁移记录进入 archive。
 - skill 拆成主入口以及 create、run、learn、archive 等执行能力。
 

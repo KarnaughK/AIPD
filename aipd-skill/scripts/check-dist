@@ -6,6 +6,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 REPO_ROOT="$(dirname "$PROJECT_ROOT")"
 SRC_SKILLS="$PROJECT_ROOT/src/skills"
 DIST_ROOT="$PROJECT_ROOT/dist"
+DEFAULT_PLATFORM="codex"
 EXPECTED_SKILLS=(
     aipd
     aipd-case
@@ -22,26 +23,11 @@ EXPECTED_CODEX_AGENTS=(
     aipd_vue_architect
     aipd_vue_provider
 )
-ALLOWED_PLATFORM_DIFFS=(
-    aipd-case/references/agent-guide.md
-    aipd-learn/references/learn-session-locator.md
-)
 CHECK_FAILED=0
 
 fail() {
     echo "FAIL: $*" >&2
     CHECK_FAILED=1
-}
-
-is_allowed_platform_diff() {
-    local candidate="$1"
-    local allowed
-    for allowed in "${ALLOWED_PLATFORM_DIFFS[@]}"; do
-        if [ "$candidate" = "$allowed" ]; then
-            return 0
-        fi
-    done
-    return 1
 }
 
 check_skill_set() {
@@ -61,17 +47,90 @@ check_skill_set() {
 check_source_sync() {
     local platform="$1"
     local skill
+    local expected_file
+    local dist_skill_file
+
     for skill in "${EXPECTED_SKILLS[@]}"; do
-        if ! cmp -s "$SRC_SKILLS/$skill/SKILL.md" "$DIST_ROOT/$platform/skills/$skill/SKILL.md"; then
-            fail "$platform/$skill 的 SKILL.md 与源码不同步"
+        expected_file=$(mktemp)
+        dist_skill_file="$DIST_ROOT/$platform/skills/$skill/SKILL.md"
+        render_runtime_skill_file "$SRC_SKILLS/$skill/SKILL.md" "$expected_file"
+
+        if ! cmp -s "$expected_file" "$dist_skill_file"; then
+            fail "$platform/$skill 的 SKILL.md 与剥离构建元数据后的源码不同步"
         fi
+        if rg -q '^inject-from-core:[[:space:]]*$' "$dist_skill_file"; then
+            fail "$platform/$skill 的 dist/SKILL.md 残留 inject-from-core 构建元数据"
+        fi
+
+        rm -f "$expected_file"
     done
+}
+
+render_runtime_skill_file() {
+    local source_file="$1"
+    local output_file="$2"
+    local line
+    local line_number=0
+    local line_has_newline
+    local in_frontmatter=false
+    local skip_inject_list=false
+    local keep_line
+
+    while true; do
+        line=""
+        if IFS= read -r line; then
+            line_has_newline=true
+        else
+            line_has_newline=false
+        fi
+
+        if ! $line_has_newline && [ -z "$line" ]; then
+            break
+        fi
+
+        line_number=$((line_number + 1))
+        keep_line=true
+
+        if [ "$line_number" -eq 1 ] && [ "$line" = "---" ]; then
+            in_frontmatter=true
+        elif $in_frontmatter; then
+            if $skip_inject_list; then
+                if [[ "$line" =~ ^[[:space:]]+-([[:space:]]|$) ]]; then
+                    keep_line=false
+                else
+                    skip_inject_list=false
+                fi
+            fi
+
+            if $keep_line; then
+                if [[ "$line" =~ ^inject-from-core:[[:space:]]*$ ]]; then
+                    keep_line=false
+                    skip_inject_list=true
+                elif [ "$line" = "---" ]; then
+                    in_frontmatter=false
+                fi
+            fi
+        fi
+
+        if $keep_line; then
+            if $line_has_newline; then
+                printf '%s\n' "$line"
+            else
+                printf '%s' "$line"
+            fi
+        fi
+
+        if ! $line_has_newline; then
+            break
+        fi
+    done < "$source_file" > "$output_file"
 }
 
 check_codex_agent_set() {
     local source_agents="$PROJECT_ROOT/src/platforms/codex/agents"
     local dist_agents="$DIST_ROOT/codex/agents"
-    local expected_file source_file dist_file agent
+    local expected_file source_file dist_file agent agent_root agent_file
+    local nickname_count nickname_line
     expected_file=$(mktemp)
     source_file=$(mktemp)
     dist_file=$(mktemp)
@@ -98,6 +157,20 @@ check_codex_agent_set() {
         if ! rg -q "^name = \"$agent\"$" "$dist_agents/$agent.toml"; then
             fail "Codex Agent 产物名称不匹配: $agent"
         fi
+
+        for agent_root in "$source_agents" "$dist_agents"; do
+            agent_file="$agent_root/$agent.toml"
+            nickname_count=$(grep -c '^nickname_candidates[[:space:]]*=' "$agent_file" || true)
+            nickname_count=${nickname_count:-0}
+            if [ "$nickname_count" -ne 1 ]; then
+                fail "Codex Agent nickname_candidates 必须且只能声明一次: $agent_file"
+                continue
+            fi
+            nickname_line=$(grep '^nickname_candidates[[:space:]]*=' "$agent_file")
+            if printf '%s\n' "$nickname_line" | LC_ALL=C grep -q '[^ -~]'; then
+                fail "Codex Agent nickname_candidates 必须使用可打印 ASCII: $agent_file"
+            fi
+        done
     done
 
     if find "$source_agents" "$dist_agents" -name 'aipd_adoc_retriever.toml' -print -quit | rg -q .; then
@@ -125,28 +198,112 @@ check_static_references() {
     done < <(find "$DIST_ROOT/$platform/skills" -mindepth 1 -maxdepth 1 -type d | sort)
 }
 
-check_platform_parity() {
-    local codex_root="$DIST_ROOT/codex/skills"
-    local claude_root="$DIST_ROOT/claude/skills"
-    local codex_files claude_files rel
-    codex_files=$(mktemp)
-    claude_files=$(mktemp)
-    (cd "$codex_root" && find . -type f | sed 's#^./##' | sort) > "$codex_files"
-    (cd "$claude_root" && find . -type f | sed 's#^./##' | sort) > "$claude_files"
-    if ! diff -u "$codex_files" "$claude_files" >/dev/null; then
-        fail "Codex / Claude 产物文件集合不同"
-        diff -u "$codex_files" "$claude_files" || true
+check_default_dist_scope() {
+    local platform_dir
+    local platform
+
+    if [ ! -d "$DIST_ROOT/$DEFAULT_PLATFORM" ]; then
+        fail "缺少默认 $DEFAULT_PLATFORM 构建产物"
+        return
     fi
-    while IFS= read -r rel; do
-        if ! cmp -s "$codex_root/$rel" "$claude_root/$rel" && ! is_allowed_platform_diff "$rel"; then
-            fail "未声明的平台产物差异: $rel"
+
+    while IFS= read -r platform_dir; do
+        platform=$(basename "$platform_dir")
+        if [ "$platform" != "$DEFAULT_PLATFORM" ]; then
+            fail "默认构建产物包含非默认平台目录: $platform"
         fi
-    done < "$codex_files"
-    rm -f "$codex_files" "$claude_files"
+    done < <(find "$DIST_ROOT" -mindepth 1 -maxdepth 1 -type d | sort)
+}
+
+check_multi_target_build_contract() {
+    local fixture_root
+    local fixture_platform="fixture-platform"
+    local fallback_agent_guide
+    local override_agent_guide
+    local override_phase_file
+    local fallback_phase_file
+    local actual_platforms
+    local expected_platforms
+
+    fixture_root=$(mktemp -d)
+    mkdir -p "$fixture_root/scripts"
+    cp -R "$PROJECT_ROOT/src" "$fixture_root/src"
+    cp "$SCRIPT_DIR/build" "$SCRIPT_DIR/migrate-project-schema" "$fixture_root/scripts/"
+    chmod +x "$fixture_root/scripts/build" "$fixture_root/scripts/migrate-project-schema"
+
+    if ! "$fixture_root/scripts/build" "$fixture_platform" >/dev/null; then
+        fail "显式安全平台无法在没有 adapter 时使用 core fallback 构建"
+        rm -rf "$fixture_root"
+        return
+    fi
+
+    if rg -q '^inject-from-core:[[:space:]]*$' \
+        "$fixture_root/dist/$fixture_platform/skills" --glob 'SKILL.md'; then
+        fail "自定义平台产物残留 inject-from-core 构建元数据"
+    fi
+
+    fallback_agent_guide="$fixture_root/dist/$fixture_platform/skills/aipd-case/references/agent-guide.md"
+    if ! cmp -s "$PROJECT_ROOT/src/core/agent-guide.md" "$fallback_agent_guide"; then
+        fail "无 adapter 平台没有使用 core fallback"
+    fi
+    if [ -e "$fixture_root/dist/$fixture_platform/agents" ]; then
+        fail "无 agents 源目录的平台不应生成 Agent 模板目录"
+    fi
+
+    if "$fixture_root/scripts/build" '../unsafe-platform' >/dev/null 2>&1; then
+        fail "build 接受了不安全的平台路径"
+    fi
+
+    mkdir -p "$fixture_root/src/platforms/$fixture_platform/core"
+    override_agent_guide="$fixture_root/src/platforms/$fixture_platform/core/agent-guide.md"
+    printf '%s\n' '# fixture platform override' > "$override_agent_guide"
+    mkdir -p "$fixture_root/src/platforms/$fixture_platform/core/case/phases"
+    override_phase_file="$fixture_root/src/platforms/$fixture_platform/core/case/phases/think.md"
+    fallback_phase_file="$PROJECT_ROOT/src/core/case/phases/design.md"
+    printf '%s\n' '# fixture phase override' > "$override_phase_file"
+    if ! "$fixture_root/scripts/build" "$fixture_platform" >/dev/null; then
+        fail "平台覆盖 fixture 构建失败"
+    elif ! cmp -s "$override_agent_guide" "$fallback_agent_guide"; then
+        fail "平台同路径文件没有覆盖 core fallback"
+    elif ! cmp -s "$override_phase_file" \
+        "$fixture_root/dist/$fixture_platform/skills/aipd-case/references/case/phases/think.md"; then
+        fail "平台目录中的同名文件没有覆盖 common 文件"
+    elif ! cmp -s "$fallback_phase_file" \
+        "$fixture_root/dist/$fixture_platform/skills/aipd-case/references/case/phases/design.md"; then
+        fail "平台目录部分覆盖时丢失了未覆盖的 common 文件"
+    fi
+
+    if ! "$fixture_root/scripts/build" all >/dev/null; then
+        fail "build all 动态平台枚举失败"
+    else
+        actual_platforms=$(mktemp)
+        expected_platforms=$(mktemp)
+        find "$fixture_root/dist" -mindepth 1 -maxdepth 1 -type d \
+            -exec basename {} \; | sort > "$actual_platforms"
+        find "$fixture_root/src/platforms" -mindepth 1 -maxdepth 1 -type d \
+            -exec basename {} \; | sort > "$expected_platforms"
+        if ! diff -u "$expected_platforms" "$actual_platforms" >/dev/null; then
+            fail "build all 没有按 src/platforms/* 动态构建"
+            diff -u "$expected_platforms" "$actual_platforms" || true
+        fi
+        rm -f "$actual_platforms" "$expected_platforms"
+    fi
+
+    if ! "$fixture_root/scripts/build" >/dev/null; then
+        fail "无参 build 的默认 Codex 构建失败"
+    else
+        actual_platforms=$(find "$fixture_root/dist" -mindepth 1 -maxdepth 1 -type d \
+            -exec basename {} \; | sort)
+        if [ "$actual_platforms" != "$DEFAULT_PLATFORM" ]; then
+            fail "无参 build 没有仅保留默认 $DEFAULT_PLATFORM 产物"
+        fi
+    fi
+
+    rm -rf "$fixture_root"
 }
 
 check_semantic_regressions() {
-    local dist_skills="$DIST_ROOT/codex/skills"
+    local dist_skills="$DIST_ROOT/$DEFAULT_PLATFORM/skills"
     local forbidden='stepsCompleted|stepsTotal|recommendation": "阶段|当前 AIPD 2 标准|case step|fork_context|Goal / Execute / Close|step 回流|aipd-skill/src/core/agent-guides|下次调用 /aipd 将进入|横向铺模块|横向铺开|L1-intent|L2-research|L3-core|L4-product|L5-dev|aipd_adoc_retriever'
     local retired_execution_forbidden='(_aipd|_adoc)/plan([/`[:space:]]|$)|aipd2?-plan-(create|run|archive|learn)|旧[[:space:]`*_]*(aipd2?[[:space:]`*_]*)?(plan|planning)([^[:alnum:]_-]|$)|(plan|planning)[[:space:]`*_]*(概念|流程|目录|文件夹|模板|指南|体系|执行系统)|plan[[:space:]`*_]*(改|到|->|→)[[:space:]`*_]*case|aipd.{0,16}计划[[:space:]`*_]*流程'
     local retired_execution_scan_roots=(
@@ -159,8 +316,7 @@ check_semantic_regressions() {
         "$REPO_ROOT/_aipd/knowledge"
         "$PROJECT_ROOT/src/skills"
         "$PROJECT_ROOT/src/core"
-        "$DIST_ROOT/codex/skills"
-        "$DIST_ROOT/claude/skills"
+        "$DIST_ROOT/$DEFAULT_PLATFORM/skills"
     )
     if rg -n "$forbidden" "$dist_skills" --glob '*.md'; then
         fail "最终产物命中当前流程禁止语义"
@@ -176,7 +332,7 @@ check_semantic_regressions() {
 
 check_code_topology_projection() {
     local source_file="$PROJECT_ROOT/src/core/ai-friendly-code-topology.md"
-    local platform skill target_file
+    local skill target_file
 
     if [ ! -f "$source_file" ]; then
         fail "缺少 AI 友好代码拓扑运行时投影源文件"
@@ -189,43 +345,44 @@ check_code_topology_projection() {
         fi
     done
 
-    for platform in codex claude; do
-        for skill in aipd aipd-case; do
-            target_file="$DIST_ROOT/$platform/skills/$skill/references/ai-friendly-code-topology.md"
-            if [ ! -f "$target_file" ]; then
-                fail "$platform/$skill 缺少代码拓扑运行时投影"
-            elif ! cmp -s "$source_file" "$target_file"; then
-                fail "$platform/$skill 的代码拓扑投影与 core 源文件不同步"
-            fi
-        done
-
-        for skill in "${EXPECTED_SKILLS[@]}"; do
-            if [ "$skill" = "aipd" ] || [ "$skill" = "aipd-case" ]; then
-                continue
-            fi
-            if [ -e "$DIST_ROOT/$platform/skills/$skill/references/ai-friendly-code-topology.md" ]; then
-                fail "$platform/$skill 不应包含代码拓扑运行时投影"
-            fi
-        done
+    for skill in aipd aipd-case; do
+        target_file="$DIST_ROOT/$DEFAULT_PLATFORM/skills/$skill/references/ai-friendly-code-topology.md"
+        if [ ! -f "$target_file" ]; then
+            fail "$DEFAULT_PLATFORM/$skill 缺少代码拓扑运行时投影"
+        elif ! cmp -s "$source_file" "$target_file"; then
+            fail "$DEFAULT_PLATFORM/$skill 的代码拓扑投影与 core 源文件不同步"
+        fi
     done
 
-    if ! rg -q 'Code Topology Contract' "$DIST_ROOT/codex/skills/aipd-case/references/case/phases/design.md"; then
+    for skill in "${EXPECTED_SKILLS[@]}"; do
+        if [ "$skill" = "aipd" ] || [ "$skill" = "aipd-case" ]; then
+            continue
+        fi
+        if [ -e "$DIST_ROOT/$DEFAULT_PLATFORM/skills/$skill/references/ai-friendly-code-topology.md" ]; then
+            fail "$DEFAULT_PLATFORM/$skill 不应包含代码拓扑运行时投影"
+        fi
+    done
+
+    if ! rg -q 'Code Topology Contract' "$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-case/references/case/phases/design.md"; then
         fail "Case Design 缺少 Code Topology Contract"
     fi
-    if ! rg -q '代码拓扑护栏 preflight' "$DIST_ROOT/codex/skills/aipd-case/references/case/phases/execute.md"; then
+    if ! rg -q '代码拓扑护栏 preflight' "$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-case/references/case/phases/execute.md"; then
         fail "Case Execute 缺少代码拓扑护栏 preflight"
     fi
-    if ! rg -q '代码拓扑合同审计' "$DIST_ROOT/codex/skills/aipd-case/references/case/phases/verify.md"; then
+    if ! rg -q '代码拓扑合同审计' "$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-case/references/case/phases/verify.md"; then
         fail "Case Verify 缺少代码拓扑合同审计"
     fi
-    if ! rg -q '拓扑敏感' "$DIST_ROOT/codex/skills/aipd-case/references/case/templates/work-package.md"; then
+    if ! rg -q '拓扑敏感' "$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-case/references/case/templates/work-package.md"; then
         fail "Work Package 模板缺少拓扑敏感字段"
     fi
 }
 
 check_cleanup_entrypoints() {
     local script
-    for script in install install-codex install-project install-project-codex dev dev-codex; do
+    local default_entrypoint
+    local codex_entrypoint
+
+    for script in install-codex install-project-codex dev-codex; do
         if ! rg -q 'source "\$SCRIPT_DIR/legacy-skills"' "$SCRIPT_DIR/$script"; then
             fail "$script 未复用共享 legacy cleanup"
         fi
@@ -241,10 +398,20 @@ check_cleanup_entrypoints() {
             fail "$script 未复用共享 legacy Agent cleanup"
         fi
     done
+
+    while read -r default_entrypoint codex_entrypoint; do
+        if ! rg -Fq "exec \"\$SCRIPT_DIR/$codex_entrypoint\" \"\$@\"" "$SCRIPT_DIR/$default_entrypoint"; then
+            fail "$default_entrypoint 没有委托给 Codex 默认入口 $codex_entrypoint"
+        fi
+    done <<'EOF'
+dev dev-codex
+install install-codex
+install-project install-project-codex
+EOF
 }
 
 check_schema_migrator() {
-    local platform packaged_migrator
+    local packaged_migrator
     if [ ! -x "$SCRIPT_DIR/migrate-project-schema" ]; then
         fail "migrate-project-schema 缺失或不可执行"
         return
@@ -257,62 +424,102 @@ check_schema_migrator() {
         fail "AIPD Schema migrator fixture 校验失败"
     fi
 
-    for platform in codex claude; do
-        packaged_migrator="$DIST_ROOT/$platform/skills/aipd/scripts/migrate-project-schema"
-        if [ ! -x "$packaged_migrator" ]; then
-            fail "$platform/aipd 缺少可执行的一次性 Schema migrator"
-        elif ! cmp -s "$SCRIPT_DIR/migrate-project-schema" "$packaged_migrator"; then
-            fail "$platform/aipd 的 Schema migrator 与源码不同步"
-        fi
-    done
+    packaged_migrator="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd/scripts/migrate-project-schema"
+    if [ ! -x "$packaged_migrator" ]; then
+        fail "$DEFAULT_PLATFORM/aipd 缺少可执行的一次性 Schema migrator"
+    elif ! cmp -s "$SCRIPT_DIR/migrate-project-schema" "$packaged_migrator"; then
+        fail "$DEFAULT_PLATFORM/aipd 的 Schema migrator 与源码不同步"
+    fi
+}
+
+check_release_bundle() {
+    local validator="$SCRIPT_DIR/check-release-bundle"
+    local fixture="$SCRIPT_DIR/check-release-bundle-fixtures"
+
+    if [ ! -x "$validator" ]; then
+        fail "check-release-bundle 缺失或不可执行"
+        return
+    fi
+    if [ ! -x "$fixture" ]; then
+        fail "check-release-bundle-fixtures 缺失或不可执行"
+        return
+    fi
+    if ! "$validator" \
+        --project-root "$PROJECT_ROOT" \
+        --dist-skills "$DIST_ROOT/$DEFAULT_PLATFORM/skills"; then
+        fail "AIPD release bundle source / Codex dist 校验失败"
+    fi
+    if ! "$fixture"; then
+        fail "AIPD release bundle / selection fixture 校验失败"
+    fi
 }
 
 check_schema_manifest_contract() {
     local source_manifest="$PROJECT_ROOT/src/core/workspace/templates/manifest.json"
-    local expected_manifest platform dist_manifest
-    expected_manifest=$(mktemp)
-    printf '%s\n' '{' '  "schema": "aipd-project",' '  "schemaVersion": 2' '}' > "$expected_manifest"
+    local dist_manifest
 
-    if ! cmp -s "$expected_manifest" "$source_manifest"; then
-        fail "Schema manifest 模板不符合 aipd-project v2 精确合同"
+    if [ ! -f "$source_manifest" ] || [ -L "$source_manifest" ]; then
+        fail "Schema manifest 模板必须是非 symlink 普通文件"
     fi
     if ! rg -q '@references/workspace/templates/manifest.json' "$SRC_SKILLS/aipd/SKILL.md"; then
         fail "aipd 初始化入口未读取 Schema manifest 模板"
     fi
 
-    for platform in codex claude; do
-        dist_manifest="$DIST_ROOT/$platform/skills/aipd/references/workspace/templates/manifest.json"
-        if ! cmp -s "$source_manifest" "$dist_manifest"; then
-            fail "$platform/aipd 的 Schema manifest 模板未与源码同步"
-        fi
-    done
-    rm -f "$expected_manifest"
+    dist_manifest="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd/references/workspace/templates/manifest.json"
+    if ! cmp -s "$source_manifest" "$dist_manifest"; then
+        fail "$DEFAULT_PLATFORM/aipd 的 Schema manifest 模板未与源码同步"
+    fi
 }
 
 check_schema_runtime_gates() {
-    local file
-    local gate_files=(
-        "$SRC_SKILLS/aipd/SKILL.md"
+    local file skill
+    local project_state="$PROJECT_ROOT/src/core/workspace/project-state.md"
+    local gate_skills=(
+        aipd
+        aipd-case
+        aipd-inbox
+        aipd-learn
+        aipd-mermaid
+        aipd-okr
+        aipd-update
+        aipd-weave
+    )
+    local projected_gate_files=(
         "$SRC_SKILLS/aipd/references/scan-agent.md"
-        "$SRC_SKILLS/aipd-case/SKILL.md"
-        "$SRC_SKILLS/aipd-inbox/SKILL.md"
-        "$SRC_SKILLS/aipd-learn/SKILL.md"
-        "$SRC_SKILLS/aipd-mermaid/SKILL.md"
-        "$SRC_SKILLS/aipd-okr/SKILL.md"
-        "$SRC_SKILLS/aipd-update/SKILL.md"
-        "$SRC_SKILLS/aipd-weave/SKILL.md"
         "$PROJECT_ROOT/src/core/agent-entry/template.md"
         "$PROJECT_ROOT/src/core/agent-guides/aipd_context_retriever.md"
         "$PROJECT_ROOT/src/platforms/codex/core/agent-guide.md"
-        "$PROJECT_ROOT/src/platforms/claude/core/agent-guide.md"
     )
 
-    for file in "${gate_files[@]}"; do
-        if ! rg -q '路径项存在性' "$file"; then
-            fail "Schema runtime gate 未声明路径项存在语义: ${file#$PROJECT_ROOT/}"
+    if [ ! -f "$project_state" ] || [ -L "$project_state" ]; then
+        fail "缺少非 symlink 的项目状态公共合同: src/core/workspace/project-state.md"
+    else
+        for term in '路径项存在性' 'symlink' 'aipdVersion' 'needs-aipd-update' '自定义 Workspace'; do
+            if ! rg -q "$term" "$project_state"; then
+                fail "项目状态公共合同缺少关键语义 $term"
+            fi
+        done
+    fi
+
+    for skill in "${gate_skills[@]}"; do
+        file="$SRC_SKILLS/$skill/SKILL.md"
+        if ! rg -Fq '@references/workspace/project-state.md' "$file"; then
+            fail "$skill 未读取公共 project-state 合同"
         fi
-        if ! rg -q 'symlink' "$file"; then
-            fail "Schema runtime gate 未声明 symlink 拒绝规则: ${file#$PROJECT_ROOT/}"
+        if ! rg -Fq '@references/updates/catalog.json' "$file"; then
+            fail "$skill 未读取本机 release catalog"
+        fi
+        if ! rg -q '^[[:space:]]*-[[:space:]]+workspace/project-state\.md[[:space:]]*$' "$file"; then
+            fail "$skill 未注入公共 project-state 合同"
+        fi
+        if ! rg -q '^[[:space:]]*-[[:space:]]+updates/(catalog\.json|\*)[[:space:]]*$' "$file"; then
+            fail "$skill 未注入本机 release catalog"
+        fi
+    done
+
+    for file in "${projected_gate_files[@]}"; do
+        if ! rg -q 'project-state\.md' "$file" || ! rg -q 'updates/catalog\.json' "$file"; then
+            fail "投影入口未连接 project-state / catalog: ${file#$PROJECT_ROOT/}"
         fi
     done
 
@@ -324,18 +531,17 @@ check_schema_runtime_gates() {
     fi
 }
 
-for platform in codex claude; do
-    check_skill_set "$platform"
-    check_source_sync "$platform"
-    check_static_references "$platform"
-done
-
-check_platform_parity
+check_default_dist_scope
+check_skill_set "$DEFAULT_PLATFORM"
+check_source_sync "$DEFAULT_PLATFORM"
+check_static_references "$DEFAULT_PLATFORM"
 check_codex_agent_set
+check_multi_target_build_contract
 check_semantic_regressions
 check_code_topology_projection
 check_cleanup_entrypoints
 check_schema_migrator
+check_release_bundle
 check_schema_manifest_contract
 check_schema_runtime_gates
 
@@ -344,4 +550,4 @@ if [ "$CHECK_FAILED" -ne 0 ]; then
     exit 1
 fi
 
-echo "AIPD dist 检查通过：9 个 Skill、3 个 Codex Agent、源码同步、静态引用、平台差异、Schema migrator、代码拓扑投影、关键语义和 cleanup 入口均正常。"
+echo "AIPD dist 检查通过：默认 Codex 产物、9 个 Skill、3 个 Codex Agent、通用多目标构建、release bundle、Schema migrator、源码同步、静态引用、代码拓扑投影、关键语义和 cleanup 入口均正常。"

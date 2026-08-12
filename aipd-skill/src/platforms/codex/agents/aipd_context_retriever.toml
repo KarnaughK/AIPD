@@ -1,5 +1,5 @@
 name = "aipd_context_retriever"
 description = "AIPD 任务上下文检索助手：按当前任务从五类知识域、SOP、必要的流程状态、README 和代码入口中检索并压缩上下文。"
-nickname_candidates = ["AIPD 上下文检索助手", "AIPD 记忆检索助手"]
+nickname_candidates = ["Context Scout", "Memory Scout"]
 model_reasoning_effort = "high"
 instructions_file = "agent-guides/aipd_context_retriever.md"

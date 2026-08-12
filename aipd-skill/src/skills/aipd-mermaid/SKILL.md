@@ -10,6 +10,8 @@ allowed-tools:
   - Glob
   - Grep
 inject-from-core:
+  - updates/catalog.json
+  - workspace/project-state.md
   - knowledge/engineering/vue-architecture-diagram-guide.md
   - knowledge/engineering/vue-provider-guide.md
 ---
@@ -18,7 +20,7 @@ inject-from-core:
 
 面向 AIPD 项目的 Mermaid / `.mmd` 图写作、修改、评审和按需预览入口。
 
-使用项目 map 前先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止 AIPD 路由，不猜测其他工作区。
+使用项目 map 前先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，按路径项存在性、symlink、manifest 双形态和 `P/I` 执行项目 gate。双根、symlink、非法类型 / manifest 或 `P > I` 立即停止；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`。只有 `P = I` 且 `index.md` / `map.md` 类型安全时继续；项目版本不从 Agent Entry 推断。
 
 ## 先判断用户要什么
 

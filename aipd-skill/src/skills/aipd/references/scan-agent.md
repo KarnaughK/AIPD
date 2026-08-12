@@ -9,11 +9,13 @@
 
 ## 扫描边界
 
-1. 先按路径项存在性检查 `{project_root}/_aipd/` 与主 Skill 定义的旧根拒绝性哨兵；损坏 symlink 和同名普通文件也算存在。双根同时存在时返回 `schemaState: invalid`，立即停止。
-2. 只有当前根路径项时，它必须是真实目录而不是 symlink，工作区内不得有 symlink，且 `manifest.json`、`index.md`、`map.md` 都必须是非 symlink 的普通文件。manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}` 时才标记为已初始化；任一类型或内容不符都返回 `schemaState: invalid`。
-3. 当前工作区不存在而旧根哨兵命中时返回 `schemaState: legacy-needs-migration`，停止扫描并指向一次性迁移器。
-4. 新旧根路径项均不存在时返回 `schemaState: absent` 和初始化建议，不扫描其他路径。
-5. 已识别 Knowledge Schema v2 时，按需读取 `_aipd/index.md` 和 `_aipd/map.md`，不全量读取知识正文。
+1. 先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，验证本机目录并取得 `currentVersion=I`。
+2. 按路径项存在性检查 `{project_root}/_aipd/` 与旧根拒绝性哨兵；损坏 symlink 和同名普通文件也算存在。双根返回 `schemaState: invalid`并立即停止。
+3. 只有当前根时，按状态合同检查真实目录、工作区 symlink、manifest 普通文件 / JSON object 和精确双形态。身份通过时返回 `schemaState: recognized`；非法类型、未知 key 或值返回 `schemaState: invalid`。
+4. 将 Schema 与发布版本分开：精确两键 manifest 返回 `versionState: unversioned-v2`；`P < I` 返回 `stale`；`P = I` 返回 `current`；`P > I` 返回 `future-project`。项目版本不从 `AGENTS.md` 推断。
+5. 旧根哨兵命中时返回 `schemaState: legacy-needs-migration`；新旧根都不存在时返回 `schemaState: absent`。两者都不扫描其他路径。
+6. `unversioned-v2` / `stale` 的推荐动作是 `needs-aipd-update`；`future-project` / `invalid` 硬停止；只有 `current` 才继续状态统计。必要 index / map 缺失时返回 drift repair 建议，不把 Schema 改判 invalid；存在但是 symlink / 类型冲突仍 invalid。
+7. 安全的额外 Workspace 文件或目录是项目定制，只列为“可保留定制”，不因未知名称判 invalid；保留名、代码目录、symlink 和类型冲突仍按合同拒绝。
 
 ## 状态统计
 
@@ -26,9 +28,9 @@
 
 ## Agent Entry
 
-- Codex 项目优先检查 `AGENTS.md`，Claude Code 项目可检查 `CLAUDE.md`。
+- 检查 Codex 项目的 `AGENTS.md`。
 - 只判断是否存在 `<!-- AIPD:START -->` 区块，不重写用户内容。
-- 工作区已初始化但 Agent Entry 缺失时，建议用 `aipd-update` 补齐。
+- 工作区已初始化但 Agent Entry 缺失时只报告当前安装状态；等级 0 本来就允许缺失。只有用户明确要求安装 Entry 时才路由 `aipd-update` 补装。
 
 ## OKR
 
@@ -49,7 +51,8 @@
 
 ```md
 AIPD 项目状态：
-- Schema：v2 / invalid / absent
+- Schema：recognized-v2 / legacy-needs-migration / invalid / absent
+- AIPD 版本：unversioned-v2 / stale(V{P}->V{I}) / current(V{I}) / future-project(V{P}>V{I})
 - Agent Entry：已安装 / 缺失
 - Intent：已定义 / 未定义
 - Knowledge：Research ... / Core ... / Product ... / Engineering ...
@@ -57,6 +60,7 @@ AIPD 项目状态：
 - OKR：...
 - Case：...
 - 阻塞 / 风险：...
+- 可保留项目定制：...
 - 推荐下一步：...
 ```
 

@@ -18,9 +18,13 @@ const { tmpdir } = require('node:os')
 const scriptDirectory = __dirname
 const migratorPath = join(scriptDirectory, 'migrate-project-schema')
 const fixtureRoot = mkdtempSync(join(tmpdir(), 'aipd-schema-migrator-'))
-const expectedManifest = {
+const expectedUnversionedManifest = {
   schema: 'aipd-project',
   schemaVersion: 2,
+}
+const expectedVersionedManifest = {
+  ...expectedUnversionedManifest,
+  aipdVersion: 1,
 }
 
 function write(path, contents = '') {
@@ -165,7 +169,10 @@ function createLegacySchema(repositoryRoot) {
   )
 }
 
-function createCurrentSchema(repositoryRoot, { manifest = expectedManifest, omit = null } = {}) {
+function createCurrentSchema(
+  repositoryRoot,
+  { manifest = expectedVersionedManifest, omit = null } = {},
+) {
   const currentRoot = join(repositoryRoot, '_aipd')
   const directories = [
     'knowledge/intent',
@@ -217,11 +224,12 @@ function verifySuccessfulMigration() {
   assert.ok(existsSync(join(repositoryRoot, '_adoc')))
   assert.equal(existsSync(join(repositoryRoot, '_aipd')), false)
 
-  runMigrator(repositoryRoot, [repositoryRoot])
+  const migrationResult = runMigrator(repositoryRoot, [repositoryRoot])
+  assert.match(migrationResult.stdout, /unversioned v2.*aipd-update/u)
   assert.equal(existsSync(join(repositoryRoot, '_adoc')), false)
   assert.deepEqual(
     JSON.parse(readFileSync(join(repositoryRoot, '_aipd', 'manifest.json'), 'utf8')),
-    expectedManifest,
+    expectedUnversionedManifest,
   )
   assert.equal(
     existsSync(join(repositoryRoot, '.codex', 'agents', 'aipd_adoc_retriever.toml')),
@@ -371,6 +379,57 @@ function verifySuccessfulMigration() {
   })
 }
 
+function verifyNonCodexAgentFilesRemainUnmapped() {
+  const repositoryRoot = initializeRepository('non-codex-agent-files', (projectRoot) => {
+    createLegacySchema(projectRoot)
+    write(
+      join(projectRoot, 'CLAUDE.md'),
+      [
+        '<!-- AIPD:START -->',
+        'keep this platform-local entry and update `_adoc/map.md` only as ordinary text',
+        '<!-- AIPD:END -->',
+        '',
+      ].join('\n'),
+    )
+    write(
+      join(projectRoot, '.claude', 'agents', 'aipd_adoc_retriever.md'),
+      'name = "aipd_adoc_retriever"\n',
+    )
+  })
+
+  runMigrator(repositoryRoot, [repositoryRoot])
+
+  const platformEntry = readFileSync(join(repositoryRoot, 'CLAUDE.md'), 'utf8')
+  assert.match(platformEntry, /keep this platform-local entry/)
+  assert.match(platformEntry, /_aipd\/map\.md/)
+  assert.doesNotMatch(platformEntry, /## 五类并列知识域/)
+  assert.ok(existsSync(
+    join(repositoryRoot, '.claude', 'agents', 'aipd_adoc_retriever.md'),
+  ))
+  assert.equal(existsSync(
+    join(repositoryRoot, '.claude', 'agents', 'aipd_context_retriever.md'),
+  ), false)
+}
+
+function verifyCurrentManifestShapesAndExtensions() {
+  const unversioned = initializeRepository('current-unversioned-v2', (repositoryRoot) => {
+    createCurrentSchema(repositoryRoot, { manifest: expectedUnversionedManifest })
+  })
+  runMigrator(unversioned, ['--check', unversioned])
+
+  const versionedWithLeader = initializeRepository(
+    'current-versioned-with-leader',
+    (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot)
+      write(
+        join(repositoryRoot, '_aipd', 'leader', 'index.md'),
+        '# Project-local Leader Experiment\n',
+      )
+    },
+  )
+  runMigrator(versionedWithLeader, ['--check', versionedWithLeader])
+}
+
 function verifyRejectedStates() {
   const fullLegacy = initializeRepository('check-legacy', createLegacySchema)
   runMigrator(fullLegacy, ['--check', fullLegacy], {
@@ -486,7 +545,19 @@ function verifyRejectedStates() {
   })
   runMigrator(codeInsideWorkspace, ['--check', codeInsideWorkspace], {
     expectSuccess: false,
-    errorPattern: /不允许额外 Workspace 目录/,
+    errorPattern: /不允许把真实代码放入 Workspace/,
+  })
+
+  const legacyLevelInsideWorkspace = initializeRepository(
+    'legacy-level-inside-workspace',
+    (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot)
+      write(join(repositoryRoot, '_aipd', 'L9-experiment', 'index.md'), '# Legacy level\n')
+    },
+  )
+  runMigrator(legacyLevelInsideWorkspace, ['--check', legacyLevelInsideWorkspace], {
+    expectSuccess: false,
+    errorPattern: /半迁移目录/,
   })
 
   const wrongManifest = initializeRepository('wrong-manifest', (repositoryRoot) => {
@@ -501,13 +572,30 @@ function verifyRejectedStates() {
 
   const extraManifestField = initializeRepository('extra-manifest-field', (repositoryRoot) => {
     createCurrentSchema(repositoryRoot, {
-      manifest: { ...expectedManifest, compatibility: 'legacy' },
+      manifest: { ...expectedVersionedManifest, compatibility: 'legacy' },
     })
   })
   runMigrator(extraManifestField, ['--check', extraManifestField], {
     expectSuccess: false,
     errorPattern: /精确声明/,
   })
+
+  for (const [name, aipdVersion] of [
+    ['zero', 0],
+    ['negative', -1],
+    ['fractional', 1.5],
+    ['string', '1'],
+  ]) {
+    const invalidVersion = initializeRepository(`invalid-aipd-version-${name}`, (repositoryRoot) => {
+      createCurrentSchema(repositoryRoot, {
+        manifest: { ...expectedUnversionedManifest, aipdVersion },
+      })
+    })
+    runMigrator(invalidVersion, ['--check', invalidVersion], {
+      expectSuccess: false,
+      errorPattern: /正整数 aipdVersion/,
+    })
+  }
 
   const collision = initializeRepository('collision', (repositoryRoot) => {
     createLegacySchema(repositoryRoot)
@@ -763,8 +851,10 @@ function verifyRejectedStates() {
 try {
   assert.ok(existsSync(migratorPath), `missing migrator: ${migratorPath}`)
   verifySuccessfulMigration()
+  verifyNonCodexAgentFilesRemainUnmapped()
+  verifyCurrentManifestShapesAndExtensions()
   verifyRejectedStates()
-  console.log('AIPD Schema migrator fixtures 通过：迁移、只读检查与拒绝状态均符合合同。')
+  console.log('AIPD Schema migrator fixtures 通过：unversioned / versioned v2、项目扩展、迁移提示与拒绝状态均符合合同。')
 } finally {
   rmSync(resolve(fixtureRoot), { recursive: true, force: true })
 }

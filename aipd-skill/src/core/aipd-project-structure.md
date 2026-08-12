@@ -4,10 +4,11 @@
 
 ```text
 _aipd/
-├── manifest.json                       # Schema 标识：aipd-project / schemaVersion 2
+├── manifest.json                       # Schema 身份 + 已应用 AIPD 版本
 ├── index.md                            # 工作区入口
 ├── inbox.md                            # 尚未整理归属的临时信息
 ├── map.md                              # 项目记忆总图：Agent 第一跳读取
+├── update-log.md                       # 本项目实际完成的 AIPD 版本更新日志
 ├── development-log.md                  # 框架项目可选
 ├── knowledge/                          # 五类并列长期知识
 │   ├── intent/                         # 项目方向、目标和长期取舍
@@ -60,16 +61,24 @@ _aipd/
 
 ## Schema 标识
 
-`_aipd/manifest.json` 是工作区版本事实源：
+`_aipd/manifest.json` 同时记录 Schema 身份和当前项目已成功应用的 AIPD 发布版本：
 
 ```json
 {
   "schema": "aipd-project",
-  "schemaVersion": 2
+  "schemaVersion": 2,
+  "aipdVersion": 1
 }
 ```
 
-活动运行时只识别这套结构，不读取旧工作区或旧知识目录。
+- `schemaVersion` 只表达 Workspace 数据形状；`aipdVersion` 表达项目最后一次完整应用的 AIPD 发布快照。
+- 本机当前版本以已安装 Skill 的 `@references/updates/catalog.json#currentVersion` 为唯一事实源，不从 Agent Entry 或远程推断。
+- 精确两键的 Schema v2 manifest 是可更新的 `unversioned-v2`；精确三键且 `aipdVersion` 为正整数时是已版本化 v2。详细状态机见 `@references/workspace/project-state.md`。
+- 一次性 Schema 迁移器仍产出无版本 v2；只有 Update 完成最终态合并和验证后才写入 `aipdVersion`。
+
+`_aipd/update-log.md` 记录本项目每次实际完成的版本跃迁、合并摘要、验证和有意保留的项目差异。它不是全局 Release Record 的副本。
+
+活动运行时不双读旧工作区或旧知识目录。除 AIPD 保留名、代码目录、symlink 或文件类型冲突外，安全的额外 Workspace 模块属于项目定制，Update 应默认保留，不纳入 V1 必选模板。
 
 ## 知识、流程与真实代码
 

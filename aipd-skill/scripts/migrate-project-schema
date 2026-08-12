@@ -33,6 +33,16 @@ const CURRENT_ROOT = '_aipd'
 const REQUIRED_ROOT_FILES = ['index.md', 'map.md', 'inbox.md']
 const REQUIRED_PROCESS_DIRECTORIES = ['sop', 'case', 'okr']
 const IGNORABLE_WORKSPACE_FILE_NAMES = new Set(['.DS_Store'])
+const FORBIDDEN_WORKSPACE_CODE_DIRECTORIES = new Set([
+  'app',
+  'build',
+  'code',
+  'dist',
+  'lib',
+  'node_modules',
+  'packages',
+  'src',
+])
 const KNOWLEDGE_MAPPINGS = Object.freeze([
   ['L1-intent', 'intent'],
   ['L2-research', 'research'],
@@ -45,10 +55,6 @@ const PROJECT_AGENT_PATH_MAPPINGS = Object.freeze([
   [
     '.codex/agents/aipd_adoc_retriever.toml',
     '.codex/agents/aipd_context_retriever.toml',
-  ],
-  [
-    '.claude/agents/aipd_adoc_retriever.md',
-    '.claude/agents/aipd_context_retriever.md',
   ],
 ])
 
@@ -126,7 +132,25 @@ const ALLOWED_RESIDUAL_FRAGMENTS = new Map([
   ['docs/modules/build-and-install.md', [
     '仍使用 `_adoc/` 与 L1-L5 目录',
   ]],
-  ['aipd-skill/src/skills/aipd/SKILL.md', ['`test -e _adoc || test -L _adoc`']],
+  ['docs/modules/skills-overview.md', ['旧 `_adoc` 项目']],
+  ['aipd-skill/src/skills/aipd/SKILL.md', [
+    '`test -e _adoc || test -L _adoc`',
+    '只有 `_adoc` 时，不读取、路由或写入其中内容',
+  ]],
+  ['aipd-skill/src/skills/aipd-learn/SKILL.md', [
+    '只有 `_adoc` 时返回 `legacy-needs-migration`',
+  ]],
+  ['aipd-skill/src/core/updates/current.md', [
+    '一次性 `_adoc -> _aipd` 迁移器',
+  ]],
+  ['aipd-skill/src/core/updates/releases/v1.md', [
+    '一次性 `_adoc -> _aipd` Schema 迁移',
+  ]],
+  ['aipd-skill/src/core/workspace/project-state.md', [
+    '检查 `_aipd` 和 `_adoc`',
+    '仅 `_adoc` 存在',
+    '一次性迁移器只负责确定性的 `_adoc -> _aipd` 结构切换',
+  ]],
 ])
 
 const WORKSPACE_REPLACEMENT_PATHS = new Map([
@@ -381,7 +405,6 @@ function assertNoIgnoredAgentEntries(projectRoot) {
       '-z',
       '--',
       'AGENTS.md',
-      'CLAUDE.md',
       ...PROJECT_AGENT_PATH_MAPPINGS.flat(),
     ],
     { binary: true },
@@ -412,7 +435,6 @@ function assertNoIgnoredAgentEntries(projectRoot) {
 function assertNoSymlinkedAipdAgentEntries(projectRoot) {
   for (const repositoryPath of [
     'AGENTS.md',
-    'CLAUDE.md',
     ...PROJECT_AGENT_PATH_MAPPINGS.flat(),
   ]) {
     const path = join(projectRoot, repositoryPath)
@@ -533,17 +555,32 @@ function readManifest(manifestPath) {
     fail(`${CURRENT_ROOT}/manifest.json 不是有效 JSON：${error.message}`)
   }
 
+  if (manifest === null || typeof manifest !== 'object' || Array.isArray(manifest)) {
+    fail(`${CURRENT_ROOT}/manifest.json 必须是 JSON object。`)
+  }
+
   const keys = Object.keys(manifest).sort()
-  if (
-    keys.length !== 2
-    || keys[0] !== 'schema'
-    || keys[1] !== 'schemaVersion'
-    || manifest.schema !== SCHEMA_MANIFEST.schema
-    || manifest.schemaVersion !== SCHEMA_MANIFEST.schemaVersion
-  ) {
+  const hasSchemaIdentity = (
+    manifest.schema === SCHEMA_MANIFEST.schema
+    && manifest.schemaVersion === SCHEMA_MANIFEST.schemaVersion
+  )
+  const isUnversioned = (
+    keys.length === 2
+    && keys[0] === 'schema'
+    && keys[1] === 'schemaVersion'
+  )
+  const isVersioned = (
+    keys.length === 3
+    && keys[0] === 'aipdVersion'
+    && keys[1] === 'schema'
+    && keys[2] === 'schemaVersion'
+    && Number.isInteger(manifest.aipdVersion)
+    && manifest.aipdVersion > 0
+  )
+  if (!hasSchemaIdentity || (!isUnversioned && !isVersioned)) {
     fail(
       `${CURRENT_ROOT}/manifest.json 必须精确声明 `
-      + JSON.stringify(SCHEMA_MANIFEST),
+      + `${JSON.stringify(SCHEMA_MANIFEST)}，或在此基础上只增加正整数 aipdVersion。`,
     )
   }
   return manifest
@@ -643,18 +680,17 @@ function validateCurrentStructure(projectRoot) {
     )
   }
 
-  const allowedWorkspaceDirectories = new Set([
-    'knowledge',
-    ...REQUIRED_PROCESS_DIRECTORIES,
-  ])
-  const unexpectedWorkspaceDirectory = readdirSync(
+  const forbiddenCodeDirectory = readdirSync(
     currentPath,
     { withFileTypes: true },
-  ).find((entry) => entry.isDirectory() && !allowedWorkspaceDirectories.has(entry.name))
-  if (unexpectedWorkspaceDirectory) {
+  ).find((entry) => (
+    entry.isDirectory()
+    && FORBIDDEN_WORKSPACE_CODE_DIRECTORIES.has(entry.name.toLowerCase())
+  ))
+  if (forbiddenCodeDirectory) {
     fail(
-      `Schema v2 不允许额外 Workspace 目录：`
-      + `${CURRENT_ROOT}/${unexpectedWorkspaceDirectory.name}`,
+      `Schema v2 不允许把真实代码放入 Workspace：`
+      + `${CURRENT_ROOT}/${forbiddenCodeDirectory.name}`,
     )
   }
 
@@ -662,7 +698,7 @@ function validateCurrentStructure(projectRoot) {
   const legacyDirectory = [
     ...readdirSync(currentPath).map((name) => `${CURRENT_ROOT}/${name}`),
     ...readdirSync(knowledgePath).map((name) => `${CURRENT_ROOT}/knowledge/${name}`),
-  ].find((path) => /^L[1-5]-/.test(path.split('/').pop()))
+  ].find((path) => /^L[0-9]+-/.test(path.split('/').pop()))
   if (legacyDirectory) {
     fail(`检测到半迁移目录 ${legacyDirectory}；迁移已停止。`)
   }
@@ -783,7 +819,7 @@ function rewriteTrackedText(text, sourceRepositoryPath, targetFilePath) {
 }
 
 function rewriteAgentEntryBlock(text, repositoryPath) {
-  if (repositoryPath !== 'AGENTS.md' && repositoryPath !== 'CLAUDE.md') {
+  if (repositoryPath !== 'AGENTS.md') {
     return text
   }
 
@@ -881,7 +917,6 @@ function containsUnresolvedKnowledgeLevel(text, repositoryPath) {
   if (
     !/\.mdx?$/iu.test(normalizedPath)
     && normalizedPath !== 'AGENTS.md'
-    && normalizedPath !== 'CLAUDE.md'
   ) {
     return false
   }
@@ -1237,6 +1272,7 @@ function main() {
 
   migrate(projectRoot, trackedEntries, moves, fileMoves, edits)
   console.log(`迁移完成：${LEGACY_ROOT}/ -> ${CURRENT_ROOT}/（Schema v2）。`)
+  console.log('当前 manifest 仍是 unversioned v2；请继续运行 aipd-update 收敛到本机 AIPD 版本。')
   console.log('请审查 git diff，确认后提交迁移结果。')
 }
 

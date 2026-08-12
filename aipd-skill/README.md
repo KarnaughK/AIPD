@@ -1,6 +1,6 @@
 # AIPD Skill 源码目录
 
-`aipd-skill/` 是 AIPD 的可构建能力源码。它维护平台无关的框架规则、九个 Skill、Codex / Claude 适配、角色 Agent、构建脚本和安装产物。
+`aipd-skill/` 是 AIPD 的可构建能力源码。它维护平台无关的框架规则、九个 Skill、Codex 适配、角色 Agent、构建脚本和安装产物。
 
 它不是项目 `_aipd/` 工作区：前者定义 AIPD 怎样运行，后者保存某个具体项目的 Knowledge、Map、SOP、Case、OKR 和 Inbox。
 
@@ -72,7 +72,7 @@ src/core/
 
 ### Agent Entry 与角色指引
 
-- `agent-entry/template.md`：注入目标项目 `AGENTS.md` / `CLAUDE.md` 的 AIPD 入口规则。
+- `agent-entry/template.md`：注入目标项目 `AGENTS.md` 的 AIPD 入口规则。
 - `agent-entry/interaction-style.md`：可选的项目级讨论 / 执行回复协议。
 - `agent-guides/aipd_context_retriever.md`：从 Knowledge、SOP、必要流程状态、局部 README 和代码入口压缩任务上下文。
 - `agent-guides/aipd_product_manager.md`：Case Design requirements 角色。
@@ -89,13 +89,12 @@ src/core/
 
 ```text
 src/platforms/
-├── claude/core/          # Claude 平台覆盖材料
 └── codex/
     ├── core/             # Codex 平台覆盖材料
     └── agents/           # Codex custom agent 元数据
 ```
 
-构建时，同路径的平台文件优先于 `src/core/`；未覆盖的内容继续使用公共核心材料。Codex Agent `.toml` 只保存平台元数据，领域规则来自 `src/core/agent-guides/`。
+当前默认构建 Codex。目录仍按平台隔离；其他平台可以在 `src/platforms/{platform}/` 提供同路径覆盖，未覆盖的内容继续使用公共核心材料。Codex Agent `.toml` 只保存平台元数据，领域规则来自 `src/core/agent-guides/`。
 
 ## `src/skills/`
 
@@ -119,13 +118,13 @@ AIPD 当前构建九个 Skill：
 
 | 脚本 | 作用 |
 |---|---|
-| `build` | 构建 Claude / Codex 产物；默认构建全部平台 |
-| `check-dist` | 校验 Skill 集合、静态 references、平台产物和旧语义残留 |
+| `build` | 默认构建 Codex 产物；保留多目标扩展能力 |
+| `check-dist` | 校验 Codex Skill 集合、静态 references、产物和旧语义残留 |
 | `migrate-project-schema` | 一次性把旧项目目录转换为 `_aipd/knowledge/*`；不进入日常运行时 |
 | `check-schema-migrator` | 用隔离 fixture 验证迁移成功、重复执行和拒绝状态 |
-| `dev` / `dev-codex` | 用户级开发 symlink 安装 |
-| `install` / `install-codex` | 用户级复制安装 |
-| `install-project` / `install-project-codex` | 指定项目的本地安装 |
+| `dev` / `dev-codex` | Codex 用户级开发 symlink 安装；泛名入口为默认，后者为显式别名 |
+| `install` / `install-codex` | Codex 用户级复制安装；泛名入口为默认，后者为显式别名 |
+| `install-project` / `install-project-codex` | Codex 指定项目本地安装；泛名入口为默认，后者为显式别名 |
 
 新运行时只认 `_aipd/`。一次性迁移器可以识别旧项目并转换；Skills 不双读、不 fallback。
 

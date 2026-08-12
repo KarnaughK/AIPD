@@ -1,0 +1,316 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const assert = require('node:assert/strict')
+const {
+  copyFileSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} = require('node:fs')
+const { tmpdir } = require('node:os')
+const { dirname, join, resolve } = require('node:path')
+const {
+  ReleaseContractError,
+  readCatalog,
+  selectReleaseRecords,
+  validateDistBundle,
+} = require('./check-release-bundle')
+
+const fixtureRoot = mkdtempSync(join(tmpdir(), 'aipd-release-bundle-'))
+const projectRoot = join(fixtureRoot, 'aipd-skill')
+const sourceRoot = join(projectRoot, 'src')
+const coreRoot = join(sourceRoot, 'core')
+const updatesRoot = join(coreRoot, 'updates')
+const distSkillsRoot = join(projectRoot, 'dist', 'codex', 'skills')
+const authority = [
+  'overview.md',
+  'aipd-project-structure.md',
+  'workspace/project-state.md',
+  'workspace/templates/manifest.json',
+  'workspace/templates/index.md',
+  'workspace/templates/map.md',
+  'workspace/templates/update-log.md',
+  'agent-entry/template.md',
+  'agent-entry/interaction-style.md',
+  'agent-guides/aipd_context_retriever.md',
+  'case/overview.md',
+  'case/templates/index.md',
+  'case/templates/case.md',
+  'case/templates/work-package.md',
+]
+
+function write(path, contents = '') {
+  mkdirSync(dirname(path), { recursive: true })
+  writeFileSync(path, contents)
+}
+
+function writeJson(path, value) {
+  write(path, `${JSON.stringify(value, null, 2)}\n`)
+}
+
+function catalogPath() {
+  return join(updatesRoot, 'catalog.json')
+}
+
+function readFixtureCatalog() {
+  return JSON.parse(readFileSync(catalogPath(), 'utf8'))
+}
+
+function writeFixtureCatalog(catalog) {
+  writeJson(catalogPath(), catalog)
+}
+
+function createFixture(versionCount = 9) {
+  const repeatedTopicStates = new Map([
+    [6, 'v6-proposed'],
+    [7, 'v7-reverted'],
+    [8, 'v8-second-direction'],
+    [9, 'v9-final'],
+  ])
+  const releases = []
+  for (let version = 1; version <= versionCount; version += 1) {
+    const record = `releases/v${version}.md`
+    releases.push({ version, record })
+    write(
+      join(updatesRoot, record),
+      [
+        `# AIPD V${version} Release Record`,
+        '',
+        `Fixture release V${version}.`,
+        repeatedTopicStates.has(version)
+          ? `same-topic-state: ${repeatedTopicStates.get(version)}`
+          : 'same-topic-state: unchanged',
+        '',
+      ].join('\n'),
+    )
+  }
+
+  write(join(updatesRoot, 'current.md'), '# Current AIPD Snapshot\n')
+  writeFixtureCatalog({
+    schema: 'aipd-release-catalog',
+    schemaVersion: 1,
+    currentVersion: versionCount,
+    currentGuide: 'current.md',
+    releases,
+    currentAuthority: authority,
+  })
+
+  for (const relativePath of authority) {
+    if (relativePath === 'workspace/templates/manifest.json') {
+      writeJson(join(coreRoot, relativePath), {
+        schema: 'aipd-project',
+        schemaVersion: 2,
+        aipdVersion: versionCount,
+      })
+    } else {
+      write(join(coreRoot, relativePath), `# Fixture ${relativePath}\n`)
+    }
+  }
+  write(join(coreRoot, 'overview.md'), '# Current Authority\n\nsame-topic-state: v9-final\n')
+
+  for (const skill of ['aipd', 'aipd-update']) {
+    const updateContract = skill === 'aipd-update'
+      ? [
+        '从 catalog 选择 `(P,I]` 的全部 Release Records。',
+        '读取 catalog 的 `currentGuide` 与 currentAuthority。',
+        '按最终态合并，而不是逐条重放版本记录。',
+        '不得把任一中间发布版本写成项目状态。',
+      ]
+      : []
+    write(
+      join(sourceRoot, 'skills', skill, 'SKILL.md'),
+      [
+        '---',
+        `name: ${skill}`,
+        'inject-from-core:',
+        '  - updates/catalog.json',
+        '---',
+        '',
+        ...updateContract,
+        '',
+      ].join('\n'),
+    )
+  }
+
+  const updateReferences = join(distSkillsRoot, 'aipd-update', 'references')
+  for (const relativePath of [
+    'updates/catalog.json',
+    'updates/current.md',
+    ...releases.map((release) => `updates/${release.record}`),
+  ]) {
+    const sourcePath = join(coreRoot, relativePath)
+    const targetPath = join(updateReferences, relativePath)
+    mkdirSync(dirname(targetPath), { recursive: true })
+    copyFileSync(sourcePath, targetPath)
+  }
+  for (const relativePath of authority) {
+    const targetPath = join(updateReferences, relativePath)
+    mkdirSync(dirname(targetPath), { recursive: true })
+    copyFileSync(join(coreRoot, relativePath), targetPath)
+  }
+
+  for (const skill of ['aipd', 'aipd-update']) {
+    const referencesRoot = join(distSkillsRoot, skill, 'references')
+    for (const relativePath of [
+      'updates/catalog.json',
+      'workspace/templates/manifest.json',
+      'workspace/templates/update-log.md',
+    ]) {
+      const targetPath = join(referencesRoot, relativePath)
+      mkdirSync(dirname(targetPath), { recursive: true })
+      copyFileSync(join(coreRoot, relativePath), targetPath)
+    }
+  }
+}
+
+function expectContractFailure(callback, pattern) {
+  assert.throws(callback, (error) => (
+    error instanceof ReleaseContractError && pattern.test(error.message)
+  ))
+}
+
+function verifySourceAndDistContract() {
+  const sourceBundle = readCatalog(projectRoot)
+  assert.equal(sourceBundle.catalog.currentVersion, 9)
+  validateDistBundle(sourceBundle, distSkillsRoot)
+}
+
+function verifyCatalogRejections() {
+  const originalCatalog = readFixtureCatalog()
+
+  writeFixtureCatalog({ ...originalCatalog, schema: 'wrong-schema' })
+  expectContractFailure(() => readCatalog(projectRoot), /schema 必须是/u)
+  writeFixtureCatalog(originalCatalog)
+
+  const gappedCatalog = structuredClone(originalCatalog)
+  gappedCatalog.releases[5].version = 7
+  writeFixtureCatalog(gappedCatalog)
+  expectContractFailure(() => readCatalog(projectRoot), /连续递增/u)
+  writeFixtureCatalog(originalCatalog)
+
+  const wrongCurrentCatalog = { ...originalCatalog, currentVersion: 8 }
+  writeFixtureCatalog(wrongCurrentCatalog)
+  expectContractFailure(() => readCatalog(projectRoot), /currentVersion/u)
+  writeFixtureCatalog(originalCatalog)
+
+  const missingAuthorityCatalog = structuredClone(originalCatalog)
+  missingAuthorityCatalog.currentAuthority = missingAuthorityCatalog.currentAuthority.filter(
+    (path) => path !== 'workspace/templates/update-log.md',
+  )
+  writeFixtureCatalog(missingAuthorityCatalog)
+  expectContractFailure(() => readCatalog(projectRoot), /update-log\.md/u)
+  writeFixtureCatalog(originalCatalog)
+
+  writeFixtureCatalog({ ...originalCatalog, unknownField: true })
+  expectContractFailure(() => readCatalog(projectRoot), /字段必须精确/u)
+  writeFixtureCatalog(originalCatalog)
+
+  const releaseNinePath = join(updatesRoot, 'releases', 'v9.md')
+  const releaseNine = readFileSync(releaseNinePath, 'utf8')
+  rmSync(releaseNinePath)
+  expectContractFailure(() => readCatalog(projectRoot), /缺少 release V9 record/u)
+  write(releaseNinePath, releaseNine)
+
+  write(releaseNinePath, '# Wrong title\n')
+  expectContractFailure(() => readCatalog(projectRoot), /标题必须精确/u)
+  write(releaseNinePath, releaseNine)
+
+  rmSync(releaseNinePath)
+  symlinkSync('v8.md', releaseNinePath)
+  expectContractFailure(() => readCatalog(projectRoot), /symlink/u)
+  rmSync(releaseNinePath)
+  write(releaseNinePath, releaseNine)
+
+  write(join(updatesRoot, 'releases', 'v10.md'), '# orphan\n')
+  expectContractFailure(() => readCatalog(projectRoot), /孤儿记录/u)
+  rmSync(join(updatesRoot, 'releases', 'v10.md'))
+
+  const manifestPath = join(coreRoot, 'workspace', 'templates', 'manifest.json')
+  const manifest = readFileSync(manifestPath, 'utf8')
+  writeJson(manifestPath, {
+    schema: 'aipd-project',
+    schemaVersion: 2,
+    aipdVersion: 8,
+  })
+  expectContractFailure(() => readCatalog(projectRoot), /aipdVersion 9/u)
+  write(manifestPath, manifest)
+
+  const distCatalogPath = join(
+    distSkillsRoot,
+    'aipd-update',
+    'references',
+    'updates',
+    'catalog.json',
+  )
+  const distCatalog = readFileSync(distCatalogPath, 'utf8')
+  write(distCatalogPath, '{}\n')
+  expectContractFailure(
+    () => validateDistBundle(readCatalog(projectRoot), distSkillsRoot),
+    /catalog 与 source 不同步/u,
+  )
+  write(distCatalogPath, distCatalog)
+
+  const updateSkillPath = join(sourceRoot, 'skills', 'aipd-update', 'SKILL.md')
+  const updateSkill = readFileSync(updateSkillPath, 'utf8')
+  write(updateSkillPath, updateSkill.replace('而不是逐条重放版本记录', '按每版逐条执行'))
+  expectContractFailure(() => readCatalog(projectRoot), /不得逐版重放/u)
+  write(updateSkillPath, updateSkill)
+}
+
+function verifyReleaseSelection() {
+  const { catalog } = readCatalog(projectRoot)
+
+  const bootstrap = selectReleaseRecords(catalog, null)
+  assert.equal(bootstrap.state, 'bootstrap')
+  assert.deepEqual(bootstrap.releases.map(({ version }) => version), [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+  const stale = selectReleaseRecords(catalog, 5)
+  assert.equal(stale.state, 'stale')
+  assert.deepEqual(stale.releases.map(({ version }) => version), [6, 7, 8, 9])
+
+  const current = selectReleaseRecords(catalog, 9)
+  assert.equal(current.state, 'current')
+  assert.deepEqual(current.releases, [])
+
+  expectContractFailure(() => selectReleaseRecords(catalog, 10), /高于本机/u)
+  expectContractFailure(() => selectReleaseRecords(catalog, 0), /正整数/u)
+}
+
+function verifyRepeatedTopicUsesFinalAuthority() {
+  const sourceBundle = readCatalog(projectRoot)
+  const selected = selectReleaseRecords(sourceBundle.catalog, 5)
+  const selectedStates = selected.releases.map((release) => {
+    const record = readFileSync(join(updatesRoot, release.record), 'utf8')
+    return record.match(/^same-topic-state: (.+)$/mu)[1]
+  })
+
+  assert.deepEqual(selectedStates, [
+    'v6-proposed',
+    'v7-reverted',
+    'v8-second-direction',
+    'v9-final',
+  ])
+  assert.match(
+    readFileSync(sourceBundle.authorityPaths.get('overview.md'), 'utf8'),
+    /^same-topic-state: v9-final$/mu,
+  )
+}
+
+try {
+  createFixture()
+  verifySourceAndDistContract()
+  verifyCatalogRejections()
+  verifySourceAndDistContract()
+  verifyReleaseSelection()
+  verifyRepeatedTopicUsesFinalAuthority()
+  console.log(
+    'AIPD release bundle fixtures 通过：catalog、source/dist、P/I selection 与 V5->V9 最终 authority 收敛均符合本机合同。',
+  )
+} finally {
+  rmSync(resolve(fixtureRoot), { recursive: true, force: true })
+}

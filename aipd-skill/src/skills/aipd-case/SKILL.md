@@ -15,6 +15,8 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - ai-friendly-code-topology.md
+  - updates/catalog.json
+  - workspace/project-state.md
   - case/overview.md
   - case/goal-mode.md
   - case/phases/*
@@ -67,7 +69,7 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 
 每次进入 `aipd-case`，先读取：
 
-1. 先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时立即停止，不猜测补全。
+1. 读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，按路径项存在性、symlink、manifest 双形态和 `P/I` 执行项目 gate。双根、symlink、非法类型 / manifest 或 `P > I` 立即停止；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`。只有 `P = I` 且本次必要入口类型安全时继续 Case；项目版本不从 Agent Entry 推断。
 2. `_aipd/index.md`
 3. `_aipd/map.md`
 4. `_aipd/case/index.md`

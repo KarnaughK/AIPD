@@ -84,14 +84,14 @@ Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业
 
 ## 主 Agent 流程
 
-1. 按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；验证 `_aipd/manifest.json`、`index.md`、`map.md` 是非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止。
+1. 读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，按路径项存在性、symlink、manifest 双形态和 `P/I` 执行项目 gate。双根、symlink、非法类型 / manifest 或 `P > I` 立即停止；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`；只有 `P = I` 且必要入口类型安全时继续。项目版本不从 Agent Entry 推断，安全的额外 Workspace 模块默认保留。
 2. 读取 `_aipd/case/index.md`，定位当前或目标 case。
 3. 读取 `_aipd/case/{case目录}/case.md`，按上下文索引加载必要文档。
 4. 读取 `Current Phase`。若处于 Execute，读取 `03-execute/execute.md` 和 `03-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
 5. 如果用户或平台明确要求目标模式，检查 goal 是否绑定当前 Case；没有 Case 时先创建 Case，再创建 goal。绑定成立时加载 Goal Mode 覆盖层；没有活动绑定时按普通 Case 运行，不自动启用。
 6. 根据上下文噪声、可并发性、主线耦合和调度成本，选择 Main 或 Child。
 7. 选择 Main 时连续完成当前内聚目标，并在里程碑写回 work package、execute.md 和 case。
-8. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。
+8. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。派发 `aipd_context_retriever` 时额外传入上述 project-state / catalog 可读路径和已判定版本状态。
 9. 只有 work package 强依赖 Main 当前未沉淀的聊天判断，且平台明确支持时，才按需继承更多上下文。
 10. Child 完成后，Main 只读取压缩结果，不重复执行同一任务；成功或失败都写回 work package、execute.md 和 case。
 

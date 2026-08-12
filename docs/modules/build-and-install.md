@@ -8,7 +8,7 @@ Skill 本体位于 `aipd-skill/`：源码在 `aipd-skill/src/`，构建产物在
 
 普通用户不需要手工背命令。
 
-建议用 Codex、Claude Code 或其他支持 Skill 的 Agent 打开本项目，然后说明目标：
+建议用 Codex 打开本项目，然后说明目标：
 
 ```text
 请阅读本仓库的项目说明和 AIPD 认知，把 AIPD 打包并安装到我本机可用的 Skill 目录。
@@ -32,37 +32,31 @@ AGENTS.md
 # 修改源码后重新构建
 ./aipd-skill/scripts/build
 
-# 构建后只读校验 Skill 集合、引用与平台产物一致性
+# 构建后只读校验 Codex 产物完整性
 ./aipd-skill/scripts/check-dist
 
-# 只构建某个平台
-./aipd-skill/scripts/build claude
+# 显式构建 Codex 产物
 ./aipd-skill/scripts/build codex
 
-# Claude Code 开发模式安装（symlink）
+# Codex 开发模式安装（symlink）
 ./aipd-skill/scripts/dev
 
-# Claude Code 用户级安装
+# Codex 用户级安装
 ./aipd-skill/scripts/install
 
-# Claude Code 项目级安装
-./aipd-skill/scripts/install-project /path/to/your-project
-
-# Codex 开发模式安装（symlink）
-./aipd-skill/scripts/dev-codex
-
-# Codex 用户级安装
-./aipd-skill/scripts/install-codex
-
 # Codex 项目级安装
-./aipd-skill/scripts/install-project-codex /path/to/your-project
+./aipd-skill/scripts/install-project /path/to/your-project
 ```
+
+当前默认只构建并验证 Codex 产物。项目目前没有 Claude Code 的实际使用与测试条件，无法确认对应产物是否可用，因此不再默认打包；`src/core/` 与 `src/platforms/{platform}/` 组成的通用多目标构建结构仍保留。
+
+`dev-codex`、`install-codex` 和 `install-project-codex` 保留为对应泛名入口的显式 Codex 别名。
 
 dev 模式下，重新 build 后通常会自动生效；install 模式下，修改源码并 build 后通常需要重新 install。
 
 Agent 修改 AIPD 源码后，可以直接运行 `./aipd-skill/scripts/build` 做低风险打包验证，但不要默认继续执行 install。install 会改写用户级或项目级 Agent 运行环境，build 完成后必须主动问用户是否执行 install；只有用户明确确认后，才运行对应安装脚本。
 
-`check-dist` 不修改安装环境，也不替代 build。它验证九个 Skill、源码 / 产物同步、静态 references、Codex / Claude 的已声明差异，以及安装脚本的历史残留清理接入。
+`check-dist` 不修改安装环境，也不替代 build。它验证 Codex 产物中的九个 Skill、源码 / 产物同步、静态 references，以及安装脚本的历史残留清理接入。
 
 ## 旧项目一次性迁移
 
@@ -76,7 +70,7 @@ Knowledge Schema v2 不提供运行时双读。仍使用 `_adoc/` 与 L1-L5 目�
 ./aipd-skill/scripts/migrate-project-schema --check /absolute/project/path
 ```
 
-构建时同一脚本也会打包进 `aipd` Skill 的 `scripts/migrate-project-schema`，因此用户级或项目级安装后，Agent 可以相对当前 Skill 目录定位它，不依赖 AIPD 源码 checkout。迁移器会整块升级带标记的 `AGENTS.md` / `CLAUDE.md` AIPD 区块，并重命名项目级上下文检索 Agent 配置；常见旧分类组合会自动改写，无法可靠判定的裸编号语义会在 dry-run 阶段硬拒绝并给出文件位置，留给人工重新归类。它还会拒绝新旧双根、半迁移结构、非法额外目录、ignored AIPD 文件、Workspace symlink、目标碰撞和错误 manifest。`--check` 只读、允许检查尚未暂存的 v2 工作树，并以 Git `HEAD` 与 index 的并集发现迁移文件丢失。
+构建时同一脚本也会打包进 `aipd` Skill 的 `scripts/migrate-project-schema`，因此用户级或项目级安装后，Agent 可以相对当前 Skill 目录定位它，不依赖 AIPD 源码 checkout。迁移器会整块升级带标记的 `AGENTS.md` AIPD 区块，并重命名项目级上下文检索 Agent 配置；常见旧分类组合会自动改写，无法可靠判定的裸编号语义会在 dry-run 阶段硬拒绝并给出文件位置，留给人工重新归类。它还会拒绝新旧双根、半迁移结构、非法额外目录、ignored AIPD 文件、Workspace symlink、目标碰撞和错误 manifest。`--check` 只读、允许检查尚未暂存的 v2 工作树，并以 Git `HEAD` 与 index 的并集发现迁移文件丢失。
 
 ## 仓库结构
 

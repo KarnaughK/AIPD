@@ -1,4 +1,5 @@
 {
   "schema": "aipd-project",
-  "schemaVersion": 2
+  "schemaVersion": 2,
+  "aipdVersion": 1
 }

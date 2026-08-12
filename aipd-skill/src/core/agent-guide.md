@@ -15,7 +15,13 @@ AIPD 的多 Agent 设计目标是：在不破坏主线连续性的前提下，�
 4. **Work Package 用于状态与验收**：`03-execute/work-packages/` 校准目标、上下文、恢复和验收边界，不是默认派发节点。旧 `steps/` 只作为旧称识别，不再兼容运行。
 5. **最小上下文**：case、work package 和显式文件足够时，不 fork 完整聊天；只有依赖尚未落盘主线判断时才继承更多上下文。
 6. **single-owner evidence**：每条证据面只交给一个 owner，Main 不重复调查；分身只回流结论、依据、风险、建议、改动文件和验证结果。
-7. **平台实现不混用**：Claude Code 和 Codex 的分身能力不同，构建时会选择对应平台的完整实现文档。
+7. **平台实现不混用**：不同运行时的分身能力可能不同，构建时会选择目标平台的完整实现文档；没有专用覆盖时使用平台中立的公共降级规则。
+
+## 项目状态 Gate
+
+派发任何会读取 AIPD Workspace 的分身前，Main 先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，执行路径项存在性、symlink、manifest 双形态和 `P/I` gate。双根、symlink、invalid 或 `P > I` 停止；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`；只有 `P = I` 才继续普通检索或 Case。
+
+派发上下文检索 Agent 时，prompt 同时提供两份 reference 的可读路径和已判定的版本状态，让它重新验证安全门。分身不从 Agent Entry 推断项目版本。安全的额外 Workspace 模块作为项目定制保留，不作为默认扫描范围。
 
 ## Main Agent 直接处理边界
 
@@ -37,9 +43,4 @@ AIPD 的多 Agent 设计目标是：在不破坏主线连续性的前提下，�
 
 本文件只描述 AIPD 的抽象协作思路。
 
-具体调度方式由平台覆盖文件提供：
-
-- Claude Code：使用 Agent Team 机制。
-- Codex：使用 Codex 子 agent 技术（worker / explorer / custom agent）创建分身 Agent。
-
-构建时如果存在 `aipd-skill/src/platforms/{platform}/core/agent-guide.md`，会使用平台文件覆盖本文件；否则才使用本文件。
+具体调度方式由 `aipd-skill/src/platforms/{platform}/core/agent-guide.md` 提供。构建时如果目标平台存在该覆盖文件，就使用平台实现；否则使用本文件，并且不假设任何专用 Agent API、上下文继承或目标模式能力。

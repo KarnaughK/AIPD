@@ -1,8 +1,8 @@
 ---
 name: aipd-update
 description: >
-  更新已初始化项目中的 AIPD 架构。审计 manifest、AGENTS.md、_aipd/index.md、_aipd/map.md、五类 Knowledge 目录、Case 模板和索引是否符合当前规则，先输出差异清单和更新方案，用户确认后再安全合并更新。
-  关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、补 map、同步新模板、检查 AIPD 架构、项目 AIPD 更新、Knowledge Schema
+  把已接入项目更新到本机已安装的 AIPD 发布快照。读取项目版本、完整版本记录、当前权威文档和项目定制后，一次语义收敛并记录结果；也可承接 unversioned-v2 或先路由 legacy Schema 迁移。
+  关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、补 map、同步新模板、项目版本、版本日志、unversioned-v2、Knowledge Schema
 allowed-tools:
   - Read
   - Write
@@ -12,189 +12,108 @@ allowed-tools:
   - Grep
   - AskUserQuestion
 inject-from-core:
+  - updates/*
   - overview.md
   - aipd-project-structure.md
+  - workspace/project-state.md
+  - workspace/templates/*
   - agent-entry/template.md
   - agent-entry/interaction-style.md
   - agent-guides/aipd_context_retriever.md
-  - workspace/templates/manifest.json
-  - workspace/templates/index.md
-  - workspace/templates/map.md
   - case/overview.md
-  - case/templates/index.md
-  - case/templates/case.md
-  - case/templates/work-package.md
+  - case/templates/*
+  - knowledge/intent/*
+  - knowledge/research/guide.md
+  - knowledge/core/guide.md
+  - knowledge/product/guide.md
+  - knowledge/engineering/guide.md
+  - okr/templates/index.md
 ---
 
 # AIPD Update
 
-`aipd-update` 只更新已经使用 Knowledge Schema v2 的项目。它先做只读审计，输出差异和安全合并方案，用户确认后才写入。
+`aipd-update` 把整个目标项目收敛到本机已安装的 AIPD 版本。正常调用已经授权更新项目内的 AIPD 工作区；不要再固定执行“先审计、逐项确认、再同步模板”。
 
-## 职责边界
+## 不变量
 
-**只做**：
+- 本机 `@references/updates/catalog.json` 声明的 `currentVersion` 是唯一目标版本 `I`；不查询 GitHub、网络或远端版本。
+- 项目 `_aipd/manifest.json#aipdVersion` 是已成功应用版本 `P`；`AGENTS.md` 不是版本事实源。
+- Release Records 只解释演进、替代关系和保护点，不是逐版执行脚本。完整读完记录以前不得写项目，也不得把项目落到中间版本。
+- catalog 的 current guide 与 `currentAuthority` 决定版本 `I` 的框架最终态；项目现状决定必须保护的业务事实和定制内容。
+- 只有验证成功后才提交版本与项目更新日志。任何失败都不得把项目标成 `I`。
 
-- 验证 `_aipd/manifest.json` 为 `aipd-project` v2。
-- 审计 `_aipd/index.md`、`_aipd/map.md` 和 `knowledge/{intent,research,core,product,engineering}/` 的边界与索引结构。
-- 审计 `_aipd/{sop,case,okr}/`、`_aipd/inbox.md` 是否保持独立流程职责。
-- 审计 `AGENTS.md` / `CLAUDE.md` 的 AIPD Project Entry，并在用户明确选择等级 2 时同步 Interaction Protocol。
-- 审计进行中 Case 是否使用 Case Contract + phase-first + `03-execute/work-packages/` 结构。
-- 优先合并缺失区块，不覆盖用户正文。
+## 所有权与合并边界
 
-**不做**：
+- **AIPD-owned**：manifest、AIPD 标记区块、框架入口和模板合同，按版本 `I` 的 current authority 收敛。
+- **project-owned**：五类 Knowledge 正文、代码就近 README、`AGENTS.md` 标记区块外内容和项目业务事实，默认保留。
+- **mixed**：项目 index / map、流程索引和正在运行的 Case，按语义合并；模板只是当前合同，不是整文件覆盖指令。
+- Intent 只接收用户明确确认的长期方向；Research 不伪造来源或时间边界；未验收 Case 结论不得趁更新写入长期 Knowledge。
+- 保留当前 Agent MD 安装状态和已有等级证据；不得自动升级等级。既有项目缺少 Entry 时默认保持缺失，只有项目中的明确证据或用户当前要求补装时才新增 Entry。
 
-- 不初始化全新项目。
-- 不识别、读取或写入任何非 Knowledge Schema v2 工作区；这类项目交给一次性 Schema 迁移器。
-- 不重写项目方向、调研结论、核心模型、产品规则或工程正文。
-- 不从进行中 Case 把未验收结论直接写入 Knowledge。
-- 不执行 install、远程写入、git commit 或 push。
+## 1. 读取本机发布快照
 
-## 与其他 Skill 的分工
+先完整读取：
 
-- 新项目初始化：`aipd`。
-- 一次性 Schema 切换：当前 `aipd` Skill 随包携带的 `scripts/migrate-project-schema`；AIPD 源码仓库中的等价入口是 `aipd-skill/scripts/migrate-project-schema`。
-- 当前项目稳定知识回写：`aipd-weave`。
-- AIPD 框架自迭代和 transcript 诊断：`aipd-learn`。
-- Case 创建、执行、验收和归档：`aipd-case`。
+1. `@references/updates/catalog.json`，得到本机版本 `I`、有序 `releases`、`currentGuide` 和 `currentAuthority`。
+2. `@references/workspace/project-state.md`，使用其中的路径安全、manifest 形态与版本状态合同。
 
-## 总流程
+校验 catalog 的 Schema、正整数版本、严格连续顺序和引用存在性。current guide、任一 Release Record 或 current authority 文件缺失时，说明本机安装包不完整并停止；不要从源码仓库或远端猜补。
 
-```text
-验证 manifest
--> 读取 index / map / Agent Entry / Knowledge 入口 / 流程索引
--> 输出差异清单与风险分级
--> 输出更新方案和 Agent MD 等级
--> 等待用户确认
--> 按已确认范围安全合并
--> 执行结构与链接验证
-```
+## 2. 安全识别项目状态
 
-## 阶段 1：只读审计
+按 project-state reference 执行结构安全 gate。双根、symlink、错误路径类型、工作区内 symlink、损坏或未知 manifest、unresolved Git conflict 都是硬停止条件。
 
-### 1. Schema Gate
+以下情况不是 blocker：当前入口、目录、模板、标记区块或旧措辞缺失 / 过期。它们正是 Update 的输入。普通 dirty worktree 也不自动停止；只有目标文件存在无法安全保护的重叠修改时才暂停。
 
-先读取 `_aipd/manifest.json`：
+按状态继续：
 
-- 按路径项存在性识别新旧根；损坏 symlink 和同名普通文件也算存在。拒绝双根、symlink 工作区和工作区内 symlink。
-- `_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件；manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。
-- 工作区缺失、任一路径类型不符，或 manifest 缺失、多字段、值不匹配时，立即停止，不继续扫描、不创建目录、不猜测修复。
+- **absent**：这是未初始化项目，交给 `aipd`，不冒充 Update 初始化。
+- **legacy-needs-migration**：定位已安装 `aipd` Skill 随包提供的 `scripts/migrate-project-schema`；在 AIPD 源码仓库可使用 `aipd-skill/scripts/migrate-project-schema`。先 dry-run，只有结果确定且安全时才执行，再把产生的两键 manifest 当作 `unversioned-v2` 继续本流程。迁移器不写 `aipdVersion`，也不代表已应用版本 `I`。
+- **unversioned-v2**：令 `P` 为空，从第一条 bootstrap Release Record 开始读取；不要伪造 `V0`。
+- **stale**（`P < I`）：更新到 `I`。
+- **current**（`P = I`）：仍读取 current authority 并检查 drift；无差异时返回 no-op，有漂移时可做同版本修复。
+- **future-project**（`P > I`）：本机包过旧，硬停止；不得降级项目。
+- **invalid**：硬停止并报告精确原因。
 
-### 2. 工作区结构
+## 3. 先理解演进，再读取最终态
 
-审计必要入口：
+严格按以下顺序加载上下文：
 
-```text
-_aipd/
-├── manifest.json
-├── index.md
-├── map.md
-├── inbox.md
-├── knowledge/
-│   ├── intent/
-│   ├── research/
-│   ├── core/
-│   ├── product/
-│   └── engineering/
-├── sop/
-├── case/
-└── okr/
-```
+1. 从 catalog 选择 `(P,I]` 的全部 Release Records；`unversioned-v2` 从 bootstrap 记录开始。`currentGuide` 与 record 路径相对 `@references/updates/` 解析，按版本升序逐份完整读取。
+2. 汇总发生过什么、哪些判断已被替代、哪些项目内容必须保护、哪些确定性结构迁移是前置条件。此时仍不得写项目。
+3. 读取 catalog 的 `currentGuide`，再读取它和 catalog 声明的全部 `currentAuthority`。core-relative 路径在安装包中解析为 `@references/{path}`。
+4. 最后读取目标项目的 manifest、现有入口、AIPD 标记区块、Knowledge / SOP / Case / OKR 结构、必要正文和 Git 状态，形成一次 `P -> I` 最终态差异。
 
-工作区只承载知识与流程，不在 `knowledge/` 中创建代码目录。
+后面的 Release Record 如果撤销前面的变化，只保留演进理解；最终结果始终以版本 `I` 的 current authority 为准。
 
-### 3. 项目入口与 map
+## 4. 一次语义收敛
 
-审计 `_aipd/index.md`：
+按所有权合并最终态，而不是逐条重放版本记录：
 
-- 是否声明 `_aipd/map.md` 为第一跳检索入口。
-- 是否将 Intent / Research / Core / Product / Engineering 表达为五类并列知识域。
-- 是否说明 SOP / Case / OKR / Inbox 不属于 Knowledge 正文。
-- 是否说明代码位于真实源码目录，局部实现地图贴近 README。
+- **additive**：补充缺失目录、入口、索引区块或模板壳，默认执行。
+- **unambiguous semantic**：更新 AIPD 标记区块、明确过期的框架措辞和路由，同时能证明项目正文被保留，默认执行。
+- **destructive**：删除、移动、覆盖项目内容或无法逆向恢复的变化，暂停并列出精确目标。
+- **ambiguous**：当前规则与项目定制都可能是有意设计，且不能按所有权并存，暂停并只询问决定该冲突所需的最小问题。
 
-审计 `_aipd/map.md`：
+确定性的底层结构迁移可以按依赖排序，但不得把任一中间发布版本写成项目状态。用户未要求时，不执行 install、commit、push 或其他远端写入。
 
-- 是否具备高频任务入口、五类知识域路由、流程入口、局部 README / 代码入口和兜底搜索。
-- 是否明确普通任务不路由到 Case / OKR，只有显式流程任务才进入。
-- 是否包含自迭代观察锚点和 Weave 反向编织锚点。
+## 5. 验证并最后提交版本
 
-### 4. 五类 Knowledge 入口
+在 manifest 仍保持原 `P` 的情况下先验证：
 
-- Intent：检查 `intent.md` 或对应索引是否保留长期方向、目标与取舍；不自动补写项目方向。
-- Research：检查调研入口是否能保留来源、观察日期和时间边界；不伪造外部事实。
-- Core：检查 index / map 骨架是否可承载核心概念、对象关系、领域语言和项目成立模型。
-- Product：检查功能线 map 是否能记录产品能力、业务规则、用户可见行为和相关实现入口。
-- Engineering：检查 index / map 是否承载跨模块实现逻辑、协作约定和长期工程规则，而不是空泛的代码细节全集。
+- 结构安全 gate 仍通过，current authority 要求的入口和静态引用可定位。
+- Agent MD 标记成对，标记区块外内容未变化，等级没有被无授权提升。
+- 五类 Knowledge 与 SOP / Case / OKR / Inbox 职责未混杂；项目正文和进行中状态可恢复。
+- 没有中间版本残留、未解决冲突或本机包以外的规则来源。
 
-对于缺失的业务正文，只列建议和骨架，不凭空定稿。
+验证通过后，准备一条项目更新记录，包含原版本、目标版本、读取的 Release Records、实际合并、验证结果、保留差异和用户决策。把 `_aipd/update-log.md` 与精确三键 manifest 作为同一提交边界，最后以 manifest 的 `aipdVersion=I` 作为成功标记。
 
-### 5. Case / SOP / OKR / Inbox
+- `P < I` 或 `unversioned-v2`：记录一次 `P -> I` 更新。
+- `P = I` 且修复 drift：记录一次 `I -> I` drift repair。
+- `P = I` 且没有任何差异：返回 no-op，不为制造日志而修改项目。
 
-- `_aipd/case/index.md` 是否能区分进行中与 archive。
-- 进行中 `case.md` 是否以 Case Contract + Case Runtime 为入口，使用 Think / Design / Execute / Verify / Close 和 `03-execute/work-packages/`。
-- `_aipd/sop/index.md` / `map.md` 是否存在，SOP 是否承载可重复的 Agent 程序而非知识正文。
-- `_aipd/okr/index.md` 和 `_aipd/inbox.md` 是否保持各自入口语义。
+若最终写入任一步失败，报告未完成状态，不声称项目已更新到 `I`。
 
-### 6. Agent MD 等级
+## 返回结果
 
-| 等级 | 内容 | 更新边界 |
-|---|---|---|
-| 0 | 不修改 Agent MD | 用户明确不想更改项目记忆文件 |
-| 1 | AIPD Project Entry | 同步 `<!-- AIPD:START -->` 区块；默认推荐 |
-| 2 | Entry + Interaction Protocol | 额外同步项目级对话协议；必须用户明确选择 |
-
-检查现有 `AGENTS.md` / `CLAUDE.md` 标记区块是否完整，区块外内容永不覆盖。
-
-## 阶段 2：差异报告与方案
-
-只读审计后输出：
-
-```md
-【AIPD Update 审计结果】
-
-Schema：passed / blocked
-
-已符合：
-- ...
-
-缺失 / 过期：
-- `path`：缺什么，影响是什么
-
-建议更新：
-- `path`：准备合并什么
-
-风险：
-- additive：...
-- semantic：...
-- destructive：...
-
-Agent MD 建议等级：0 / 1 / 2
-
-待确认：
-- 是否按上述范围执行？
-```
-
-风险分级：
-
-- **additive**：新增缺失目录、索引区块或模板壳，不覆盖用户正文。
-- **semantic**：修改一段现有规则或路由语义，必须说清影响。
-- **destructive**：删除、移动或覆盖文件；必须精确列出目标并单独确认。
-
-## 阶段 3：用户确认后执行
-
-1. 再次校验 manifest，防止执行期状态变化。
-2. 按确认的 Agent MD 等级编辑标记区块，不改区块外内容。
-3. 只新建方案明确列出的目录和模板壳。
-4. 更新 `_aipd/index.md` 和 `_aipd/map.md` 时，优先追加缺失区块或表格行，不重写用户已有正文。
-5. 知识域中只写经确认的结构骨架；项目事实和稳定知识交给 Weave。
-6. 破坏性操作只执行用户单独确认的精确目标。
-
-## 验证
-
-- manifest 仍为 `aipd-project` v2。
-- `_aipd/index.md` / `map.md` 和五类 Knowledge 目录链接可定位。
-- SOP / Case / OKR / Inbox 没有被混入 Knowledge。
-- Case 索引能定位进行中 Case，恢复链可用。
-- Agent MD 标记成对，区块外内容保持不变。
-- 新增 Markdown 链接和模板引用均存在。
-
-完成后返回改动文件、验证结果和未处理风险。不自动提交、push 或 install。
+成功时返回原版本、目标本机版本、读取的记录、实际改动、验证结果和保留的项目差异。暂停时只报告 blocker、已完成的只读检查和继续所需的精确决定。

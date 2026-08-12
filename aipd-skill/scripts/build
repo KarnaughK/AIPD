@@ -55,6 +55,8 @@ build_platform() {
             fi
         done < "$dest/SKILL.md"
 
+        strip_build_metadata "$dest/SKILL.md"
+
         echo "  完成 → $dest"
     done
 
@@ -65,6 +67,107 @@ build_platform() {
     skill_count=$(find "$dist_dir" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
     echo "共 $skill_count 个 skill"
     echo ""
+}
+
+strip_build_metadata() {
+    local skill_file="$1"
+    local rendered_file
+    rendered_file=$(mktemp "${skill_file}.tmp.XXXXXX")
+
+    render_runtime_skill_file "$skill_file" "$rendered_file"
+    cp "$rendered_file" "$skill_file"
+    rm -f "$rendered_file"
+}
+
+render_runtime_skill_file() {
+    local source_file="$1"
+    local output_file="$2"
+    local line
+    local line_number=0
+    local line_has_newline
+    local in_frontmatter=false
+    local skip_inject_list=false
+    local keep_line
+
+    while true; do
+        line=""
+        if IFS= read -r line; then
+            line_has_newline=true
+        else
+            line_has_newline=false
+        fi
+
+        if ! $line_has_newline && [ -z "$line" ]; then
+            break
+        fi
+
+        line_number=$((line_number + 1))
+        keep_line=true
+
+        if [ "$line_number" -eq 1 ] && [ "$line" = "---" ]; then
+            in_frontmatter=true
+        elif $in_frontmatter; then
+            if $skip_inject_list; then
+                if [[ "$line" =~ ^[[:space:]]+-([[:space:]]|$) ]]; then
+                    keep_line=false
+                else
+                    skip_inject_list=false
+                fi
+            fi
+
+            if $keep_line; then
+                if [[ "$line" =~ ^inject-from-core:[[:space:]]*$ ]]; then
+                    keep_line=false
+                    skip_inject_list=true
+                elif [ "$line" = "---" ]; then
+                    in_frontmatter=false
+                fi
+            fi
+        fi
+
+        if $keep_line; then
+            if $line_has_newline; then
+                printf '%s\n' "$line"
+            else
+                printf '%s' "$line"
+            fi
+        fi
+
+        if ! $line_has_newline; then
+            break
+        fi
+    done < "$source_file" > "$output_file"
+}
+
+validate_platform() {
+    local platform="$1"
+
+    if [[ ! "$platform" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+        echo "非法平台名: $platform" >&2
+        echo "平台名只能包含字母、数字、点、下划线和连字符，且必须以字母或数字开头。" >&2
+        exit 1
+    fi
+}
+
+build_all_platforms() {
+    local platform_dir
+    local platform
+    local platform_count=0
+
+    rm -rf "$DIST_ROOT"
+
+    for platform_dir in "$SRC_DIR/platforms"/*/; do
+        [ -d "$platform_dir" ] || continue
+        platform=$(basename "$platform_dir")
+        validate_platform "$platform"
+        build_platform "$platform"
+        platform_count=$((platform_count + 1))
+    done
+
+    if [ "$platform_count" -eq 0 ]; then
+        echo "src/platforms/ 下没有可构建的平台。" >&2
+        exit 1
+    fi
 }
 
 build_platform_agents() {
@@ -122,16 +225,18 @@ inject_core_path() {
         local dir_path="${src_path%/*}"
         local platform_dir="$platform_core_dir/$dir_path"
         local common_dir="$common_core_dir/$dir_path"
-        local source_dir
-
-        if [ -d "$platform_dir" ]; then
-            source_dir="$platform_dir"
-        else
-            source_dir="$common_dir"
-        fi
 
         mkdir -p "$references_dir/$dir_path"
-        cp -r "$source_dir"/* "$references_dir/$dir_path/"
+        if [ -d "$common_dir" ]; then
+            cp -R "$common_dir"/. "$references_dir/$dir_path/"
+        fi
+        if [ -d "$platform_dir" ]; then
+            cp -R "$platform_dir"/. "$references_dir/$dir_path/"
+        fi
+        if [ ! -d "$common_dir" ] && [ ! -d "$platform_dir" ]; then
+            echo "缺少注入目录: $dir_path" >&2
+            exit 1
+        fi
     elif [[ "$src_path" == *"/"* ]]; then
         local target_dir
         local platform_file="$platform_core_dir/$src_path"
@@ -162,20 +267,21 @@ inject_core_path() {
     fi
 }
 
-case "${1:-all}" in
-    claude)
-        build_platform "claude"
-        ;;
-    codex)
-        build_platform "codex"
-        ;;
-    all)
-        rm -rf "$DIST_ROOT/skills" "$DIST_ROOT/claude" "$DIST_ROOT/codex"
-        build_platform "claude"
-        build_platform "codex"
-        ;;
-    *)
-        echo "用法: aipd-skill/scripts/build [claude|codex|all]"
-        exit 1
-        ;;
-esac
+if [ "$#" -eq 0 ]; then
+    rm -rf "$DIST_ROOT"
+    build_platform "codex"
+    exit 0
+fi
+
+if [ "$#" -ne 1 ]; then
+    echo "用法: aipd-skill/scripts/build [all|<platform>]" >&2
+    exit 1
+fi
+
+requested_platform="$1"
+if [ "$requested_platform" = "all" ]; then
+    build_all_platforms
+else
+    validate_platform "$requested_platform"
+    build_platform "$requested_platform"
+fi

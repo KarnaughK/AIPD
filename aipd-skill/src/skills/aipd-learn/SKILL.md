@@ -15,6 +15,8 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - aipd-project-structure.md
+  - updates/catalog.json
+  - workspace/project-state.md
   - case/overview.md
   - experience/*
   - learn-session-locator.md
@@ -108,11 +110,13 @@ experience-assets/{asset-name}/              # 仅在文字不足以可靠复用
 
 先判断当前工作目录是不是 AIPD 源项目。
 
+决定运行身份前，先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json` 检查新旧根路径项。双根、symlink 或 invalid 状态硬停止；只有 `_adoc` 时返回 `legacy-needs-migration` 并路由 `aipd-update`；只有 `_aipd` 时继续 manifest 双形态和 `P/I` gate，`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`，`P > I` 硬停止。项目版本不从 Agent Entry 推断。新旧根都不存在时才可进入不读写 AIPD Workspace 的外部项目采集器模式。
+
 可用信号：
 
 - 当前目录存在 `aipd-skill/src/skills/aipd-learn/SKILL.md`
 - 当前目录存在 `aipd-skill/src/core/overview.md`
-- 按路径项存在性识别新旧根后不是双根；`_aipd` 是无 symlink 的真实工作区，`manifest.json`、`index.md`、`map.md` 是非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`
+- 项目状态合同判定为 `current`（`P = I`），且 `_aipd/index.md` 和 `_aipd/map.md` 是非 symlink 普通文件
 - `_aipd/index.md` 中项目名称是 `AIPD`
 
 如果不在 AIPD 源项目，进入**外部项目采集器模式**：
@@ -181,7 +185,7 @@ find _aipd/case/{case目录}/steps -type f 2>/dev/null
 
 ```md
 【AIPD Learn 定位卡】
-- 平台：{Codex / Claude Code / 未识别}
+- 平台：{当前平台名 / 未识别}
 - 会话 ID：{平台可见 ID 或未识别}
 - transcript path：{本地 JSONL 路径；没有则留空}
 - 当前 turn ID：{如平台可用则填写；没有则留空}
@@ -300,7 +304,7 @@ Agent 反应问题：
 # AIPD 经验回流包
 
 ## 来源定位
-- 平台：Codex / Claude Code / 未识别
+- 平台：{当前平台名 / 未识别}
 - 项目路径：{project_root}
 - Git remote：{origin 或未识别}
 - 当前分支：{branch 或未识别}
@@ -347,7 +351,7 @@ Agent 反应问题：
 | 已初始化项目的 AIPD 架构升级、AGENTS.md / map 同步 | AIPD 仓库的 `aipd-skill/src/skills/aipd-update/` |
 | case 生命周期流程经验 | AIPD 仓库的 `aipd-skill/src/skills/aipd-case/` 或 `aipd-skill/src/core/case/` |
 | 平台会话 ID、transcript、回流包生成 | 公共行为进入 `aipd-skill/src/skills/aipd-learn/`；定位差异进入 `aipd-skill/src/platforms/{platform}/core/learn-session-locator.md` |
-| Claude/Codex 平台差异 | AIPD 仓库的 `aipd-skill/src/platforms/` |
+| 平台专用差异 | AIPD 仓库的 `aipd-skill/src/platforms/{platform}/` |
 
 如果当前工作目录不是 AIPD 源码仓库，但经验属于 AIPD 框架本身，不要硬写目标项目；先整理为“框架回流建议”，让用户切换到 AIPD 仓库后再执行。
 

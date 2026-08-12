@@ -29,10 +29,13 @@ AIPD 仓库同时有面向用户的学习文档、面向 Agent 的项目认知�
 - `aipd-skill/src/core/agent-guides/` 存平台无关的领域执行指引。
 - `aipd-skill/src/platforms/codex/agents/` 只存 Codex custom agent 打包元数据和指引引用。
 - 构建脚本负责把核心指引注入 Codex agent 模板，输出到 `aipd-skill/dist/codex/agents/`。
-- 构建脚本还会把一次性 `migrate-project-schema` 复制进两个平台的 `aipd/scripts/`，让已安装 Skill 能在外部项目中定位迁移器；该脚本不进入日常读取链路。
-- 安装脚本负责把 Codex agent 安装到 `~/.codex/agents/` 或目标项目 `.codex/agents/`。
+- 构建脚本默认把一次性 `migrate-project-schema` 复制进 Codex 的 `aipd/scripts/`，让已安装 Skill 能在外部项目中定位迁移器；该脚本不进入日常读取链路。
+- 默认安装脚本负责把 Codex Skill 与 agent 安装到用户级或目标项目的 `.codex/` 目录；带 `-codex` 的脚本保留为显式别名。
 - 修改 AIPD 源码后，Agent 可以直接运行 `./aipd-skill/scripts/build` 作为低风险打包验证；不要默认执行安装脚本。
-- build 完成后运行 `./aipd-skill/scripts/check-dist`，统一验证 9 个 Skill 集合、源码 / 产物同步、静态 references、Codex / Claude 声明内差异、关键旧语义和所有 install / dev 入口的 legacy cleanup 接入。`check-dist` 只读，不替代 build，也不执行 install。
+- 无参 build 默认只生成 Codex 产物。构建系统保留通用目标装配、平台同路径覆盖、core fallback 和可选 agents 注入；其他目标可自行扩展和打包，但不进入默认交付与验证。
+- build 完成后运行 `./aipd-skill/scripts/check-dist`，统一验证 Codex 的 9 个 Skill、3 个 Agent、源码 / 产物同步、静态 references、关键旧语义、默认入口和通用多目标构建护栏。`check-dist` 只读，不替代 build，也不执行 install。
+- `aipd-skill/src/core/updates/catalog.json` 是本机发布版本事实源。每次发布必须保持连续 Release Records、current authority、manifest 模板、默认 Codex Skill references 和 `currentVersion` 一致；`check-release-bundle`、其 fixture 与 `check-dist` 共同阻止 source / dist 版本漂移。
+- 一次性 Schema migrator 只把旧工作区切换为精确两键的 `unversioned-v2`，不写本机当前 `aipdVersion`；只有 `aipd-update` 完成语义收敛和验证后才提交项目版本与 `_aipd/update-log.md`。
 - 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；构建和安装脚本不得把它复制进 `aipd-skill/dist` 或 Agent Skill 目录。
 - install 会改写用户级或项目级 Agent 运行环境。build 完成后，必须主动问用户是否执行 install；不能只说明“可能需要 install”。只有用户明确确认后，才执行 `./aipd-skill/scripts/install`、`./aipd-skill/scripts/install-codex`、`./aipd-skill/scripts/install-project` 或 `./aipd-skill/scripts/install-project-codex`。
 
@@ -41,8 +44,8 @@ AIPD 仓库同时有面向用户的学习文档、面向 Agent 的项目认知�
 - `_aipd/knowledge/core/ai-friendly-code-topology.md` 是长期抽象认知主事实源；`aipd-skill/src/core/ai-friendly-code-topology.md` 是供外部 Agent 消费的精简运行时投影，不逐字复制研究过程。
 - `aipd` 与 `aipd-case` 通过 `inject-from-core` 获得同一 reference。普通结构性开发和 Case Design 条件加载；无关任务以及 Case Execute / Verify 默认不重复加载完整 guide。
 - Case Design 把通用判断编译为项目具体的 `Code Topology Contract`；拓扑敏感 Work Package 在 Execute 携带短护栏；Verify 根据真实 diff、目录、依赖和文档回写反查合同。
-- `aipd-skill/scripts/check-dist` 验证 Codex / Claude 两个平台的两个目标 Skill 都包含同一投影、其他 Skill 不包含、两个入口有静态读取规则，并检查三段合同闭环与旧空间术语。
-- build 产物位于 `aipd-skill/dist/{platform}/skills/{aipd,aipd-case}/references/ai-friendly-code-topology.md`，只由 build 生成，不手改。
+- `aipd-skill/scripts/check-dist` 验证 Codex 的两个目标 Skill 都包含同一投影、其他 Skill 不包含、两个入口有静态读取规则，并检查三段合同闭环与旧空间术语。
+- 默认 build 产物位于 `aipd-skill/dist/codex/skills/{aipd,aipd-case}/references/ai-friendly-code-topology.md`，只由 build 生成，不手改；通用构建器仍使用 `dist/{platform}/` 目标边界。
 
 ## 当前已知 Agent
 

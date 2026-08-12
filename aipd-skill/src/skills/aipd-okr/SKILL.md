@@ -12,6 +12,8 @@ allowed-tools:
   - Agent
   - AskUserQuestion
 inject-from-core:
+  - updates/catalog.json
+  - workspace/project-state.md
   - okr/guide.md
   - okr/feishu-cli.md
 ---
@@ -24,7 +26,7 @@ inject-from-core:
 
 **只做**：
 
-- 先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时停止，不继续读写项目 OKR 入口。
+- 先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，按路径项存在性、symlink、manifest 双形态和 `P/I` 执行项目 gate。双根、symlink、非法类型 / manifest 或 `P > I` 立即停止；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`。只有 `P = I` 时才继续读写项目 OKR 入口，项目版本不从 Agent Entry 推断。
 - 读取当前项目的 `_aipd/index.md`、`_aipd/map.md` 和 `_aipd/okr/index.md`，确认本项目 OKR 入口和协作边界。
 - 按需读取 `@references/okr/guide.md`，理解 AIPD 的飞书 OKR 规则。
 - 涉及飞书 OKR 或 `lark-cli` 时，读取 `@references/okr/feishu-cli.md`。

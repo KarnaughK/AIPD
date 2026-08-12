@@ -6,9 +6,10 @@
 - 只返回可用于 Main Agent 判断的压缩上下文包，不执行代码修改，不创建 case，不推进 work package，不做归档。
 
 项目识别：
-- 先判断当前项目是否是 AIPD 项目。
-- 按路径项存在性识别新旧根，损坏 symlink 和同名普通文件也算存在；拒绝双根、symlink 工作区和工作区内 symlink。稳定识别信号是 `_aipd` 为真实目录，`manifest.json`、`index.md`、`map.md` 为非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`；任一类型不符或 manifest 多字段都不属于 v2。
-- 如果不是 AIPD 项目，直接返回“未识别为 AIPD 项目”和依据，不继续扩大搜索。
+- 先判断当前项目是否是 AIPD 项目。Main 的派发 prompt 必须提供当前已安装 Skill 中 `workspace/project-state.md` 和 `updates/catalog.json` 的可读路径；若缺失，返回要求 Main 补充，不从 `AGENTS.md`、Git tag 或远程推断版本。
+- 读取上述合同和 catalog，用 `currentVersion=I` 执行路径项存在性、symlink、manifest 双形态与 `P/I` gate。双根、symlink、非法类型 / manifest 或 `P > I` 停止检索；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`；只有 `P = I` 且必要入口类型安全时继续。
+- 安全的额外 Workspace 模块是项目定制，不因名称未知判 invalid 或扩大扫描；保留名、代码目录、symlink 和类型冲突仍停止。
+- 如果不是可检索的 current AIPD 项目，直接返回状态和依据，不继续扩大搜索。
 
 检索优先级：
 - 默认检索范围：`_aipd/knowledge/{intent,research,core,product,engineering}/`、`_aipd/sop/`、局部 README 和代码入口。
@@ -34,6 +35,7 @@
 ```md
 AIPD 任务上下文检索结果：
 - 项目识别：AIPD / 非 AIPD / 不确定
+- 项目版本：V{P} / unversioned-v2 / stale / future-project / invalid
 - 上下文类型：Intent / Research / Core / Product / Engineering / SOP / 次级流程 / README / Code
 - 必读文档：...
 - 关键结论：...

@@ -11,6 +11,7 @@
 - 命中不清楚时，用 `rg` 搜索核心词、skill 名、agent 名、平台名和 README。
 - 新发现的稳定入口，后续应回写到本文件或对应 Core / Product / Engineering map。
 - 关键路径尽量扁平暴露，不要求 Agent 通过多层目录链自行发现。
+- 只有用户明确进入 Project Leader 模式、要求恢复 Leader 状态，或讨论 Mission / 跨 Case 项目推进时，才路由到 `_aipd/leader/`；普通开发不默认读取 Leader 工作记忆。
 - 普通开发、找代码、查业务规则、查页面或组件实现时，本文件不把请求路由到 `_aipd/case/` 或 `_aipd/okr/`。只有用户明确要求 case / OKR 流程，或当前任务本身是 `aipd-case`、OKR 对齐时，才读取对应流程状态。
 
 ## 高频任务入口
@@ -25,9 +26,10 @@
 | 初始化 / AGENTS.md / Agent Entry | AIPD 初始化入口 | Engineering + 真实代码 | `_aipd/knowledge/engineering/index.md` | `aipd-skill/src/skills/aipd/SKILL.md`、`aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/workspace/templates/index.md` | `rg "agent-entry|AGENTS|初始化" aipd-skill/src _aipd` |
 | Agent MD 等级 2 / Interaction Protocol / 回复模板 / 我理解 / 展开说说 / 横向拓展 / 下一步 | Interaction Protocol | Product + Agent Entry | `_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md` | `aipd-skill/src/core/agent-entry/interaction-style.md` | `rg "AIPD Interaction Protocol|我理解|展开说说|横向拓展|下一步" AGENTS.md aipd-skill/src _aipd` |
 | 旧 `_adoc` / L1-L5 目录 / 升级 Knowledge Schema v2 / 一次性迁移 | AIPD Project Schema 迁移 | Engineering + CLI | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` | `aipd-skill/scripts/migrate-project-schema`；安装后为 `aipd` Skill 内 `scripts/migrate-project-schema` | `rg "migrate-project-schema|schemaVersion|完整旧版|混合状态" aipd-skill/scripts aipd-skill/src docs` |
-| 更新已是 v2 的项目 AIPD 架构 / aipd update / 同步新模板 | AIPD Update | Engineering + 真实代码 | `_aipd/map.md`、`_aipd/knowledge/engineering/index.md` | `aipd-skill/src/skills/aipd-update/SKILL.md`、`aipd-skill/src/core/workspace/templates/map.md`、`aipd-skill/src/core/workspace/templates/index.md`、`aipd-skill/src/core/agent-entry/template.md` | `rg "aipd-update|更新 AIPD|同步新模板|map.md|AGENTS" aipd-skill/src _aipd` |
+| AIPD update / 项目版本落后 / unversioned-v2 / 同版本 drift / 更新 AGENTS / 同步本机模板 | AIPD Update | Product + Engineering + 真实项目 | `_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md`、`_aipd/knowledge/engineering/index.md` | `aipd-skill/src/skills/aipd-update/SKILL.md`、`aipd-skill/src/core/updates/catalog.json`、`aipd-skill/src/core/updates/current.md`、`aipd-skill/src/core/workspace/project-state.md` | `rg "aipd-update|aipdVersion|currentVersion|currentAuthority|update-log|unversioned-v2|drift" aipd-skill/src aipd-skill/scripts _aipd` |
 | 上下文检索 / 大地图 / map | 项目记忆地图 | Core + Engineering | `_aipd/map.md`、`_aipd/knowledge/core/index.md` | `aipd-skill/src/core/workspace/templates/map.md`、`aipd-skill/src/skills/aipd-case/SKILL.md` | `rg "map.md|上下文检索|检索包|观察锚点" aipd-skill/src _aipd AGENTS.md` |
 | 上下文检索 Agent / 查项目资料 / 项目认知查询 / 保持主 Agent 上下文干净 | 上下文检索 Agent | Engineering + agent-guide | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | `aipd-skill/src/core/agent-guides/aipd_context_retriever.md`、`aipd-skill/src/platforms/codex/agents/aipd_context_retriever.toml` | `rg "aipd_context_retriever|上下文检索|子 Agent|默认调度" AGENTS.md aipd-skill/src _aipd` |
+| Project Leader / 项目负责人 / leader / Mission / 主导模式 / 跨 Case 推进 / 思路变化 | Project Leader 工作空间（实验） | Leader 流程状态；按入口链接读取必要 Knowledge / Case | `_aipd/leader/index.md` | Leader 自建文字文件；只按 `index.md` 和显式链接渐进读取 | `rg -e "Project Leader" -e "Mission" -e "当前工作区索引" -e "反向归属" -e "跨 Case" -e "思路变化" _aipd/leader _aipd aipd-skill/src` |
 | inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_aipd/inbox.md` | `aipd-skill/src/skills/aipd-inbox/SKILL.md`、`aipd-skill/src/core/workspace/templates/inbox.md` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _aipd aipd-skill/src` |
 | think / AIPD Think / 讨论任务 / 定任务 / 前置判断 / 要不要做 / 从模糊到清晰 / 深度调研后再决定 | Case Think / 前置讨论与决策 | Core + Product 规划能力 | `_aipd/knowledge/core/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md`、`_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-case/SKILL.md`、`aipd-skill/src/core/case/phases/think.md` | `rg "Think|Case Think|任务澄清|前置讨论|要不要做|从模糊到清晰|Create|Kill|Defer|Research|Design" _aipd aipd-skill/src docs` |
 | SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 / 查关键词 / 日报 | SOP 项目级 Agent 程序库 | SOP + Core | `_aipd/sop/index.md`、`_aipd/sop/map.md`、`_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure|查关键词|日报" _aipd aipd-skill/src docs` |
@@ -50,6 +52,7 @@
 | 横向功能能力 | Map 检索 / Case 系统 / Weave / 上下文服务 | `_aipd/knowledge/core/horizontal-capabilities.md` | aipd-case、weave、learn | 不是新的知识域；它回答 Agent 做事时怎么串起 Workspace 模块 |
 | 代码纵横 / 横向基座 / 横向共享能力 / 纵向业务上下文 | AI 友好代码拓扑 | `_aipd/knowledge/core/ai-friendly-code-topology.md` | AIPD Case Design、技术栈经验 | 与上面两项属于不同命名空间；代码拓扑不是“全面纵向”，黑箱也不是Workspace 模块专有属性 |
 | 文件优先上下文承接 | 文件 checkpoint / 当前游标 / 压缩后恢复 | `_aipd/knowledge/core/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md`、`aipd-skill/src/core/case/overview.md` | aipd-case、Agent Entry | 不是聊天存档；它只承接有恢复价值的状态、确认、边界、下一步 |
+| AIPD 发布版本 / 项目已应用版本 / Release Record / current authority | 本机发布快照与项目版本状态 | `_aipd/knowledge/core/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md` | AIPD Update | `schemaVersion` 表示 Workspace 形状，`aipdVersion` 表示项目最后成功应用的完整 AIPD 发布；版本记录解释演进，当前权威定义最终态 |
 | Think / AIPD Think / 任务澄清 / 前置讨论 / 要不要做 | Think / 任务澄清决策模型 | `_aipd/knowledge/core/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md` | AIPD Case、weave | Think 可以在 Case 前，也可以作为 Case 内 phase 处理推进中的未知、调研和抉择 |
 | 外部世界 | Research | `_aipd/knowledge/core/workspace-modules.md` | AIPD 初始化、aipd-case | 不只是痛点；竞品、玩法范式、市场观察、流量来源和变现方式也可先放 Research |
 | 项目成立模型 | Core | `_aipd/knowledge/core/index.md` | AIPD 初始化、AIPD Update | 不等于狭义数据模型；也可能是增长模型、内容模型、流量模型、留存模型和商业模型 |
@@ -57,6 +60,7 @@
 | Weave 反向编织 | `aipd-weave` / 项目 Knowledge 回写 | `_aipd/knowledge/core/horizontal-capabilities.md` | Weave | 和 `aipd-learn` 分工不同；weave 面向当前项目知识库，learn 面向 AIPD 框架自迭代 |
 | 子 Agent | 用于上下文隔离、真实并发或独立复核的执行 / 调研 Agent | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | case Execute、角色 Agent 调度 | 不是默认步骤；按隔离收益、并发收益、主线耦合和调度成本选择，派发不扩大外部副作用权限 |
 | 上下文检索 Agent | `aipd_context_retriever` | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/agent-guides/aipd_context_retriever.md` | Map-first 认知加载、SOP 检索、次级流程检索 | Main 先最小路由；大量项目认知或多条独立认知线才优先派发；Inbox/OKR/Case 只有明确需要时查 |
+| Project Leader / Leader 工作记忆 | `_aipd/leader/`（项目内实验） | `_aipd/leader/index.md` | Project Leader 模式、Mission 与跨 Case 推进 | 不是第六类 Knowledge，也不是其他模块的副本；只保存没有更权威归属、但会影响当前判断和恢复的信息 |
 | Case / Work Package | 短周期目标契约 / 可执行、可恢复、可验收目标包 | `_aipd/case/index.md`、`aipd-skill/src/core/case/overview.md` | aipd-case | Work Package 是状态与验收边界，不等于子 Agent 派发节点；运行时另选 Main 或 Child |
 | OKR | 飞书阶段目标 / 飞书 O/KR | `aipd-skill/src/skills/aipd-okr/SKILL.md`、`_aipd/okr/index.md`、`aipd-skill/src/core/okr/guide.md` | `aipd-okr`、AIPD Case | AIPD 里的 OKR 默认指飞书 OKR；高噪声飞书查询应压缩成 OKR 经验包 |
 | SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_aipd/sop/index.md`、`_aipd/sop/map.md` | SOP、aipd-case、weave | 不是 Product/Engineering 知识条目，也不是单纯脚本；代码只是 SOP 可调用的工具之一 |
@@ -76,7 +80,7 @@
 | 框架自迭代 / transcript 回流 | Learn | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-learn/SKILL.md` | transcript、回流包、AIPD 源码 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/knowledge/engineering/index.md` |
 | OKR / 飞书 OKR / 目标 / 周期 / OKR 经验包 | AIPD OKR | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-okr/SKILL.md` | 飞书 O/KR、周期 ID、飞书入口、OKR 经验包 | `_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/okr/index.md`、`aipd-skill/src/core/okr/` |
 | 旧 `_adoc` / L1-L5 / Schema v2 迁移 | Project Schema 一次性迁移 | `_aipd/knowledge/product/map.md` | `aipd-skill/scripts/migrate-project-schema` | 旧工作区、新 manifest、五类 Knowledge 目录 | `_aipd/knowledge/core/map.md` | `_aipd/knowledge/engineering/index.md` |
-| 更新已是 v2 的项目 AIPD 架构 | AIPD Update | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-update/SKILL.md` | `AGENTS.md`、`_aipd/map.md`、Case 模板 | `_aipd/knowledge/core/map.md` | `_aipd/knowledge/engineering/index.md` |
+| 项目更新到本机 AIPD 版本 / 同版本 drift repair | AIPD Update | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-update/SKILL.md` | release catalog、Release Records、current authority、`AGENTS.md`、manifest、update log、项目定制 | `_aipd/knowledge/core/map.md` | `_aipd/knowledge/engineering/index.md` |
 | Mermaid / MMD / 架构图 / 预览图 | Mermaid / MMD | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | `_aipd/knowledge/core/index.md` | `aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md` |
 | git push / 推送当前分支 | Git Push | `_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | `_aipd/knowledge/core/horizontal-capabilities.md` | git 状态 |
 | SOP / AI 程序 / 可复用流程 | SOP 库 | `_aipd/knowledge/product/map.md` | `_aipd/sop/index.md`、`_aipd/sop/map.md` | SOP 目录、输入、步骤、工具、输出 | `_aipd/knowledge/core/index.md` | `_aipd/sop/` |
@@ -123,6 +127,8 @@
 - 如果任务涉及产品功能线，Agent 是否读取 Product map，并找到稳定源码入口。
 - 如果任务涉及跨模块工程规则，Agent 是否读取 Engineering 规则。
 - 如果任务涉及可重复执行的项目动作，Agent 是否检查 `_aipd/sop/` 中是否已有可复用 SOP。
+- Project Leader 实践中自然产生了哪些文字文件，它们是否真的帮助跨聊天、跨 Case 恢复判断，而不是复制 Knowledge / Case 正文。
+- Leader 工作记忆成熟、失效或出现更权威归属后，是否被迁出、引用或删除，没有逐渐变成新的杂物箱。
 - 如果本文件缺入口，Agent 是否用 `rg` 兜底，并提出应回写到 map 的稳定入口。
 
 ## Weave 反向编织锚点

@@ -41,6 +41,7 @@ AIPD 的任务连续性以文件为核心，不以聊天为核心。聊天上下
 | Case 系统 | 一个短周期目标如何按 Case Contract / Think / Design / Execute / Verify / Close 完成闭环 | OKR、Case、Work Package、必要 Knowledge、真实代码、Agent Entry |
 | SOP 系统 | 项目里可重复执行的动作如何沉淀为以 Agent 为运行时的 AI 原生程序 | SOP、五类 Knowledge、工具代码、Case、Work Package、Agent Entry、Weave |
 | Weave 反向编织 | case 完成后把已确认、已验证的稳定判断、规则、入口和外部资料写回哪里 | Intent、Research、Core、Product、Engineering、局部 README、Map；未完成候选先留在 Close 归档候选 |
+| AIPD Update | 已接入项目如何理解多版演进、保留项目定制并直接收敛到本机完整发布 | 本机 release catalog / records / current authority、项目 manifest / update log、Agent Entry、Workspace 模板和项目真实内容 |
 | OKR 对齐 | 当前 case / work package 是否推进阶段目标，以及如何把高噪声飞书查询压缩成主 Agent 可用结果 | `aipd-okr`、飞书 OKR、`_aipd/okr/` 入口、Case、Intent、子 Agent 经验包 |
 | 构建 / 安装 | AIPD skill 怎么生成、安装到不同 Agent 平台 | Engineering、真实代码、Agent Entry |
 | 未来上下文服务 | 用 MCP / 检索工具给 Agent 提供上下文 | Map、Knowledge、SOP、流程状态、真实代码、Agent Entry |
@@ -167,6 +168,12 @@ Agent Entry 通过 `AGENTS.md` 给新进入项目的 Agent 提供第一跳规则
 Workspace 模块负责“不同性质的信息放在哪里”，横向能力负责“Agent 做事时怎么把这些东西串起来”。
 
 AIPD 后续设计 README、Map、aipd-case、weave、learn、update、MCP 或上下文服务时，都应先判断当前改动是在扩展 Workspace 模块，还是在扩展横向能力。
+
+## AIPD Update 功能
+
+Update 串起的是“框架演进事实”和“项目当前事实”。本机 release catalog 给出目标版本 `I`，项目 manifest 给出已应用版本 `P`；Agent 先完整读取 `(P,I]` 记录理解发生过什么，再读取 `I` 的 current authority 和项目自身内容，最后只落一次最终态。
+
+版本记录不是按顺序执行的脚本。多个版本反复修改同一个规则时，Agent 不让项目逐次经历已经废弃的中间形态。缺失模板、旧 Agent Entry 或入口漂移是正常 Update 输入；安全 additive 与无歧义 semantic 合并默认完成，只有破坏性或所有权歧义才暂停。验证通过以前不写 `aipdVersion`，因此失败或中断可以安全重跑。
 
 ## OKR 对齐功能
 

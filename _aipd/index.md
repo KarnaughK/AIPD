@@ -6,6 +6,7 @@
 
 - 当前项目：AIPD 2
 - 当前结构：AIPD Project Schema v2
+- 当前 AIPD 发布：V1
 - Knowledge Schema：Intent / Research / Core / Product / Engineering 五类并列知识域
 - 项目级检索入口：`_aipd/map.md`
 
@@ -13,10 +14,12 @@
 
 | 区域 | 路径 | 职责 |
 |---|---|---|
-| Schema 标识 | `_aipd/manifest.json` | 标识当前项目使用的 AIPD Project Schema |
+| Schema / 版本状态 | `_aipd/manifest.json` | 标识当前项目使用的 Workspace Schema 与最后成功应用的 AIPD 发布版本 |
 | Workspace 入口 | `_aipd/index.md` | 说明各区域的职责与使用边界 |
 | 项目 Map | `_aipd/map.md` | 把自然语言、业务词和工程词路由到所需 Knowledge、局部 README 与代码入口 |
+| AIPD 更新日志 | `_aipd/update-log.md` | 记录本项目实际完成的 AIPD 版本跃迁、验证结果与保留差异；不复制全局 Release Record |
 | Knowledge | `_aipd/knowledge/` | 存放五类长期、稳定、可复用的项目认知 |
+| Leader（实验） | `_aipd/leader/` | Project Leader 的可恢复工作记忆；只承接没有更权威归属、但会影响当前判断和恢复的信息 |
 | SOP | `_aipd/sop/` | 存放以 Agent 为运行时的可复用程序 |
 | Case | `_aipd/case/` | 存放短周期目标、阶段状态、工作包和验证记录 |
 | OKR | `_aipd/okr/` | 存放阶段目标及其对齐关系 |
@@ -40,12 +43,15 @@
 1. 先读 `_aipd/map.md`，把用户说法映射到必要的 Knowledge、局部 README 和代码入口。
 2. 根据任务范围选择最少但足够的上下文，不默认把五类 Knowledge 全部加载。
 3. 项目 Map 负责全局第一跳；业务线、功能线或共享能力 Map 负责上下文范围；代码就近 README 负责最后一跳。
-4. 普通开发不读取 Case 或 OKR。只有任务明确涉及对应流程或状态时，才进入这些区域。
-5. Map 未命中时，再用 `rg` 搜索业务词、页面名、接口名、权限码、README 和代码符号。
+4. 只有当前任务明确处于 Project Leader 模式，或需要恢复 Project Leader 状态时，才读取 `_aipd/leader/index.md`；普通开发不默认加载 Leader 工作记忆。
+5. 普通开发不读取 Case 或 OKR。只有任务明确涉及对应流程或状态时，才进入这些区域。
+6. Map 未命中时，再用 `rg` 搜索业务词、页面名、接口名、权限码、README 和代码符号。
 
 ## 常用入口
 
 - 项目方向：`_aipd/knowledge/intent/intent.md`
+- AIPD 项目更新结果：`_aipd/update-log.md`
+- Project Leader 工作空间（实验）：`_aipd/leader/index.md`
 - Workspace 与 Knowledge 定义：`_aipd/knowledge/core/workspace-modules.md`
 - 核心认知：`_aipd/knowledge/core/index.md`
 - Agent 横向能力：`_aipd/knowledge/core/horizontal-capabilities.md`
@@ -61,5 +67,6 @@
 - Intent 只接收用户明确确认的长期方向和边界，不从一次实现结果自动反推。
 - Research 只接收带来源、观察时间或适用时间边界的稳定外部事实与调研结论。
 - Core、Product、Engineering 只接收已确认或已验证、对后续任务仍有复用价值的项目事实。
+- 跨事项的当前判断、优先级、协调与恢复信息，只有在没有更权威归属时才进入 Leader；成熟后迁出，Leader 不复制其他事实源正文。
 - 未完成事项和待验证候选留在 Case；阶段目标留在 OKR；可复用步骤留在 SOP；临时材料留在 Inbox。
 - 页面、组件和代码模块的局部实现说明优先放在代码就近 `README.md`，不要把细节重新堆回 Engineering。

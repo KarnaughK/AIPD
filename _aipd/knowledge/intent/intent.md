@@ -42,7 +42,7 @@ AI 原生代码架构负责探索更适合 AI 理解、修改和扩展的代码�
 
 ## 核心取舍
 
-- AIPD 不替代 Coding Agent。Codex、Claude Code、Cursor Agent 或其他 Agent 负责具体执行；AIPD 负责让项目认知、任务状态和经验沉淀可被继承。
+- AIPD 不替代 Codex 等 Coding Agent。Coding Agent 负责具体执行；AIPD 负责让项目认知、任务状态和经验沉淀可被继承。
 - AIPD 不做传统意义上的前端、后端、移动端或桌面端代码框架。
 - AIPD 不把所有内容塞进一个超长提示词，而是优先分类存储、扁平检索、局部任务自足和逐步回写。
 - AIPD 不把项目管理、流程管理和代码框架混成一个大而全工具；它优先解决 AI 和人如何共同推进软件项目的问题。
@@ -60,5 +60,5 @@ AIPD 更适合长期迭代、AI 深度参与、存在业务语言、历史取舍
 
 - 稳定 AIPD Skill 本体，让 `/aipd*` 系列能力能在真实项目中可用。
 - 继续完善项目知识库、Case / Work Package、分身 Agent、Weave 和 SOP 的协作链路。
-- 当前研发和验证优先适配 Codex，同时保留 Claude Code 等平台的可迁移空间。
+- 当前产品方向、研发、默认构建和验证均以 Codex 为交付目标；保留可面向其他平台扩展的通用打包结构，先把 Codex 主链路做好。
 - AIPD Desktop 实验已于 2026-08-07 取消；不再维护独立桌面产品方向，文件浏览、聊天和上下文引用优先复用 Codex、IDE 与现有 AIPD map / Case 能力。

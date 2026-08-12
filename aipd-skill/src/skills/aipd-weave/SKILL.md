@@ -15,6 +15,8 @@ allowed-tools:
 inject-from-core:
   - overview.md
   - aipd-project-structure.md
+  - updates/catalog.json
+  - workspace/project-state.md
   - workspace/templates/map.md
   - case/overview.md
 ---
@@ -76,7 +78,7 @@ inject-from-core:
 
 ### 1. 项目入口
 
-先执行 AIPD v2 Schema gate：按路径项存在性识别新旧根，拒绝双根、损坏 symlink、同名普通文件、symlink 工作区和工作区内 symlink；`_aipd/manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。通过后再读取 `_aipd/index.md` 和 `_aipd/map.md`；任一类型或内容不符时停止，不创建或猜测修复。
+先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，按路径项存在性、symlink、manifest 双形态和 `P/I` 执行项目 gate。双根、symlink、非法类型 / manifest 或 `P > I` 立即停止；`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update`。只有 `P = I` 且 `index.md` / `map.md` 类型安全时才读取它们；项目版本不从 Agent Entry 推断。
 
 地图只负责引路。后续按候选信息读取相关知识域、局部 README 或流程文件，不全量扫描 `_aipd/`。
 

@@ -8,7 +8,7 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 
 - Core 回答 AIPD 靠哪些核心模型成立。
 - Product 回答这些模型落成哪些可用能力，以及每个能力对用户承诺什么、不承诺什么。
-- Engineering 回答能力如何落到 Codex / Claude / OpenCode、构建脚本、Agent 配置、路径和工程约定。
+- Engineering 回答能力如何落到当前 Codex 适配、通用平台扩展结构、构建脚本、Agent 配置、路径和工程约定。
 
 判断一条信息是否属于 Product，可以问：
 
@@ -27,7 +27,7 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 | Weave 反向编织 | 把稳定知识回写到五类 Knowledge、局部 README 或 Map | `aipd-weave` | 项目知识库维护模型 | 已存在 |
 | Learn 框架自迭代 | 把真实协作经验回流到 AIPD 框架自身的 skill、模板和规则 | `aipd-learn` | 项目知识库维护模型、Agent 协作思考模型 | 已存在 |
 | Project Schema 一次性迁移 | 把旧 `_adoc` / L1-L5 工作区原子切换到 v2，不保留日常兼容 | `migrate-project-schema` | 项目知识库维护模型 | 已存在 |
-| AIPD Update | 帮已接入项目升级 AIPD 架构，同时保护项目已有认知 | `aipd-update` | 项目知识库维护模型、Map-first 上下文检索模型 | 已存在 |
+| AIPD Update | 把已接入项目一次语义收敛到本机 AIPD 发布快照，同时保护项目已有认知与定制 | `aipd-update`、`_aipd/manifest.json`、`_aipd/update-log.md` | 项目知识库维护模型、Map-first 上下文检索模型 | 已存在 |
 | Mermaid / MMD | 用图提高人和 AI 对复杂结构的对齐速度 | `aipd-mermaid`、`.mmd` 文件 | AI 原生代码架构模型、任务执行模型 | 已存在 |
 | Git Push 辅助 | 用低风险固定流程完成当前分支推送 | `aipd-git-push` | 任务执行模型 | 已存在 |
 | SOP 库 | 把可重复项目动作沉淀为以 Agent 为运行时的 AI 原生程序 | `_aipd/sop/`、SOP map | SOP / AI 程序模型 | 壳子 |
@@ -78,11 +78,13 @@ Learn 用来采集 transcript、case 经验或用户反馈，并判断是否需�
 
 ### AIPD Update
 
-Update 用来更新已经使用 Knowledge Schema v2 的项目。它需要审计当前结构和新规则差异，给出更新方案，并在用户确认后合并新模板、新 Map 和新 Agent Entry。
+Update 用来把项目收敛到当前电脑已安装的完整 AIPD 发布快照。项目 manifest 记录已应用版本 `P`，本机安装包声明当前版本 `I`；Update 完整读取 `(P,I]` 的版本记录来理解变化、撤销和保护点，再读取版本 `I` 的当前权威文档与模板，最后结合项目实际内容做一次 `P -> I` 语义合并。它不查询远端版本，也不把项目逐版改到会被后续版本废弃的中间态。
 
-它的核心边界是“升级框架结构但不破坏项目已有认知”。
+版本记录解释“为什么变”，当前权威文档定义“最后应该是什么”，项目正文定义“哪些真实定制必须保留”。缺失入口、过期模板或旧措辞都是正常更新输入；additive 和无歧义 semantic 合并默认执行，只有需要删除、覆盖、重命名或无法判断所有权的冲突才暂停确认。
 
-旧 `_adoc` / L1-L5 项目不由 Update 兼容读取，而是先使用独立的 `migrate-project-schema` 一次性迁移器。迁移器随 `aipd` Skill 打包，也保留 AIPD 源码仓库 CLI 入口。
+旧 `_adoc` / L1-L5 项目可以先由 Update 调用独立的 `migrate-project-schema` 完成确定性结构迁移，再以 `unversioned-v2` 身份继续语义收敛。迁移器只改变 Schema，不写当前 AIPD 版本。验证全部通过后，Update 才把 `aipdVersion=I` 写入 manifest，并在 `_aipd/update-log.md` 留下一条项目级更新记录。
+
+项目版本等于本机版本时，Update 仍可检查 drift；没有差异就 no-op。项目版本高于本机版本时必须停止，不能用旧安装包降级项目。
 
 ### Mermaid / MMD
 
@@ -104,7 +106,7 @@ SOP 库不是普通知识库目录，也不是单纯脚本集合。它收纳可�
 
 ## 不放入 Product 的内容
 
-- Codex / Claude / OpenCode 的具体适配方式，进入 Engineering。
+- Codex 的当前适配方式与其他平台的通用扩展机制，进入 Engineering。
 - 构建、安装、dist、agent 模板生成等工程规则，进入 Engineering。
 - 单个 skill 内部的执行步骤，留在对应 `SKILL.md`。
 - 页面、组件、脚本内部的数据流和修改注意事项，写到就近 README。

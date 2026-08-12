@@ -2,7 +2,7 @@
 
 AIPD 当前构建九个 Skill。它们不是九个彼此孤立的对象，而是围绕“进入项目、完成目标、维护记忆和处理专用协作”分工。
 
-源码位于 `aipd-skill/src/skills/`；构建后生成 Codex / Claude Code 可安装产物。具体平台能力仍以 `aipd-skill/src/platforms/` 和构建脚本为准。
+源码位于 `aipd-skill/src/skills/`；构建后默认生成 Codex 可安装产物。平台无关能力与扩展边界仍以 `aipd-skill/src/platforms/` 和构建脚本为准。
 
 ## 主循环
 
@@ -17,10 +17,10 @@ AIPD 当前构建九个 Skill。它们不是九个彼此孤立的对象，而是
 | Skill | 触发场景 | 主要结果 |
 |---|---|---|
 | `aipd-inbox` | 先记一下、稍后再判断 | 低承诺度临时记录 |
-| `aipd-update` | 已初始化项目需要升级 AIPD 结构 | 先审计差异和方案，确认后安全合并 |
+| `aipd-update` | 已接入项目需要升级到本机 AIPD 版本，或检查同版本 drift | 读取版本演进和当前权威文档，一次语义收敛并记录结果 |
 | `aipd-learn` | 要从会话、Case 或用户反馈迭代 AIPD 框架 | 最小定位卡或框架回流包 |
 
-Weave 面向当前项目；Learn 面向 AIPD 框架自身。Update 只升级结构和入口，不覆盖项目已有认知。
+Weave 面向当前项目的稳定认知；Learn 面向 AIPD 框架自身。Update 面向项目里的 AIPD 结构与规则版本：项目 manifest 保存已应用版本，本机安装包给出目标版本。它会完整理解两者之间的更新记录，再以本机当前文档为最终态保护性合并；普通安全更新直接执行，只有破坏性或歧义冲突才暂停。
 
 ## 专用协作
 
@@ -57,6 +57,18 @@ Weave 面向当前项目；Learn 面向 AIPD 框架自身。Update 只升级结�
 /aipd-inbox
 -> 后续丢弃 / 转 Case / 转 SOP / Weave
 ```
+
+### 已接入项目升级 AIPD
+
+```text
+/aipd-update
+-> 读取项目版本 P 与本机版本 I
+-> 完整理解 (P,I] 更新记录，不逐版落盘
+-> 读取 I 的当前权威文档和项目定制
+-> 一次语义收敛、验证并记录 P -> I
+```
+
+Update 不查询远端最新版。旧 `_adoc` 项目可以先在同一目标下运行确定性 Schema 迁移，再以无版本 v2 项目继续更新；迁移器本身不写当前 AIPD 版本。
 
 ### AIPD 自身需要从真实使用中学习
 

@@ -18,7 +18,7 @@ AIPD 是面向 AI 协作的软件项目认知框架。它把长期知识、检�
 
 `_aipd/map.md` 是项目给 AI 准备的第一跳检索地图。它把用户说法、业务词和工程词路由到相关知识域、SOP、局部 README 和真实代码入口。
 
-进入任何 AIPD 读取或写入前，先执行 Schema gate：按路径项存在性识别新旧根，因此损坏 symlink 和同名普通文件也不是“缺失”；双根、symlink 工作区或工作区内 symlink 均停止。当前 `_aipd` 必须是真实目录，`manifest.json`、`index.md`、`map.md` 必须是非 symlink 的普通文件，且 manifest 仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`。任一类型或内容不符时，不猜测补全，回到 `aipd` 入口判定初始化或一次性迁移。
+进入任何 AIPD 读取或写入前，先使用当前已安装 AIPD Skill 中的 `workspace/project-state.md` 与 `updates/catalog.json` 执行项目状态 gate；catalog 的 `currentVersion` 是本机版本 `I`，项目版本永远不从本 Agent Entry 推断。按路径项存在性识别新旧根，损坏 symlink 和同名普通文件也算存在；双根、symlink 工作区 / 工作区内 symlink、manifest 非法、保留路径类型冲突或项目版本高于 `I` 均硬停止。精确两键 manifest 是 `unversioned-v2`；精确三键且 `aipdVersion` 为正整数时是已版本化 v2。`unversioned-v2` 或项目版本低于 `I` 时返回 `needs-aipd-update`；只有版本相等时继续普通 AIPD 读写。必要入口缺失是 Update drift，安全的额外 Workspace 模块作为项目定制保留。
 
 Map 可以有三种分辨率：项目总图、业务线 / 功能线 / shared capability 的上下文 Map、代码就近局部实现图。它们是读取视图，不是新的知识分类，也不是每次都要走完的固定三级流程。
 
@@ -33,9 +33,10 @@ Map 可以有三种分辨率：项目总图、业务线 / 功能线 / shared cap
 
 ## 工作区位置
 
-- `_aipd/manifest.json` 是工作区 Schema 标识。
+- `_aipd/manifest.json` 是工作区 Schema 身份和已应用 AIPD 版本事实源。
 - `_aipd/index.md` 是项目认知入口。
 - `_aipd/map.md` 是任务上下文检索地图。
+- `_aipd/update-log.md` 记录本项目实际完成的 AIPD 版本跃迁、验证和保留差异。
 - `_aipd/knowledge/` 存放五类长期知识。
 - `_aipd/sop/` 存放以 Agent 为运行时的可复用项目动作。
 - `_aipd/case/`、`_aipd/okr/` 和 `_aipd/inbox.md` 分别承载短周期事项、阶段目标和未整理信息，不属于长期知识正文。

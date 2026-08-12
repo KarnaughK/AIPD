@@ -16,6 +16,8 @@ inject-from-core:
   - overview.md
   - ai-friendly-code-topology.md
   - aipd-project-structure.md
+  - updates/catalog.json
+  - workspace/project-state.md
   - agent-entry/template.md
   - agent-entry/interaction-style.md
   - agent-guides/aipd_context_retriever.md
@@ -23,6 +25,7 @@ inject-from-core:
   - workspace/templates/index.md
   - workspace/templates/inbox.md
   - workspace/templates/map.md
+  - workspace/templates/update-log.md
   - workspace/templates/sop-index.md
   - workspace/templates/sop-map.md
   - case/templates/index.md
@@ -38,12 +41,13 @@ inject-from-core:
 
 进入任何读取或写入前，先判断项目状态：
 
-1. 先按路径项存在性分别检查新旧根：`test -e _aipd || test -L _aipd`，以及 `test -e _adoc || test -L _adoc`。损坏的 symlink 和同名普通文件也算“存在”；两边同时存在就是双根混合状态，立即停止。
-2. 只有当前根路径项时，`_aipd` 必须是真实目录而不是 symlink，且工作区内不得存在 symlink；`manifest.json`、`index.md` 与 `map.md` 必须是非 symlink 的普通文件。manifest 必须仅含并精确等于 `{"schema":"aipd-project","schemaVersion":2}`，否则视为未知状态并停止。
-3. 不存在当前根路径项时，旧根检查只作为拒绝性哨兵。若旧根路径项存在，立即停止，不读取、路由或写入其中内容；定位当前 `aipd` Skill 目录中随安装包提供的 `scripts/migrate-project-schema`，先以 `--dry-run /absolute/project/path` 预检，用户确认后再以 `/absolute/project/path` 执行。若当前就在 AIPD 源码仓库开发，可使用 `aipd-skill/scripts/migrate-project-schema` 这一等价源码入口。
-4. 新旧根路径项均不存在时，才视为未初始化的新项目。
+1. 先读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，用 catalog 的 `currentVersion` 作为本机版本 `I`；不从 `AGENTS.md`、Git tag 或远程推断版本。
+2. 按路径项存在性分别检查新旧根：`test -e _aipd || test -L _aipd`，以及 `test -e _adoc || test -L _adoc`。损坏 symlink 和同名普通文件也算“存在”；双根、symlink 工作区、工作区内 symlink、manifest 身份或类型非法时按合同立即停止。
+3. 只有 `_aipd` 时，按合同判定项目版本 `P`。`unversioned-v2` 或 `P < I` 返回 `needs-aipd-update` 并路由 `aipd-update`；`P > I` 硬停止，不降级也不查远程；只有 `P = I` 才继续普通读写。`index.md` / `map.md` 等必要入口缺失是 Update drift，存在但是 symlink 或类型冲突则硬停止。
+4. 只有 `_adoc` 时，不读取、路由或写入其中内容；定位当前 `aipd` Skill 随包提供的 `scripts/migrate-project-schema`，先以 `--dry-run /absolute/project/path` 预检，用户确认后执行。若当前在 AIPD 源码仓库，可使用 `aipd-skill/scripts/migrate-project-schema`。迁移后仍是无版本 v2，继续交给 `aipd-update` 应用当前发布。
+5. 新旧根路径项均不存在时，才视为未初始化的新项目。
 
-日常运行时只识别 Knowledge Schema v2，不双读、不 fallback、不使用迁移器兜底。
+日常运行时不双读、不 fallback。安全的额外 Workspace 模块是项目定制，不因名称未知就删除或判 invalid；保留名、代码目录、symlink 和文件类型冲突仍按合同停止。
 
 ## 入口判断
 
@@ -117,6 +121,7 @@ inject-from-core:
 ```text
 AIPD 项目状态
 _aipd/      : ✅ Knowledge Schema v2
+AIPD 版本  : V{P} / needs-aipd-update
 Agent Entry : ✅ AGENTS.md 已安装
 Intent      : ✅ 已定义
 当前 OKR   : ...
@@ -134,12 +139,13 @@ mkdir -p _aipd/knowledge/core _aipd/knowledge/product _aipd/knowledge/engineerin
 mkdir -p _aipd/sop _aipd/case/archive _aipd/okr
 ```
 
-创建默认文档壳：
+先写入精确两键的 `unversioned-v2` bootstrap manifest，再创建默认文档壳。初始化尚未验证完成前，不得提前写入 `aipdVersion`：
 
-- 将 `@references/workspace/templates/manifest.json` 写入 `_aipd/manifest.json`。
+- 将 `{"schema":"aipd-project","schemaVersion":2}` 写入 `_aipd/manifest.json`；当前版本模板只在最后成功提交时使用。
 - 将 `@references/workspace/templates/index.md` 写入 `_aipd/index.md`。
 - 将 `@references/workspace/templates/inbox.md` 写入 `_aipd/inbox.md`。
 - 将 `@references/workspace/templates/map.md` 写入 `_aipd/map.md`。
+- 将 `@references/workspace/templates/update-log.md` 写入 `_aipd/update-log.md`。
 - 将 `@references/workspace/templates/sop-index.md` 写入 `_aipd/sop/index.md`。
 - 将 `@references/workspace/templates/sop-map.md` 写入 `_aipd/sop/map.md`。
 - 将 `@references/case/templates/index.md` 写入 `_aipd/case/index.md`。
@@ -147,11 +153,11 @@ mkdir -p _aipd/sop _aipd/case/archive _aipd/okr
 
 目标文件已存在时不覆盖，先提示用户并基于现有内容继续。默认壳只是入口索引，不代表对应知识已完成。
 
-然后先询问 Agent MD 模板等级，再决定是否写入项目根 Agent Entry；最后引导用户定义 `_aipd/knowledge/intent/intent.md`（参考 `@references/knowledge/intent/guide.md`、`intent-writing.md` 和 `template.md`）。
+然后先询问 Agent MD 模板等级，再决定是否写入项目根 Agent Entry。完成结构、必要入口、标记区块验证，并确认 manifest 模板的 `aipdVersion` 等于 catalog 的 `currentVersion=I` 后，最后将 `@references/workspace/templates/manifest.json` 写入 `_aipd/manifest.json`，以其中的 `aipdVersion=I` 作为初始化成功标记；任一步失败时保留 `unversioned-v2`，不得声称已完成当前版本。初始化完成后再引导用户定义 `_aipd/knowledge/intent/intent.md`（参考 `@references/knowledge/intent/guide.md`、`intent-writing.md` 和 `template.md`）。
 
 | 等级 | 名称 | 内容 |
 |---|---|---|
-| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` / `CLAUDE.md` |
+| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` |
 | 1 | AIPD Project Entry | 写入 AIPD 项目入口区块；默认推荐 |
 | 2 | Entry + Interaction Protocol | 额外写入 AIPD 项目级对话协议 |
 

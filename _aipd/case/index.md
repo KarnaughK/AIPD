@@ -42,6 +42,7 @@
 | `archive/c20-aipd-knowledge-execution-code-topology` | 2026-08-10 | 从千里马、Page One、Guessword 三个案例形成 AI 友好代码拓扑；完成 Core 主事实源、Skill 公共投影、双入口条件加载、三段代码拓扑合同、两平台构建与 Codex 安装 |
 | `archive/c21-interaction-response-protocol` | 2026-08-09 | 将 Agent MD 等级 2 的讨论回复协议固定为“我理解 → 展开说说 → 结论 → 横向拓展 → 下一步”，完成构建、安装、验收与 Product / Map 回写 |
 | `archive/c22-aipd-knowledge-schema` | 2026-08-10 | 将项目工作区切换为 `_aipd/knowledge/*` 五类并列知识域，完成一次性迁移器、双平台构建、Codex 用户级安装和新上下文检索 Agent 验收 |
+| `archive/c23-versioned-aipd-update` | 2026-08-12 | 建立本机 V1 发布目录、项目 `aipdVersion` 与版本驱动 Update；读取版本演进后按当前权威一次收敛，完成 Codex 构建与自举验收，未执行安装 |
 
 ## 使用原则
 
