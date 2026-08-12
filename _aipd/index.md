@@ -6,7 +6,7 @@
 
 - 当前项目：AIPD 2
 - 当前结构：AIPD Project Schema v2
-- 当前 AIPD 发布：V1
+- 当前 AIPD 发布：V2
 - Knowledge Schema：Intent / Research / Core / Product / Engineering 五类并列知识域
 - 项目级检索入口：`_aipd/map.md`
 
@@ -19,7 +19,7 @@
 | 项目 Map | `_aipd/map.md` | 把自然语言、业务词和工程词路由到所需 Knowledge、局部 README 与代码入口 |
 | AIPD 更新日志 | `_aipd/update-log.md` | 记录本项目实际完成的 AIPD 版本跃迁、验证结果与保留差异；不复制全局 Release Record |
 | Knowledge | `_aipd/knowledge/` | 存放五类长期、稳定、可复用的项目认知 |
-| Leader（实验） | `_aipd/leader/` | Project Leader 的可恢复工作记忆；只承接没有更权威归属、但会影响当前判断和恢复的信息 |
+| Leader（显式可选） | `_aipd/leader/` | `$aipd-leader` 的可恢复工作记忆；只承接没有更权威归属、但会影响当前 Mission、跨 Case 判断和恢复的信息 |
 | SOP | `_aipd/sop/` | 存放以 Agent 为运行时的可复用程序 |
 | Case | `_aipd/case/` | 存放短周期目标、阶段状态、工作包和验证记录 |
 | OKR | `_aipd/okr/` | 存放阶段目标及其对齐关系 |
@@ -43,7 +43,7 @@
 1. 先读 `_aipd/map.md`，把用户说法映射到必要的 Knowledge、局部 README 和代码入口。
 2. 根据任务范围选择最少但足够的上下文，不默认把五类 Knowledge 全部加载。
 3. 项目 Map 负责全局第一跳；业务线、功能线或共享能力 Map 负责上下文范围；代码就近 README 负责最后一跳。
-4. 只有当前任务明确处于 Project Leader 模式，或需要恢复 Project Leader 状态时，才读取 `_aipd/leader/index.md`；普通开发不默认加载 Leader 工作记忆。
+4. 只有用户显式调用 `$aipd-leader`，或需要恢复此前已显式启动的 Project Leader 状态时，才读取 `_aipd/leader/index.md`；自然语言提到 Leader、Mission 或跨 Case 推进都不自动启动，普通开发不加载 Leader 工作记忆。
 5. 普通开发不读取 Case 或 OKR。只有任务明确涉及对应流程或状态时，才进入这些区域。
 6. Map 未命中时，再用 `rg` 搜索业务词、页面名、接口名、权限码、README 和代码符号。
 
@@ -51,7 +51,7 @@
 
 - 项目方向：`_aipd/knowledge/intent/intent.md`
 - AIPD 项目更新结果：`_aipd/update-log.md`
-- Project Leader 工作空间（实验）：`_aipd/leader/index.md`
+- AIPD Leader 工作空间：`_aipd/leader/index.md`
 - Workspace 与 Knowledge 定义：`_aipd/knowledge/core/workspace-modules.md`
 - 核心认知：`_aipd/knowledge/core/index.md`
 - Agent 横向能力：`_aipd/knowledge/core/horizontal-capabilities.md`

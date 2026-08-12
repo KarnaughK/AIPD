@@ -11,7 +11,7 @@
 - 命中不清楚时，用 `rg` 搜索核心词、skill 名、agent 名、平台名和 README。
 - 新发现的稳定入口，后续应回写到本文件或对应 Core / Product / Engineering map。
 - 关键路径尽量扁平暴露，不要求 Agent 通过多层目录链自行发现。
-- 只有用户明确进入 Project Leader 模式、要求恢复 Leader 状态，或讨论 Mission / 跨 Case 项目推进时，才路由到 `_aipd/leader/`；普通开发不默认读取 Leader 工作记忆。
+- 只有用户显式调用 `$aipd-leader`，或需要恢复此前已显式启动的 Leader 状态时，才路由到 `_aipd/leader/`。自然语言提到 Leader、Mission 或跨 Case 推进只用于讨论或建议，不自动启动，也不读取 Leader 工作记忆。
 - 普通开发、找代码、查业务规则、查页面或组件实现时，本文件不把请求路由到 `_aipd/case/` 或 `_aipd/okr/`。只有用户明确要求 case / OKR 流程，或当前任务本身是 `aipd-case`、OKR 对齐时，才读取对应流程状态。
 
 ## 高频任务入口
@@ -29,7 +29,7 @@
 | AIPD update / 项目版本落后 / unversioned-v2 / 同版本 drift / 更新 AGENTS / 同步本机模板 | AIPD Update | Product + Engineering + 真实项目 | `_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md`、`_aipd/knowledge/engineering/index.md` | `aipd-skill/src/skills/aipd-update/SKILL.md`、`aipd-skill/src/core/updates/catalog.json`、`aipd-skill/src/core/updates/current.md`、`aipd-skill/src/core/workspace/project-state.md` | `rg "aipd-update|aipdVersion|currentVersion|currentAuthority|update-log|unversioned-v2|drift" aipd-skill/src aipd-skill/scripts _aipd` |
 | 上下文检索 / 大地图 / map | 项目记忆地图 | Core + Engineering | `_aipd/map.md`、`_aipd/knowledge/core/index.md` | `aipd-skill/src/core/workspace/templates/map.md`、`aipd-skill/src/skills/aipd-case/SKILL.md` | `rg "map.md|上下文检索|检索包|观察锚点" aipd-skill/src _aipd AGENTS.md` |
 | 上下文检索 Agent / 查项目资料 / 项目认知查询 / 保持主 Agent 上下文干净 | 上下文检索 Agent | Engineering + agent-guide | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | `aipd-skill/src/core/agent-guides/aipd_context_retriever.md`、`aipd-skill/src/platforms/codex/agents/aipd_context_retriever.toml` | `rg "aipd_context_retriever|上下文检索|子 Agent|默认调度" AGENTS.md aipd-skill/src _aipd` |
-| Project Leader / 项目负责人 / leader / Mission / 主导模式 / 跨 Case 推进 / 思路变化 | Project Leader 工作空间（实验） | Leader 流程状态；按入口链接读取必要 Knowledge / Case | `_aipd/leader/index.md` | Leader 自建文字文件；只按 `index.md` 和显式链接渐进读取 | `rg -e "Project Leader" -e "Mission" -e "当前工作区索引" -e "反向归属" -e "跨 Case" -e "思路变化" _aipd/leader _aipd aipd-skill/src` |
+| `$aipd-leader` / Project Leader / 项目负责人 / AI 主导项目 / Mission / 主导模式 / 跨 Case 推进 / Codex task / 思路变化 | AIPD Leader（显式可选） | 显式调用时进入 Leader Mission 与流程状态；其他说法只用于解释或建议，不自动启动 | `_aipd/leader/index.md`、`aipd-skill/src/skills/aipd-leader/SKILL.md` | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、Leader 自建文字文件 | `rg -e "aipd-leader" -e "Project Leader" -e "Mission" -e "Codex task" -e "当前工作区索引" -e "反向归属" -e "跨 Case" _aipd/leader _aipd aipd-skill/src docs` |
 | inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理 | Inbox 临时收件箱 | capture | `_aipd/inbox.md` | `aipd-skill/src/skills/aipd-inbox/SKILL.md`、`aipd-skill/src/core/workspace/templates/inbox.md` | `rg "inbox|收件箱|先记一下|先存一下|回头再整理" _aipd aipd-skill/src` |
 | think / AIPD Think / 讨论任务 / 定任务 / 前置判断 / 要不要做 / 从模糊到清晰 / 深度调研后再决定 | Case Think / 前置讨论与决策 | Core + Product 规划能力 | `_aipd/knowledge/core/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md`、`_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md` | `aipd-skill/src/skills/aipd-case/SKILL.md`、`aipd-skill/src/core/case/phases/think.md` | `rg "Think|Case Think|任务澄清|前置讨论|要不要做|从模糊到清晰|Create|Kill|Defer|Research|Design" _aipd aipd-skill/src docs` |
 | SOP / AI 原生程序 / Agent 程序 / 可复用流程 / 按步骤反复执行 / 查关键词 / 日报 | SOP 项目级 Agent 程序库 | SOP + Core | `_aipd/sop/index.md`、`_aipd/sop/map.md`、`_aipd/knowledge/core/horizontal-capabilities.md` | `_aipd/sop/` | `rg "SOP|AI 原生程序|Agent 程序|可复用流程|procedure|查关键词|日报" _aipd aipd-skill/src docs` |
@@ -60,7 +60,7 @@
 | Weave 反向编织 | `aipd-weave` / 项目 Knowledge 回写 | `_aipd/knowledge/core/horizontal-capabilities.md` | Weave | 和 `aipd-learn` 分工不同；weave 面向当前项目知识库，learn 面向 AIPD 框架自迭代 |
 | 子 Agent | 用于上下文隔离、真实并发或独立复核的执行 / 调研 Agent | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | case Execute、角色 Agent 调度 | 不是默认步骤；按隔离收益、并发收益、主线耦合和调度成本选择，派发不扩大外部副作用权限 |
 | 上下文检索 Agent | `aipd_context_retriever` | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/agent-guides/aipd_context_retriever.md` | Map-first 认知加载、SOP 检索、次级流程检索 | Main 先最小路由；大量项目认知或多条独立认知线才优先派发；Inbox/OKR/Case 只有明确需要时查 |
-| Project Leader / Leader 工作记忆 | `_aipd/leader/`（项目内实验） | `_aipd/leader/index.md` | Project Leader 模式、Mission 与跨 Case 推进 | 不是第六类 Knowledge，也不是其他模块的副本；只保存没有更权威归属、但会影响当前判断和恢复的信息 |
+| AIPD Leader / Leader 工作记忆 | `$aipd-leader`、`_aipd/leader/` | `_aipd/leader/index.md`、`aipd-skill/src/skills/aipd-leader/SKILL.md` | 显式 Leader 模式、一个 active Mission、一个 Case 一个 Codex task | 不是第六类 Knowledge，也不自动启动；只保存没有更权威归属、但会影响当前判断和恢复的信息 |
 | Case / Work Package | 短周期目标契约 / 可执行、可恢复、可验收目标包 | `_aipd/case/index.md`、`aipd-skill/src/core/case/overview.md` | aipd-case | Work Package 是状态与验收边界，不等于子 Agent 派发节点；运行时另选 Main 或 Child |
 | OKR | 飞书阶段目标 / 飞书 O/KR | `aipd-skill/src/skills/aipd-okr/SKILL.md`、`_aipd/okr/index.md`、`aipd-skill/src/core/okr/guide.md` | `aipd-okr`、AIPD Case | AIPD 里的 OKR 默认指飞书 OKR；高噪声飞书查询应压缩成 OKR 经验包 |
 | SOP | 以 Agent 为运行时的可复用 AI 原生程序 | `_aipd/sop/index.md`、`_aipd/sop/map.md` | SOP、aipd-case、weave | 不是 Product/Engineering 知识条目，也不是单纯脚本；代码只是 SOP 可调用的工具之一 |

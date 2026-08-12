@@ -1,6 +1,6 @@
-# AIPD V1 Current Snapshot Guide
+# AIPD V2 Current Snapshot Guide
 
-本文件是本机 AIPD V1 发布快照的当前事实入口。机器可读的当前版本只以同目录 `catalog.json#currentVersion` 为准；不要从 Git tag、远端仓库、`AGENTS.md` 或项目正文推断版本。
+本文件是本机 AIPD V2 发布快照的当前事实入口。机器可读的当前版本只以同目录 `catalog.json#currentVersion` 为准；不要从 Git tag、远端仓库、`AGENTS.md` 或项目正文推断版本。
 
 ## 读取顺序
 
@@ -8,7 +8,7 @@
 2. 按项目版本选择并完整读取 `(P,I]` 的 Release Records；无版本 v2 项目读取全部 bootstrap records。
 3. 把 records 只作为演进、替代关系、保护点和风险上下文，不逐版修改目标项目。
 4. 再读取 `catalog.json#currentAuthority` 列出的当前文档和模板，以它们作为最终态权威。
-5. 对照目标项目实际内容，一次收敛到 V1；保留可兼容的项目定制。
+5. 对照目标项目实际内容，一次收敛到 V2；保留可兼容的项目定制。
 
 Release Record 不是迁移脚本、待办清单或中间版本回放。若历史记录与当前权威文档不同，以当前权威文档为最终目标；只有确定性的底层结构迁移可以在内部按依赖排序。
 
@@ -25,6 +25,7 @@ Release Record 不是迁移脚本、待办清单或中间版本回放。若历�
 | `knowledge/{intent,research,core,product,engineering}/guide.md` | 五类并列 Knowledge 的当前分类边界 |
 | `agent-entry/{template,interaction-style}.md` | 项目 Agent Entry 与可选交互协议 |
 | `agent-guides/aipd_context_retriever.md` | 上下文检索 Agent 当前职责 |
+| `leader/{guide,workspace-template}.md` | 显式 Leader、Mission 与可选工作记忆；具体 task runtime 由平台覆盖 |
 | `case/overview.md`、`case/templates/*` | 当前 Case / Work Package 结构与模板 |
 | `okr/templates/index.md` | 项目 OKR 入口模板 |
 
@@ -32,7 +33,7 @@ Release Record 不是迁移脚本、待办清单或中间版本回放。若历�
 
 ## 本机边界
 
-- V1 更新只面向当前安装包，不检查 GitHub 或其他远端是否有更高版本。
+- V2 更新只面向当前安装包，不检查 GitHub 或其他远端是否有更高版本。
 - `schemaVersion` 表达 Workspace 数据形状；`aipdVersion` 表达项目已经成功应用的完整发布快照。
-- 只有完成最终态合并和验证后，才把项目 manifest 写为 V1，并追加项目 `_aipd/update-log.md`。
-- 一次性 `_adoc -> _aipd` 迁移器只建立无版本 Schema v2；迁移完成后仍须由 Update 应用 V1。
+- 只有完成最终态合并和验证后，才把项目 manifest 写为 V2，并追加项目 `_aipd/update-log.md`。
+- 一次性 `_adoc -> _aipd` 迁移器只建立无版本 Schema v2；迁移完成后仍须由 Update 应用 V1、V2 的完整演进上下文并直接收敛到 V2。

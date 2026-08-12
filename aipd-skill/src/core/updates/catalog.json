@@ -1,12 +1,16 @@
 {
   "schema": "aipd-release-catalog",
   "schemaVersion": 1,
-  "currentVersion": 1,
+  "currentVersion": 2,
   "currentGuide": "current.md",
   "releases": [
     {
       "version": 1,
       "record": "releases/v1.md"
+    },
+    {
+      "version": 2,
+      "record": "releases/v2.md"
     }
   ],
   "currentAuthority": [
@@ -28,6 +32,8 @@
     "agent-entry/template.md",
     "agent-entry/interaction-style.md",
     "agent-guides/aipd_context_retriever.md",
+    "leader/guide.md",
+    "leader/workspace-template.md",
     "case/overview.md",
     "case/templates/index.md",
     "case/templates/case.md",

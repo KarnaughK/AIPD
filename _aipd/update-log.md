@@ -13,3 +13,13 @@
 - 验证：默认 Codex build、`check-dist`、release bundle source / dist 校验、V5 -> V9 最终权威 forward fixture、Schema migrator 全量 fixture、当前项目 Schema check、脚本语法、experience assets 与 `git diff --check` 均通过。
 - 安装结果：用户后续已明确确认安装；Codex 的 9 个 Skill 与 3 个 Agent 已安装到用户级目录，并与本次 dist 逐项比对一致。
 - 未处理 / 后续观察：远端版本发现不在 V1 范围内。
+
+### 2026-08-12 · V1 -> V2
+
+- 本机发布：V2；只使用当前电脑已经安装的 AIPD V2 发布快照，未检查远端版本。
+- 已读记录：V2 Leader release record；它用于理解显式启动、Leader / Case / 子 Agent 四层边界、工作记忆归属和方向澄清保护点，最终态以 V2 current authority 为准。
+- 实际合并：将 `AGENTS.md` 的 AIPD 标记区块同步到 V2 权威模板；把本项目 `_aipd/index.md` 的发布状态更新为 V2；收紧 `_aipd/index.md` 与 `_aipd/map.md` 的 Leader 路由，只有显式调用 `$aipd-leader` 或恢复此前已显式启动的 Leader 状态时才进入工作记忆，自然语言提到 Leader、Mission 或跨 Case 推进不自动启动。
+- 保留的项目定制：完整保留 Agent MD 等级 2 的 Interaction Protocol、既有 `_aipd/leader/` 工作空间、已经沉淀的 Leader Knowledge、Case / OKR / SOP / Inbox 及进行中状态；没有用发布模板覆盖项目正文，也没有删除安全的额外模块。
+- 验证：项目安全 gate、V2 current authority、Agent Entry 精确比对、Interaction Protocol 字节级保留、标记成对、Leader 静态入口、Git 冲突与空白检查均通过；默认 Codex build 与 `check-dist` 通过，10 个 Skill、3 个 Codex Agent、release bundle、Schema migrator 和 Leader 显式调用合同正常；用户级已安装套件与本次 dist 逐项一致。
+- 安装状态：本次项目 Update 未再次执行 install；当前电脑的用户级 AIPD Skill 套件在 Update 前已经安装为 V2。
+- 未处理：未检查远端版本，未提交 Git，未推送远端。

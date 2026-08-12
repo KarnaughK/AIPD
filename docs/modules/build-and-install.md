@@ -56,7 +56,7 @@ dev 模式下，重新 build 后通常会自动生效；install 模式下，修�
 
 Agent 修改 AIPD 源码后，可以直接运行 `./aipd-skill/scripts/build` 做低风险打包验证，但不要默认继续执行 install。install 会改写用户级或项目级 Agent 运行环境，build 完成后必须主动问用户是否执行 install；只有用户明确确认后，才运行对应安装脚本。
 
-`check-dist` 不修改安装环境，也不替代 build。它验证 Codex 产物中的九个 Skill、源码 / 产物同步、静态 references，以及安装脚本的历史残留清理接入。
+`check-dist` 不修改安装环境，也不替代 build。它验证 Codex 产物中的十个 Skill、源码 / 产物同步、静态 references、Leader 显式调用合同，以及安装脚本的历史残留清理接入。
 
 ## 旧项目一次性迁移
 

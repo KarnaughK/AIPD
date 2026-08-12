@@ -7,6 +7,7 @@
 - 普通开发、分析或进入 `aipd-case` 前，优先读取 `_aipd/map.md`。
 - 先按用户说法和业务词命中入口，再读取必要上下文；不要机械全量扫描所有知识域。
 - 普通任务不读取 `_aipd/case/` 或 `_aipd/okr/`；只有明确进入相应流程时才读取状态文件。
+- 只有用户显式调用 `$aipd-leader`，才创建或读取 `_aipd/leader/`；任务复杂或存在多个 Case 不会自动触发。
 - 新发现的稳定入口应回写本文件或相应知识域的 map。
 
 ## Map 的三种分辨率
@@ -26,6 +27,7 @@
 | {示例：合同 / 产品 / 任务 / 交付记录} | {核心概念或功能线} | `knowledge.core` + `knowledge.product` | `_aipd/knowledge/core/map.md`、`_aipd/knowledge/product/{feature}/map.md` | 相关页面或模块 README | `rg "合同|产品|任务|交付"` |
 | {示例：权限 / 菜单 / 按钮显隐} | {工程规则} | `knowledge.engineering` + 局部 README | `_aipd/knowledge/engineering/{rule}/map.md` | 目标页面 README、权限工具函数 | `rg "permission|perms|auth|hasPermi"` |
 | inbox / 收件箱 / 先记一下 / 先存一下 | Inbox 临时收件箱 | capture | `_aipd/inbox.md` | `aipd-inbox` | `rg "inbox|收件箱|先记一下|先存一下" _aipd` |
+| `$aipd-leader` / AI 主导项目 / Mission / 跨 Case 调度 | AIPD Leader（显式可选） | Leader + 必要 Knowledge / Case | 首次调用后读取 `_aipd/leader/index.md` | 已安装的 `aipd-leader` Skill | `rg "Mission|跨 Case|Leader" _aipd` |
 | SOP / AI 原生程序 / 可复用流程 | SOP 项目级 Agent 程序库 | SOP | `_aipd/sop/index.md`、`_aipd/sop/map.md` | `_aipd/sop/` | `rg "SOP|AI 原生程序|可复用流程" _aipd` |
 
 ## Core 核心概念
@@ -59,6 +61,7 @@
 - 产品功能是否读取 Product feature map，并找到稳定代码入口。
 - 跨模块工程规则是否读取 Engineering rule map。
 - 可重复项目动作是否检查 `_aipd/sop/` 中已有 SOP。
+- Leader 是否只在用户显式调用后读取，并能恢复一个 active Mission、Case / task 绑定和下一位置。
 
 ## 回写检查
 

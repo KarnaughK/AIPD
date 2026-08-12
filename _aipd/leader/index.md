@@ -1,10 +1,10 @@
-# Project Leader 工作空间
+# AIPD Leader 工作空间
 
-> 状态：项目内实验。除本入口外，不预设固定目录和文件结构。
+> 状态：显式可选能力。只有用户主动调用 `$aipd-leader` 才进入；除本入口外，不预设固定目录和文件结构。
 
 ## 定位
 
-`_aipd/leader/` 是 Project Leader 的可恢复工作记忆，用来承接跨聊天、跨 Case 仍会影响当前判断、优先级、协调和下一步恢复的信息。
+`_aipd/leader/` 是 AIPD Leader 的可恢复工作记忆，用来承接跨聊天、跨 Case 仍会影响当前 Mission、方向、优先级、协调和下一步恢复的信息。
 
 它不是长期 Knowledge，也不替代 Case / Work Package、OKR、SOP、Inbox、Map、局部 README 或真实代码。只有当前会话明确承担 Project Leader 角色，或需要恢复 Project Leader 状态时，才读取本目录；普通开发任务不默认加载。
 
@@ -38,6 +38,16 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 - 不复制 Knowledge、Case 或其他事实源的长正文；需要时使用链接和影响摘要。
 - 新建、删除或重命名本目录内文件后，应在本文件的“当前工作区索引”中更新入口。
 - 不再影响当前判断的信息可以删除，不要求永久归档所有思考过程。
+
+无论文件怎样拆分，都必须能够恢复：active Mission 与成功判据、最近方向变化及依据、Case 队列 / 依赖 / owner、Codex task 绑定、待确认事项和下一恢复位置。
+
+## 运行合同
+
+- 当前 Leader task：由用户设置 `gpt-5.6-sol / max / Fast`。
+- 每个 Case task：Leader 创建时设置 `gpt-5.6-sol / high`；Fast 继承当前 Codex 配置，无法核验时明确标记。
+- 一个项目只运行一个 Leader，同一时刻只有一个 active Mission；多个独立 Case 可以并发。
+- 一个 Case 对应一个主 Codex task；Case 内 phase 回跳继续使用原 task。
+- 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`。
 
 ## 迁出与清理
 

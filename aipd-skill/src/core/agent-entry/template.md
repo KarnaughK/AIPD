@@ -38,6 +38,7 @@ Map 可以有三种分辨率：项目总图、业务线 / 功能线 / shared cap
 - `_aipd/map.md` 是任务上下文检索地图。
 - `_aipd/update-log.md` 记录本项目实际完成的 AIPD 版本跃迁、验证和保留差异。
 - `_aipd/knowledge/` 存放五类长期知识。
+- `_aipd/leader/` 是显式调用 `$aipd-leader` 后才创建的可选项目主导工作记忆；普通任务不读取。
 - `_aipd/sop/` 存放以 Agent 为运行时的可复用项目动作。
 - `_aipd/case/`、`_aipd/okr/` 和 `_aipd/inbox.md` 分别承载短周期事项、阶段目标和未整理信息，不属于长期知识正文。
 - 页面、弹窗、组件或模块内部的最后一层实现地图放在代码就近 `README.md`。
@@ -52,9 +53,19 @@ Map 可以有三种分辨率：项目总图、业务线 / 功能线 / shared cap
 
 Weave 回写时，Intent 只接收用户明确确认的长期方向和边界；Research 只接收带来源与时间边界的稳定外部事实或调研结论；Core、Product、Engineering 只接收已确认或已验证的项目事实。
 
+## 显式 Leader 模式
+
+普通 AIPD 默认停留在 Case 执行层。只有用户主动调用 `$aipd-leader`，当前对话才成为项目 Leader；任务复杂、自然语言提到 Leader 或存在多个 Case 都不自动触发。
+
+- 一个项目同一时刻只有一个 Leader 和一个 active Mission。
+- Leader 负责方向澄清、探索、Case 拆分、同级 Codex task 调度和总验收；每个 task 对应一个 Case，并在 task 内使用 `aipd-case`。
+- Case task 可以按下文规则使用子 Agent，但不创建新的同级 task，不承担跨 Case 方向判断。
+- `_aipd/leader/` 只保存没有更权威归属、但会影响当前 Mission、跨 Case 协调和恢复的信息；Knowledge、Case、OKR、SOP、Map、README 或代码已有正文时只保留链接和影响摘要。
+- 用户新方向与项目文档或已验证事实冲突时，先澄清底层逻辑并记录变化依据，不静默覆盖，也不盲目执行。
+
 ## Main / 子 Agent 调度
 
-AIPD 不把子 Agent 当成每个任务的默认步骤。Main Agent 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本决定是否派发。
+AIPD 不把子 Agent 当成每个任务的默认步骤。下述 Main / 子 Agent 是单个普通任务或 Case task 内部的运行时选择；显式 Leader 与同级 Case task 的关系由上一节和 `aipd-leader` Skill 约束。Main Agent 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本决定是否派发。
 
 ### AIPD 上下文检索 Agent
 

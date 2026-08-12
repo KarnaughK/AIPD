@@ -12,6 +12,7 @@ EXPECTED_SKILLS=(
     aipd-case
     aipd-git-push
     aipd-inbox
+    aipd-leader
     aipd-learn
     aipd-mermaid
     aipd-okr
@@ -38,7 +39,7 @@ check_skill_set() {
     printf '%s\n' "${EXPECTED_SKILLS[@]}" | sort > "$expected_file"
     find "$DIST_ROOT/$platform/skills" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort > "$actual_file"
     if ! diff -u "$expected_file" "$actual_file" >/dev/null; then
-        fail "$platform Skill 集合不是预期 9 项"
+        fail "$platform Skill 集合不是预期 ${#EXPECTED_SKILLS[@]} 项"
         diff -u "$expected_file" "$actual_file" || true
     fi
     rm -f "$expected_file" "$actual_file"
@@ -478,6 +479,7 @@ check_schema_runtime_gates() {
         aipd
         aipd-case
         aipd-inbox
+        aipd-leader
         aipd-learn
         aipd-mermaid
         aipd-okr
@@ -531,6 +533,42 @@ check_schema_runtime_gates() {
     fi
 }
 
+check_leader_skill_contract() {
+    local source_root="$SRC_SKILLS/aipd-leader"
+    local dist_root="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-leader"
+    local source_yaml="$source_root/agents/openai.yaml"
+    local dist_yaml="$dist_root/agents/openai.yaml"
+    local skill_file="$source_root/SKILL.md"
+
+    if [ ! -f "$source_yaml" ]; then
+        fail "aipd-leader 缺少源码 agents/openai.yaml"
+        return
+    fi
+    if [ ! -f "$dist_yaml" ]; then
+        fail "$DEFAULT_PLATFORM/aipd-leader 缺少 agents/openai.yaml"
+        return
+    fi
+    if ! cmp -s "$source_yaml" "$dist_yaml"; then
+        fail "$DEFAULT_PLATFORM/aipd-leader 的 agents/openai.yaml 与源码不同步"
+    fi
+    if ! rg -q '^[[:space:]]*allow_implicit_invocation:[[:space:]]*false[[:space:]]*$' "$source_yaml"; then
+        fail "aipd-leader 必须禁止隐式调用"
+    fi
+    if ! rg -Fq '$aipd-leader' "$source_yaml"; then
+        fail "aipd-leader 默认 prompt 必须包含显式调用名"
+    fi
+    for term in 'gpt-5.6-sol' '`max`' '`high`' 'Fast' '一个 active Mission' '一个独立 Codex 任务'; do
+        if ! rg -Fq "$term" "$skill_file"; then
+            fail "aipd-leader 运行合同缺少关键语义: $term"
+        fi
+    done
+    if ! rg -Fq '@references/leader/runtime.md' "$skill_file" \
+        || ! rg -Fq '@references/leader/guide.md' "$skill_file" \
+        || ! rg -Fq '@references/leader/workspace-template.md' "$skill_file"; then
+        fail "aipd-leader 未连接完整 Leader 运行时 references"
+    fi
+}
+
 check_default_dist_scope
 check_skill_set "$DEFAULT_PLATFORM"
 check_source_sync "$DEFAULT_PLATFORM"
@@ -544,10 +582,11 @@ check_schema_migrator
 check_release_bundle
 check_schema_manifest_contract
 check_schema_runtime_gates
+check_leader_skill_contract
 
 if [ "$CHECK_FAILED" -ne 0 ]; then
     echo "AIPD dist 检查失败。" >&2
     exit 1
 fi
 
-echo "AIPD dist 检查通过：默认 Codex 产物、9 个 Skill、3 个 Codex Agent、通用多目标构建、release bundle、Schema migrator、源码同步、静态引用、代码拓扑投影、关键语义和 cleanup 入口均正常。"
+echo "AIPD dist 检查通过：默认 Codex 产物、${#EXPECTED_SKILLS[@]} 个 Skill、3 个 Codex Agent、通用多目标构建、release bundle、Schema migrator、源码同步、静态引用、Leader 显式调用合同、代码拓扑投影、关键语义和 cleanup 入口均正常。"

@@ -22,6 +22,7 @@ AIPD 仓库同时有面向用户的学习文档、面向 Agent 的项目认知�
 ## 当前研发策略
 
 - Codex 优先适配，先跑通 `skills + agents + aipd-case` 的最短闭环。
+- `$aipd-leader` 是唯一的显式项目主导入口：当前 Leader task 由用户配置为 `gpt-5.6-sol / max / Fast`；它创建的每个 Case task 明确使用 `gpt-5.6-sol / high`，Fast 由 Codex 配置继承或标记未核验。Case task 仍走 `aipd-case`，不得再创建同级 task。
 - Codex 子 Agent 不是默认步骤；Main 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本自然选择是否派发。平台不可用时由 Main 回退执行。
 - GPT-5.6 Sol 日常交互以 High 为基线，Ultra 只用于存在多条独立工作线且可接受更长等待的任务；Ultra 自带委派与 AIPD 主动派发不能无条件叠加。
 - work package 文件和显式上下文不是替代当前对话的任务源，而是用于校准边界、压缩恢复和沉淀长期事实。
@@ -33,7 +34,7 @@ AIPD 仓库同时有面向用户的学习文档、面向 Agent 的项目认知�
 - 默认安装脚本负责把 Codex Skill 与 agent 安装到用户级或目标项目的 `.codex/` 目录；带 `-codex` 的脚本保留为显式别名。
 - 修改 AIPD 源码后，Agent 可以直接运行 `./aipd-skill/scripts/build` 作为低风险打包验证；不要默认执行安装脚本。
 - 无参 build 默认只生成 Codex 产物。构建系统保留通用目标装配、平台同路径覆盖、core fallback 和可选 agents 注入；其他目标可自行扩展和打包，但不进入默认交付与验证。
-- build 完成后运行 `./aipd-skill/scripts/check-dist`，统一验证 Codex 的 9 个 Skill、3 个 Agent、源码 / 产物同步、静态 references、关键旧语义、默认入口和通用多目标构建护栏。`check-dist` 只读，不替代 build，也不执行 install。
+- build 完成后运行 `./aipd-skill/scripts/check-dist`，统一验证 Codex 的 10 个 Skill、3 个 Agent、源码 / 产物同步、静态 references、Leader 显式调用合同、关键旧语义、默认入口和通用多目标构建护栏。`check-dist` 只读，不替代 build，也不执行 install。
 - `aipd-skill/src/core/updates/catalog.json` 是本机发布版本事实源。每次发布必须保持连续 Release Records、current authority、manifest 模板、默认 Codex Skill references 和 `currentVersion` 一致；`check-release-bundle`、其 fixture 与 `check-dist` 共同阻止 source / dist 版本漂移。
 - 一次性 Schema migrator 只把旧工作区切换为精确两键的 `unversioned-v2`，不写本机当前 `aipdVersion`；只有 `aipd-update` 完成语义收敛和验证后才提交项目版本与 `_aipd/update-log.md`。
 - 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；构建和安装脚本不得把它复制进 `aipd-skill/dist` 或 Agent Skill 目录。

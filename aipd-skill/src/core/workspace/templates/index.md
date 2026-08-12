@@ -15,6 +15,7 @@
 - **SOP**：`_aipd/sop/index.md`、`_aipd/sop/map.md`
 - **OKR**：`_aipd/okr/index.md`
 - **Case**：`_aipd/case/index.md`
+- **Leader（显式可选）**：首次调用 `$aipd-leader` 后创建 `_aipd/leader/index.md`；普通任务不读取
 
 ## 并列知识域
 
@@ -36,6 +37,7 @@
 - `_aipd/knowledge/core/` 维护核心概念和项目成立模型，包含标准名、别名/黑话、关系和常见误解。
 - `_aipd/knowledge/engineering/` 维护跨模块实现逻辑、工程规则和协作约定；页面、弹窗、组件内部的实现地图放代码目录就近 `README.md`。
 - `_aipd/sop/` 存放可复用 Agent 程序，不属于长期知识正文。
+- `_aipd/leader/` 只在用户显式调用 `$aipd-leader` 后创建，保存当前 Mission、跨 Case 调度和恢复信息；普通 AIPD / Case 不自动进入。
 
 ## 维护约定
 
@@ -50,3 +52,4 @@
 - 项目记忆地图：`_aipd/map.md`
 - 临时收件箱：`_aipd/inbox.md`
 - Case / OKR：`_aipd/case/index.md`、`_aipd/okr/index.md`
+- Leader：显式调用 `$aipd-leader` 后读取 `_aipd/leader/index.md`

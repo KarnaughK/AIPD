@@ -38,6 +38,7 @@ AIPD 的任务连续性以文件为核心，不以聊天为核心。聊天上下
 | Engineering 工程规则地图 | 权限、路由、插件、前后端约定等规则怎么查 | Engineering、Product、真实代码 |
 | 局部 README 地图 | 某个页面、弹窗、组件或模块内部怎么理解和修改 | Product、Engineering、真实代码 |
 | Think phase | 模糊想法或 case 推进中的未知如何讨论、调研、比较方案并形成 Create / Kill / Defer / Research / Weave / Continue / Design 等出口 | 五类 Knowledge、Case、Weave、Agent Entry |
+| Leader 项目主导 | 用户不再逐 Case 驾驶时，谁负责方向探索、一个 Mission、多 Case task 调度和总验收 | Leader 工作记忆、Mission、Case、必要 Knowledge、Codex task、Agent Entry |
 | Case 系统 | 一个短周期目标如何按 Case Contract / Think / Design / Execute / Verify / Close 完成闭环 | OKR、Case、Work Package、必要 Knowledge、真实代码、Agent Entry |
 | SOP 系统 | 项目里可重复执行的动作如何沉淀为以 Agent 为运行时的 AI 原生程序 | SOP、五类 Knowledge、工具代码、Case、Work Package、Agent Entry、Weave |
 | Weave 反向编织 | case 完成后把已确认、已验证的稳定判断、规则、入口和外部资料写回哪里 | Intent、Research、Core、Product、Engineering、局部 README、Map；未完成候选先留在 Close 归档候选 |
@@ -88,6 +89,14 @@ Think 的核心出口应至少包括：
 Think 可以包含 deep research / 深度检索，但调研资料先服务当前 case 的 Think phase，不直接变成长期认知。经过判断的稳定结论也先记录为 Close 归档候选；Case 完成后再由 Weave 判断是否回写 Intent / Research / Core / Product / Engineering。Intent 需要用户明确确认，Research 需要可追溯来源与时间边界。
 
 Think 和 Inbox 的区别是承诺度：Inbox 只负责 capture，不承诺讨论；Think 已经进入主动澄清和决策。Think 和 SOP 的区别是对象：SOP 是可重复执行程序，Think phase 是当前 case 内的一次具体思考状态。
+
+## Leader 项目主导
+
+Leader 是用户显式增加在 Case 之上的项目主导层。普通 AIPD 默认仍由人驾驶，Agent 在 Case 层完成执行；只有用户主动调用 `$aipd-leader`，当前对话才承担一个 active Mission 的方向探索、Case 拆分、同级 Codex task 调度和总验收。
+
+Leader 与 Main / Child Agent 不是同一层：Leader 创建的每个 Codex task 对应一个 Case；Case task 内部仍可以按项目规则使用 Child Agent 或工具。Case task 不创建新的同级 task，也不承担跨 Case 方向判断。
+
+`_aipd/leader/` 保存跨聊天、跨 Case 的短中期恢复信息，但不是第六类 Knowledge。已有 Knowledge、Case、OKR、SOP、Map、README 或代码事实源的信息只在 Leader 保留链接和当前影响。文件结构由 Leader自主设计，最低要求是能恢复 Mission、方向变化、Case / task 绑定、待确认事项和下一位置。
 
 ## Case 系统
 

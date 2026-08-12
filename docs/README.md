@@ -1,6 +1,6 @@
 # AIPD 学习文档
 
-这里不是九个 Skill 的对象手册，而是三种不同的入口：
+这里不是十个 Skill 的对象手册，而是三种不同的入口：
 
 - **先体验**：你已经理解大意，只想在项目里完成第一轮。
 - **连续学习**：你想从问题出发，理解 AIPD 为什么这样设计。
@@ -53,6 +53,7 @@
 ### 一个目标怎么完成并恢复
 
 - [Case 与 Work Package](modules/case-and-step.md)：phase-first 生命周期、文件状态与目标包。
+- [Leader](modules/leader.md)：怎样显式提升一层，用一个 Mission 调度多个独立 Case 任务。
 - [Think](modules/think.md)：调研、实验、比较和回跳怎样留在当前 Case。
 - [Main / Child Agent](modules/clone-agents.md)：什么时候直接做，什么时候隔离或并发。
 - [OKR](modules/okr.md)：飞书阶段目标怎样与 Case 对齐。
@@ -61,7 +62,7 @@
 
 - [Inbox](modules/inbox.md)：先记一下，但不提前当成项目事实。
 - [Weave](modules/weave.md)：把已完成、已验证的信息写回正确知识域。
-- [Skill 概览](modules/skills-overview.md)：九个入口各自负责什么，常见组合是什么。
+- [Skill 概览](modules/skills-overview.md)：十个入口各自负责什么，常见组合是什么。
 
 ### 代码和工程怎么继续深入
 

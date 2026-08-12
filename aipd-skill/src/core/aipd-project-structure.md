@@ -10,6 +10,8 @@ _aipd/
 ├── map.md                              # 项目记忆总图：Agent 第一跳读取
 ├── update-log.md                       # 本项目实际完成的 AIPD 版本更新日志
 ├── development-log.md                  # 框架项目可选
+├── leader/                              # 显式调用 $aipd-leader 后才创建的可选工作记忆
+│   └── index.md
 ├── knowledge/                          # 五类并列长期知识
 │   ├── intent/                         # 项目方向、目标和长期取舍
 │   │   ├── intent.md
@@ -67,7 +69,7 @@ _aipd/
 {
   "schema": "aipd-project",
   "schemaVersion": 2,
-  "aipdVersion": 1
+  "aipdVersion": 2
 }
 ```
 
@@ -78,7 +80,7 @@ _aipd/
 
 `_aipd/update-log.md` 记录本项目每次实际完成的版本跃迁、合并摘要、验证和有意保留的项目差异。它不是全局 Release Record 的副本。
 
-活动运行时不双读旧工作区或旧知识目录。除 AIPD 保留名、代码目录、symlink 或文件类型冲突外，安全的额外 Workspace 模块属于项目定制，Update 应默认保留，不纳入 V1 必选模板。
+活动运行时不双读旧工作区或旧知识目录。除 AIPD 保留名、代码目录、symlink 或文件类型冲突外，安全的额外 Workspace 模块属于项目定制，Update 应默认保留。`_aipd/leader/` 是 V2 的显式可选模块，不纳入基础初始化必选模板；首次调用 `$aipd-leader` 时才创建。
 
 ## 知识、流程与真实代码
 
@@ -89,6 +91,8 @@ Intent、Research、Core、Product、Engineering 是五类并列知识域，逻�
 `_aipd/inbox.md` 只接住尚未整理归属的信息。它不是待办列表、候选 Case、稳定知识或执行事实源；整理后再归入相应知识域、OKR、Case，或删除。
 
 `_aipd/sop/` 存放以 Agent 为运行时的可复用程序。SOP 是项目动作如何重复执行，不属于 `knowledge/` 正文，也不是单纯脚本。
+
+`_aipd/leader/` 只在用户显式调用 `$aipd-leader` 后创建，保存一个 active Mission 下跨聊天、跨 Case 的短中期恢复信息。已有更权威 Knowledge、Case、OKR、SOP、Map、README 或代码事实源的信息只在这里保留链接和当前影响。
 
 ## 检索结构
 

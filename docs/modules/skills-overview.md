@@ -1,8 +1,16 @@
 # Skill 概览
 
-AIPD 当前构建九个 Skill。它们不是九个彼此孤立的对象，而是围绕“进入项目、完成目标、维护记忆和处理专用协作”分工。
+AIPD 当前构建十个 Skill。它们不是十个彼此孤立的对象，而是围绕“主导项目、进入项目、完成目标、维护记忆和处理专用协作”分工。
 
 源码位于 `aipd-skill/src/skills/`；构建后默认生成 Codex 可安装产物。平台无关能力与扩展边界仍以 `aipd-skill/src/platforms/` 和构建脚本为准。
+
+## 显式主导层
+
+| Skill | 触发场景 | 主要结果 |
+|---|---|---|
+| `aipd-leader` | 用户主动调用 `$aipd-leader`，希望由 AI 承担项目推进、探索与跨 Case 协调 | 一个 active Mission；每个 Case 一个独立 Codex 任务；Leader 总验收 |
+
+Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言提到 Leader、任务很复杂或存在多个 Case 都不会自动启动它。
 
 ## 主循环
 
@@ -31,6 +39,19 @@ Weave 面向当前项目的稳定认知；Learn 面向 AIPD 框架自身。Updat
 | `aipd-git-push` | 只需检查并推送当前分支 | 推送；不自动 add / commit / merge / rebase / stash |
 
 ## 常见组合
+
+### 让 AI 主导一个项目 Mission
+
+```text
+用户把当前任务设置为 gpt-5.6-sol / max / Fast
+-> 显式调用 $aipd-leader
+-> Leader 澄清并记录一个 active Mission
+-> 每个 Case 创建 gpt-5.6-sol / high / Fast 的独立 Codex 任务
+-> Case task 使用 $aipd-case 完成闭环
+-> Leader 跨 Case 协调并做 Mission 总验收
+```
+
+详细边界见 [Leader](leader.md)。
 
 ### 第一次进入项目
 

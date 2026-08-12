@@ -20,6 +20,8 @@ inject-from-core:
   - agent-entry/template.md
   - agent-entry/interaction-style.md
   - agent-guides/aipd_context_retriever.md
+  - leader/guide.md
+  - leader/workspace-template.md
   - case/overview.md
   - case/templates/*
   - knowledge/intent/*

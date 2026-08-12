@@ -9,6 +9,7 @@ AIPD 把软件项目从构想到交付过程中产生的经验和决策，按领
 - **五类知识域并列组织**：Intent、Research、Core、Product、Engineering 是按内容职责划分的知识域，不代表阶段、成熟度或固定读取顺序
 - **文件优先的上下文承接**：聊天只是运行缓存，文件才是长期事实源；会影响后续恢复路径的小步确认、状态变化、设计边界和下一步游标，都应及时写回 case、phase、work package、README 或 map
 - **任务上下文解耦**：在人与 AI 编写任务、设计 case、对齐目标时，优先找到复杂度爆点并做最小必要解耦，让业务上下文可以并列扩展
+- **显式项目主导**：普通模式由用户驾驶、AI 在 Case 层执行；只有用户调用 `$aipd-leader`，才增加一个负责 Mission、方向探索、跨 Case task 调度和总验收的 Leader 层
 
 ## 文件优先的上下文承接
 
@@ -44,14 +45,15 @@ AIPD 不把长期任务连续性建立在聊天上下文上。聊天负责推进
 
 真实代码仍分布在前端、后端、爬虫、脚本等实际源码目录中，由 map 和局部 README 暴露入口；`_aipd/knowledge/` 不创建 code 类别。五类知识域的详细指引见 `core/knowledge/*/guide.md`。
 
-## 多 Agent 架构
+## Leader 与多 Agent 架构
 
-- **主 Agent = 项目负责人和主线执行者**：与用户对话、规划任务、直接完成内聚工作，或在有净收益时调度分身 Agent
-- **分身 Agent = 隔离或并发分支执行者**：读取最小必要上下文，完成高噪声探索、独立并发工作线或独立复核
+- **普通主 Agent / Case task = 当前目标执行者**：与用户或 Leader 对齐一个 Case，在同一 task 中推进 Think / Design / Execute / Verify / Close
+- **Leader task = 显式项目主导者**：只在用户调用 `$aipd-leader` 后出现，负责一个 active Mission、方向探索、多个同级 Case task 和总验收
+- **分身 Agent = 单个 task 内的隔离或并发执行者**：读取最小必要上下文，完成高噪声探索、独立并发工作线或独立复核
 
-**核心设计哲学：Case / Work Package 承接文件事实；平台 Goal Mode 只提供运行覆盖；Main / Child 是按任务形状做出的运行时选择。**
+**核心设计哲学：Leader 决定项目推进与 Case 拓扑，Case / Work Package 承接执行事实，Main / Child 是每个 task 内按任务形状做出的运行时选择。**
 
-AIPD 不把分身 Agent 当成每个任务的默认步骤。主 Agent 可以连续完成上下文规模可控、与主线高度耦合的内聚模块；分身 Agent 主要用于隔离长文档、长日志、大量页面结构等高噪声过程，或并发推进两条以上真正独立的工作线。
+Leader 不自动启动；普通 AIPD 仍由用户驾驶。显式启动后，Leader 为每个已确认 Case 创建一个同级 task，Case task 不再创建同级 task，但仍可按项目规则使用分身 Agent。AIPD 也不把分身 Agent 当成每个 task 的默认步骤：主 Agent 可以连续完成上下文规模可控、与主线高度耦合的内聚模块；分身 Agent 主要用于隔离长文档、长日志、大量页面结构等高噪声过程，或并发推进两条以上真正独立的工作线。
 
 派发是否值得，需要同时比较主线上下文节省、墙钟时间收益、启动与上下文继承成本、协调等待、结果合并和重复工作。派发后每条证据面只有一个 owner，Main 只接收压缩结果，不重复调查。
 
@@ -59,6 +61,7 @@ AIPD 不把分身 Agent 当成每个任务的默认步骤。主 Agent 可以连�
 
 ## 执行体系
 
+- **Leader / Mission**：用户显式调用 `$aipd-leader` 后，由一个 Leader task 在一个 active Mission 内探索方向、协调多个 Case task 并做总验收
 - **Case**：把短周期目标写入 `case.md` 的 Case Contract，再按 Think / Design / Execute / Verify / Close 推进，由主 Agent 维护目标边界和状态
 - **Work Package**：Case 内可执行、可恢复、可验收的目标包，不是微步骤，也不等于子 Agent 派发节点
 - **OKR**：追踪飞书阶段目标与关键结果，对齐 AI 的执行方向

@@ -16,7 +16,7 @@ AIPD 是一套面向 AI 协作的软件开发框架。它不替代 Codex，也�
 
 一句话：**Agent 负责执行，AIPD 让项目记住自己。**
 
-[五分钟开始](#五分钟开始) · [完整学习路径](docs/README.md) · [九个 Skill](#九个-skill一套循环) · [构建与安装](docs/modules/build-and-install.md)
+[五分钟开始](#五分钟开始) · [完整学习路径](docs/README.md) · [十个 Skill](#十个-skill一套循环) · [构建与安装](docs/modules/build-and-install.md)
 
 ## 没有 AIPD 时，项目会怎样失忆
 
@@ -137,7 +137,15 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 这让下一次 Agent 继承的是经过验证的项目事实，而不是整段聊天历史。
 
-## 九个 Skill，一套循环
+## 十个 Skill，一套循环
+
+### 显式主导层
+
+| Skill | 什么时候用 | 结果 |
+|---|---|---|
+| `$aipd-leader` | 希望把当前对话提升为项目 Leader，由它探索方向并调度多个 Case | 一个 active Mission；每个 Case 对应一个独立 Codex 任务；Leader 负责总验收 |
+
+Leader 绝不自动启动。普通 AIPD 仍从 Case 执行层开始；只有用户主动调用 `$aipd-leader`，当前对话才承担项目主导职责。默认运行配置为 Leader `gpt-5.6-sol / max / Fast`，Case 任务 `gpt-5.6-sol / high / Fast`。
 
 ### 主循环
 

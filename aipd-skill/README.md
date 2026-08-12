@@ -1,6 +1,6 @@
 # AIPD Skill 源码目录
 
-`aipd-skill/` 是 AIPD 的可构建能力源码。它维护平台无关的框架规则、九个 Skill、Codex 适配、角色 Agent、构建脚本和安装产物。
+`aipd-skill/` 是 AIPD 的可构建能力源码。它维护平台无关的框架规则、十个 Skill、Codex 适配、角色 Agent、构建脚本和安装产物。
 
 它不是项目 `_aipd/` 工作区：前者定义 AIPD 怎样运行，后者保存某个具体项目的 Knowledge、Map、SOP、Case、OKR 和 Inbox。
 
@@ -40,6 +40,7 @@ src/core/
 ├── agent-guides/
 ├── case/
 ├── experience/
+├── leader/
 └── okr/
 ```
 
@@ -79,9 +80,10 @@ src/core/
 - `agent-guides/aipd_vue_architect.md`：Vue 页面、组件、交互和状态架构角色。
 - `agent-guides/aipd_vue_provider.md`：Vue provider/controller、数据源和字段契约角色。
 
-### Case、经验与 OKR
+### Case、Leader、经验与 OKR
 
 - `case/`：Case Contract、Think / Design / Execute / Verify / Close、Work Package 模板和 worker 指引。
+- `leader/`：显式 Leader 模式的 Mission、方向澄清、工作记忆和平台运行时合同。
 - `experience/`：真实项目已经跑过的具象经验；实现型源码资产另放根级 `experience-assets/`。
 - `okr/`：飞书 OKR 规则、CLI 入口和模板。
 
@@ -98,7 +100,7 @@ src/platforms/
 
 ## `src/skills/`
 
-AIPD 当前构建九个 Skill：
+AIPD 当前构建十个 Skill：
 
 | Skill | 职责 |
 |---|---|
@@ -106,6 +108,7 @@ AIPD 当前构建九个 Skill：
 | `aipd-case` | Case Contract 与 Think / Design / Execute / Verify / Close 生命周期 |
 | `aipd-weave` | 把已完成、已验收的稳定信息回写到正确 Knowledge、Map 或局部 README |
 | `aipd-inbox` | 捕获尚未整理归属的临时信息 |
+| `aipd-leader` | 仅在用户显式调用时，把当前对话提升为 Leader 并按一个 Case 一个 Codex 任务进行编排 |
 | `aipd-update` | 审计和升级已初始化项目的 AIPD Schema 与入口 |
 | `aipd-learn` | 从 transcript / Case / 经验包回流 AIPD 框架自身 |
 | `aipd-okr` | 管理飞书 OKR 并压缩成主 Agent 可用上下文 |
@@ -152,6 +155,7 @@ AIPD 当前构建九个 Skill：
 |---|---|
 | 项目识别、初始化和 Map-first 路由 | `src/skills/aipd/SKILL.md` |
 | Case 生命周期 | `src/skills/aipd-case/SKILL.md`、`src/core/case/` |
+| Leader / Mission / Codex Case 任务调度 | `src/skills/aipd-leader/SKILL.md`、`src/core/leader/`、`src/platforms/codex/core/leader/` |
 | 项目目录 Schema 与初始化模板 | `src/core/aipd-project-structure.md`、`src/core/workspace/templates/` |
 | 五类 Knowledge 方法 | `src/core/knowledge/` |
 | Weave / Update / Inbox / Learn | 对应 `src/skills/{skill}/SKILL.md` |

@@ -45,7 +45,7 @@ Schema v2 只识别以下两种形态；JSON key 顺序不重要，但 key 集�
 {
   "schema": "aipd-project",
   "schemaVersion": 2,
-  "aipdVersion": 1
+  "aipdVersion": 2
 }
 ```
 
