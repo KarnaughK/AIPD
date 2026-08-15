@@ -1,7 +1,7 @@
 ---
 name: aipd-leader
 description: >
-  AIPD Leader 显式启动入口。仅当用户主动调用 `$aipd-leader` 时，把当前对话提升为项目级 Leader：澄清一个 Mission、维护跨 Case 工作记忆，并为每个已确认 Case 创建和协调独立 Codex 任务。不得因任务复杂、存在多个 Case 或普通 AIPD / Case 请求而隐式启动。
+  AIPD Leader 显式启动入口。仅当用户主动调用 `$aipd-leader` 时，把当前对话提升为项目级 Leader：澄清一个 Mission、维护跨 Case 工作记忆，并按当前宿主调度 Case 执行层。Codex 上一个 Case 对应一个独立 Codex 任务；Cursor 上默认检查并调用 DSH。不得因任务复杂、存在多个 Case 或普通 AIPD / Case 请求而隐式启动。
 inject-from-core:
   - updates/catalog.json
   - workspace/project-state.md
@@ -19,7 +19,7 @@ inject-from-core:
 - 只有用户在当前对话中主动调用 `$aipd-leader`，或在界面中明确选择本 Skill，才启动 Leader。
 - 不因任务规模、用户提到 “leader”、存在多个 Case、模型能力或普通 `$aipd` / `$aipd-case` 请求而自动启动。
 - 显式启动后，当前对话就是本项目唯一的 Leader 对话；不要再创建第二个 Leader。
-- 本次显式调用同时授权 Leader：在当前 Mission 内，为已经澄清并确认要推进的 Case 创建同级 Codex 任务。它不扩大远端写入、发布、删除、付费或其他外部副作用权限。
+- 本次显式调用同时授权 Leader：在当前 Mission 内，为已经澄清并确认要推进的 Case 调度同级 Case 执行层。Codex 上这是一个独立 Codex 任务；Cursor 上默认是 DSH。它不扩大远端写入、发布、删除、付费或其他外部副作用权限。
 - 用户明确结束 Leader 模式后，停止新增调度，先写回恢复点，再回到普通对话。
 
 ## 启动与恢复
@@ -41,17 +41,21 @@ inject-from-core:
 3. 按 `@references/leader/guide.md` 的影响测试区分方向问题和 Case 内局部问题。方向问题必须由 Leader 与用户澄清；局部可逆问题交给 Case owner 判断。
 4. 在 `_aipd/leader/` 持久化当前 Mission、用户关注 / 汇报约定、方向变更依据、Case 队列 / 依赖、任务绑定和下一恢复点。只要求这些信息可恢复，不强制固定文件名；新文件必须回链到 `index.md`。
 5. 把 Mission 拆成边界清楚、可独立验收的 Case brief。只并发真正独立且代码所有权不重叠的 Case。
-6. 按下一节把每个已确认 Case 交给一个独立 Codex 任务。不要把一个 Work Package 当成一个新任务，也不要让多个任务共同拥有同一证据面或代码面。
+6. 按下一节把每个已确认 Case 交给当前宿主的 Case 执行层。Codex 上一个 Case 对应一个独立 Codex 任务；Cursor 上默认对应一次 DSH 执行。不要把一个 Work Package 当成一个新的同级 Case，也不要让多个执行层共同拥有同一证据面或代码面。
 7. Case 完成后核对 Case 文件、真实改动、验证和集成状态。任务自报完成不等于 Leader 验收通过。
 8. 到达汇报节点时，向用户压缩说明阶段结果与证据、Mission / Case 状态、偏差、风险、待决定事项和下一阶段；不转发完整 Case transcript，也不把阶段汇报变成逐 Case 审批。
 9. Leader 可在当前 Mission 内继续下一个已确认 Case，不等待用户逐 Case 验收；遇到方向变化、新权限、破坏性动作、不可逆分歧或跨 Case 冲突时立即暂停并澄清，不等固定汇报节点。
 10. 所有 Case 通过后做 Mission 级总验收，向用户说明达成结果、剩余风险、方向变化和下一候选 Mission。
 
-## Codex Case 任务
+## Case 任务
 
-需要创建、跟进或验收 Case 任务时，完整读取 `@references/leader/runtime.md`。
+需要创建、跟进或验收 Case 任务时，先判断当前宿主，再完整读取 `@references/leader/runtime.md`。
 
-运行配置固定为：
+- Codex：一个 Case 对应一个独立 Codex 任务。
+- Cursor：默认走 DSH。先 `command -v dsh`，没有再 `npx --no-install @deepseek-ai/dsh`；还是没有就停止并说明没有 DSH。有则用 `dsh --profile headless`，状态只在 Case 文件里。
+- 其他宿主：停止。不要用子 Agent 冒充 Case task。
+
+Codex 运行配置固定为：
 
 | 层级 | 模型 | 推理等级 | 速度 |
 |---|---|---|---|
@@ -59,8 +63,9 @@ inject-from-core:
 | Leader 创建的 Case 任务 | `gpt-5.6-sol` | `high` | Fast |
 
 - 当前 Leader 的模型、推理等级和 Fast 由用户在启动任务时设置；Skill 不能自行切换当前任务。
-- 创建 Case 任务时明确传入 `gpt-5.6-sol` 和 `high`。
+- 在 Codex 上创建 Case 任务时明确传入 `gpt-5.6-sol` 和 `high`。
 - 如果当前任务创建接口没有 Fast 参数，把 Fast 作为账号 / 会话 / Codex 配置的运行前提或继承状态；能核验就记录，不能核验就写“Fast 未核验”，不得声称已经开启。
+- Cursor 上的 Leader 记录实际宿主和 DSH 是否可用；不适用 Codex 模型表，也不要假装 Fast 已开启。
 
 ## 完成与退出
 

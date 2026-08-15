@@ -2,6 +2,12 @@
 
 Agent Entry 是 Agent 进入项目后的第一跳规则，通常由根 `AGENTS.md` 承担。它不复制所有知识，而是规定怎样找到事实、什么时候进入流程状态、哪些副作用需要确认。
 
+## 先确认项目状态
+
+在读取 `_aipd` 正文前，AIPD 先用当前安装包的版本目录和项目 manifest 执行状态 gate。只有项目版本与本机版本一致、必要入口类型安全时才进入普通任务；旧 `_adoc`、无版本 v2、版本落后或同版本 drift 会路由到 [Update 与 Schema 迁移](update-and-migration.md)。
+
+这一步不由 `AGENTS.md` 声明版本，也不查询远端最新版。
+
 ## 普通任务读取链路
 
 业务功能、页面、权限、接口、核心概念或跨模块规则通常按以下路径读取：
@@ -46,6 +52,16 @@ Case / Work Package 文件是长期状态事实源，聊天是运行缓存。两
 - 压缩后怎样从文件 checkpoint 恢复。
 
 它不应该塞进完整业务知识、具体 Case 过程或每个 Skill 的全部规则；这些内容应由 map 路由到 owner。
+
+## Agent MD 等级
+
+初始化时可以选择三个等级：
+
+- **0**：不修改 `AGENTS.md`。
+- **1**：安装 AIPD Project Entry，默认推荐。
+- **2**：在 Entry 之外，再安装独立的 [Interaction Protocol](interaction-protocol.md)。
+
+Interaction Protocol 只约束讨论 / 执行切换和回复结构，不改变本页的项目读取链路。Update 会保留已有等级，不会自动升级。
 
 ## README、docs、_aipd 与源码
 

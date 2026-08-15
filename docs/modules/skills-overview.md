@@ -25,7 +25,7 @@ Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言�
 | Skill | 触发场景 | 主要结果 |
 |---|---|---|
 | `aipd-inbox` | 先记一下、稍后再判断 | 低承诺度临时记录 |
-| `aipd-update` | 已接入项目需要升级到本机 AIPD 版本，或检查同版本 drift | 读取版本演进和当前权威文档，一次语义收敛并记录结果 |
+| `aipd-update` | 已接入项目需要升级到本机 AIPD 版本，或检查同版本 drift | 读取版本演进和当前权威文档，一次语义收敛并记录结果；见 [Update 与 Schema 迁移](update-and-migration.md) |
 
 Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构与规则版本：项目 manifest 保存已应用版本，本机安装包给出目标版本。它会完整理解两者之间的更新记录，再以本机当前文档为最终态保护性合并；普通安全更新直接执行，只有破坏性或歧义冲突才暂停。
 
@@ -44,6 +44,8 @@ Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构�
 | `aipd-learn` | 已回到 AIPD 源码仓库，要从当前对话、外部 transcript、Case 或用户反馈迭代框架 | 诊断框架行为；用户确认后修改 AIPD Skill、模板、Agent 规则、项目认知或实践经验库 |
 
 `aipd-learn` 的事实源是 `.agents/skills/aipd-learn/`。它不进入 `aipd-skill/src/skills/`、公共 dist、用户级安装或业务项目级安装。外部项目中的 AIPD 框架反馈需要先带回源码仓库；项目自身知识仍使用该项目的 `aipd-weave`。
+
+因此这里共有十个用户可见入口，但公共构建集合仍是九个 Skill；Learn 是第十个、且只属于 AIPD 源码仓库。
 
 ## 常见组合
 
@@ -98,6 +100,8 @@ Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构�
 
 Update 不查询远端最新版。旧 `_adoc` 项目可以先在同一目标下运行确定性 Schema 迁移，再以无版本 v2 项目继续更新；迁移器本身不写当前 AIPD 版本。
 
+项目版本 gate、migrator 与 Update 的完整分工见 [Update 与 Schema 迁移](update-and-migration.md)。
+
 ### AIPD 自身需要从真实使用中学习
 
 ```text
@@ -119,6 +123,8 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 ## Skill 之外的支撑能力
 
 - **Agent Entry**：`AGENTS.md` 规定进入项目和恢复任务的第一跳。
+- **Interaction Protocol**：Agent MD 等级 2 可选安装的项目级讨论 / 执行回复协议；见 [Interaction Protocol](interaction-protocol.md)。
+- **AI 友好代码拓扑**：结构性开发和 Case Design 条件加载的模块边界判断；见 [AI 友好代码拓扑](ai-friendly-code-topology.md)。
 - **角色 Agent / 领域指引**：为上下文检索、requirements、Vue 架构和 provider 等稳定边界提供执行支持；不自动派发。
 - **实践经验库**：`aipd-skill/src/core/experience/` 保存真实项目跑过的具象经验。
 - **经验源码资产**：根级 `experience-assets/` 保存只靠文字不足以可靠复用的可验证实现，不随 Skill 打包。

@@ -2,7 +2,9 @@
 
 ## 进行中 Case
 
-当前无进行中 Case。
+| Case | 状态 | 说明 |
+|---|---|---|
+| 无 | — | 2026-08-16 已关闭 `c29` / `c30`；后续新 Case 另开 |
 
 ## 暂停 Case
 
@@ -43,6 +45,12 @@
 | `archive/c22-aipd-knowledge-schema` | 2026-08-10 | 将项目工作区切换为 `_aipd/knowledge/*` 五类并列知识域，完成一次性迁移器、双平台构建、Codex 用户级安装和新上下文检索 Agent 验收 |
 | `archive/c23-versioned-aipd-update` | 2026-08-12 | 建立本机 V1 发布目录、项目 `aipdVersion` 与版本驱动 Update；读取版本演进后按当前权威一次收敛，完成 Codex 构建与自举验收，未执行安装 |
 | `archive/c24-aipd-leader-mode` | 2026-08-12 | 建立显式 `$aipd-leader` 项目主导层、Leader 工作记忆与 Codex Case task 编排合同；完成 V2 发布、构建安装、项目 Update、反向编织和 `main` 整合 |
+| `archive/c25-internal-documentation-refresh` | 2026-08-13 | 审计并更新内部认知入口与维护者文档，校准 Knowledge Schema v2、版本化 Update、显式 Leader、AI 友好代码拓扑、交互协议、Main / Child 与仓库级 Learn 的当前事实 |
+| `archive/c26-public-readme-refresh` | 2026-08-13 | 刷新根 README 的新人价值、可靠性与首次闭环叙事，准确投影 Schema v2、版本化 Update、显式 Leader、Main / Child、AI 友好代码拓扑及九个公共 Skill / 仓库级 learn 边界 |
+| `archive/c27-learning-docs-refresh` | 2026-08-13 | 刷新 docs 三条学习路径和六章教程，新增 Update / 迁移、Interaction Protocol、AI 友好代码拓扑参考，完成链接 / 数量 / 命令 / 路径与用户旅程验收 |
+| `archive/c28-documentation-value-clarity` | 2026-08-13 | 让 README 与两篇入门 Guide 先呈现“每次 AI 开发建立在上一次之上”的用户结果，再命名项目记忆 / AIPD 并进入机制；完成四入口差异化、Reduction Scan 与链接 / 范围验收 |
+| `archive/c29-dsh-headless-dispatch` | 2026-08-16 | Cursor Leader 用 DSH headless 调通文件写回；实验完成，非正式 runtime 晋升 |
+| `archive/c30-cursor-leader-platform` | 2026-08-16 | Cursor 平台包与 `install-cursor` 双目录安装已落地后停止；wp-02 取消；代码保留，执行层改向 Cursor Agent |
 
 ## 使用原则
 

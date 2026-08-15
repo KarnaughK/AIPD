@@ -32,15 +32,27 @@
 /aipd
 ```
 
-让 Agent 扫描项目并建立最小入口。初始化后检查：
+`aipd` 会先执行项目状态 gate：
+
+- 新项目才进入初始化。
+- 旧 `_adoc`、`unversioned-v2`、版本落后或同版本 drift 进入 `aipd-update`。
+- 双根、symlink、非法 manifest 或项目版本高于本机时停止，不猜着合并或降级。
+
+新项目初始化时，Agent 会询问 Agent MD 等级。第一次使用推荐等级 1，只安装 Project Entry；如果你还希望固定“先讨论还是直接执行”的项目级对话边界，可以选择等级 2 并查看 [Interaction Protocol](../modules/interaction-protocol.md)。
+
+初始化后检查：
 
 ```text
 AGENTS.md
+_aipd/manifest.json
 _aipd/index.md
 _aipd/map.md
+_aipd/update-log.md
 ```
 
-它们不需要立刻完整，但必须能够回答：Agent 先读哪里、当前项目的核心认知在哪里、常见任务下一跳去哪里。
+它们不需要立刻完整，但必须能够回答：项目是否成功应用本机 AIPD 版本、Agent 先读哪里、当前项目的核心认知在哪里、常见任务下一跳去哪里。
+
+`_aipd/leader/` 不会在这里自动创建。只有你以后显式调用 `$aipd-leader`，希望用一个 active Mission 调度多个 Case task 时才进入 Leader 模式。
 
 ## 3. 用一个真实问题测试 Map-first
 
@@ -54,7 +66,7 @@ _aipd/map.md
 
 如果 Agent 只能全仓搜索，说明 map 还没有最小价值。补高频入口，不要为了完整性扩写所有知识域和模块。
 
-## 4. 创建并绑定第一个 Case
+## 4. 创建第一个 Case（可选绑定 Goal Mode）
 
 用结果而不是步骤描述目标：
 
@@ -141,6 +153,10 @@ Case Close 后，检查哪些信息值得被下一次继承：
 - Case 需要回跳或拆目标包：[Case 与 Work Package](../modules/case-and-step.md)
 - 不知道是否该派子 Agent：[Main / Child Agent](../modules/clone-agents.md)
 - 不知道新经验该写哪里：[Weave](../modules/weave.md)
+- 旧项目、版本落后或入口漂移：[Update 与 Schema 迁移](../modules/update-and-migration.md)
+- 想固定讨论 / 执行的项目级协议：[Interaction Protocol](../modules/interaction-protocol.md)
+- 想用一个 Mission 协调多个 Case：[Leader](../modules/leader.md)
 - 开始出现跨文件牵连问题：[上下文解耦](../modules/context-decoupling.md)
+- 正在调整模块、shared 或跨上下文依赖：[AI 友好代码拓扑](../modules/ai-friendly-code-topology.md)
 
 [返回学习文档索引](../README.md)

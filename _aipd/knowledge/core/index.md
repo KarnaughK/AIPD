@@ -16,7 +16,7 @@ AIPD 当前的 Core 先收敛为九个核心成立模型。它们回答的不是
 | Think / 任务澄清决策模型 | 模糊想法或 case 推进中的未知如何通过讨论、调研、方案比较和决策出口，变成清晰方向、设计输入或被 kill / defer / research / weave | Case Think phase、discussion / research / options / decision |
 | 任务执行模型 | 短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 变成可恢复、可验收、可关闭的执行闭环 | OKR、Case、Work Package、执行记录、归档 |
 | Leader 项目主导编排模型 | 人如何把项目推进责任委托给一个 AI Leader，由它在一个 Mission 内探索方向、拆分并协调多个独立 Case task、处理方向变化并做总验收 | `$aipd-leader`、`_aipd/leader/`、Mission、Codex Case task |
-| Agent 协作思考模型 | Main Agent、分身 Agent、角色 Agent 如何分工，如何保护主线判断和上下文预算 | Agent Entry、分身 Agent、角色 Agent、平台 agent 指引 |
+| Agent 协作思考模型 | Main Agent 与 Child Agent（分身 / 角色 Agent）如何按运行时收益分工，如何保护主线判断和上下文预算 | Agent Entry、Main / Child 运行时判定、平台 agent 指引 |
 | SOP / AI 程序模型 | 可重复的 Agent 行为如何沉淀成以 LLM / Agent 为运行时的 AI 原生程序 | `_aipd/sop/`、SOP map、工具调用、执行实例 |
 | AI 原生代码架构模型 | 代码如何更适合 AI 读取、修改、扩展和验收 | 上下文解耦、AI 友好代码拓扑、黑箱上移、Decouple first, DRY later、技术栈经验库 |
 
@@ -102,7 +102,7 @@ Case / Work Package / OKR 是流程状态模块。只有创建、执行、恢复
 AIPD 面向用户解释时，可以按教学主线讲清楚，而不是一上来展开所有 Workspace 模块和横向能力：
 
 1. **知识库最小闭环**：讲知识库本体、知识怎么存、知识怎么取。五类 Knowledge 是知识库本体，真实代码是被索引的实现；Weave / 反向编织负责维护，Map 负责读取。
-2. **Case / Work Package 开发逻辑**：讲短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 完成闭环。OKR、Case、Work Package、分身 Agent、执行记录、归档和 Close 归档候选都服务这条执行线。
+2. **Case / Work Package 开发逻辑**：讲短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 完成闭环。OKR、Case、Work Package、Main / Child 运行时选择、执行记录、归档和 Close 归档候选都服务这条执行线。
 3. **Think / Design 决策逻辑**：讲模糊想法和推进中的未知如何通过讨论、调研、方案比较、复杂度爆点识别和最小解耦设计，变成可执行工作包，或被 kill / defer / research / weave。
 4. **SOP / Agent 原生程序**：讲项目里可重复执行的动作如何沉淀为以 Agent 为运行时的 AI 原生程序。SOP 可以调用代码和工具，但主体是目标、输入、步骤、分析判断、输出和收尾。
 5. **AI 原生代码架构实验**：讲代码组织如何进一步适配 AI，包括横向基座、横向共享能力、纵向业务上下文、显式组合边界、降低牵连面和 Decouple first, DRY later。这是探索性主线，不应写成已经定型的硬规范。
@@ -139,7 +139,7 @@ AIPD 不否认这种能力有价值，但任务执行时不能主要依赖“未
 
 上下文解耦主要约束的是任务设计，而不是项目方向本身。
 
-在创建 case、拆 work package、写上下文索引、派发分身 Agent 前，人与 AI 对齐工作的目标是：
+在创建 case、拆 work package、写上下文索引、决定是否派发 Child Agent 前，人与 AI 对齐工作的目标是：
 
 - 把任务边界缩小到一个相对独立的黑箱。
 - 写清楚这个黑箱需要遵守的大规则、输入、输出、验收口径和不做范围。
@@ -276,7 +276,7 @@ AIPD 早期尝试过一种思路：给 Agent 一套底层认知或 SOP，让它�
 
 ## 对 AIPD 的要求
 
-AIPD 后续设计 case、step、map、局部 README 和分身 Agent 派发时，应优先追求：
+AIPD 后续设计 case、Work Package、map、局部 README 和 Main / Child 运行时选择时，应优先追求：
 
 - 全局规则清楚。
 - 局部上下文自足。

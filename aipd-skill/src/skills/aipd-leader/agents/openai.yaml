@@ -1,7 +1,7 @@
 interface:
   display_name: "AIPD Leader"
-  short_description: "显式启动项目级 Leader，并为每个 Case 调度独立 Codex 任务"
-  default_prompt: "Use $aipd-leader to lead this project, clarify one Mission, and coordinate one Codex task per Case."
+  short_description: "显式启动项目级 Leader，并按宿主调度 Case 执行层"
+  default_prompt: "Use $aipd-leader to lead this project, clarify one Mission, and coordinate one Case runtime per Case."
 
 policy:
   allow_implicit_invocation: false

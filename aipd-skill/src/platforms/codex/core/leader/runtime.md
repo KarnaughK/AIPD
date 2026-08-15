@@ -1,8 +1,18 @@
-# Codex Leader Runtime
+# Leader Case Runtime
+
+派发 Case 前先判断当前宿主。不要猜，也不要用子 Agent 冒充 Case task。
+
+## 宿主判断
+
+- 当前对话在 Codex，或能调用 `codex_app__create_thread`：走 **Codex**。
+- 当前对话在 Cursor，或能看到 Cursor Agent / `cursor-app-control`：走 **Cursor**。
+- 看不清：停下来问一句。
+
+## Codex
 
 Codex 的独立 task 是 Leader 的 Case 执行单元。用户界面称 task，协调 API 可能沿用 thread 命名。
 
-## 固定运行配置
+### 固定运行配置
 
 | 任务 | model | reasoning | Fast |
 |---|---|---|---|
@@ -14,7 +24,7 @@ Codex 的独立 task 是 Leader 的 Case 执行单元。用户界面称 task，�
 - 当前 create-task API 如果没有 Fast / service tier 参数，不要虚构字段。Fast 由账号、会话或 Codex 配置启用；可通过当前平台能力核验就记录，无法核验就写“Fast 未核验”。
 - 如果未来工具 schema 提供 Fast 参数，以当时 schema 为准并显式启用。
 
-## 创建一个 Case task
+### 创建一个 Case task
 
 1. 确认 Case brief 已经澄清，且属于当前 active Mission。`$aipd-leader` 的显式调用已经授权为这些已确认 Case 创建 task；超出 Mission 或带新外部副作用时重新确认。
 2. 写 Leader checkpoint：Case brief、边界、预期输出、停止条件、代码 / 证据 owner、依赖和返回位置。
@@ -23,7 +33,7 @@ Codex 的独立 task 是 Leader 的 Case 执行单元。用户界面称 task，�
 5. 调用任务创建能力（当前为 `codex_app__create_thread`），标题使用 `AIPD Case <case-id-or-slug> — <short goal>`，明确传入 `gpt-5.6-sol` 与 `high`。创建是非阻塞的；只有返回可用 `threadId` / `hostId` 才算 ready，排队中的 `clientThreadId` 不能冒充可协调 task id。
 6. 将 Case 与 `threadId`、`hostId`、worktree / local 环境、创建时间、状态和最后 cursor 绑定到 `_aipd/leader/`。一个 Case 只绑定一个主 task；同一 Case 的 phase 回跳继续使用该 task。
 
-## 派发 prompt
+### 派发 prompt
 
 每个 Case task 的 prompt 至少包含：
 
@@ -38,7 +48,7 @@ Codex 的独立 task 是 Leader 的 Case 执行单元。用户界面称 task，�
 
 如果 Case 尚未在当前 worktree 中存在，Case task 自己通过 `$aipd-case` 建立正式 Case；Leader 先记录 provisional brief，待 task 返回后补实际 Case id / path。这样不要依赖另一个 worktree 中尚未提交的 Case 文件。
 
-## 跟进与反馈
+### 跟进与反馈
 
 - 使用 task 列表、读取、等待和发送消息能力跟进（当前分别为 `codex_app__list_threads`、`codex_app__read_thread`、`codex_app__wait_threads`、`codex_app__send_message_to_thread`）。
 - 创建后显式等待进展；多个独立 Case 用一次有界 `wait_threads` 批量等待，并保存每个 task cursor。不要高频空轮询，也不要反复读取已经由 cursor 交付的文本。
@@ -49,7 +59,7 @@ Codex 的独立 task 是 Leader 的 Case 执行单元。用户界面称 task，�
 - 到达约定汇报节点时，聚合说明阶段结果与证据、Mission / Case 状态、计划偏差、风险、待用户决定事项和下一阶段。汇报后可在既有授权内继续推进，不默认等待逐 Case 批准。
 - 方向变化、新权限、破坏性动作、不可逆分歧或跨 Case 冲突立即上交用户，不因尚未到固定汇报节点而延后。
 
-## Leader 总验收
+### Leader 总验收
 
 Case task 自报完成后，Leader 至少核对：
 
@@ -60,3 +70,38 @@ Case task 自报完成后，Leader 至少核对：
 5. 新稳定事实只作为 Close / Weave 候选处理，没有污染 Leader 工作记忆或长期 Knowledge。
 
 通过后才把 Case 标记为 Leader accepted，并继续当前 Mission 的下一项。所有 Case 完成后做 Mission 级验证和用户反馈。
+
+## Cursor
+
+Cursor 默认走 DSH。不要用 Cursor 子 Agent / Cloud Agent / `move_agent_to_root` 顶第三层。
+
+1. 找 `dsh`：先 `command -v dsh`；没有再用 `npx --no-install @deepseek-ai/dsh`（只走本机缓存，不新装）。
+2. 还是没有：停止，直接说没有 DSH，搞不了。不要补鲁棒性，也不要改走子 Agent。
+3. 有 DSH：默认用方式 A。需要人在 GUI 里续跑时用方式 B。
+
+### 方式 A：headless 单轮（默认）
+
+在**项目根目录**执行。每次调用是独立执行轮，无会话记忆。中间状态只靠 `_aipd/` 里的 `case.md` / work package / checkpoint。
+
+```bash
+cd /项目路径
+dsh --profile headless "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再读取 Case：{绝对路径}，读取 work package：{绝对路径}，按 work package 的上下文文档执行。允许在同一 Case 内回跳，不得另建同级 Case 或同级 DSH 会话。完成后返回压缩结果：Case id / path、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
+```
+
+- 打印最终回复后退出。`exit 0` 即这次调用成功。
+- 派发 prompt 带 Case 与 work package 的绝对路径和边界；执行端自己读文件，不复制长正文。
+- Leader 读回 Case 文件、真实改动和验证结果做验收。任务自报完成不等于 Leader accepted。
+
+### 方式 B：文件交接 + DSH GUI
+
+1. Leader 把 Case brief、work package、checkpoint 写进 `_aipd/case/` 和 `_aipd/leader/`。
+2. 用户在 DSH GUI 里继续执行该 work package。
+3. Leader 读回文件验收，不信任自报。
+
+### 绑定
+
+在 `_aipd/leader/` 记录：Case id / path、宿主 `cursor`、调用方式 `dsh-headless` 或 `dsh-gui`、项目根、时间、状态。headless 无 `session_id` 可续；同一 Case 的下一轮再调一次方式 A，靠文件恢复。
+
+## 其他宿主
+
+停止，说明当前没有可用的 Case runtime。

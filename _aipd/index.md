@@ -9,6 +9,7 @@
 - 当前 AIPD 发布：V2
 - Knowledge Schema：Intent / Research / Core / Product / Engineering 五类并列知识域
 - 项目级检索入口：`_aipd/map.md`
+- 项目版本 gate：任何 AIPD 读写前先用 `aipd-skill/src/core/workspace/project-state.md` 和 `aipd-skill/src/core/updates/catalog.json` 检查；只有路径安全、必要入口类型正确且项目版本 `P = I` 时继续普通流程
 
 ## Workspace 区域
 
@@ -26,6 +27,8 @@
 | Inbox | `_aipd/inbox.md` | 暂存尚未归类的材料、想法和候选认知 |
 | 真实代码 | 项目代码目录 | 承载实际实现；由 Map、Engineering 和局部 README 提供入口 |
 
+`AGENTS.md` 位于 `_aipd/` 外，是项目级 Agent Entry；用户选择 Agent MD 等级 2 时，它还承载 Interaction Protocol。仓库级 `.agents/skills/aipd-learn/` 也位于 `_aipd/` 外，只用于 AIPD 源码仓库自迭代，不属于 Workspace 或公共安装集合。
+
 ## 五类 Knowledge
 
 | Knowledge 域 | 逻辑标识 | 路径 | 负责存放 |
@@ -40,17 +43,19 @@
 
 ## Context Retrieval
 
-1. 先读 `_aipd/map.md`，把用户说法映射到必要的 Knowledge、局部 README 和代码入口。
-2. 根据任务范围选择最少但足够的上下文，不默认把五类 Knowledge 全部加载。
-3. 项目 Map 负责全局第一跳；业务线、功能线或共享能力 Map 负责上下文范围；代码就近 README 负责最后一跳。
-4. 只有用户显式调用 `$aipd-leader`，或需要恢复此前已显式启动的 Project Leader 状态时，才读取 `_aipd/leader/index.md`；自然语言提到 Leader、Mission 或跨 Case 推进都不自动启动，普通开发不加载 Leader 工作记忆。
-5. 普通开发不读取 Case 或 OKR。只有任务明确涉及对应流程或状态时，才进入这些区域。
-6. Map 未命中时，再用 `rg` 搜索业务词、页面名、接口名、权限码、README 和代码符号。
+1. 先执行项目状态 gate；`unversioned-v2`、`P < I`、必要入口缺失或不安全路径 / manifest 状态按合同路由 Update 或停止。
+2. 读取 `_aipd/map.md`，把用户说法映射到必要的 Knowledge、局部 README 和代码入口。
+3. 根据任务范围选择最少但足够的上下文，不默认把五类 Knowledge 全部加载。
+4. 项目 Map 负责全局第一跳；业务线、功能线或共享能力 Map 负责上下文范围；代码就近 README 负责最后一跳。
+5. 只有用户显式调用 `$aipd-leader`，或需要恢复此前已显式启动的 Project Leader 状态时，才读取 `_aipd/leader/index.md`；自然语言提到 Leader、Mission 或跨 Case 推进都不自动启动，普通开发不加载 Leader 工作记忆。
+6. 普通开发不读取 Case 或 OKR。只有任务明确涉及对应流程或状态时，才进入这些区域。
+7. Map 未命中时，再用 `rg` 搜索业务词、页面名、接口名、权限码、README 和代码符号。
 
 ## 常用入口
 
 - 项目方向：`_aipd/knowledge/intent/intent.md`
 - AIPD 项目更新结果：`_aipd/update-log.md`
+- 本机发布与状态 gate：`aipd-skill/src/core/updates/catalog.json`、`aipd-skill/src/core/workspace/project-state.md`
 - AIPD Leader 工作空间：`_aipd/leader/index.md`
 - Workspace 与 Knowledge 定义：`_aipd/knowledge/core/workspace-modules.md`
 - 核心认知：`_aipd/knowledge/core/index.md`
@@ -58,6 +63,10 @@
 - AI 友好代码拓扑：`_aipd/knowledge/core/ai-friendly-code-topology.md`
 - 产品功能：`_aipd/knowledge/product/index.md`
 - 工程规则：`_aipd/knowledge/engineering/index.md`
+- Agent Entry 与 Interaction Protocol：`aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/agent-entry/interaction-style.md`
+- Main / Child 运行时判定：`aipd-skill/src/platforms/codex/core/agent-guide.md`
+- AIPD 仓库级 Learn：`.agents/skills/aipd-learn/SKILL.md`
+- Skill 维护者入口：`aipd-skill/README.md`
 - SOP：`_aipd/sop/index.md`
 - Case：`_aipd/case/index.md`
 - OKR：`_aipd/okr/index.md`

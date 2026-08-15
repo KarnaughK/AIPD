@@ -82,7 +82,7 @@ Think 的核心出口应至少包括：
 | Create | 目标清晰且值得执行 | 确认 Case Contract，进入 Design / Execute 等后续 phase |
 | Kill | 不值得做或方向不成立 | 记录终止原因，避免重复讨论 |
 | Defer | 值得但不是当前阶段 | 记录延后条件，可进入 inbox / OKR / 后续 Think |
-| Research | 信息不足 | 继续调研，必要时派发分身 Agent |
+| Research | 信息不足 | 继续调研；只有上下文隔离或并发净收益明确时才派发 Child Agent |
 | Weave | 产生稳定认知但不形成事项 | 先记录 Close 归档候选；Case 完成后由 Weave 判断是否进入 Intent / Research / Core / Product / Engineering 或 map。Intent 仅限用户明确确认的长期方向与边界，Research 必须保留来源与时间边界 |
 | Continue | 尚未清晰 | 继续讨论和澄清 |
 
@@ -113,7 +113,7 @@ Case 系统是一组重功能，现在推荐通过 `aipd-case` 统一入口和 p
 
 Case Contract 会横向读取必要 Knowledge、真实代码、Map、局部 README 和必要的 OKR 约束，把一次事项压缩成可恢复的 Case。
 
-Case Execute 会按 case / work package 恢复任务状态，再读取 work package 指定的上下文。Work Package 可以派发给分身 Agent 或角色 Agent，执行后只回流结论、依据、风险、建议、改动文件和验证结果。
+Case Execute 会按 case / work package 恢复任务状态，再读取 work package 指定的上下文。Work Package 是状态、恢复和验收边界，不等于 Child 派发节点；运行时选择 Child 后，分身或角色 Agent 才接管唯一证据面，执行后只回流结论、依据、风险、建议、改动文件和验证结果。
 
 ## SOP 系统
 
@@ -168,7 +168,7 @@ Agent Entry 通过 `AGENTS.md` 给新进入项目的 Agent 提供第一跳规则
 - 如何判断任务涉及哪些 Workspace 模块。
 - 什么时候查 map。
 - 如何恢复 case / work package 状态。
-- 如何处理 Main Agent、分身 Agent 和角色 Agent 的边界。
+- 如何根据上下文隔离、真实并发、主线耦合和调度成本处理 Main / Child 边界，以及分身 Agent、角色 Agent 的选择。
 
 ## 功能和概念的关系
 

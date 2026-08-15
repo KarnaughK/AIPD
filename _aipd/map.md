@@ -27,6 +27,7 @@
 | Agent MD 等级 2 / Interaction Protocol / 回复模板 / 我理解 / 展开说说 / 横向拓展 / 下一步 | Interaction Protocol | Product + Agent Entry | `_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md` | `aipd-skill/src/core/agent-entry/interaction-style.md` | `rg "AIPD Interaction Protocol|我理解|展开说说|横向拓展|下一步" AGENTS.md aipd-skill/src _aipd` |
 | 旧 `_adoc` / L1-L5 目录 / 升级 Knowledge Schema v2 / 一次性迁移 | AIPD Project Schema 迁移 | Engineering + CLI | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` | `aipd-skill/scripts/migrate-project-schema`；安装后为 `aipd` Skill 内 `scripts/migrate-project-schema` | `rg "migrate-project-schema|schemaVersion|完整旧版|混合状态" aipd-skill/scripts aipd-skill/src docs` |
 | AIPD update / 项目版本落后 / unversioned-v2 / 同版本 drift / 更新 AGENTS / 同步本机模板 | AIPD Update | Product + Engineering + 真实项目 | `_aipd/knowledge/product/index.md`、`_aipd/knowledge/product/map.md`、`_aipd/knowledge/engineering/index.md` | `aipd-skill/src/skills/aipd-update/SKILL.md`、`aipd-skill/src/core/updates/catalog.json`、`aipd-skill/src/core/updates/current.md`、`aipd-skill/src/core/workspace/project-state.md` | `rg "aipd-update|aipdVersion|currentVersion|currentAuthority|update-log|unversioned-v2|drift" aipd-skill/src aipd-skill/scripts _aipd` |
+| 维护 AIPD Skill / 公共与仓库级 Skill / 源码 owner / 平台覆盖 / build / 校验 / release bundle / 迁移 / install 边界 | AIPD Skill 维护者入口 | Engineering + 局部 README | `aipd-skill/README.md`、`_aipd/knowledge/engineering/index.md` | 公共源码：`aipd-skill/src/`；仓库级 Learn：`.agents/skills/aipd-learn/`；平台：`aipd-skill/src/platforms/`；脚本：`aipd-skill/scripts/{build,check-dist,check-release-bundle,check-schema-migrator,migrate-project-schema}` | `rg "inject-from-core|currentAuthority|EXPECTED_SKILLS|EXPECTED_CODEX_AGENTS|migrate-project-schema|install" aipd-skill .agents/skills/aipd-learn` |
 | 上下文检索 / 大地图 / map | 项目记忆地图 | Core + Engineering | `_aipd/map.md`、`_aipd/knowledge/core/index.md` | `aipd-skill/src/core/workspace/templates/map.md`、`aipd-skill/src/skills/aipd-case/SKILL.md` | `rg "map.md|上下文检索|检索包|观察锚点" aipd-skill/src _aipd AGENTS.md` |
 | 上下文检索 Agent / 查项目资料 / 项目认知查询 / 保持主 Agent 上下文干净 | 上下文检索 Agent | Engineering + agent-guide | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/platforms/codex/core/agent-guide.md` | `aipd-skill/src/core/agent-guides/aipd_context_retriever.md`、`aipd-skill/src/platforms/codex/agents/aipd_context_retriever.toml` | `rg "aipd_context_retriever|上下文检索|子 Agent|默认调度" AGENTS.md aipd-skill/src _aipd` |
 | `$aipd-leader` / Project Leader / 项目负责人 / 监督者 / 多开线 / 阶段汇报 / AI 主导项目 / Mission / 主导模式 / 跨 Case 推进 / Codex task / 思路变化 | AIPD Leader（显式可选） | 显式调用时进入 Leader Mission 与流程状态；其他说法只用于解释或建议，不自动启动 | `_aipd/leader/index.md`、`aipd-skill/src/skills/aipd-leader/SKILL.md` | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、Leader 自建文字文件 | `rg -e "aipd-leader" -e "Project Leader" -e "项目负责人" -e "监督者" -e "阶段汇报" -e "Mission" -e "Codex task" -e "当前工作区索引" -e "反向归属" -e "跨 Case" _aipd/leader _aipd aipd-skill/src docs` |
@@ -48,7 +49,7 @@
 | 用户说法 / 黑话 | 标准概念 | 概念 map | 相关 Product 功能线 | 常见误解 |
 |---|---|---|---|---|
 | 项目认知 / Knowledge | 五类 Knowledge | `_aipd/knowledge/core/map.md` | AIPD 初始化、AIPD Update、Weave | Knowledge 只指 `_aipd/knowledge/` 中的长期认知，不等于整个 `_aipd/` Workspace |
-| AIPD Workspace / 工作区 | Knowledge / Map / SOP / Case / OKR / Inbox / Agent Entry | `_aipd/knowledge/core/workspace-modules.md` | aipd-case、update | 不是功能清单，也不是从上到下的流水线；真实代码位于 Workspace 外并由 Map 索引 |
+| AIPD Workspace / 工作区 / 版本状态 / Agent Entry | manifest / update-log / Knowledge / Map / 显式可选 Leader / SOP / Case / OKR / Inbox；`AGENTS.md` 是外部项目入口 | `_aipd/knowledge/core/workspace-modules.md` | aipd-case、update、显式 Leader | 不是功能清单或从上到下的流水线；Leader 不是必选模块或第六类 Knowledge；真实代码位于 Workspace 外并由 Map 索引 |
 | 横向功能能力 | Map 检索 / Case 系统 / Weave / 上下文服务 | `_aipd/knowledge/core/horizontal-capabilities.md` | aipd-case、weave、learn | 不是新的知识域；它回答 Agent 做事时怎么串起 Workspace 模块 |
 | 代码纵横 / 横向基座 / 横向共享能力 / 纵向业务上下文 | AI 友好代码拓扑 | `_aipd/knowledge/core/ai-friendly-code-topology.md` | AIPD Case Design、技术栈经验 | 与上面两项属于不同命名空间；代码拓扑不是“全面纵向”，黑箱也不是Workspace 模块专有属性 |
 | 文件优先上下文承接 | 文件 checkpoint / 当前游标 / 压缩后恢复 | `_aipd/knowledge/core/index.md`、`_aipd/knowledge/core/horizontal-capabilities.md`、`aipd-skill/src/core/case/overview.md` | aipd-case、Agent Entry | 不是聊天存档；它只承接有恢复价值的状态、确认、边界、下一步 |
@@ -92,7 +93,7 @@
 | Codex custom agents / 推荐 Agent | Codex Agent 调度 | `_aipd/knowledge/engineering/index.md` | Codex 平台、case Execute、Vue 角色 Agent | `aipd-skill/src/platforms/codex/core/agent-guide.md`、`aipd-skill/src/platforms/codex/agents/` | 不要因 agent 注册失败阻塞任务，应降级读取领域指引 |
 | 上下文检索 / context retriever / aipd_context_retriever | 上下文检索 Agent 调度 | `_aipd/knowledge/engineering/index.md` | Codex 平台、项目认知加载、SOP 检索 | `aipd-skill/src/core/agent-guides/aipd_context_retriever.md`、`aipd-skill/src/platforms/codex/agents/aipd_context_retriever.toml` | custom agent 身份优先；已知入口少时 Main 直接读，大量扫描时再派发 |
 | 子 Agent / sub Agent / agent 调度 / 并发 | Main / Child 运行时判定 | `_aipd/knowledge/engineering/index.md` | 普通探索、case Execute、角色 Agent | `aipd-skill/src/platforms/codex/core/agent-guide.md`、`aipd-skill/src/skills/aipd-case/SKILL.md` | Work Package 不等于派发；按上下文隔离、真实并发、主线耦合和调度成本选择 |
-| skills + agents 构建安装 | Codex 构建安装 | `_aipd/knowledge/engineering/index.md` | AIPD 开发脚本 | `aipd-skill/scripts/build`、`aipd-skill/scripts/install-codex`、`aipd-skill/scripts/dev-codex`、`aipd-skill/scripts/install-project-codex` | 源模板、dist 输出和用户级安装目录要区分 |
+| skills + agents 构建 / 校验 / 发布 / 迁移 / 安装 | Codex 构建维护合同 | `_aipd/knowledge/engineering/index.md` | AIPD 开发脚本 | `aipd-skill/README.md`、`aipd-skill/scripts/build`、`aipd-skill/scripts/check-dist`、`aipd-skill/scripts/check-release-bundle`、`aipd-skill/scripts/check-schema-migrator`、`aipd-skill/scripts/migrate-project-schema` | 区分公共 Skill 源码、仓库级 Learn、平台覆盖、生成的 dist 与安装目标；install / dev 必须获得用户明确确认 |
 | Vue 架构 / Vue Provider | Vue 角色 Agent 规则 | `_aipd/knowledge/engineering/index.md` | Vue 前端 case | `aipd-skill/src/core/agent-guides/`、`aipd-skill/src/platforms/codex/agents/` | 不要仅因知识点多就继续拆身份；按执行边界拆 |
 
 ## 局部 README 入口
@@ -100,6 +101,7 @@
 | 模块 / 页面 / 弹窗 | README / 局部入口 | 说明 | 关联功能线 |
 |---|---|---|---|
 | AIPD 核心说明 | `README.md`、`aipd-skill/src/core/overview.md` | 框架对外说明和核心介绍 | AIPD 初始化、AIPD Update |
+| AIPD Skill 维护 | `aipd-skill/README.md` | 公共 / 仓库级 Skill owner、源码 / 平台 / 构建 / 校验 / 迁移 / 安装导航 | AIPD 源码维护、版本化 Update |
 | Codex 平台适配 | `aipd-skill/src/platforms/codex/core/agent-guide.md` | Codex 子 Agent 上下文、角色 Agent、派发与降级策略 | Case Execute |
 | 平台无关角色指引 | `aipd-skill/src/core/agent-guides/` | 角色 Agent 的领域执行指引 | Case Execute、Vue 角色 Agent |
 | skill 源码 | `aipd-skill/src/skills/{skill}/SKILL.md` | skill 执行规则本体 | 对应功能线 |

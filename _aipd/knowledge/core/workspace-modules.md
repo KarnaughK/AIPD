@@ -6,14 +6,18 @@
 
 `_aipd/` 是整个 AIPD 项目工作区，不等于知识库正文。它把几类性质不同的模块放在同一个可发现入口下：
 
+- `manifest.json` 记录 Workspace Schema 身份和最后成功应用的 AIPD 发布版本；`update-log.md` 记录版本跃迁、验证与有意保留的项目差异。
 - `knowledge/` 保存长期稳定的项目认知。
 - `map.md` 和各类细节 Map 提供按任务、业务线或功能线组织的检索视图。
+- `leader/` 只在用户显式调用 `$aipd-leader` 后创建，保存一个 active Mission 的可恢复工作记忆；它不是第六类 Knowledge。
 - `sop/` 保存以 Agent 为运行时的可复用程序。
 - `case/` 保存短周期目标的 Contract、phase 和 Work Package 状态。
 - `okr/` 保存飞书阶段目标入口与对齐信息。
 - `inbox.md` 接住尚未整理归属的临时信息。
 - 真实代码继续留在项目源码目录，由 Map 和局部 README 建立入口。
-- `AGENTS.md` 是 Agent 进入项目和恢复任务时的第一跳规则。
+- `AGENTS.md` 是 Agent 进入项目和恢复任务时的第一跳规则。它位于 `_aipd/` 外；Agent MD 等级 2 还会在其中安装 Interaction Protocol。
+
+任何 AIPD 读写前，Agent 先用本机 release catalog 与 project-state 合同检查路径安全、manifest 形态和项目版本 `P` / 本机版本 `I`。只有 `P = I` 且必要入口类型安全时进入普通检索；stale、unversioned、drift、future-project 或 invalid 状态按 Update / 停止规则处理。
 
 这些模块不是一条从上到下的成熟度流水线，也不是要求 Agent 每次全部读取。
 
@@ -82,11 +86,13 @@ Engineering 是 Product 到真实代码之间的桥梁，适合权限、路由�
 
 它们是同一种检索视图的不同分辨率，不是三类新存储，也不是每次都要完整经过的三级流程。
 
-## Map、SOP、Case 和 Weave
+## Map、Leader、SOP、Case、Update 和 Weave
 
 - **Map** 是声明式路由，回答“哪里有什么、这次应该读什么”。
+- **Leader** 是显式可选的项目主导层，回答“当前 Mission 由谁负责方向探索、跨 Case 协调和总验收”；普通 AIPD 不加载它。
 - **SOP** 是可复用 Agent 程序，回答“一个动作怎样重复执行”。
 - **Case** 是一次短周期目标的状态容器，回答“现在做到哪里、下一步从哪里恢复”。
+- **Update** 读取发布演进与当前权威，把项目一次收敛到本机最终态；Schema migrator 只做结构切换，不写当前 AIPD 版本。
 - **Weave** 在完成和验收后判断稳定信息回到哪里。
 
 Weave 可以候选五类 Knowledge，但有不同门槛：

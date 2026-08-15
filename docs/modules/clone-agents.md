@@ -52,12 +52,13 @@ Work Package 定义的是目标、上下文、恢复和验收边界。它可以�
 
 ## 当前角色与领域指引
 
-AIPD 当前包含：
+Codex 当前构建三个 custom Agent：
 
 - `aipd_context_retriever`：从 Knowledge、SOP、必要流程状态、局部 README 和代码入口中检索并压缩当前任务上下文。
-- `aipd_product_manager`：Design requirements 的目标、规则、confirmed / assumed / open 梳理。
 - `aipd_vue_architect`：Vue 页面、组件、交互、状态与整体架构。
 - `aipd_vue_provider`：Vue `useXxx`、provide / inject、API 数据源和字段对齐。
+
+`aipd_product_manager` 当前是平台无关的 requirements 领域指引，不是独立 Codex custom Agent。决定派发且平台没有对应身份时，普通 Child 仍可读取这份指引执行边界内的需求梳理。
 
 角色指引是领域边界，不是自治权限。派发不会扩大 Case 范围，也不会授予安装、远端写入、删除等外部副作用权限。
 

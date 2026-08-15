@@ -28,7 +28,7 @@ Intent、Research、Core、Product、Engineering 是统一分类标识，不是�
 
 任务执行系统负责把较大的软件开发事项从聊天里固定下来，形成可恢复、可派发、可验收、可回写的执行过程。
 
-它包含 OKR、Case、Work Package、分身 Agent、执行记录、归档和 Close 归档候选等能力。OKR 负责阶段目标，Case 负责一次事项的目标、边界和上下文索引，Work Package 负责围绕设计边界的可执行目标包，Weave 负责在 case 完成后把稳定经验回写到项目知识库或局部 README。
+它包含 OKR、Case、Work Package、Main / Child 运行时选择、执行记录、归档和 Close 归档候选等能力。OKR 负责阶段目标，Case 负责一次事项的目标、边界和上下文索引，Work Package 负责围绕设计边界的可执行目标包，Main / Child 根据上下文隔离、真实并发、主线耦合和调度成本选择执行方式，Weave 负责在 case 完成后把稳定经验回写到项目知识库或局部 README。
 
 任务执行系统不是为了把 Agent 限死成按钮流程，而是为了让人和 AI 在长任务、多分支和上下文压缩后，仍然能知道当前在做什么、为什么做、做到哪里、下一步应该接哪里。
 
@@ -59,6 +59,6 @@ AIPD 更适合长期迭代、AI 深度参与、存在业务语言、历史取舍
 ## 当前阶段重点
 
 - 稳定 AIPD Skill 本体，让 `/aipd*` 系列能力能在真实项目中可用。
-- 继续完善项目知识库、Case / Work Package、分身 Agent、Weave 和 SOP 的协作链路。
+- 继续完善项目知识库、Case / Work Package、Main / Child 运行时协作、Weave 和 SOP 的协作链路。
 - 当前产品方向、研发、默认构建和验证均以 Codex 为交付目标；保留可面向其他平台扩展的通用打包结构，先把 Codex 主链路做好。
 - AIPD Desktop 实验已于 2026-08-07 取消；不再维护独立桌面产品方向，文件浏览、聊天和上下文引用优先复用 Codex、IDE 与现有 AIPD map / Case 能力。

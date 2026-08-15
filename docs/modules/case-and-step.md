@@ -70,6 +70,8 @@ Design 负责把目标变成可执行方案：先固定 requirements 和领域�
 
 Design 不是一上来画目录，也不是只找“复杂度爆点”。任何 `assumed` 或 `open` 都不能被偷偷固化成数据字段、API、状态机或 UI 事实。
 
+当 Design 会新增或调整模块 / 文件夹边界、shared 上移、跨上下文依赖或组合协议时，还要形成项目具体的 `Code Topology Contract`。Execute 只携带当前 Work Package 所需的短护栏，Verify 再对照真实 diff 和依赖审计；具体判断见 [AI 友好代码拓扑](ai-friendly-code-topology.md)。
+
 ## Work Package 是目标包
 
 Work Package 只存在于 `03-execute/work-packages/`。它不是微步骤，也不等于子 Agent 派发节点。

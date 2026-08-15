@@ -19,6 +19,7 @@ _aipd/
 ├── index.md
 ├── map.md
 ├── inbox.md
+├── update-log.md
 ├── knowledge/
 │   ├── intent/
 │   ├── research/
@@ -30,12 +31,28 @@ _aipd/
 └── sop/
 ```
 
+`_aipd/leader/` 不属于初始化必选结构；只有用户显式调用 `$aipd-leader` 后才创建。
+
 初始化的正确结果不是“所有目录都写满”，而是：
 
 - Agent 知道先读哪里。
 - 项目最重要的稳定事实有位置可放。
 - 当前高频任务可以从 map 命中入口。
 - 暂时不知道归属的信息有 Inbox 接住。
+
+## 初始化先完成版本闭环
+
+初始化不是“看到 `_aipd` 目录就算成功”。AIPD 会先写无版本 v2 的安全 bootstrap，创建必要入口并让你选择 Agent MD 等级，全部验证通过后才把 manifest 标成当前本机版本。
+
+Agent MD 有三个等级：
+
+- 0：不修改 `AGENTS.md`。
+- 1：安装 AIPD Project Entry，默认推荐。
+- 2：在 Entry 之外，再安装项目级 [Interaction Protocol](../modules/interaction-protocol.md)。
+
+如果初始化中断，项目会保留 `unversioned-v2`，普通 Skill 不会假装它已经完成；下次通过 [Update 与 Schema 迁移](../modules/update-and-migration.md)继续收敛。
+
+已接入项目每次进入普通 AIPD 流程前，也会比较项目版本 `P` 和本机版本 `I`。只有 `P=I` 且必要入口安全时继续；这让 Agent 不会在旧规则上局部套用新模板。
 
 ## 五类 Knowledge 不是五个推进阶段
 

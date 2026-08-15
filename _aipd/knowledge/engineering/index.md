@@ -71,7 +71,9 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 - `aipd-skill/scripts/check-dist` 验证 Codex 的两个目标 Skill 都包含同一投影、其他 Skill 不包含、两个入口有静态读取规则，并检查三段合同闭环与旧空间术语。
 - 默认 build 产物位于 `aipd-skill/dist/codex/skills/{aipd,aipd-case}/references/ai-friendly-code-topology.md`，只由 build 生成，不手改；通用构建器仍使用 `dist/{platform}/` 目标边界。
 
-## 当前已知 Agent
+## 当前 Agent 角色指引与 Codex 装配
+
+`aipd-skill/src/core/agent-guides/` 当前有 4 份平台无关角色指引；`aipd-skill/src/platforms/codex/agents/` 当前只把其中 3 个装配为 Codex custom Agent。`aipd_product_manager` 目前是 Case Design 可按需读取的领域指引，没有对应 Codex `.toml`；因此“4 份指引”与“3 个 Codex Agent”不是数量冲突。
 
 | Agent | 用途 | 源码 |
 |---|---|---|

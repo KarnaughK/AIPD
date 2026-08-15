@@ -39,15 +39,14 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 - 新建、删除或重命名本目录内文件后，应在本文件的“当前工作区索引”中更新入口。
 - 不再影响当前判断的信息可以删除，不要求永久归档所有思考过程。
 
-无论文件怎样拆分，都必须能够恢复：active Mission 与成功判据、最近方向变化及依据、Case 队列 / 依赖 / owner、Codex task 绑定、待确认事项和下一恢复位置。
+无论文件怎样拆分，都必须能够恢复：active Mission 与成功判据、最近方向变化及依据、Case 队列 / 依赖 / owner、Case runtime 绑定（Codex task 或 Cursor 上的执行层）、待确认事项和下一恢复位置。
 
 ## 运行合同
 
-- 当前 Leader task：由用户设置 `gpt-5.6-sol / max / Fast`。
-- 每个 Case task：Leader 创建时设置 `gpt-5.6-sol / high`；Fast 继承当前 Codex 配置，无法核验时明确标记。
-- 一个项目只运行一个 Leader，同一时刻只有一个 active Mission；多个独立 Case 可以并发。
-- 一个 Case 对应一个主 Codex task；Case 内 phase 回跳继续使用原 task。
-- 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`。
+- 本对话不是 `$aipd-leader` 启动。
+- `dsh-case-runtime` Mission 已于 2026-08-16 关闭：`c29` 实验完成并归档，`c30` 停止并归档，已改代码保留。
+- 已安装 Skill 仍可能写 DSH 执行层；后续新 Case 再改成已登录的 `cursor-agent`。
+- 详细规则仍以 Skill 源码为准：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/core/leader/runtime.md`、平台 runtime、本目录 `dsh-case-runtime.md`。
 
 ## 迁出与清理
 
@@ -67,5 +66,8 @@ Project Leader 接管或恢复项目时：
 
 ## 当前工作区索引
 
-- 当前状态：等待 Project Leader 在真实推进中自行建立工作记忆。
-- 当前文件：`index.md`，负责本目录的定位、边界与恢复入口。
+- 当前状态：无 active Mission。`dsh-case-runtime` 已关闭。
+- 已关闭 Case：[`archive/c29-dsh-headless-dispatch`](../case/archive/c29-dsh-headless-dispatch/case.md)、[`archive/c30-cursor-leader-platform`](../case/archive/c30-cursor-leader-platform/case.md)。
+- 最近完成 Mission：`documentation-value-clarity.md`，记录“让每次 AI 开发建立在上一次之上”的用户价值入口改写与验收。
+- 上一完成 Mission：`documentation-refresh-v2.md`，记录 AIPD 大升级后的全量文档刷新、Case 绑定与 Mission 级验收。
+- 当前文件：`index.md`（定位与恢复入口）、`dsh-case-runtime.md`（已关闭的 DSH 实验 Mission）。
