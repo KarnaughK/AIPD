@@ -15,7 +15,7 @@ AIPD 当前的 Core 先收敛为九个核心成立模型。它们回答的不是
 | 文件优先上下文承接模型 | 长任务如何不依赖聊天记忆，而是通过文件 checkpoint 承接状态、边界和恢复入口 | case.md、phase artifact、work package、局部 README、map |
 | Think / 任务澄清决策模型 | 模糊想法或 case 推进中的未知如何通过讨论、调研、方案比较和决策出口，变成清晰方向、设计输入或被 kill / defer / research / weave | Case Think phase、discussion / research / options / decision |
 | 任务执行模型 | 短周期目标如何通过 Case Contract / Think / Design / Execute / Verify / Close 变成可恢复、可验收、可关闭的执行闭环 | OKR、Case、Work Package、执行记录、归档 |
-| Leader 项目主导编排模型 | 人如何把项目推进责任委托给一个 AI Leader，由它在一个 Mission 内探索方向、拆分并协调多个独立 Case task、处理方向变化并做总验收 | `$aipd-leader`、`_aipd/leader/`、Mission、Codex Case task |
+| Leader 项目主导编排模型 | 人如何把项目推进责任委托给一个 AI Leader，由它在一个 Mission 内探索方向、拆分并协调多个独立 Case 执行层、处理方向变化并做总验收 | `$aipd-leader`、`_aipd/leader/`、Mission、Codex Case task、Cursor `cursor-agent` + `chatId` |
 | Agent 协作思考模型 | Main Agent 与 Child Agent（分身 / 角色 Agent）如何按运行时收益分工，如何保护主线判断和上下文预算 | Agent Entry、Main / Child 运行时判定、平台 agent 指引 |
 | SOP / AI 程序模型 | 可重复的 Agent 行为如何沉淀成以 LLM / Agent 为运行时的 AI 原生程序 | `_aipd/sop/`、SOP map、工具调用、执行实例 |
 | AI 原生代码架构模型 | 代码如何更适合 AI 读取、修改、扩展和验收 | 上下文解耦、AI 友好代码拓扑、黑箱上移、Decouple first, DRY later、技术栈经验库 |

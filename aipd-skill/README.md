@@ -117,7 +117,7 @@ src/platforms/
 │   │   └── leader/runtime.md    # Leader 创建同级 Case task 的 Codex 合同
 │   └── agents/                  # 3 个 Codex custom agent 元数据
 └── cursor/
-    └── core/leader/runtime.md   # Cursor Leader + DSH Case 执行层
+    └── core/leader/runtime.md   # Cursor Leader + cursor-agent Case 执行层
 ```
 
 当前默认构建 Codex。目录仍按平台隔离；其他平台可以在 `src/platforms/{platform}/` 提供同路径覆盖，未覆盖的内容继续使用公共核心材料。Codex Agent `.toml` 只保存平台元数据，领域规则来自 `src/core/agent-guides/`。
@@ -132,7 +132,7 @@ AIPD 当前构建九个公共 Skill：
 | `aipd-case` | Case Contract 与 Think / Design / Execute / Verify / Close 生命周期 |
 | `aipd-weave` | 把已完成、已验收的稳定信息回写到正确 Knowledge、Map 或局部 README |
 | `aipd-inbox` | 捕获尚未整理归属的临时信息 |
-| `aipd-leader` | 仅在用户显式调用时，把当前对话提升为 Leader 并按一个 Case 一个 Codex 任务进行编排 |
+| `aipd-leader` | 仅在用户显式调用时，把当前对话提升为 Leader；Codex 上一个 Case 一个 task，Cursor 上派已登录的 `cursor-agent` |
 | `aipd-update` | 读取项目版本与本机发布快照，把 unversioned / stale / current-drift 项目一次语义收敛到当前权威，并保护项目定制 |
 | `aipd-okr` | 管理飞书 OKR 并压缩成主 Agent 可用上下文 |
 | `aipd-mermaid` | 创建、修改、评审和按需渲染 Mermaid 图 |
@@ -155,7 +155,7 @@ AIPD 当前构建九个公共 Skill：
 | `legacy-skills` | 安装 / dev 入口共享的已退役 Skill / Agent 清理清单；不是当前能力列表或运行时入口 |
 | `dev` / `dev-codex` | Codex 用户级开发 symlink 安装；泛名入口为默认，后者为显式别名 |
 | `install` / `install-codex` | Codex 用户级复制安装；泛名入口为默认，后者为显式别名 |
-| `install-cursor` | Cursor 用户级复制安装；同时写入 `~/.cursor/skills/` 与 `~/.dsh/skills/`，不改泛名 `install` |
+| `install-cursor` | Cursor 用户级复制安装；只写入 `~/.cursor/skills/`，不改泛名 `install`，不写 DSH |
 | `install-project` / `install-project-codex` | Codex 指定项目本地安装；泛名入口为默认，后者为显式别名 |
 
 新运行时只认 `_aipd/`。一次性迁移器可以识别旧项目并转换；Skills 不双读、不 fallback。`check-dist`、`check-release-bundle*` 和 `check-schema-migrator` 是本地校验，不执行 install 或远端写入；`dev*` / `install*` 会改变用户级或项目级 Agent 环境，必须获得用户明确确认。

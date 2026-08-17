@@ -4,7 +4,7 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| 无 | — | 2026-08-16 已关闭 `c29` / `c30`；后续新 Case 另开 |
+| — | — | 无 |
 
 ## 暂停 Case
 
@@ -51,6 +51,7 @@
 | `archive/c28-documentation-value-clarity` | 2026-08-13 | 让 README 与两篇入门 Guide 先呈现“每次 AI 开发建立在上一次之上”的用户结果，再命名项目记忆 / AIPD 并进入机制；完成四入口差异化、Reduction Scan 与链接 / 范围验收 |
 | `archive/c29-dsh-headless-dispatch` | 2026-08-16 | Cursor Leader 用 DSH headless 调通文件写回；实验完成，非正式 runtime 晋升 |
 | `archive/c30-cursor-leader-platform` | 2026-08-16 | Cursor 平台包与 `install-cursor` 双目录安装已落地后停止；wp-02 取消；代码保留，执行层改向 Cursor Agent |
+| `archive/c31-cursor-leader-agent-runtime` | 2026-08-17 | Cursor 桌面端 Leader + 已登录 `cursor-agent` 执行层落地；DSH 退出现行合同 |
 
 ## 使用原则
 

@@ -55,6 +55,9 @@ AGENTS.md
 # Codex 用户级安装
 ./aipd-skill/scripts/install
 
+# Cursor 用户级安装（只写 ~/.cursor/skills/）
+./aipd-skill/scripts/install-cursor
+
 # Codex 项目级安装
 ./aipd-skill/scripts/install-project /path/to/your-project
 ```

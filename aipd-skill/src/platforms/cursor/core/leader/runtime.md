@@ -1,47 +1,66 @@
 # Leader Case Runtime
 
-当前包是 Cursor 平台包。Leader 在 Cursor，Case 执行层是 DSH。不要判断 Codex 宿主，也不要用 Cursor 子 Agent / Cloud Agent / `move_agent_to_root` 顶第三层。
+当前包是 Cursor 平台包。桌面端对话是 Leader；Case 执行层是本机已登录的 `cursor-agent` 无头进程。不要判断 Codex 宿主。不要用对话内 Task / 子 Agent / Cloud Agent / `move_agent_to_root` 顶第三层。不要找 DSH，不要装 DSH，不要写 `~/.dsh/skills/`。
 
-没有 DSH 就停。不要补鲁棒性，也不要改走子 Agent。
+没有 `cursor-agent` 或未登录就停。不要补退路，也不要改走子 Agent。
+
+本包不提目标模式，不加载 `goal-mode.md`，不写「目标模式绑定」。
 
 ## 安装绑定
 
-`install-cursor` 必须同时写入这两个目录，不要只装一边：
+`install-cursor` 只写入 `~/.cursor/skills/`。禁止写入 `~/.dsh/skills/`、`~/.cursor/skills-cursor/`、`~/.codex/skills/`。泛名 `install` 仍只装 Codex。
 
-| 软件 | 落点 | 谁读 |
-|---|---|---|
-| Cursor | `~/.cursor/skills/` | Cursor 上的 `$aipd-leader` |
-| DSH | `~/.dsh/skills/` | DSH Case 执行层的 `$aipd-case` 等 Skill |
+桌面端 Leader 和无头执行 Agent 都读 `~/.cursor/skills/`，因此执行层会加载 `aipd-case`。
 
-泛名 `install` 仍只装 Codex，不写这里。禁止写入 `~/.cursor/skills-cursor/` 和 `~/.codex/skills/`。
+## 找 cursor-agent
 
-## 找 DSH
+1. 只用 `cursor-agent`，不用 PATH 上的裸 `agent`（本机 `agent` 可能是别的 CLI）。
+2. `command -v cursor-agent`。没有：停止，说明没装 Cursor CLI。
+3. `cursor-agent status`。未登录：停止，请用户在本机执行 `cursor-agent login`。不要用 `CURSOR_API_KEY` / `--api-key`。
+4. 有且已登录：按下面派发。
 
-1. 先 `command -v dsh`。
-2. 没有再用 `npx --no-install @deepseek-ai/dsh`（只走本机缓存，不新装）。
-3. 还是没有：停止，直接说没有 DSH，搞不了。
-4. 有 DSH：默认用方式 A。需要人在 GUI 里续跑时用方式 B。
+## 职责
 
-## 方式 A：headless 单轮（默认）
+- **Leader**（当前桌面对话）：规划 Mission 的 Case 路线，按序派一个执行 Agent 做一个 Case，最后收口。不代做 Case 内 Think / Design / Execute / Verify。
+- **执行 Agent**（无头 `cursor-agent`）：把一个 Case 从当前 phase 做到 Close，含验证。可按项目规则使用 Child Agent；不得另建同级 Case 执行层，不得再开一个 Leader。
+- 同一时刻一个 Case 只有一个执行 Agent。基础版不扇出多个无头进程。
 
-在**项目根目录**执行。每次调用是独立执行轮，无会话记忆。中间状态只靠 `_aipd/` 里的 `case.md` / work package / checkpoint。
+## 对象绑定（chatId）
 
-```bash
-cd /项目路径
-dsh --profile headless "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再读取 Case：{绝对路径}，读取 work package：{绝对路径}，按 work package 的上下文文档执行。允许在同一 Case 内回跳，不得另建同级 Case 或同级 DSH 会话。完成后返回压缩结果：Case id / path、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
+每次启动都是新进程。身份不绑对象，绑 `_aipd/leader/` 里的记录：
+
+1. 派发前读 `_aipd/leader/index.md` 和它链接的绑定文件。
+2. 该 Case 还没有 `chatId`：运行 `cursor-agent create-chat`，把返回的 ID 记下来。
+3. 已有 `chatId`：同一 Case 的下一轮必须 `--resume <chatId>`，不要新建对话。
+4. 绑定写在 `_aipd/leader/` 的文字文件里，并回链 `index.md`。建议字段：
+
+```md
+| Case | path | chatId | 方式 | 状态 | 时间 |
+| cN-slug | /abs/path/to/case.md | <chatId> | cursor-agent-print | running / returned / accepted | ISO time |
 ```
 
-- 打印最终回复后退出。`exit 0` 即这次调用成功。
-- 派发 prompt 带 Case 与 work package 的绝对路径和边界；执行端自己读文件，不复制长正文。
-- Leader 读回 Case 文件、真实改动和验证结果做验收。任务自报完成不等于 Leader accepted。
-- headless 默认扫描 `~/.dsh/skills/`。本包安装后，DSH 应从这里加载 `aipd-case`，不要再依赖 `~/.codex/skills`。
+5. Case 进度以 Case 文件为准。`chatId` 只用来恢复同一条执行对话。任务自报完成不等于 Leader accepted。
 
-## 方式 B：文件交接 + DSH GUI
+## 派发（无头单轮）
 
-1. Leader 把 Case brief、work package、checkpoint 写进 `_aipd/case/` 和 `_aipd/leader/`。
-2. 用户在 DSH GUI 里继续执行该 work package。
-3. Leader 读回文件验收，不信任自报。
+在**项目根目录**执行。`--print` 这一轮阻塞到执行 Agent 退出。中间状态只靠 `_aipd/case/`。
 
-## 绑定
+```bash
+cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId> "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再显式使用 aipd-case 读取 Case：{绝对路径}。按该 Case 当前 phase 推进；有 work package 时读取其绝对路径和上下文文档。允许在同一 Case 内回跳，不得另建同级 Case 或再开一个 Leader。完成后返回压缩结果：Case id / path、chatId、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
+```
 
-在 `_aipd/leader/` 记录：Case id / path、宿主 `cursor`、调用方式 `dsh-headless` 或 `dsh-gui`、项目根、时间、状态。headless 无 `session_id` 可续；同一 Case 的下一轮再调一次方式 A，靠文件恢复。
+- 必须带 Case 绝对路径；有当前 work package 时也带。不要把长正文复制进 prompt。
+- `--force` 只让这一轮能改工作区文件。发布、删除、付费、远端推送仍按原权限边界。
+- 不用 `--api-key`。模型不写死，跟已登录账号的可用模型走。
+- `exit 0` 只表示这一轮 CLI 跑完。Leader 读回 Case 文件、真实改动和验证结果再验收。
+
+## 收口
+
+执行 Agent 返回后，Leader 至少核对：
+
+1. Case / Work Package 状态与返回一致。
+2. 改动落在该 Case 边界内。
+3. 验证证据覆盖 Case 成功判据；不重跑一遍 Verify，缺证据就打回同一 `chatId`。
+4. 没有另建同级 Case，也没有抢其他 Case 的代码面。
+
+通过后记 Leader accepted，再派下一个已确认 Case。未关闭就 `--resume` 同一 `chatId` 再开一轮。

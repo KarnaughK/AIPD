@@ -43,7 +43,7 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 ## 当前研发策略
 
 - Codex 优先适配，先跑通 `skills + agents + aipd-case` 的最短闭环。
-- `$aipd-leader` 是唯一的显式项目主导入口：当前 Leader task 由用户配置为 `gpt-5.6-sol / max / Fast`；它创建的每个 Case task 明确使用 `gpt-5.6-sol / high`，Fast 由 Codex 配置继承或标记未核验。Case task 仍走 `aipd-case`，不得再创建同级 task。
+- `$aipd-leader` 是唯一的显式项目主导入口。Codex 上：当前 Leader task 由用户配置为 `gpt-5.6-sol / max / Fast`；它创建的每个 Case task 明确使用 `gpt-5.6-sol / high`，Fast 由 Codex 配置继承或标记未核验。Cursor 上：桌面端对话是 Leader；Case 执行层是已登录的 `cursor-agent` 无头进程，`chatId` 记在 `_aipd/leader/`，命令写死 `cursor-agent` 而不是裸 `agent`。两种宿主上 Case 执行层都走 `aipd-case`，不得再创建同级 Case task，也不找 DSH。
 - Codex 子 Agent 不是默认步骤；Main 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本自然选择是否派发。平台不可用时由 Main 回退执行。
 - GPT-5.6 Sol 日常交互以 High 为基线，Ultra 只用于存在多条独立工作线且可接受更长等待的任务；Ultra 自带委派与 AIPD 主动派发不能无条件叠加。
 - work package 文件和显式上下文不是替代当前对话的任务源，而是用于校准边界、压缩恢复和沉淀长期事实。
@@ -61,7 +61,7 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 - 一次性 Schema migrator 只把旧工作区切换为精确两键的 `unversioned-v2`，不写本机当前 `aipdVersion`；只有 `aipd-update` 完成语义收敛和验证后才提交项目版本与 `_aipd/update-log.md`。
 - 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；构建和安装脚本不得把它复制进 `aipd-skill/dist` 或 Agent Skill 目录。
 - 用户级或旧项目级安装中残留的公共 `aipd-learn` 已进入共享退役清理清单；只有用户明确授权执行 install / dev 时才清理，仓库内 `.agents/skills/aipd-learn/` 不受影响。
-- install 会改写用户级或项目级 Agent 运行环境。build 完成后，必须主动问用户是否执行 install；不能只说明“可能需要 install”。只有用户明确确认后，才执行 `./aipd-skill/scripts/install`、`./aipd-skill/scripts/install-codex`、`./aipd-skill/scripts/install-project` 或 `./aipd-skill/scripts/install-project-codex`。
+- install 会改写用户级或项目级 Agent 运行环境。build 完成后，必须主动问用户是否执行 install；不能只说明“可能需要 install”。只有用户明确确认后，才执行 `./aipd-skill/scripts/install`、`./aipd-skill/scripts/install-codex`、`./aipd-skill/scripts/install-cursor`、`./aipd-skill/scripts/install-project` 或 `./aipd-skill/scripts/install-project-codex`。`install-cursor` 只写入 `~/.cursor/skills/`，不写 `~/.dsh/skills/`。
 
 ## AI 友好代码拓扑运行时投影
 

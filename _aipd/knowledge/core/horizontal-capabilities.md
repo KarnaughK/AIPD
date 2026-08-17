@@ -92,11 +92,16 @@ Think 和 Inbox 的区别是承诺度：Inbox 只负责 capture，不承诺讨�
 
 ## Leader 项目主导
 
-Leader 是用户显式增加在 Case 之上的项目主导层。普通 AIPD 默认仍由人驾驶，Agent 在 Case 层完成执行；只有用户主动调用 `$aipd-leader`，当前对话才承担一个 active Mission 的方向探索、Case 拆分、同级 Codex task 调度和总验收。
+Leader 是用户显式增加在 Case 之上的项目主导层。普通 AIPD 默认仍由人驾驶，Agent 在 Case 层完成执行；只有用户主动调用 `$aipd-leader`，当前对话才承担一个 active Mission 的方向探索、Case 拆分、同级执行层调度和总验收。
 
-Leader 与 Main / Child Agent 不是同一层：Leader 创建的每个 Codex task 对应一个 Case；Case task 内部仍可以按项目规则使用 Child Agent 或工具。Case task 不创建新的同级 task，也不承担跨 Case 方向判断。
+Leader 与 Main / Child Agent 不是同一层。宿主决定执行层：
 
-`_aipd/leader/` 保存跨聊天、跨 Case 的短中期恢复信息，但不是第六类 Knowledge。已有 Knowledge、Case、OKR、SOP、Map、README 或代码事实源的信息只在 Leader 保留链接和当前影响。文件结构由 Leader自主设计，最低要求是能恢复 Mission、方向变化、Case / task 绑定、待确认事项和下一位置。
+- Codex：一个 Case 对应一个独立 Codex task。
+- Cursor：桌面端对话是 Leader；每个 Case 由已登录的无头 `cursor-agent` 做完。`chatId` 记在 `_aipd/leader/`，同一 Case 下一轮 `--resume`，不用对话内子 Agent，也不找 DSH。
+
+Case 执行层内部仍可以按项目规则使用 Child Agent 或工具。执行层不创建新的同级 Case task，也不承担跨 Case 方向判断。
+
+`_aipd/leader/` 保存跨聊天、跨 Case 的短中期恢复信息，但不是第六类 Knowledge。已有 Knowledge、Case、OKR、SOP、Map、README 或代码事实源的信息只在 Leader 保留链接和当前影响。文件结构由 Leader 自主设计，最低要求是能恢复 Mission、方向变化、Case / 执行层绑定、待确认事项和下一位置。
 
 ## Case 系统
 

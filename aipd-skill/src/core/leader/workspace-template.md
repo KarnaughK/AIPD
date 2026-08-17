@@ -36,7 +36,7 @@
 - active Mission、边界、成功判据和状态。
 - 用户关注方式、希望校验的阶段效果和汇报节点。
 - 最近方向变化及其依据、证据和影响。
-- Case 队列、依赖、owner、Codex task 绑定和状态。
+- Case 队列、依赖、owner、执行层绑定（Codex task 或 Cursor `chatId`）和状态。
 - 待用户澄清 / 授权的事项。
 - 下一恢复位置。
 

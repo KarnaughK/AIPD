@@ -44,9 +44,9 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 ## 运行合同
 
 - 本对话不是 `$aipd-leader` 启动。
-- `dsh-case-runtime` Mission 已于 2026-08-16 关闭：`c29` 实验完成并归档，`c30` 停止并归档，已改代码保留。
-- 已安装 Skill 仍可能写 DSH 执行层；后续新 Case 再改成已登录的 `cursor-agent`。
-- 详细规则仍以 Skill 源码为准：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/core/leader/runtime.md`、平台 runtime、本目录 `dsh-case-runtime.md`。
+- `dsh-case-runtime` Mission 已关闭。Cursor 执行层改为已登录 `cursor-agent`；DSH 不再使用。
+- 已归档 Case：[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)。
+- 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`、本目录 `cursor-agent-bindings.md`。
 
 ## 迁出与清理
 
@@ -66,8 +66,8 @@ Project Leader 接管或恢复项目时：
 
 ## 当前工作区索引
 
-- 当前状态：无 active Mission。`dsh-case-runtime` 已关闭。
-- 已关闭 Case：[`archive/c29-dsh-headless-dispatch`](../case/archive/c29-dsh-headless-dispatch/case.md)、[`archive/c30-cursor-leader-platform`](../case/archive/c30-cursor-leader-platform/case.md)。
-- 最近完成 Mission：`documentation-value-clarity.md`，记录“让每次 AI 开发建立在上一次之上”的用户价值入口改写与验收。
-- 上一完成 Mission：`documentation-refresh-v2.md`，记录 AIPD 大升级后的全量文档刷新、Case 绑定与 Mission 级验收。
-- 当前文件：`index.md`（定位与恢复入口）、`dsh-case-runtime.md`（已关闭的 DSH 实验 Mission）。
+- 当前状态：无 active Mission。Cursor 执行层合同已由 `c31` 落地并归档。
+- 已关闭 Case：[`archive/c29-dsh-headless-dispatch`](../case/archive/c29-dsh-headless-dispatch/case.md)、[`archive/c30-cursor-leader-platform`](../case/archive/c30-cursor-leader-platform/case.md)、[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)。
+- 执行层绑定：[`cursor-agent-bindings.md`](cursor-agent-bindings.md)。
+- 最近完成 Mission：`documentation-value-clarity.md`。
+- 当前文件：`index.md`、`cursor-agent-bindings.md`、`dsh-case-runtime.md`（已关闭）。

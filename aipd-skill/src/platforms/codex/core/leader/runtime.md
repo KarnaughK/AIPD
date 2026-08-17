@@ -73,34 +73,12 @@ Case task 自报完成后，Leader 至少核对：
 
 ## Cursor
 
-Cursor 默认走 DSH。不要用 Cursor 子 Agent / Cloud Agent / `move_agent_to_root` 顶第三层。
+本文件是 Codex 平台包。若宿主其实是 Cursor，不要找 DSH。执行层是已登录的 `cursor-agent`；完整合同在 Cursor 平台包的 `leader/runtime.md`。最短派发：
 
-1. 找 `dsh`：先 `command -v dsh`；没有再用 `npx --no-install @deepseek-ai/dsh`（只走本机缓存，不新装）。
-2. 还是没有：停止，直接说没有 DSH，搞不了。不要补鲁棒性，也不要改走子 Agent。
-3. 有 DSH：默认用方式 A。需要人在 GUI 里续跑时用方式 B。
-
-### 方式 A：headless 单轮（默认）
-
-在**项目根目录**执行。每次调用是独立执行轮，无会话记忆。中间状态只靠 `_aipd/` 里的 `case.md` / work package / checkpoint。
-
-```bash
-cd /项目路径
-dsh --profile headless "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再读取 Case：{绝对路径}，读取 work package：{绝对路径}，按 work package 的上下文文档执行。允许在同一 Case 内回跳，不得另建同级 Case 或同级 DSH 会话。完成后返回压缩结果：Case id / path、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
-```
-
-- 打印最终回复后退出。`exit 0` 即这次调用成功。
-- 派发 prompt 带 Case 与 work package 的绝对路径和边界；执行端自己读文件，不复制长正文。
-- Leader 读回 Case 文件、真实改动和验证结果做验收。任务自报完成不等于 Leader accepted。
-
-### 方式 B：文件交接 + DSH GUI
-
-1. Leader 把 Case brief、work package、checkpoint 写进 `_aipd/case/` 和 `_aipd/leader/`。
-2. 用户在 DSH GUI 里继续执行该 work package。
-3. Leader 读回文件验收，不信任自报。
-
-### 绑定
-
-在 `_aipd/leader/` 记录：Case id / path、宿主 `cursor`、调用方式 `dsh-headless` 或 `dsh-gui`、项目根、时间、状态。headless 无 `session_id` 可续；同一 Case 的下一轮再调一次方式 A，靠文件恢复。
+1. 只用 `cursor-agent`，不用裸 `agent`。未安装或未登录就停。
+2. `chatId` 记在 `_aipd/leader/`；同一 Case 只 `--resume` 这一条。
+3. `cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId>`，prompt 要求执行 Agent 用 `aipd-case` 做完这一个 Case。
+4. Leader 读 Case 文件验收，不信自报。不提目标模式。
 
 ## 其他宿主
 
