@@ -31,7 +31,7 @@ Codex 的独立 task 是 Leader 的 Case 执行单元。用户界面称 task，�
 3. 先调用项目列表能力（当前为 `codex_app__list_projects`），解析当前 saved project。不得凭目录名猜 project id。
 4. Git 项目默认创建隔离 worktree；非 Git 项目默认 local。Case 依赖当前 checkout 未提交状态时，先形成可复现 checkpoint / 稳定基线；若确实必须共享 local checkout，说明冲突风险并按当前 create-task 合同取得所需用户指示。
 5. 调用任务创建能力（当前为 `codex_app__create_thread`），标题使用 `AIPD Case <case-id-or-slug> — <short goal>`，明确传入 `gpt-5.6-sol` 与 `high`。创建是非阻塞的；只有返回可用 `threadId` / `hostId` 才算 ready，排队中的 `clientThreadId` 不能冒充可协调 task id。
-6. 将 Case 与 `threadId`、`hostId`、worktree / local 环境、创建时间、状态和最后 cursor 绑定到 `_aipd/leader/`。一个 Case 只绑定一个主 task；同一 Case 的 phase 回跳继续使用该 task。
+6. 将 Case 与 `threadId`、`hostId`、worktree / local 环境、创建时间、状态和最后 cursor 绑定到 `_aipd/leader/`。一个 Case 只绑定一个主 task；同一 Case 的 phase 回跳继续使用该 task。该 task 上的平台目标若存在，只绑这一个 Case；不要为了维持目标再开第二个 task。
 
 ### 派发 prompt
 
@@ -78,7 +78,7 @@ Case task 自报完成后，Leader 至少核对：
 1. 只用 `cursor-agent`，不用裸 `agent`。未安装或未登录就停。
 2. `chatId` 记在 `_aipd/leader/`；同一 Case 只 `--resume` 这一条。
 3. `cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId>`，prompt 要求执行 Agent 用 `aipd-case` 做完这一个 Case。
-4. Leader 读 Case 文件验收，不信自报。不提目标模式。
+4. Leader 读 Case 文件验收，不信自报。平台目标怎么配合见 `core/leader/guide.md` 与 Cursor 平台包的 `leader/runtime.md`。
 
 ## 其他宿主
 

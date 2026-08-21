@@ -53,6 +53,10 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 回跳必须记录触发原因、新发现的问题、需要更新的上游 artifact、受影响的下游设计或 work package，以及是否需要用户确认目标 / 边界 / 验收标准变化。
 
+这条回跳就是 Case 的校准逻辑。用户说「把这个 Case 推进到结束」时，走的是同一个 Case 的完整生命周期，包括回跳；不要为了推完当前 Case 再开平级 Case。Leader 若在监督，也只打回同一条执行对话，不另建 Case 来代替回跳。
+
+平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不是 Case 的新 phase，也不替代 Case Contract。只有平台目标明确绑定**当前**这个 Case 时，才加载 `goal-mode.md`；Leader 对话上绑定 Mission 的平台目标不进入本 Case 覆盖层。有无平台目标，回跳、checkpoint 和验收都必须做。Cursor 上即使对话挂了 `/goal`，只要没有上述绑定，仍按普通 Case 的确认与回跳推进。
+
 ## Phase-first 目录结构
 
 Case 内部按 phase 解耦。新建 case 不再按材料类型拆成顶层 `doc/`、`steps/`、`code/`，也不再把目标拆成独立 `01-goal/` 目录，而是把目标契约放在 `case.md`，其余展开材料按 phase 平铺：

@@ -42,7 +42,7 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 
 `Goal` 不再是独立 phase。目标、边界、验收标准和上下文索引是整个 case 的契约，直接写在 `case.md` 顶部的 `Case Contract`。后续所有 phase 都必须以这个契约为上下文；执行中迭代出的“暂时做什么 / 暂时不做什么 / 完成标准变化 / 边界变化”也回写到 `case.md` 的契约区或边界变更记录。
 
-平台目标模式与 Case 是单向依赖：启动目标模式必须绑定一个 Case；创建或推进 Case 不要求启动目标模式。进入 Case 时只在平台存在明确绑定当前 Case 的活动目标时加载 `@references/case/goal-mode.md`；没有明确外部绑定时不加载，也不根据任务特征推断目标模式。Goal Mode 是 Case 外部的运行覆盖层，不改变 Case 本体。
+平台目标是宿主完成合同，不是 Case 的新 phase。进入 Case 时，只在平台目标明确绑定**当前**这个 Case 时加载 `@references/case/goal-mode.md`。创建或推进 Case 不要求启动目标模式；Leader 对话上绑定 Mission 的平台目标、或 Cursor `/goal` 尚未形成上述绑定，都不加载覆盖层。也不根据任务特征推断目标模式。覆盖层只改内部 Gate 谁确认，不改变 Case 本体，也不取消回跳。「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳；不要另开平级 Case。
 
 ## 总原则
 

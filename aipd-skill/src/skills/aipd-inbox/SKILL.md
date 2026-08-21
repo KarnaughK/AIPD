@@ -31,8 +31,10 @@ inject-from-core:
 - “回头再整理”
 - “这个外部框架先收一下”
 - “这个想法先扔进来”
+- “先扔一边”
+- “回头有空再说”
 
-不要因为用户普通讨论、提出需求、反馈 bug 或描述稳定认知，就自动进入 inbox。那些场景分别由普通对话、aipd-case 或 weave 处理。
+不要因为用户普通讨论、提出需求、反馈 bug 或描述稳定认知，就自动进入 inbox。那些场景分别由普通对话、aipd-case 或 weave 处理。Leader 对话里的「扔一边 / 回头有空」也走本入口；它不是 To Do，也不是 Mission 排队。Leader 做完当前焦点不会自动翻 Inbox。
 
 ## 职责
 
@@ -50,7 +52,7 @@ inject-from-core:
 - 不拆 work package。
 - 不执行 weave 回写。
 - 不把条目自动写入五类长期知识域。
-- 不把 inbox 条目自动变成 OKR、候选 case 或稳定认知。
+- 不把 inbox 条目自动变成 OKR、候选 case、稳定认知、To Do 或 Mission 队列。
 
 ## 写入格式
 

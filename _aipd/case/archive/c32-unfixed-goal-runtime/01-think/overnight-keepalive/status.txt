@@ -1,0 +1,7 @@
+updated=2026-08-18 08:00:00+0800
+decision=STOPPED_AT_08:00
+supervisor_pid=19657
+worker_pid=
+chat_id=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0
+interval_seconds=300
+stop_at=2026-08-18T08:00+08:00

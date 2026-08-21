@@ -1,0 +1,162 @@
+2026-08-18 01:32:03 supervisor start pid=16054 stop=2026-08-18T08:00+08:00
+2026-08-18 01:32:03 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s
+2026-08-18 01:32:21 supervisor start pid=16331 stop=2026-08-18T08:00+08:00
+2026-08-18 01:32:21 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s
+2026-08-18 01:34:21 supervisor start pid=17470 stop=2026-08-18T08:00+08:00
+2026-08-18 01:34:41 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:35:44 worker finished; sleep 60s then pull again
+2026-08-18 01:36:44 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:37:11 supervisor start pid=19393 stop=2026-08-18T08:00+08:00
+2026-08-18 01:38:28 supervisor start pid=19657 stop=2026-08-18T08:00+08:00
+2026-08-18 01:38:28 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:39:38 worker finished; sleep 60s then pull again
+2026-08-18 01:40:38 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:41:23 worker finished; sleep 60s then pull again
+2026-08-18 01:42:23 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:43:13 worker finished; sleep 60s then pull again
+2026-08-18 01:44:13 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:45:01 worker finished; sleep 60s then pull again
+2026-08-18 01:46:01 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:47:02 worker finished; sleep 60s then pull again
+2026-08-18 01:48:02 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:48:55 worker finished; sleep 60s then pull again
+2026-08-18 01:49:55 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:50:41 worker finished; sleep 60s then pull again
+2026-08-18 01:51:41 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:52:30 worker finished; sleep 60s then pull again
+2026-08-18 01:53:30 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:54:18 worker finished; sleep 60s then pull again
+2026-08-18 01:55:18 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:56:01 worker finished; sleep 60s then pull again
+2026-08-18 01:57:01 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 01:58:11 worker finished; sleep 60s then pull again
+2026-08-18 01:59:11 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 02:00:01 worker finished; sleep 60s then pull again
+2026-08-18 02:01:01 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 02:01:48 worker finished; sleep 60s then pull again
+2026-08-18 02:02:48 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 02:03:37 worker finished; sleep 60s then pull again
+2026-08-18 02:04:37 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=60s reason=interval
+2026-08-18 02:05:29 worker finished; sleep 60s then pull again
+2026-08-18 02:06:29 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:07:18 worker finished; sleep 300s then pull again
+2026-08-18 02:12:18 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:13:02 worker finished; sleep 300s then pull again
+2026-08-18 02:18:03 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:18:55 worker finished; sleep 300s then pull again
+2026-08-18 02:23:55 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:24:33 worker finished; sleep 300s then pull again
+2026-08-18 02:29:33 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:30:17 worker finished; sleep 300s then pull again
+2026-08-18 02:35:17 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:35:57 worker finished; sleep 300s then pull again
+2026-08-18 02:40:57 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:41:41 worker finished; sleep 300s then pull again
+2026-08-18 02:46:41 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:47:33 worker finished; sleep 300s then pull again
+2026-08-18 02:52:33 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:53:13 worker finished; sleep 300s then pull again
+2026-08-18 02:58:13 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 02:59:14 worker finished; sleep 300s then pull again
+2026-08-18 03:04:14 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:04:59 worker finished; sleep 300s then pull again
+2026-08-18 03:09:59 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:10:46 worker finished; sleep 300s then pull again
+2026-08-18 03:15:46 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:16:27 worker finished; sleep 300s then pull again
+2026-08-18 03:21:27 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:22:19 worker finished; sleep 300s then pull again
+2026-08-18 03:27:19 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:27:58 worker finished; sleep 300s then pull again
+2026-08-18 03:32:58 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:33:42 worker finished; sleep 300s then pull again
+2026-08-18 03:38:42 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:39:26 worker finished; sleep 300s then pull again
+2026-08-18 03:44:26 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:45:10 worker finished; sleep 300s then pull again
+2026-08-18 03:50:10 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:50:55 worker finished; sleep 300s then pull again
+2026-08-18 03:55:55 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 03:56:51 worker finished; sleep 300s then pull again
+2026-08-18 04:01:51 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:02:23 worker finished; sleep 300s then pull again
+2026-08-18 04:07:23 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:08:23 worker finished; sleep 300s then pull again
+2026-08-18 04:13:23 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:13:52 worker finished; sleep 300s then pull again
+2026-08-18 04:18:52 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:19:26 worker finished; sleep 300s then pull again
+2026-08-18 04:24:26 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:25:06 worker finished; sleep 300s then pull again
+2026-08-18 04:30:06 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:30:38 worker finished; sleep 300s then pull again
+2026-08-18 04:35:38 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:36:13 worker finished; sleep 300s then pull again
+2026-08-18 04:41:13 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:41:43 worker finished; sleep 300s then pull again
+2026-08-18 04:46:43 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:47:15 worker finished; sleep 300s then pull again
+2026-08-18 04:52:15 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:52:51 worker finished; sleep 300s then pull again
+2026-08-18 04:57:51 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 04:58:22 worker finished; sleep 300s then pull again
+2026-08-18 05:03:23 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:04:09 worker finished; sleep 300s then pull again
+2026-08-18 05:09:09 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:09:58 worker finished; sleep 300s then pull again
+2026-08-18 05:14:58 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:15:28 worker finished; sleep 300s then pull again
+2026-08-18 05:20:28 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:21:00 worker finished; sleep 300s then pull again
+2026-08-18 05:26:00 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:26:34 worker finished; sleep 300s then pull again
+2026-08-18 05:31:34 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:32:09 worker finished; sleep 300s then pull again
+2026-08-18 05:37:09 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:37:42 worker finished; sleep 300s then pull again
+2026-08-18 05:42:42 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 05:47:56 worker finished; sleep 300s then pull again
+2026-08-18 05:52:56 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:00:50 worker finished; sleep 300s then pull again
+2026-08-18 06:05:50 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:07:15 worker finished; sleep 300s then pull again
+2026-08-18 06:12:15 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:13:12 worker finished; sleep 300s then pull again
+2026-08-18 06:18:12 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:19:02 worker finished; sleep 300s then pull again
+2026-08-18 06:24:02 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:24:54 worker finished; sleep 300s then pull again
+2026-08-18 06:29:54 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:30:35 worker finished; sleep 300s then pull again
+2026-08-18 06:35:35 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:36:18 worker finished; sleep 300s then pull again
+2026-08-18 06:41:18 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:42:06 worker finished; sleep 300s then pull again
+2026-08-18 06:47:06 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:47:51 worker finished; sleep 300s then pull again
+2026-08-18 06:52:51 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:53:31 worker finished; sleep 300s then pull again
+2026-08-18 06:58:31 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 06:59:15 worker finished; sleep 300s then pull again
+2026-08-18 07:04:15 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:04:56 worker finished; sleep 300s then pull again
+2026-08-18 07:09:56 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:10:39 worker finished; sleep 300s then pull again
+2026-08-18 07:15:39 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:16:20 worker finished; sleep 300s then pull again
+2026-08-18 07:21:20 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:22:00 worker finished; sleep 300s then pull again
+2026-08-18 07:27:00 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:27:47 worker finished; sleep 300s then pull again
+2026-08-18 07:32:47 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:33:30 worker finished; sleep 300s then pull again
+2026-08-18 07:38:30 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:39:16 worker finished; sleep 300s then pull again
+2026-08-18 07:44:16 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:44:57 worker finished; sleep 300s then pull again
+2026-08-18 07:49:57 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:50:42 worker finished; sleep 300s then pull again
+2026-08-18 07:55:42 wake cursor-agent resume=c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0 interval=300s reason=interval
+2026-08-18 07:56:28 worker finished; sleep 300s then pull again
+2026-08-18 08:00:00 stop time reached; supervisor exit
+STOPPED_AT_08:00

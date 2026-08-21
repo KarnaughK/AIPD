@@ -43,7 +43,7 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 ## 当前研发策略
 
 - Codex 优先适配，先跑通 `skills + agents + aipd-case` 的最短闭环。
-- `$aipd-leader` 是唯一的显式项目主导入口。Codex 上：当前 Leader task 由用户配置为 `gpt-5.6-sol / max / Fast`；它创建的每个 Case task 明确使用 `gpt-5.6-sol / high`，Fast 由 Codex 配置继承或标记未核验。Cursor 上：桌面端对话是 Leader；Case 执行层是已登录的 `cursor-agent` 无头进程，`chatId` 记在 `_aipd/leader/`，命令写死 `cursor-agent` 而不是裸 `agent`。两种宿主上 Case 执行层都走 `aipd-case`，不得再创建同级 Case task，也不找 DSH。
+- `$aipd-leader` 是唯一的显式项目主导入口。Codex 上：当前 Leader task 由用户配置为 `gpt-5.6-sol / max / Fast`；它创建的每个 Case task 明确使用 `gpt-5.6-sol / high`，Fast 由 Codex 配置继承或标记未核验。Cursor 上：桌面端对话是 Leader；Case 执行层是已登录的 `cursor-agent` 无头进程，`chatId` 记在 `_aipd/leader/`，命令写死 `cursor-agent` 而不是裸 `agent`。两种宿主上 Case 执行层都走 `aipd-case`，不得再创建同级 Case task，也不找 DSH。Cursor `/goal` 是宿主完成合同，不是定时器；Cursor 平台包不加载 `goal-mode.md`、不写「目标模式绑定」。同一 Case 回跳必须 `--resume` 同一 `chatId`。
 - Codex 子 Agent 不是默认步骤；Main 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本自然选择是否派发。平台不可用时由 Main 回退执行。
 - GPT-5.6 Sol 日常交互以 High 为基线，Ultra 只用于存在多条独立工作线且可接受更长等待的任务；Ultra 自带委派与 AIPD 主动派发不能无条件叠加。
 - work package 文件和显式上下文不是替代当前对话的任务源，而是用于校准边界、压缩恢复和沉淀长期事实。

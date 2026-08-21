@@ -70,7 +70,7 @@ Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作�
 
 ## Codex 目标模式
 
-Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业务目标或子 Agent。它与 Case 是单向依赖关系：启动 goal 必须绑定一个 Case；创建或推进 Case 不要求启动 goal。
+Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业务目标或子 Agent。Case 执行对话上的 goal 与 Case 是单向依赖：启动该层 goal 必须绑定当前这一个 Case；创建或推进 Case 不要求启动 goal。Leader 对话上的平台目标写 Mission，不绑 Case，也不加载本覆盖层。
 
 - 只有用户或平台明确要求启动目标模式时才创建 goal；不要因为 Case 较长、work package 较多、可能跨轮次或可能压缩上下文就自动创建。
 - 创建 goal 前，先读取 `_aipd/case/index.md` 定位 Case；没有合适 Case 时，先通过 `aipd-case` 创建 `case.md` 并写好 Case Contract，然后再调用 `create_goal`。

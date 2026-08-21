@@ -65,11 +65,13 @@ Codex 上，Leader 默认由用户把当前 task 配置为 `gpt-5.6-sol / max / 
 
 `_aipd/leader/` 是显式启动后才创建的可选工作记忆。信息若能进入 Knowledge、Case、OKR、SOP、Map、README 或代码事实源，就进入对应 owner；Leader 只保存链接及其对当前 Mission 的影响。
 
+平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不替代 Mission 或 Case。用户明确要求时，Leader 对话上的目标写 Mission；Case 执行对话上的目标最多绑那一个 Case。Cursor 上即使挂了 `/goal`，AIPD 仍不自动加载 Case 目标覆盖层。Case 的 phase 回跳是短周期校准；Leader 只打回同一执行层，不为了推完一个 Case 再开两三个 Case。插话聊完后只分「继续当前 / 插队 / 进 Mission 排队 / 扔 Inbox」。Inbox 是项目相关的临时仓库，回头再翻，不是 To Do，也不是排队；Leader 做完当前不会自动去翻。
+
 ### AIPD Case
 
 AIPD Case 是新的统一 case 入口。它不再把 create / run / archive 作为用户必须记住的主流程，而是读取 case.md 的 Case Contract、`Current Phase` 和 `Phase State`，按 Think / Design / Execute / Verify / Close 渐进加载对应 phase 文档。目标、边界和验收标准不再放在独立 Goal phase，而是直接进入 `case.md` 顶部的目标契约。
 
-Case 的用户价值是把一个马上要完成的目标做成完整闭环：先定目标和上下文，必要时在 Think 中调研和抉择，在 Design 中找到复杂度爆点并做最小必要解耦，再按 Work Package 执行，最后 Verify 和 Close。
+Case 的用户价值是把一个马上要完成的目标做成完整闭环：先定目标和上下文，必要时在 Think 中调研和抉择，在 Design 中找到复杂度爆点并做最小必要解耦，再按 Work Package 执行，最后 Verify 和 Close。后续 phase 发现上游不对时带原因回跳，这是 Case 自己的校准，不是另开一个 Case。
 
 Design phase 的核心边界是：不完整抽象所有概念，而是找到复杂度爆点，对爆点做最小必要解耦，让后续执行围绕架构边界并列扩展独立模块，而不是顺着时间纵向堆版本。
 

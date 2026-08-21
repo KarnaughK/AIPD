@@ -2,9 +2,7 @@
 
 ## 进行中 Case
 
-| Case | 状态 | 说明 |
-|---|---|---|
-| — | — | 无 |
+无。
 
 ## 暂停 Case
 
@@ -52,6 +50,7 @@
 | `archive/c29-dsh-headless-dispatch` | 2026-08-16 | Cursor Leader 用 DSH headless 调通文件写回；实验完成，非正式 runtime 晋升 |
 | `archive/c30-cursor-leader-platform` | 2026-08-16 | Cursor 平台包与 `install-cursor` 双目录安装已落地后停止；wp-02 取消；代码保留，执行层改向 Cursor Agent |
 | `archive/c31-cursor-leader-agent-runtime` | 2026-08-17 | Cursor 桌面端 Leader + 已登录 `cursor-agent` 执行层落地；DSH 退出现行合同 |
+| `archive/c32-unfixed-goal-runtime` | 2026-08-21 | 无固定目标自运行 Think + 过夜循环实验后，按用户收口以 `stopped / deferred` 归档；未进 Design，非正式产品 |
 
 ## 使用原则
 

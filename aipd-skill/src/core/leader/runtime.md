@@ -36,7 +36,7 @@ cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId> "你
 ```
 
 7. `exit 0` 只表示这一轮跑完。Leader 读 Case 文件和真实改动验收；未关闭就 resume 同一 `chatId`。
-8. 本段不提目标模式。完整 Cursor 合同以 Cursor 平台包的 `leader/runtime.md` 为准。
+8. 平台目标怎么配合见 `core/leader/guide.md` 与 Cursor 平台包的 `leader/runtime.md`。创建 Goal 不是另开 Case 的理由。
 
 ## 其他宿主
 

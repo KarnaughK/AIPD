@@ -5,6 +5,7 @@ Inbox 是未整理信息的收件箱，只负责接住临时材料，不承诺�
 ## 使用原则
 
 - 这里只记录“先存一下，回头再判断”的信息。
+- 这是临时仓库，不是 To Do，也不是 Mission 排队；Leader 做完当前焦点不会自动来翻。
 - 不在这里拆 work package，不在这里承诺要做。
 - 不把这里的内容直接当作 五类 Knowledge 的稳定认知。
 - 整理时再判断是否迁移到 Intent / Research / Core / Product / Engineering / SOP / OKR / Case，或直接删除。

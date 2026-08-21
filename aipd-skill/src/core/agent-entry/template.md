@@ -58,7 +58,8 @@ Weave 回写时，Intent 只接收用户明确确认的长期方向和边界；R
 普通 AIPD 默认停留在 Case 执行层。只有用户主动调用 `$aipd-leader`，当前对话才成为项目 Leader；任务复杂、自然语言提到 Leader 或存在多个 Case 都不自动触发。
 
 - 一个项目同一时刻只有一个 Leader 和一个 active Mission。
-- Leader 负责方向澄清、探索、Case 拆分、同级 Codex task 调度和总验收；每个 task 对应一个 Case，并在 task 内使用 `aipd-case`。
+- Leader 负责方向澄清、探索、Case 拆分、同级执行层调度和总验收；每个执行层对应一个 Case（Codex task 或 Cursor `cursor-agent`），并在其中使用 `aipd-case`。同一 Case 的 phase 回跳留在该执行层，不要为了推完它再开平级 Case。
+- 平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不替代 Mission 或 Case Contract；未明确要求时不创建。
 - Case task 可以按下文规则使用子 Agent，但不创建新的同级 task，不承担跨 Case 方向判断。
 - `_aipd/leader/` 只保存没有更权威归属、但会影响当前 Mission、跨 Case 协调和恢复的信息；Knowledge、Case、OKR、SOP、Map、README 或代码已有正文时只保留链接和影响摘要。
 - 用户新方向与项目文档或已验证事实冲突时，先澄清底层逻辑并记录变化依据，不静默覆盖，也不盲目执行。

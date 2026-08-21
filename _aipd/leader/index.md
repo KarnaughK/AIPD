@@ -43,9 +43,10 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 
 ## 运行合同
 
-- 本对话不是 `$aipd-leader` 启动。
-- `dsh-case-runtime` Mission 已关闭。Cursor 执行层改为已登录 `cursor-agent`；DSH 不再使用。
-- 已归档 Case：[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)。
+- 本对话曾是 `$aipd-leader` 启动（2026-08-18 01:29）。当前无 active Mission。
+- overnight Mission：[`overnight-mission.md`](overnight-mission.md) 已于 08:00 收口，见 [`overnight-close.md`](overnight-close.md)。`c32` 已于 2026-08-21 `stopped / deferred` 归档。
+- `dsh-case-runtime` Mission 已关闭。Cursor 执行层是已登录 `cursor-agent`；DSH 不用。
+- 已归档 Case：[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)、[`archive/c32-unfixed-goal-runtime`](../case/archive/c32-unfixed-goal-runtime/case.md)。
 - 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`、本目录 `cursor-agent-bindings.md`。
 
 ## 迁出与清理
@@ -66,8 +67,9 @@ Project Leader 接管或恢复项目时：
 
 ## 当前工作区索引
 
-- 当前状态：无 active Mission。Cursor 执行层合同已由 `c31` 落地并归档。
-- 已关闭 Case：[`archive/c29-dsh-headless-dispatch`](../case/archive/c29-dsh-headless-dispatch/case.md)、[`archive/c30-cursor-leader-platform`](../case/archive/c30-cursor-leader-platform/case.md)、[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)。
+- 当前状态：overnight Mission 已收口 [`overnight-close.md`](overnight-close.md)；Mission [`overnight-mission.md`](overnight-mission.md)；心跳 [`heartbeat.md`](heartbeat.md)。
+- 活动 Case：无。
+- 已关闭 Case：[`archive/c29-dsh-headless-dispatch`](../case/archive/c29-dsh-headless-dispatch/case.md)、[`archive/c30-cursor-leader-platform`](../case/archive/c30-cursor-leader-platform/case.md)、[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)、[`archive/c32-unfixed-goal-runtime`](../case/archive/c32-unfixed-goal-runtime/case.md)。
 - 执行层绑定：[`cursor-agent-bindings.md`](cursor-agent-bindings.md)。
 - 最近完成 Mission：`documentation-value-clarity.md`。
-- 当前文件：`index.md`、`cursor-agent-bindings.md`、`dsh-case-runtime.md`（已关闭）。
+- 当前文件：`index.md`、`overnight-close.md`、`overnight-mission.md`、`heartbeat.md`、`runtime-status.md`、`loop-tick.prompt.md`、`cursor-agent-bindings.md`、`dsh-case-runtime.md`（已关闭）。

@@ -1,0 +1,1024 @@
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 落盘「醒来后读什么」短清单；补 ~01:35 过夜实测；收窄下一轮 prompt |
+| **改动文件** | `01-think/think.md`、`case.md`、`01-think/overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；`supervisor.pid=17470` 存活；本轮由 `WAKE reason=interval` 拉起 |
+| **风险** | `status.txt` 在 `WAKE` 时可能空 `worker_pid=`（先写 status 后写 pid） |
+| **阻塞** | 无 |
+| **建议** | 下一轮只修该 status 竞态 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 醒来短清单 → `overnight-keepalive/status.txt` |
+
+本轮停。等监督器下一轮。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 修 `WAKE` 竞态：先写 `worker.pid` 再写 `status.txt`；热重启监督器 |
+| **改动文件** | `overnight-keepalive/supervisor.sh`、`think.md`、`case.md`、`worker.prompt.md` |
+| **验证** | Gate `P=I=2`；`zsh -n` 通过；新 `sup=19393` 存活；`SKIP_BUSY` 时 `worker_pid=18659` 非空 |
+| **风险** | 本轮未亲眼见到修复后的真实 `WAKE` 行，下一轮需核对 |
+| **阻塞** | 无 |
+| **建议** | 下一轮核对 `WAKE` 的 `worker_pid` 非空 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~01:37 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 核对 `WAKE`/`worker_pid=19676` 非空（修复通过）；落盘频率档 assumed 表 60/600；下一轮 prompt 改为写 60 vs 600 判断句 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；`status.txt`=`WAKE` 且 `worker_pid=19676`；与 pid 文件及存活进程一致 |
+| **风险** | 60/600 仅为 assumed，非用户确认 |
+| **阻塞** | 无 |
+| **建议** | 下一轮只写「何时 60 vs 600」三条 assumed 判断 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~01:38 / assumed 表 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 写入 3 条 assumed：推进→60；等人拍板→600；拿不准→60 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE`/`worker_pid=20637`；`interval=60` |
+| **风险** | 判断句与秒数均为 assumed，非用户确认 |
+| **阻塞** | 无 |
+| **建议** | 下一轮收紧「醒来短清单 ↔ 写 interval」一句，或补实测 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md`「何时写 60 vs 600」→ `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 醒来短清单旁补：改频率按 60/600 assumed 三条，并写明数字；本轮保持 interval=60 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE` / `sup=19657` / `worker_pid=21554` / `interval=60` |
+| **风险** | 频率规则仍为 assumed |
+| **阻塞** | 无 |
+| **建议** | 下一轮补过夜实测一行 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 醒来短清单 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 补过夜实测：`sup=19657` / `WAKE` / `interval=60` / `worker=22497` |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；`status.txt` 与记录一致；频率未改仍为 60 |
+| **风险** | 无新风险；运转观察正常 |
+| **阻塞** | 无 |
+| **建议** | 下一轮收「额度未知」为 assumed 一句 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~01:44 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 额度未知 → `quota=unknown` 且按偏紧收敛（assumed，未拍板） |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE` / `sup=19657` / `worker=23488` / `interval=60` |
+| **风险** | 偏紧策略仅为 overnight assumed |
+| **阻塞** | 无 |
+| **建议** | 下一轮收「性格如何改决策」assumed 一句 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 额度未知 assumed → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 性格 overnight 默认 `cautious`：只调敢做多大，不改语气（assumed，未拍板） |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE` / `sup=19657` / `worker=24374` / `interval=60` |
+| **风险** | 性格档仅为 assumed |
+| **阻塞** | 无 |
+| **建议** | 下一轮收「门铃是否只限人说话」assumed 一句 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 性格 assumed → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 门铃 assumed：过夜唯一自动调回=人说话；`doorbell.flag` 仅实验近似；未拍板 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE` / `sup=19657` / `worker=25212` / `interval=60` |
+| **风险** | 门铃范围仅为 assumed |
+| **阻塞** | 无 |
+| **建议** | 下一轮写「过夜不选挂站」assumed |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 门铃 assumed → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 挂站 assumed：过夜不选站、不碰 oknp/DSH，只跑通运转；未拍板 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE` / `sup=19657` / `worker=26247` / `interval=60` |
+| **风险** | 无新风险 |
+| **阻塞** | 无 |
+| **建议** | 下一轮写「进 Design 前还缺什么」≤3 行（仍不进 Design） |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 挂站 assumed → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 写出进 Design 前 3 缺口（确认频率+门铃；确认第三运行时表述；再多轮监督器观察）；明确本轮不进 Design |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮 `WAKE` / `sup=19657` / `worker=27133` / `interval=60` |
+| **风险** | 无；进 Design 被预期缺口挡住 |
+| **阻塞** | 无（等人/再实验，非故障） |
+| **建议** | 下一轮补过夜实测一行 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md`「进 Design 前还缺什么」→ `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 过夜实测：`sup=19657` / `WAKE` / `interval=60` / `worker=27986`；同 pid 自 01:38:28 连续 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；log 最后一次 supervisor start 为 19657@01:38:28，与 status 一致 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 下一轮只读核对 `doorbell.flag` |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~01:55 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 只读核对 `doorbell.flag`=ABSENT；未 touch；记入过夜实测 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；门铃文件不存在；本轮仍 `WAKE`/`sup=19657`/`worker=29057`/`interval=60` |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 下一轮再测同 supervisor pid 是否连续 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~01:57 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 过夜实测：`sup=19657` / `WAKE` / `interval=60` / `worker=29945`；相对 01:38:28 同 pid 连续约 21min |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；log 无更新 start；`sup_alive`；status 一致 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 下一轮只改「进 Design 缺口」第 3 条半句，写入连续观察证据 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~01:59 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 缺口#3 写入：`19657` 自 `01:38:28` 连续；标明仍不满足、须更长窗口；1–2 未动 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；本轮仍 `WAKE`/`sup=19657`/`worker=30953`/`interval=60` |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 下一轮实测抽检即可，无故障不扩写 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 进 Design 前还缺什么 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=31939` / `interval=60`；同 pid 自 01:38:28 连续约 25min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；log 无新 start；`19657_alive` |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 下一轮可将 `interval` assumed 改为 300 拉长观察窗 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:03 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 无故障；`interval-seconds.txt` 60→**300**（assumed 拉长观察窗）；已写入过夜实测 |
+| **改动文件** | `overnight-keepalive/interval-seconds.txt`、`01-think/think.md`、`case.md`、`worker.prompt.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件现为 `300` |
+| **风险** | 300 为 assumed，非用户确认的 60/600 档 |
+| **阻塞** | 无 |
+| **建议** | 下一轮按 5 分钟节奏抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:05 → `status.txt` |
+
+本轮停。监督器将在本 worker 结束后按新的 300s 再拉起。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=33827`；interval 文件与 status 均为 **300**；同 pid 连续约 28min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md`、`overnight-keepalive/worker.prompt.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval=300 生效 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 节奏抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:07 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=35057`；interval=300；同 pid 连续约 34min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:12 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=36337`；interval=300；同 pid 连续约 40min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:18 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=37625`；interval=300；同 pid 连续约 46min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:24 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=38917`；interval=300；同 pid 连续约 51min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:30 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=40169`；interval=300；同 pid 连续约 57min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:35 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=41539`；interval=300；同 pid 连续约 63min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:41 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=42836`；interval=300；同 pid 连续约 68min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:47 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=44137`；interval=300；同 pid 连续约 74min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:53 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=45434`；interval=300；同 pid 连续约 80min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~02:59 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=46752`；interval=300；同 pid 连续约 86min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:04 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=48043`；interval=300；同 pid 连续约 92min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:10 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=49433`；interval=300；同 pid 连续约 98min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:16 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=50717`；interval=300；同 pid 连续约 103min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:22 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=52015`；interval=300；同 pid 连续约 109min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:27 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=53297`；interval=300；同 pid 连续约 115min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:33 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=54635`；interval=300；同 pid 连续约 120min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:39 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=55925`；interval=300；同 pid 连续约 126min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:45 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=57082`；interval=300；同 pid 连续约 132min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:50 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=58439`；interval=300；同 pid 连续约 138min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~03:56 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=59759`；interval=300；同 pid 连续约 144min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:02 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=61040`；interval=300；同 pid 连续约 150min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:08 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=62295`；interval=300；同 pid 连续约 155min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:13 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=63540`；interval=300；同 pid 连续约 161min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:19 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=64812`；interval=300；同 pid 连续约 166min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:25 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=66113`；interval=300；同 pid 连续约 172min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:30 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=67418`；interval=300；同 pid 连续约 177min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:36 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=68699`；interval=300；同 pid 连续约 183min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:41 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=70018`；interval=300；同 pid 连续约 188min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:47 → `status.txt` |
+
+本轮停。
+### 压缩结果
+
+| 项 | 内容 |
+|---|---|
+| **Case** | `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md` |
+| **chatId** | `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0` |
+| **phase** | Think / in_progress |
+| **完成项** | 抽检：`WAKE` / `sup=19657` / `worker=71282`；interval=300；同 pid 连续约 194min；无故障 |
+| **改动文件** | `01-think/think.md`、`case.md` |
+| **验证** | Gate `P=I=2`；`19657_alive`；log 无新 start；interval 文件=300 |
+| **风险** | 无 |
+| **阻塞** | 无 |
+| **建议** | 继续 300s 抽检；有故障改回 60 |
+| **恢复位置** | `case.md` 当前焦点 → `think.md` 过夜实测 ~04:52 → `status.txt` |
+
+本轮停。
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** ~04:58 抽检；gate `P=I=2`
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=72598` / interval=**300**；19657 自 01:38:28 连续约 200min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~04:58 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:03 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=73849` / interval=**300**；19657 自 01:38:28 连续约 205min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:03 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:09 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=75133` / interval=**300**；19657 自 01:38:28 连续约 211min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:09 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:15 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=76412` / interval=**300**；19657 自 01:38:28 连续约 217min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:15 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:20 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=77663` / interval=**300**；19657 自 01:38:28 连续约 222min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:20 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:26 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=78950` / interval=**300**；19657 自 01:38:28 连续约 228min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:26 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:31 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=80203` / interval=**300**；19657 自 01:38:28 连续约 233min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:31 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:37 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=81411` / interval=**300**；19657 自 01:38:28 连续约 239min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:37 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:42 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=82641` / interval=**300**；19657 自 01:38:28 连续约 244min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:42 → `status.txt`
+Connection lost, reconnecting to https://agentn.global.api5.cursor.sh (attempt 1)...
+Retry attempt 1...
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~05:53 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=84205` / interval=**300**；19657 自 01:38:28 连续约 255min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~05:53 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:06 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=86087` / interval=**300**；19657 自 01:38:28 连续约 268min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:06 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:12 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=87370` / interval=**300**；19657 自 01:38:28 连续约 274min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:12 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:18 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=88655` / interval=**300**；19657 自 01:38:28 连续约 280min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:18 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:24 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=89932` / interval=**300**；19657 自 01:38:28 连续约 286min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:24 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:30 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=91217` / interval=**300**；19657 自 01:38:28 连续约 292min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:30 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:35 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=92485` / interval=**300**；19657 自 01:38:28 连续约 298min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:35 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:41 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=93799` / interval=**300**；19657 自 01:38:28 连续约 303min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:41 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:47 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=95040` / interval=**300**；19657 自 01:38:28 连续约 309min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:47 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:53 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=96293` / interval=**300**；19657 自 01:38:28 连续约 315min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:53 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~06:58 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=97589` / interval=**300**；19657 自 01:38:28 连续约 320min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~06:58 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:04 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=98872` / interval=**300**；19657 自 01:38:28 连续约 326min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:04 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:10 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=229` / interval=**300**；19657 自 01:38:28 连续约 332min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:10 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:15 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=1780` / interval=**300**；19657 自 01:38:28 连续约 337min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:15 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:21 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=3073` / interval=**300**；19657 自 01:38:28 连续约 343min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:21 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:27 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=4324` / interval=**300**；19657 自 01:38:28 连续约 349min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:27 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:32 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=5595` / interval=**300**；19657 自 01:38:28 连续约 355min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:32 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:38 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=6853` / interval=**300**；19657 自 01:38:28 连续约 360min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:38 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:44 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=8093` / interval=**300**；19657 自 01:38:28 连续约 366min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认
+- **建议:** 下一轮继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:44 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:50 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=9264` / interval=**300**；19657 自 01:38:28 连续约 372min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认；距 08:00 硬停约 10min
+- **建议:** 下一轮若仍在 08:00 前继续 300s 抽检；有故障改回 60
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:50 → `status.txt`
+- **Case:** `c32-unfixed-goal-runtime` → `_aipd/case/c32-unfixed-goal-runtime/case.md`
+- **chatId:** `c632d911-5ae3-4c8c-9bf7-da9bcbc4d1e0`
+- **phase:** Think / in_progress
+- **完成项:** gate `P=I=2`；~07:55 抽检
+- **改动:** `think.md`、`case.md` 焦点 + checkpoint；interval **未改**
+- **验证:** `WAKE` / `sup=19657` / `worker=10610` / interval=**300**；19657 自 01:38:28 连续约 378min，存活
+- **风险 / 阻塞:** 无故障；进 Design 仍等人确认；距 08:00 硬停约 5min
+- **建议:** 截止前或可再抽一轮；08:00 后停新调度、等用户
+- **恢复:** `case.md` 当前焦点 → `think.md` 过夜实测 ~07:55 → `status.txt`
