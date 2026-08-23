@@ -103,7 +103,7 @@ src/core/
 ### Case、Leader、经验与 OKR
 
 - `case/`：Case Contract、Think / Design / Execute / Verify / Close、Work Package 模板和 worker 指引。
-- `leader/`：显式 Leader 模式的 Mission、方向澄清、工作记忆和平台运行时合同。
+- `leader/`：显式 Leader 模式的 Mission、方向澄清、工作记忆和平台运行时合同。当前 Agent 平台的目标模式 / goal 模式按本对话身份分流，入口在 `agent-entry/template.md`；Leader 绑 Mission，默认执行层绑 Case，Case 覆盖层仍是 `case/goal-mode.md`。
 - `experience/`：真实项目已经跑过的具象经验；实现型源码资产另放根级 `experience-assets/`。
 - `okr/`：飞书 OKR 规则、CLI 入口和模板。
 

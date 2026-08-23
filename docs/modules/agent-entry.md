@@ -48,6 +48,7 @@ Case / Work Package 文件是长期状态事实源，聊天是运行缓存。两
 - 五类 Knowledge、局部 README 和真实代码怎样分工。
 - 普通任务与 Case / OKR / Inbox 等流程何时分流。
 - Main / Child 调度和平台降级原则。
+- 用户说「目标模式 / goal 模式」时，先看本对话是否已显式 `$aipd-leader`：是则绑 Mission，否则绑当前 Case。
 - build、install、发布、删除、远端写入等权限边界。
 - 压缩后怎样从文件 checkpoint 恢复。
 

@@ -10,7 +10,7 @@ AIPD 当前构建九个面向普通项目的公共 Skill。它们不是彼此孤
 |---|---|---|
 | `aipd-leader` | 用户主动调用 `$aipd-leader`，希望由 AI 承担项目推进、探索与跨 Case 协调 | 一个 active Mission；每个 Case 一个独立 Codex 任务；Leader 总验收 |
 
-Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言提到 Leader、任务很复杂或存在多个 Case 都不会自动启动它。
+Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言提到 Leader、任务很复杂或存在多个 Case 都不会自动启动它。用户说「目标模式 / goal 模式」时也不自动启动 Leader：已经显式调用过的 Leader 对话把它绑到当前 Mission，默认执行对话把它交给 `aipd-case`。
 
 ## 主循环
 
