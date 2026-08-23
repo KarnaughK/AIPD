@@ -65,7 +65,7 @@ Codex 上，Leader 默认由用户把当前 task 配置为 `gpt-5.6-sol / max / 
 
 `_aipd/leader/` 是显式启动后才创建的可选工作记忆。信息若能进入 Knowledge、Case、OKR、SOP、Map、README 或代码事实源，就进入对应 owner；Leader 只保存链接及其对当前 Mission 的影响。
 
-平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不替代 Mission 或 Case。用户明确要求时，Leader 对话上的目标写 Mission；Case 执行对话上的目标最多绑那一个 Case。Cursor 上即使挂了 `/goal`，AIPD 仍不自动加载 Case 目标覆盖层。Case 的 phase 回跳是短周期校准；Leader 只打回同一执行层，不为了推完一个 Case 再开两三个 Case。插话聊完后只分「继续当前 / 插队 / 进 Mission 排队 / 扔 Inbox」。Inbox 是项目相关的临时仓库，回头再翻，不是 To Do，也不是排队；Leader 做完当前不会自动去翻。
+当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal` / `CreateGoal`，Codex Goal）是这条对话的宿主续跑能力，不替代 Mission 或 Case。先看本对话身份：已显式 `$aipd-leader` 时写当前 Mission；默认执行层最多绑那一个 Case。Cursor 上即使挂了 `/goal`，只要不是绑当前 Case，AIPD 仍不加载 Case 覆盖层。Case 的 phase 回跳是短周期校准；Leader 只打回同一执行层，不为了推完一个 Case 再开两三个 Case。插话聊完后只分「继续当前 / 插队 / 进 Mission 排队 / 扔 Inbox」。Inbox 是项目相关的临时仓库，回头再翻，不是 To Do，也不是排队；Leader 做完当前不会自动去翻。
 
 ### AIPD Case
 

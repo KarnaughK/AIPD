@@ -68,19 +68,20 @@ case / phase / work package 文件是执行阶段的事实源，但 Work Package
 
 Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作为长期任务事实来源；任务恢复必须回到 `AGENTS.md -> _aipd/manifest.json -> _aipd/index.md -> _aipd/map.md -> _aipd/case/index.md -> 当前 case.md -> 当前 phase 目录 -> 当前 work package`。如果聊天记忆与 case / phase / work package 文件冲突，先提示冲突，再以文件为准。
 
-## Codex 目标模式
+## Codex 目标模式 / goal 模式
 
-Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业务目标或子 Agent。Case 执行对话上的 goal 与 Case 是单向依赖：启动该层 goal 必须绑定当前这一个 Case；创建或推进 Case 不要求启动 goal。Leader 对话上的平台目标写 Mission，不绑 Case，也不加载本覆盖层。
+Codex Goal 是当前这条 Agent 对话的 goal 模式，不是 AIPD 的长期记忆、第二份业务目标或子 Agent。先看本对话身份：已显式 `$aipd-leader` 时，goal 写当前 Mission，不绑 Case，也不加载 `goal-mode.md`；默认执行层上的 goal 与 Case 是单向依赖，必须绑定当前这一个 Case。创建或推进 Case 不要求启动 goal。
 
-- 只有用户或平台明确要求启动目标模式时才创建 goal；不要因为 Case 较长、work package 较多、可能跨轮次或可能压缩上下文就自动创建。
-- 创建 goal 前，先读取 `_aipd/case/index.md` 定位 Case；没有合适 Case 时，先通过 `aipd-case` 创建 `case.md` 并写好 Case Contract，然后再调用 `create_goal`。
-- 一个活动 goal 只绑定一个 Case。goal objective 使用稳定文案，不重复 Case Contract 中的业务目标，也不写会变化的当前 phase 或 work package。
-- 推荐 objective：`推进并关闭 AIPD Case {case-id}（{case.md 路径}）。以该 Case 文件为唯一目标契约和状态事实源，严格按 Think → Design → Execute → Verify → Close 流程完成。`
-- 活动 goal 明确绑定当前 Case 时，加载 `@references/case/goal-mode.md`。平台 goal 是否活动、绑定哪个 Case 是目标模式的权威状态；不要根据 Case 内容或任务特征自行识别。
-- 绑定后可以在 `case.md` 顶部写一条 `目标模式绑定` 恢复提示，但它只是外部状态的镜像，不是新的 Case Contract 字段。
-- Goal Mode 下的内部 Phase Gate 由 Agent 按覆盖层自检并自动推进；不得因为等待 Think -> Design、Design -> Execute、Execute -> Verify 或 Verify -> Close 的确认而把 goal 标记为 blocked。
+- 只有用户或宿主明确要求启动目标模式 / goal 模式时才创建；不要因为 Case 较长、work package 较多、可能跨轮次或可能压缩上下文就自动创建。
+- 本对话已是 Leader：不要为了开 goal 先造 Case。objective 写当前 Mission 完成判据。
+- 本对话是默认执行层：创建 goal 前先读取 `_aipd/case/index.md` 定位 Case；没有合适 Case 时，先通过 `aipd-case` 创建 `case.md` 并写好 Case Contract，然后再调用 `create_goal`。
+- 执行层上一个活动 goal 只绑定一个 Case。goal objective 使用稳定文案，不重复 Case Contract 中的业务目标，也不写会变化的当前 phase 或 work package。
+- 执行层推荐 objective：`推进并关闭 AIPD Case {case-id}（{case.md 路径}）。以该 Case 文件为唯一目标契约和状态事实源，严格按 Think → Design → Execute → Verify → Close 流程完成。`
+- 活动 goal 明确绑定当前 Case 时，加载 `@references/case/goal-mode.md`。宿主 goal 是否活动、绑定哪个 Case 是权威状态；不要根据 Case 内容或任务特征自行识别。
+- 绑定后可以在 `case.md` 顶部写一条 `goal 模式绑定` 恢复提示，但它只是外部状态的镜像，不是新的 Case Contract 字段。
+- 执行层 Goal Mode 下的内部 Phase Gate 由 Agent 按覆盖层自检并自动推进；不得因为等待 Think -> Design、Design -> Execute、Execute -> Verify 或 Verify -> Close 的确认而把 goal 标记为 blocked。
 - 当前 phase、work package、执行游标和验收结果始终写入 case / phase / work package 文件。goal 不替代状态写回，也不强制子 Agent 派发。
-- 只有所绑定 Case 完成 Close 后，才能把 goal 标记为 complete。Case 进度以 Case 文件为准；目标模式是否活动、绑定关系是否存在，以平台 goal 状态为准。
+- 执行层只有所绑定 Case 完成 Close 后，才能把 goal 标记为 complete。Case 进度以 Case 文件为准；goal 模式是否活动、绑定关系是否存在，以宿主 goal 状态为准。
 
 ## 主 Agent 流程
 
@@ -88,7 +89,7 @@ Codex goal 是平台运行时目标，不是 AIPD 的长期记忆、第二份业
 2. 读取 `_aipd/case/index.md`，定位当前或目标 case。
 3. 读取 `_aipd/case/{case目录}/case.md`，按上下文索引加载必要文档。
 4. 读取 `Current Phase`。若处于 Execute，读取 `03-execute/execute.md` 和 `03-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
-5. 如果用户或平台明确要求目标模式，检查 goal 是否绑定当前 Case；没有 Case 时先创建 Case，再创建 goal。绑定成立时加载 Goal Mode 覆盖层；没有活动绑定时按普通 Case 运行，不自动启用。
+5. 如果用户或宿主明确要求目标模式 / goal 模式：本对话已是 Leader 时绑当前 Mission，不要先造 Case，也不加载覆盖层；本对话是默认执行层时，检查 goal 是否绑定当前 Case，没有 Case 就先创建再绑定，绑定成立才加载 Goal Mode 覆盖层。没有活动绑定时按普通 Case 运行，不自动启用。
 6. 根据上下文噪声、可并发性、主线耦合和调度成本，选择 Main 或 Child。
 7. 选择 Main 时连续完成当前内聚目标，并在里程碑写回 work package、execute.md 和 case。
 8. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。派发 `aipd_context_retriever` 时额外传入上述 project-state / catalog 可读路径和已判定版本状态。

@@ -55,6 +55,7 @@ inject-from-core:
 
 - 用户明确说“inbox / 收件箱 / 先记一下 / 先存一下 / 回头再整理”，进入 `aipd-inbox`。
 - 用户明确说“OKR / 飞书 OKR / lark-cli / 周期 / O / KR / OKR 经验包”，进入 `aipd-okr`。
+- 用户说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」：先按 `AGENTS.md` 看本对话身份。已显式 `$aipd-leader` 则进入 `aipd-leader`，为当前 Mission 开 goal 模式；否则进入 `aipd-case`，为当前 Case 开 goal 模式。不要凭 `_aipd/leader/` 或项目里已有 Mission 自称 Leader。
 - 用户带着具体开发、分析、讨论或修改任务，进入“任务上下文轻量加载”。
 - 用户没有明确任务，或明确要看状态、初始化、Case、归档、复盘或总结经验，进入“项目状态与流程”。
 

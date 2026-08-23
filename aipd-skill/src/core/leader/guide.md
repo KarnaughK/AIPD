@@ -91,25 +91,25 @@ Inbox 里可以夹着以后才用得上的材料或不紧急的事，条条都�
 
 「待办 / 回头做」若只是「先出当前焦点、堆起来」，走 Inbox。若已经是现在要做，走插队。若已经认过、会轮到，走 Mission 排队。不要用 Inbox 冒充第四条执行线。
 
-等用户验收时插进来聊两句：当前验收不自动撤。只有用户改口插队或改 Mission，才动执行线和平台目标。
+等用户验收时插进来聊两句：当前验收不自动撤。只有用户改口插队或改 Mission，才动执行线和这条对话上的 goal 模式。
 
-## 平台目标、Mission 与 Case
+## 目标模式 / goal 模式、Mission 与 Case
 
-平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不是 AIPD 的第三套目标对象。它不替代 Mission，也不替代 Case Contract。
+「目标模式」「goal 模式」是**当前这条 Agent 对话**所在宿主提供的长效续跑能力（Cursor `/goal` / `CreateGoal`，Codex Goal），不是 AIPD 的第三套目标对象。它不替代 Mission，也不替代 Case Contract。绑定对象看**本对话身份**，不看项目里有没有 `_aipd/leader/` 或进行中的 Mission。
 
 | 对象 | Owner | 结束态 |
 |---|---|---|
 | Mission | Leader | 项目级结果达成，当前 Case 队列验收通过 |
 | Case Contract | Case 执行层 | 该短周期事项 Close |
-| 平台目标 | 当前这条宿主对话 | 用户或平台明确写下的可核验结束态 |
+| 当前 Agent 平台的目标模式 / goal 模式 | 当前这条宿主对话 | 用户或宿主明确写下的可核验结束态 |
 
 配合规则：
 
-- 只有用户或平台明确要求时才创建平台目标；不因任务长、有 Case、有 Mission 或怕压缩而自动创建。
-- Leader 对话上的平台目标写当前 Mission 的完成判据，不绑某一个 Case，也不把 Mission 拆成几个并行 Goal。
-- Case 执行对话上的平台目标最多绑这一个 Case。只有满足 `case/goal-mode.md` 启用条件才加载覆盖层；覆盖层只改内部 Gate 谁确认，不改 Case 本体，也不取消回跳。
-- Cursor 已有原生 `/goal`，但 Cursor 平台包仍不加载 `goal-mode.md`、不写「目标模式绑定」。执行层继续按普通 `aipd-case` 的确认与回跳推进。`/loop` 是叫醒器，不是目标本体。
-- 「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳。不要为了推完它再开两三个平级 Case，也不要用「已经绑了目标模式」掩盖拆分失控。
+- 用户说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」，或宿主明确要求时，才创建；不因任务长、有 Case、有 Mission 或怕压缩而自动创建。
+- 本对话已显式 `$aipd-leader`：goal 模式写当前 Mission 的完成判据，不绑某一个 Case，也不把 Mission 拆成几个并行 Goal。拆 Case、派执行层、验收仍由 Leader 做。不要加载 `case/goal-mode.md`。可在 `_aipd/leader/` 写一条「goal 模式绑当前 Mission」的恢复提示。
+- 本对话不是 Leader：goal 模式最多绑当前这一个 Case。没有 Case 时先走 `aipd-case` 立 Case，再创建。只有满足 `case/goal-mode.md` 启用条件才加载覆盖层；覆盖层只改内部 Gate 谁确认，不改 Case 本体，也不取消回跳。
+- Cursor 执行层即使对话挂了 `/goal`，只要 goal 写的不是这一个 Case，仍按普通 `aipd-case` 的确认与回跳推进。`/loop` 是叫醒器，不是 goal 模式本身。
+- 「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳。不要为了推完它再开两三个平级 Case，也不要用「已经开了 goal 模式」掩盖拆分失控。
 
 ## 校准逻辑在 Case，不在 Leader
 

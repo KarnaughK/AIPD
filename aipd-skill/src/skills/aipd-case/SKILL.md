@@ -42,7 +42,7 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 
 `Goal` 不再是独立 phase。目标、边界、验收标准和上下文索引是整个 case 的契约，直接写在 `case.md` 顶部的 `Case Contract`。后续所有 phase 都必须以这个契约为上下文；执行中迭代出的“暂时做什么 / 暂时不做什么 / 完成标准变化 / 边界变化”也回写到 `case.md` 的契约区或边界变更记录。
 
-平台目标是宿主完成合同，不是 Case 的新 phase。进入 Case 时，只在平台目标明确绑定**当前**这个 Case 时加载 `@references/case/goal-mode.md`。创建或推进 Case 不要求启动目标模式；Leader 对话上绑定 Mission 的平台目标、或 Cursor `/goal` 尚未形成上述绑定，都不加载覆盖层。也不根据任务特征推断目标模式。覆盖层只改内部 Gate 谁确认，不改变 Case 本体，也不取消回跳。「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳；不要另开平级 Case。
+当前 Agent 平台的目标模式 / goal 模式不是 Case 的新 phase。先按本对话身份分流：本对话已显式 `$aipd-leader` 时，goal 模式绑 Mission，不要为了开 goal 先造 Case，也不加载本覆盖层。本对话是默认执行层时，只在 goal 模式明确绑定**当前**这个 Case 时加载 `@references/case/goal-mode.md`。创建或推进 Case 不要求启动 goal 模式；Leader 对话上绑 Mission 的 goal、或 Cursor `/goal` 尚未形成上述绑定，都不加载覆盖层。也不根据任务特征推断。覆盖层只改内部 Gate 谁确认，不改变 Case 本体，也不取消回跳。「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳；不要另开平级 Case。
 
 ## 总原则
 
@@ -88,7 +88,7 @@ _aipd/case/{case-dir}/case.md
 检测到这是旧结构 case。新 AIPD Case 不再兼容旧 steps/doc 或独立 Goal phase 运行逻辑。是否需要先把它迁移为当前 contract + phase-first case？
 ```
 
-如果还没有 case，先创建 `case.md` 的 `Case Contract`，写清目标、边界、验收标准和上下文索引；然后根据是否存在未知或架构缺口，把 `Current Phase` 设为 `Think` 或 `Design`。如果本次入口来自用户或平台明确要求启动目标模式，必须等 Case 创建完成后再创建并绑定平台目标；绑定后可以在 `case.md` 顶部增加一条目标模式恢复提示。普通 Case 不自动启用目标模式。
+如果还没有 case，先创建 `case.md` 的 `Case Contract`，写清目标、边界、验收标准和上下文索引；然后根据是否存在未知或架构缺口，把 `Current Phase` 设为 `Think` 或 `Design`。如果本次入口来自默认执行层对话、且用户或宿主明确要求启动 goal 模式，必须等 Case 创建完成后再创建并绑定；绑定后可以在 `case.md` 顶部增加一条 goal 模式恢复提示。普通 Case 不自动启用。本对话已是 Leader 时，不要为了开 goal 模式先造 Case。
 
 恢复已有 case 后，不要首轮直接跨 phase 写回。先输出状态卡：文件事实、用户当前认知、冲突点、当前 phase 条件、建议下一步。普通 Case 的关键 phase 跳转必须先确认；已加载 Goal Mode 覆盖层时，按覆盖层的 Gate 规则推进。
 

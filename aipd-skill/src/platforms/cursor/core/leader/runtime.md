@@ -4,15 +4,15 @@
 
 没有 `cursor-agent` 或未登录就停。不要补退路，也不要改走子 Agent。
 
-## 平台目标（Cursor `/goal`）
+## 当前 Agent 平台的目标模式（Cursor `/goal`）
 
-Cursor `/goal` 是宿主完成合同：让同一条对话朝可核验结束态续跑。它不是定时器；定期叫醒用 `/loop`。平台目标怎么和 Mission / Case 配合，以 `core/leader/guide.md` 为准。
+Cursor `/goal` / `CreateGoal` 是当前这条对话的 goal 模式：让同一条对话朝可核验结束态续跑。它不是定时器；定期叫醒用 `/loop`。绑谁以本对话身份为准，细节见 `core/leader/guide.md`。
 
-本包仍不加载 `goal-mode.md`，不写「目标模式绑定」。执行层继续按普通 `aipd-case` 的确认与回跳推进。
+本包不加载 `case/goal-mode.md`。执行层继续按普通 `aipd-case` 的确认与回跳推进。
 
-- 不因有 Mission、有 Case 或任务长而自动创建 Goal。
-- 用户明确要求时：Leader 对话上的 Goal 写当前 Mission 的完成判据，不绑某一个 Case。
-- 用户要求执行对话也挂 Goal 时：objective 最多写「推进并关闭这一个 Case（路径）」；这仍不是 AIPD 覆盖层绑定。
+- 不因有 Mission、有 Case 或任务长而自动创建。
+- 本对话已是 Leader，且用户明确要求目标模式 / goal 模式：必须创建 `/goal`，objective 写当前 Mission 的完成判据，不绑某一个 Case。可在 `_aipd/leader/` 写「goal 模式绑当前 Mission」。
+- 用户要求执行对话也开 goal 模式时：objective 最多写「推进并关闭这一个 Case（路径）」；这仍不是 Case 覆盖层绑定。
 - `/goal` 不是另开 Case 的理由。碰壁回跳留在同一 `chatId`。
 
 ## 安装绑定

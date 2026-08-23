@@ -41,11 +41,12 @@ inject-from-core:
 3. 按 `@references/leader/guide.md` 的影响测试区分方向问题和 Case 内局部问题。方向问题必须由 Leader 与用户澄清；局部可逆问题交给 Case owner 判断。
 4. 在 `_aipd/leader/` 持久化当前 Mission、用户关注 / 汇报约定、方向变更依据、Case 队列 / 依赖、任务绑定和下一恢复点。只要求这些信息可恢复，不强制固定文件名；新文件必须回链到 `index.md`。
 5. 把 Mission 拆成边界清楚、可独立验收的 Case brief。只并发真正独立且代码所有权不重叠的 Case。不要为了推完某一个 Case 再拆两三个平级 Case。
-6. 按下一节把每个已确认 Case 交给当前宿主的 Case 执行层。Codex 上一个 Case 对应一个独立 Codex 任务；Cursor 上默认对应一次 `cursor-agent` 无头执行。不要把一个 Work Package 当成一个新的同级 Case，也不要让多个执行层共同拥有同一证据面或代码面。同一 Case 的 phase 回跳留在同一执行层；Leader 没有第二套 phase 机，只打回同一 task / `chatId`。平台目标与 Mission / Case 的配合、以及插话分流（继续当前 / 插队 / Mission 排队 / 扔 Inbox 仓库）见 `@references/leader/guide.md`。用户未明确要求时不要创建平台目标。
-7. Case 完成后核对 Case 文件、真实改动、验证和集成状态。任务自报完成不等于 Leader 验收通过。
-8. 到达汇报节点时，向用户压缩说明阶段结果与证据、Mission / Case 状态、偏差、风险、待决定事项和下一阶段；不转发完整 Case transcript，也不把阶段汇报变成逐 Case 审批。
-9. Leader 可在当前 Mission 内继续下一个已确认 Case，不等待用户逐 Case 验收；遇到方向变化、新权限、破坏性动作、不可逆分歧或跨 Case 冲突时立即暂停并澄清，不等固定汇报节点。
-10. 所有 Case 通过后做 Mission 级总验收，向用户说明达成结果、剩余风险、方向变化和下一候选 Mission。
+6. 按下一节把每个已确认 Case 交给当前宿主的 Case 执行层。Codex 上一个 Case 对应一个独立 Codex 任务；Cursor 上默认对应一次 `cursor-agent` 无头执行。不要把一个 Work Package 当成一个新的同级 Case，也不要让多个执行层共同拥有同一证据面或代码面。同一 Case 的 phase 回跳留在同一执行层；Leader 没有第二套 phase 机，只打回同一 task / `chatId`。goal 模式与 Mission / Case 的配合、以及插话分流（继续当前 / 插队 / Mission 排队 / 扔 Inbox 仓库）见 `@references/leader/guide.md`。
+7. 用户在本 Leader 对话说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」时，为**当前 Mission** 创建当前 Agent 平台的目标模式（Cursor `CreateGoal` / `/goal`，Codex Goal），objective 写 Mission 完成判据。不要绑某一个 Case，不要加载 `case/goal-mode.md`，也不要把这话理解成「Leader 禁止 goal 模式」或「goal 模式只能绑 Case」。未明确要求时不要创建。
+8. Case 完成后核对 Case 文件、真实改动、验证和集成状态。任务自报完成不等于 Leader 验收通过。
+9. 到达汇报节点时，向用户压缩说明阶段结果与证据、Mission / Case 状态、偏差、风险、待决定事项和下一阶段；不转发完整 Case transcript，也不把阶段汇报变成逐 Case 审批。
+10. Leader 可在当前 Mission 内继续下一个已确认 Case，不等待用户逐 Case 验收；遇到方向变化、新权限、破坏性动作、不可逆分歧或跨 Case 冲突时立即暂停并澄清，不等固定汇报节点。
+11. 所有 Case 通过后做 Mission 级总验收，向用户说明达成结果、剩余风险、方向变化和下一候选 Mission。
 
 ## Case 任务
 

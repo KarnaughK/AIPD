@@ -55,7 +55,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 这条回跳就是 Case 的校准逻辑。用户说「把这个 Case 推进到结束」时，走的是同一个 Case 的完整生命周期，包括回跳；不要为了推完当前 Case 再开平级 Case。Leader 若在监督，也只打回同一条执行对话，不另建 Case 来代替回跳。
 
-平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不是 Case 的新 phase，也不替代 Case Contract。只有平台目标明确绑定**当前**这个 Case 时，才加载 `goal-mode.md`；Leader 对话上绑定 Mission 的平台目标不进入本 Case 覆盖层。有无平台目标，回跳、checkpoint 和验收都必须做。Cursor 上即使对话挂了 `/goal`，只要没有上述绑定，仍按普通 Case 的确认与回跳推进。
+当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal` / `CreateGoal`，Codex Goal）不是 Case 的新 phase，也不替代 Case Contract。只有本对话是默认执行层、且 goal 模式明确绑定**当前**这个 Case 时，才加载 `goal-mode.md`；Leader 对话上绑 Mission 的 goal 不进入本 Case 覆盖层。有无 goal 模式，回跳、checkpoint 和验收都必须做。Cursor 上即使对话挂了 `/goal`，只要没有上述绑定，仍按普通 Case 的确认与回跳推进。
 
 ## Phase-first 目录结构
 

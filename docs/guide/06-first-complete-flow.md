@@ -77,7 +77,7 @@ _aipd/update-log.md
 完成后 Verify、Close，并整理 Weave 候选。
 ```
 
-如果平台支持目标模式，并且你希望 Agent 在既定边界内持续推进，可以明确要求把平台目标绑定到这个 Case。Case 应先创建，再绑定目标。
+如果当前 Agent 平台支持目标模式 / goal 模式，并且你希望这条对话持续被拉起：默认执行层把它绑到当前 Case（Case 应先创建，再绑定）；已经显式启动 Leader 的对话则绑当前 Mission。
 
 检查 `case.md` 顶部的 Case Contract：
 

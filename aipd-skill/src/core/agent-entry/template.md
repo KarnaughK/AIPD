@@ -59,10 +59,20 @@ Weave 回写时，Intent 只接收用户明确确认的长期方向和边界；R
 
 - 一个项目同一时刻只有一个 Leader 和一个 active Mission。
 - Leader 负责方向澄清、探索、Case 拆分、同级执行层调度和总验收；每个执行层对应一个 Case（Codex task 或 Cursor `cursor-agent`），并在其中使用 `aipd-case`。同一 Case 的 phase 回跳留在该执行层，不要为了推完它再开平级 Case。
-- 平台目标（Codex Goal / Cursor `/goal`）是宿主完成合同，不替代 Mission 或 Case Contract；未明确要求时不创建。
 - Case task 可以按下文规则使用子 Agent，但不创建新的同级 task，不承担跨 Case 方向判断。
 - `_aipd/leader/` 只保存没有更权威归属、但会影响当前 Mission、跨 Case 协调和恢复的信息；Knowledge、Case、OKR、SOP、Map、README 或代码已有正文时只保留链接和影响摘要。
 - 用户新方向与项目文档或已验证事实冲突时，先澄清底层逻辑并记录变化依据，不静默覆盖，也不盲目执行。
+
+## 当前 Agent 平台的目标模式 / goal 模式
+
+「目标模式」「goal 模式」指当前这条 Agent 对话所在宿主提供的长效续跑能力（Cursor `/goal` / `CreateGoal`，Codex Goal）。它让**当前这条对话**朝一个可核验结束态继续被拉起。它不替代 Mission，也不替代 Case Contract。用户或宿主未明确要求时不创建。
+
+用户说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」时，先看**本对话身份**，再决定绑谁：
+
+1. 本对话已经显式调用 `$aipd-leader`（或用户明确选择了该 Skill）：这条对话是 Leader。goal 模式绑当前 Mission 的完成判据，不绑某一个 Case。拆 Case、派执行层、验收仍由 Leader 做。不要加载 Case 的 `goal-mode.md`。
+2. 否则：这条对话是默认执行层。goal 模式绑当前 Case；还没有 Case 就先走 `aipd-case` 立 Case，再开 goal 模式。不要因为项目里已有 `_aipd/leader/` 或进行中的 Mission，就把自己当成 Leader。
+
+不要凭任务长、有 Case、有 Mission 或怕压缩而自动创建。`/loop` 是叫醒器，不是 goal 模式本身。
 
 ## Main / 子 Agent 调度
 

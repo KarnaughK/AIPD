@@ -90,7 +90,7 @@ Work Package 只存在于 `03-execute/work-packages/`。它不是微步骤，也
 
 ## Goal Mode 是外部覆盖层
 
-平台目标模式只有在活动目标明确绑定当前 Case 时启用。它允许 Agent 在 Contract 边界内自行检查内部 Gate，通过后写 checkpoint 并继续完整生命周期。
+当前 Agent 平台的目标模式 / goal 模式按本对话身份分流。默认执行层只有在活动 goal 明确绑定当前 Case 时，才启用 Case 覆盖层；Leader 对话上的 goal 绑 Mission，不启用本覆盖层。Case 覆盖层允许 Agent 在 Contract 边界内自行检查内部 Gate，通过后写 checkpoint 并继续完整生命周期。
 
 Goal Mode 不改变 Case Contract、phase、Work Package 或验收标准，也不扩大权限。目标、边界或风险结构需要实质变化，以及安装、发布、删除、付费、外部消息等副作用，仍需要用户决定或对应授权。
 

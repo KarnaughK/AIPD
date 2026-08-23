@@ -95,9 +95,9 @@ open：管理员是否允许人工退款
 
 ## Goal Mode 和 Case 的关系
 
-平台目标模式可以绑定一个明确 Case。绑定后，Agent 在 Contract 边界内自行检查 Think、Design、Execute、Verify、Close 的内部 Gate，通过后写 checkpoint 并继续。
+当前 Agent 平台的目标模式 / goal 模式先看本对话身份。默认执行层可以把它绑到一个明确 Case；Leader 对话则绑当前 Mission，不走下面的 Case 覆盖层。
 
-Goal Mode 只改变“内部 Gate 由谁确认”，不改变 Case 内容，也不扩大权限。安装、发布、付费、删除、对外发送等副作用仍需要各自的授权。
+绑到 Case 后，Agent 在 Contract 边界内自行检查 Think、Design、Execute、Verify、Close 的内部 Gate，通过后写 checkpoint 并继续。Goal Mode 只改变“内部 Gate 由谁确认”，不改变 Case 内容，也不扩大权限。安装、发布、付费、删除、对外发送等副作用仍需要各自的授权。
 
 ## Main / Child 是运行时选择
 

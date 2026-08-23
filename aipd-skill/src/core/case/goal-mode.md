@@ -1,24 +1,26 @@
 # AIPD Case Goal Mode Overlay
 
-本文件是平台目标模式绑定 AIPD Case 时加载的运行覆盖层。它不改变 Case Contract、phase 结构、artifact、Work Package 或验收标准；普通 Case 不读取本文件，继续按原有协作流程运行。
+本文件只是 Case 执行层的运行覆盖层，不是「目标模式 / goal 模式」一词的全部含义。当前 Agent 平台的目标模式先按本对话身份分流：Leader 对话绑 Mission，走 `leader/guide.md`，不要读本文件；只有 goal 模式明确绑定**这一个 Case** 时，才加载本覆盖层。
+
+它不改变 Case Contract、phase 结构、artifact、Work Package 或验收标准；普通 Case 不读取本文件，继续按原有协作流程运行。
 
 ## 启用条件
 
 只有同时满足以下条件才启用本覆盖层：
 
-1. 平台当前存在活动目标。
-2. 目标明确绑定一个 Case ID 或 `case.md` 路径。
-3. 目标内容是推进、完成或关闭该 Case，而不是另一份独立业务目标。
+1. 当前这条对话存在活动的 goal 模式。
+2. 该 goal 明确绑定一个 Case ID 或 `case.md` 路径。
+3. goal 内容是推进、完成或关闭该 Case，而不是 Mission 或另一份独立业务目标。
 
-不要根据任务长度、work package 数量、上下文压缩风险、目标文案相似度或 Agent 自己的判断推断目标模式。没有明确外部绑定时，按普通 Case 运行。宿主上存在 `/goal` 或活动目标、但目标写的是 Mission、另一个 Case 或含糊业务结果时，也不加载本文件。
+不要根据任务长度、work package 数量、上下文压缩风险、目标文案相似度或 Agent 自己的判断推断 goal 模式。没有明确外部绑定时，按普通 Case 运行。宿主上存在 `/goal` 或活动目标、但目标写的是 Mission、另一个 Case 或含糊业务结果时，也不加载本文件。
 
-平台目标状态是权威来源。绑定时可以在 `case.md` 顶部增加一条恢复提示：
+goal 模式的宿主状态是权威来源。绑定时可以在 `case.md` 顶部增加一条恢复提示：
 
 ```md
-> **目标模式绑定**：{平台目标；active；绑定本 Case}
+> **goal 模式绑定**：{当前 Agent 平台的目标模式；active；绑定本 Case}
 ```
 
-这条提示不是新的 Case Contract 字段，也不替代平台状态。平台目标删除、完成、暂停或改绑后，应同步更新或移除提示；两者冲突时以平台状态为准。
+这条提示不是新的 Case Contract 字段，也不替代宿主状态。goal 模式删除、完成、暂停或改绑后，应同步更新或移除提示；两者冲突时以宿主状态为准。
 
 ## 覆盖边界
 
@@ -40,7 +42,7 @@
 - Verify 中能够依据 Case Contract、测试、报告、截图或其他证据完成的验收由 Agent 自主完成；只有验收标准明确要求用户主观判断或用户独有事实时才询问。
 - 产品类 Case 命中 Attention Contract / Reduction Scan 触发器时，视为内部质量 Gate：记录证据后自主回到 Design，形成 Reduction Delta，修正受影响产物并重新 Verify。迭代次数由触发器和收敛证据决定，不按固定轮数执行，也不因需要内部回跳而暂停等待用户。
 - Case Contract 已明确包含归档时，Verify 通过后可以自主进入 Close 并归档；提交、推送、发布、付费、外部消息等动作仍按原权限边界处理。
-- Case 完成 Close 后，才能把平台目标标记为完成。
+- Case 完成 Close 后，才能把这条对话上的 goal 模式标记为完成。
 
 ## 必须暂停询问的情况
 
@@ -62,8 +64,8 @@
 
 ## 退出条件
 
-平台不再存在绑定本 Case 的活动目标时，停止加载本覆盖层，Case 恢复普通协作流程。不要把目标模式规则永久写进各 phase 文档或 Case Contract。
+宿主不再存在绑定本 Case 的活动 goal 时，停止加载本覆盖层，Case 恢复普通协作流程。不要把 goal 模式规则永久写进各 phase 文档或 Case Contract。
 
 ## 与 Mission / Leader 的关系
 
-本覆盖层只服务「平台目标明确绑定这一个 Case」。Leader 的 Mission、Leader 对话上的平台目标都不是本文件的启用条件。绑定后，回跳仍按 Case 主流程执行；不要为了维持目标活跃而另建 Case。Cursor 平台包目前不创建这种绑定，也不注入本文件；Cursor `/goal` 只让当前对话按宿主合同续跑。
+本覆盖层只服务「当前对话的 goal 模式明确绑定这一个 Case」。Leader 的 Mission、Leader 对话上绑 Mission 的 goal 模式都不是本文件的启用条件。绑定后，回跳仍按 Case 主流程执行；不要为了维持 goal 活跃而另建 Case。Cursor 执行层即使挂了 `/goal`，只要不是绑这一个 Case，就不注入本文件。
