@@ -39,15 +39,15 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 - 新建、删除或重命名本目录内文件后，应在本文件的“当前工作区索引”中更新入口。
 - 不再影响当前判断的信息可以删除，不要求永久归档所有思考过程。
 
-无论文件怎样拆分，都必须能够恢复：active Mission 与成功判据、最近方向变化及依据、Case 队列 / 依赖 / owner、Case runtime 绑定（Codex task 或 Cursor 上的执行层）、待确认事项和下一恢复位置。
+无论文件怎样拆分，都必须能够恢复：active Mission 与成功判据、最近方向变化及依据、Case 队列 / 依赖 / owner、Case runtime 绑定（Codex 上是独立 task；Cursor 上才是 `chatId`）、待确认事项和下一恢复位置。
 
 ## 运行合同
 
-- 本对话曾是 `$aipd-leader` 启动（2026-08-18 01:29）。当前无 active Mission。
-- overnight Mission：[`overnight-mission.md`](overnight-mission.md) 已于 08:00 收口，见 [`overnight-close.md`](overnight-close.md)。`c32` 已于 2026-08-21 `stopped / deferred` 归档。
-- `dsh-case-runtime` Mission 已关闭。Cursor 执行层是已登录 `cursor-agent`；DSH 不用。
-- 已归档 Case：[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)、[`archive/c32-unfixed-goal-runtime`](../case/archive/c32-unfixed-goal-runtime/case.md)。
-- 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`、本目录 `cursor-agent-bindings.md`。
+- 当前无 active Mission，也没有活动 Leader 对话。
+- Codex 上 Leader 直接为每个 Case 开独立 Agent 线程，不套桌面端 + CLI 组合。
+- Cursor 因为对话内 Agent 不够强，才用桌面端 Leader + 已登录 `cursor-agent`；那是 Cursor 平台包的事，不是 Codex 默认路径。
+- DSH 已退出现行合同。相关实验见已归档 `c29` / `c30` / `c31`；无固定目标过夜实验见已归档 `c32`。
+- 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`。
 
 ## 迁出与清理
 
@@ -67,9 +67,7 @@ Project Leader 接管或恢复项目时：
 
 ## 当前工作区索引
 
-- 当前状态：overnight Mission 已收口 [`overnight-close.md`](overnight-close.md)；Mission [`overnight-mission.md`](overnight-mission.md)；心跳 [`heartbeat.md`](heartbeat.md)。
+- 当前状态：无 active Mission。
 - 活动 Case：无。
 - 已关闭 Case：[`archive/c29-dsh-headless-dispatch`](../case/archive/c29-dsh-headless-dispatch/case.md)、[`archive/c30-cursor-leader-platform`](../case/archive/c30-cursor-leader-platform/case.md)、[`archive/c31-cursor-leader-agent-runtime`](../case/archive/c31-cursor-leader-agent-runtime/case.md)、[`archive/c32-unfixed-goal-runtime`](../case/archive/c32-unfixed-goal-runtime/case.md)。
-- 执行层绑定：[`cursor-agent-bindings.md`](cursor-agent-bindings.md)。
-- 最近完成 Mission：`documentation-value-clarity.md`。
-- 当前文件：`index.md`、`overnight-close.md`、`overnight-mission.md`、`heartbeat.md`、`runtime-status.md`、`loop-tick.prompt.md`、`cursor-agent-bindings.md`、`dsh-case-runtime.md`（已关闭）。
+- 当前文件：`index.md`。

@@ -94,10 +94,10 @@ Think 和 Inbox 的区别是承诺度：Inbox 只负责 capture，不承诺讨�
 
 Leader 是用户显式增加在 Case 之上的项目主导层。普通 AIPD 默认仍由人驾驶，Agent 在 Case 层完成执行；只有用户主动调用 `$aipd-leader`，当前对话才承担一个 active Mission 的方向探索、Case 拆分、同级执行层调度和总验收。
 
-Leader 与 Main / Child Agent 不是同一层。宿主决定执行层：
+Leader 与 Main / Child Agent 不是同一层。平台决定执行层，但不要把弱宿主的组合形态套到强宿主上：
 
-- Codex：一个 Case 对应一个独立 Codex task。
-- Cursor：桌面端对话是 Leader；每个 Case 由已登录的无头 `cursor-agent` 做完。`chatId` 记在 `_aipd/leader/`，同一 Case 下一轮 `--resume`，不用对话内子 Agent，也不找 DSH。
+- Codex：Leader 直接为每个 Case 开独立 Codex task，不经过桌面端 + CLI。
+- Cursor：对话内 Agent 不够强，所以桌面端对话是 Leader；每个 Case 由已登录的无头 `cursor-agent` 做完。`chatId` 记在 `_aipd/leader/`，同一 Case 下一轮 `--resume`，不用对话内子 Agent，也不找 DSH。
 
 Case 执行层内部仍可以按项目规则使用 Child Agent 或工具。执行层不创建新的同级 Case task，也不承担跨 Case 方向判断。同一 Case 的 phase 回跳留在该执行层；Leader 没有第二套 phase 机。当前 Agent 平台的目标模式 / goal 模式是这条对话的宿主续跑能力，不是第三套运行时：本对话已是 Leader 时写 Mission，默认执行层最多绑这一个 Case。
 

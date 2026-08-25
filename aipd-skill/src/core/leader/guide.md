@@ -108,7 +108,7 @@ Inbox 里可以夹着以后才用得上的材料或不紧急的事，条条都�
 - 用户说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」，或宿主明确要求时，才创建；不因任务长、有 Case、有 Mission 或怕压缩而自动创建。
 - 本对话已显式 `$aipd-leader`：goal 模式写当前 Mission 的完成判据，不绑某一个 Case，也不把 Mission 拆成几个并行 Goal。拆 Case、派执行层、验收仍由 Leader 做。不要加载 `case/goal-mode.md`。可在 `_aipd/leader/` 写一条「goal 模式绑当前 Mission」的恢复提示。
 - 本对话不是 Leader：goal 模式最多绑当前这一个 Case。没有 Case 时先走 `aipd-case` 立 Case，再创建。只有满足 `case/goal-mode.md` 启用条件才加载覆盖层；覆盖层只改内部 Gate 谁确认，不改 Case 本体，也不取消回跳。
-- Cursor 执行层即使对话挂了 `/goal`，只要 goal 写的不是这一个 Case，仍按普通 `aipd-case` 的确认与回跳推进。`/loop` 是叫醒器，不是 goal 模式本身。
+- Cursor 因为对话内 Agent 不够强，才用桌面端 Leader + `cursor-agent`；那是 Cursor 平台包的事。Codex 上不要套这套组合，直接开独立 task。Cursor 执行层即使对话挂了 `/goal`，只要 goal 写的不是这一个 Case，仍按普通 `aipd-case` 的确认与回跳推进。`/loop` 是叫醒器，不是 goal 模式本身。
 - 「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳。不要为了推完它再开两三个平级 Case，也不要用「已经开了 goal 模式」掩盖拆分失控。
 
 ## 校准逻辑在 Case，不在 Leader
@@ -117,7 +117,7 @@ Case 的 Think → Design → Execute → Verify 可以带原因回跳。这是�
 
 Leader 没有第二套 phase 机。Leader 的校准是：
 
-- 局部、可逆、仍在该 Case 边界内：打回**同一个** Case 执行层（同一 Codex task / 同一 `chatId`），由执行层按 `aipd-case` 回跳。
+- 局部、可逆、仍在该 Case 边界内：打回**同一个** Case 执行层（Codex 上同一 task，Cursor 上同一 `chatId`），由执行层按 `aipd-case` 回跳。
 - 改变 Mission 结果、跨 Case 前提或项目方向：停在 Leader，与用户澄清后再改 Case 队列。
 - 一次碰壁、一次回跳、一次验收失败，都不是创建新 Case 或新执行层的理由。
 

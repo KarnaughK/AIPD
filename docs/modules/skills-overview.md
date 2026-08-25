@@ -8,7 +8,7 @@ AIPD 当前构建九个面向普通项目的公共 Skill。它们不是彼此孤
 
 | Skill | 触发场景 | 主要结果 |
 |---|---|---|
-| `aipd-leader` | 用户主动调用 `$aipd-leader`，希望由 AI 承担项目推进、探索与跨 Case 协调 | 一个 active Mission；每个 Case 一个独立 Codex 任务；Leader 总验收 |
+| `aipd-leader` | 用户主动调用 `$aipd-leader`，希望由 AI 承担项目推进、探索与跨 Case 协调 | 一个 active Mission；Codex 上每个 Case 一条独立 Agent 线程；Leader 总验收 |
 
 Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言提到 Leader、任务很复杂或存在多个 Case 都不会自动启动它。用户说「目标模式 / goal 模式」时也不自动启动 Leader：已经显式调用过的 Leader 对话把它绑到当前 Mission，默认执行对话把它交给 `aipd-case`。
 
@@ -55,7 +55,7 @@ Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构�
 用户把当前任务设置为 gpt-5.6-sol / max / Fast
 -> 显式调用 $aipd-leader
 -> Leader 澄清并记录一个 active Mission
--> 每个 Case 创建 gpt-5.6-sol / high / Fast 的独立 Codex 任务
+-> 每个 Case 直接创建 gpt-5.6-sol / high / Fast 的独立 Codex 线程
 -> Case task 使用 $aipd-case 完成闭环
 -> Leader 跨 Case 协调并做 Mission 总验收
 ```

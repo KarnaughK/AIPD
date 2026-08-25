@@ -163,7 +163,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 
 | Skill | 什么时候用 | 结果 |
 |---|---|---|
-| `$aipd-leader` | 希望把当前对话提升为项目 Leader，由它探索方向并调度多个 Case | 一个 active Mission；每个 Case 对应一个独立 Codex 任务；Leader 负责总验收 |
+| `$aipd-leader` | 希望把当前对话提升为项目 Leader，由它探索方向并调度多个 Case | 一个 active Mission；Codex 上每个 Case 直接开一条独立 Agent 线程；Leader 负责总验收 |
 
 Leader 绝不自动启动。普通 AIPD 仍从 Case 执行层开始；只有用户主动调用 `$aipd-leader`，当前对话才承担项目主导职责。Leader 可以在已确认的 Mission 内协调 Case 任务，但不会扩大安装、发布、删除、付费或远端写入权限。当前 Agent 平台的目标模式 / goal 模式跟这条对话的身份走：Leader 对话绑 Mission，普通执行对话绑当前 Case。
 

@@ -1,42 +1,32 @@
 # Leader Case Runtime
 
-派发 Case 前先判断当前宿主。不要猜，也不要用子 Agent 冒充 Case task。
+派发 Case 前读取当前平台注入的 `leader/runtime.md`。不要用子 Agent 冒充 Case task。
 
-## 宿主判断
-
-- 当前对话在 Codex，或能调用 `codex_app__create_thread`：走 **Codex**。
-- 当前对话在 Cursor，或能看到 Cursor Agent / `cursor-app-control`：走 **Cursor**。
-- 看不清：停下来问一句。
+构建时，Codex 包注入 Codex 平台覆盖，Cursor 包注入 Cursor 平台覆盖。公共层只保留平台分发，不把某一宿主的组合形态写进另一宿主的默认路径。
 
 ## Codex
 
-Codex 平台覆盖文件有完整合同。若当前构建注入的就是本文件，按同级 task 创建：
+Codex 上 Leader 直接开独立 Codex 任务。一个 Case 对应一个主 task；phase 回跳继续用它。完整合同以 Codex 平台覆盖为准。
+
+最短路径：
 
 1. 用 `codex_app__list_projects` 解析当前 saved project，不得凭目录名猜 id。
 2. 调用 `codex_app__create_thread`，标题 `AIPD Case <case-id-or-slug> — <short goal>`，传入 `gpt-5.6-sol` 与 `high`。
 3. 只有返回可用 `threadId` / `hostId` 才算 ready。
 4. 用 `codex_app__send_message_to_thread`、`codex_app__wait_threads`、`codex_app__read_thread` 跟进。
-5. 一个 Case 只绑定一个主 task；phase 回跳继续用它。
+5. 不要调用 `cursor-agent`，也不要先判断是不是 Cursor 再改走桌面端组合。
 
 没有这些能力时不要假装已经启动编排。
 
 ## Cursor
 
-Cursor 的 Case 执行层是本机已登录的 `cursor-agent`。不要用对话内 Task / 子 Agent / Cloud Agent / `move_agent_to_root` 顶第三层。不要找 DSH。
+Cursor 因为对话内 Agent 不足以独立承接 Case，才使用桌面端 Leader + 已登录 `cursor-agent` 无头执行层。这是 Cursor 平台包的合同，不是 Codex 的默认路径。完整步骤以 Cursor 平台覆盖为准。
 
-1. 只用 `cursor-agent`，不用裸 `agent`。
-2. `command -v cursor-agent`；没有就停。
-3. `cursor-agent status`；未登录就停，请用户执行 `cursor-agent login`。不用 API key。
-4. 该 Case 还没有 `chatId`：`cursor-agent create-chat`，把 ID 写进 `_aipd/leader/` 并回链 `index.md`。
-5. 已有 `chatId`：`--resume` 同一条，不要新建。
-6. 在项目根无头派发：
+公共层只记住：
 
-```bash
-cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId> "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再显式使用 aipd-case 读取 Case：{绝对路径}。按该 Case 当前 phase 推进；有 work package 时读取其绝对路径和上下文文档。允许在同一 Case 内回跳，不得另建同级 Case 或再开一个 Leader。完成后返回压缩结果：Case id / path、chatId、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
-```
-
-7. `exit 0` 只表示这一轮跑完。Leader 读 Case 文件和真实改动验收；未关闭就 resume 同一 `chatId`。
-8. goal 模式怎么配合见 `core/leader/guide.md` 与 Cursor 平台包的 `leader/runtime.md`。创建 goal 不是另开 Case 的理由。
+- 不用对话内 Task / 子 Agent / Cloud Agent 顶第三层。
+- 不用 DSH。
+- 一个 Case 一条 `chatId`，回跳 `--resume` 同一条。
 
 ## 其他宿主
 

@@ -61,7 +61,7 @@ Leader 是用户显式启动的可选项目主导层。它不会因任务复杂�
 
 Leader 是面向用户的受托项目负责人和监督者，Case 是面向目标契约与实现细节的执行者。用户可对主要跟进的项目亲自承担 Leader 责任并直接与 Case 沟通；对无法持续投入精力的项目，则显式委托 AI Leader 掌控状态、处理跨 Case 判断，并在约定节点汇报阶段结果、证据、偏差、风险和待决定事项。AI Leader 已启动时，用户仍可进入 Case 核查细节，但跨 Case 结论必须返回 Leader 汇总。
 
-Codex 上，Leader 默认由用户把当前 task 配置为 `gpt-5.6-sol / max / Fast`，创建的 Case task 使用 `gpt-5.6-sol / high / Fast`。模型和推理等级由创建接口明确传递；接口没有 Fast 字段时只记录继承或未核验状态。Cursor 上，桌面端对话是 Leader，Case 执行层是已登录的无头 `cursor-agent`；`chatId` 记在 `_aipd/leader/`，不找 DSH，也不用对话内子 Agent 顶执行层。
+Codex 上，Leader 默认由用户把当前 task 配置为 `gpt-5.6-sol / max / Fast`，并直接为每个 Case 开独立 Codex 任务，使用 `gpt-5.6-sol / high / Fast`。模型和推理等级由创建接口明确传递；接口没有 Fast 字段时只记录继承或未核验状态。不要在 Codex 上套桌面端 + CLI 组合。Cursor 因为对话内 Agent 不够强，才用桌面端 Leader + 已登录无头 `cursor-agent`；`chatId` 记在 `_aipd/leader/`，不找 DSH，也不用对话内子 Agent 顶执行层。
 
 `_aipd/leader/` 是显式启动后才创建的可选工作记忆。信息若能进入 Knowledge、Case、OKR、SOP、Map、README 或代码事实源，就进入对应 owner；Leader 只保存链接及其对当前 Mission 的影响。
 

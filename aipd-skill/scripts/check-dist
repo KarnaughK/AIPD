@@ -578,6 +578,8 @@ check_leader_skill_contract() {
     local source_yaml="$source_root/agents/openai.yaml"
     local dist_yaml="$dist_root/agents/openai.yaml"
     local skill_file="$source_root/SKILL.md"
+    local codex_runtime="$PROJECT_ROOT/src/platforms/codex/core/leader/runtime.md"
+    local dist_runtime="$dist_root/references/leader/runtime.md"
 
     if [ ! -f "$source_yaml" ]; then
         fail "aipd-leader 缺少源码 agents/openai.yaml"
@@ -601,10 +603,27 @@ check_leader_skill_contract() {
             fail "aipd-leader 运行合同缺少关键语义: $term"
         fi
     done
-    if ! rg -Fq '@references/leader/runtime.md' "$skill_file" \
-        || ! rg -Fq '@references/leader/guide.md' "$skill_file" \
-        || ! rg -Fq '@references/leader/workspace-template.md' "$skill_file"; then
+    if ! rg -Fq '@references/leader/runtime.md' "$skill_file"         || ! rg -Fq '@references/leader/guide.md' "$skill_file"         || ! rg -Fq '@references/leader/workspace-template.md' "$skill_file"; then
         fail "aipd-leader 未连接完整 Leader 运行时 references"
+    fi
+    if [ ! -f "$codex_runtime" ]; then
+        fail "缺少 Codex Leader runtime 源文件"
+        return
+    fi
+    if ! rg -Fq 'codex_app__create_thread' "$codex_runtime"; then
+        fail "Codex Leader runtime 必须直接开独立 Codex 任务"
+    fi
+    if rg -nF 'cursor-agent -p' "$codex_runtime" "$dist_runtime" 2>/dev/null; then
+        fail "Codex Leader runtime 不得把 cursor-agent 写成默认执行层"
+    fi
+    if rg -nF 'cursor-agent create-chat' "$codex_runtime" "$dist_runtime" 2>/dev/null; then
+        fail "Codex Leader runtime 不得把 cursor-agent 写成默认执行层"
+    fi
+    if rg -nF '先判断当前宿主' "$codex_runtime" "$skill_file"; then
+        fail "Codex Leader 合同不得要求先判断宿主再决定是否开线程"
+    fi
+    if [ -f "$dist_runtime" ] && ! rg -Fq 'codex_app__create_thread' "$dist_runtime"; then
+        fail "Codex dist Leader runtime 必须直接开独立 Codex 任务"
     fi
 }
 

@@ -132,7 +132,7 @@ AIPD 当前构建九个公共 Skill：
 | `aipd-case` | Case Contract 与 Think / Design / Execute / Verify / Close 生命周期 |
 | `aipd-weave` | 把已完成、已验收的稳定信息回写到正确 Knowledge、Map 或局部 README |
 | `aipd-inbox` | 捕获尚未整理归属的临时信息 |
-| `aipd-leader` | 仅在用户显式调用时，把当前对话提升为 Leader；Codex 上一个 Case 一个 task，Cursor 上派已登录的 `cursor-agent` |
+| `aipd-leader` | 仅在用户显式调用时，把当前对话提升为 Leader；Codex 上直接为每个 Case 开独立 task，Cursor 上才派已登录的 `cursor-agent` |
 | `aipd-update` | 读取项目版本与本机发布快照，把 unversioned / stale / current-drift 项目一次语义收敛到当前权威，并保护项目定制 |
 | `aipd-okr` | 管理飞书 OKR 并压缩成主 Agent 可用上下文 |
 | `aipd-mermaid` | 创建、修改、评审和按需渲染 Mermaid 图 |
@@ -191,7 +191,7 @@ AIPD 当前构建九个公共 Skill：
 |---|---|
 | 项目识别、初始化和 Map-first 路由 | `src/skills/aipd/SKILL.md` |
 | Case 生命周期 | `src/skills/aipd-case/SKILL.md`、`src/core/case/` |
-| Leader / Mission / Codex Case 任务调度 | `src/skills/aipd-leader/SKILL.md`、`src/core/leader/`、`src/platforms/codex/core/leader/` |
+| Leader / Mission / Case 执行层调度 | `src/skills/aipd-leader/SKILL.md`、`src/core/leader/`、`src/platforms/codex/core/leader/`、`src/platforms/cursor/core/leader/` |
 | 项目目录 Schema 与初始化模板 | `src/core/aipd-project-structure.md`、`src/core/workspace/templates/` |
 | 项目状态 gate 与版本化 Update 发布合同 | `src/core/workspace/project-state.md`、`src/core/updates/`、`src/skills/aipd-update/SKILL.md` |
 | 五类 Knowledge 方法 | `src/core/knowledge/` |

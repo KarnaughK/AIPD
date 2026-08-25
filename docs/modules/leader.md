@@ -18,7 +18,7 @@ speed: Fast
 $aipd-leader
 ```
 
-调用后，当前对话成为这个项目唯一的 Leader。该调用也授权 Leader 在当前 Mission 内，为已澄清并确认的 Case 创建同级 Codex 任务；它不授权发布、删除、远端写入、付费等额外副作用。
+调用后，当前对话成为这个项目唯一的 Leader。该调用也授权 Leader 在当前 Mission 内，为已澄清并确认的 Case 创建同级执行层：Codex 上直接开独立任务，不套桌面端组合。它不授权发布、删除、远端写入、付费等额外副作用。
 
 普通 `$aipd` 和 `$aipd-case` 仍是执行级入口。任务复杂、存在多个 Case 或自然语言提到 “Leader” 都不会触发这一层。
 
@@ -52,7 +52,7 @@ Case task 固定使用 `gpt-5.6-sol / high / Fast`。创建任务时 Leader 能�
 
 当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal`、Codex Goal）是这条对话的宿主续跑能力，不替代 Mission 或 Case。本对话已经显式 `$aipd-leader` 时，goal 模式绑当前 Mission；拆 Case、派执行层、验收仍由 Leader 做。普通执行对话说目标模式，才绑当前 Case。不要因为项目里已有 `_aipd/leader/` 或进行中的 Mission，就把一条新对话当成 Leader。
 
-多个 Case 可以并发，但必须有真实并发收益、依赖清楚且代码 / 证据所有权不重叠。一个 Case 只对应一个主 Codex 任务；同一 Case 的 phase 回跳和碰壁继续留在原任务，不因失败不断开新任务。
+多个 Case 可以并发，但必须有真实并发收益、依赖清楚且代码 / 证据所有权不重叠。Codex 上一个 Case 只对应一个主 Codex 任务；同一 Case 的 phase 回跳和碰壁继续留在原任务，不因失败不断开新任务。Cursor 上才用桌面端 Leader + `cursor-agent`，那是弱宿主的组合，不是 Codex 默认。
 
 Leader 可以继续当前 Mission 内已经确认的下一个 Case，不要求用户逐 Case 验收。方向改变、需要新权限、出现破坏性动作或项目认知冲突时，必须回到用户这里澄清。
 
