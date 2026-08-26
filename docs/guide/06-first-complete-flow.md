@@ -79,6 +79,8 @@ _aipd/update-log.md
 
 如果当前 Agent 平台支持目标模式 / goal 模式，并且你希望这条对话持续被拉起：默认执行层把它绑到当前 Case（Case 应先创建，再绑定）；已经显式启动 Leader 的对话则绑当前 Mission。
 
+Codex 上的 Leader 还有一条自动续跑：开出独立 Case 任务后，要先写下正在等哪个任务，再给自己这条 Leader 对话开或确认绑 Mission 的 goal，然后等到执行层干完。这不是给 Case 任务自动开 goal。
+
 检查 `case.md` 顶部的 Case Contract：
 
 - 目标是否是一个短周期结果。

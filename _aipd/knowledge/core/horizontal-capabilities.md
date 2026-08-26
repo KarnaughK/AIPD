@@ -101,6 +101,8 @@ Leader 与 Main / Child Agent 不是同一层。平台决定执行层，但不�
 
 Case 执行层内部仍可以按项目规则使用 Child Agent 或工具。执行层不创建新的同级 Case task，也不承担跨 Case 方向判断。同一 Case 的 phase 回跳留在该执行层；Leader 没有第二套 phase 机。当前 Agent 平台的目标模式 / goal 模式是这条对话的宿主续跑能力，不是第三套运行时：本对话已是 Leader 时写 Mission，默认执行层最多绑这一个 Case。
 
+Codex 上，Leader 开出独立 Case task 后必须自己续跑：先更新 `_aipd/leader/` 进度，再确保本 Leader 对话已有绑 Mission 的 goal 模式，然后等到执行层完成或需要答复。不要把这条套到 Cursor，也不要替 Case task 开 goal。
+
 `_aipd/leader/` 保存跨聊天、跨 Case 的短中期恢复信息，但不是第六类 Knowledge。已有 Knowledge、Case、OKR、SOP、Map、README 或代码事实源的信息只在 Leader 保留链接和当前影响。文件结构由 Leader 自主设计，最低要求是能恢复 Mission、方向变化、Case / 执行层绑定、待确认事项和下一位置。
 
 ## Case 系统

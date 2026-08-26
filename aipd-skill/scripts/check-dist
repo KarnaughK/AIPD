@@ -613,6 +613,14 @@ check_leader_skill_contract() {
     if ! rg -Fq 'codex_app__create_thread' "$codex_runtime"; then
         fail "Codex Leader runtime 必须直接开独立 Codex 任务"
     fi
+    for term in '等待 Codex Case task 时必须续跑' 'create_goal' 'wait_threads' '更新进度'; do
+        if ! rg -Fq "$term" "$codex_runtime"; then
+            fail "Codex Leader runtime 缺少等待续跑语义: $term"
+        fi
+    done
+    if ! rg -Fq '强制续跑' "$skill_file"; then
+        fail "aipd-leader Skill 必须声明 Codex 等待 Case task 时的强制续跑"
+    fi
     if rg -nF 'cursor-agent -p' "$codex_runtime" "$dist_runtime" 2>/dev/null; then
         fail "Codex Leader runtime 不得把 cursor-agent 写成默认执行层"
     fi

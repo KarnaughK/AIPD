@@ -52,6 +52,8 @@ Case task 固定使用 `gpt-5.6-sol / high / Fast`。创建任务时 Leader 能�
 
 当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal`、Codex Goal）是这条对话的宿主续跑能力，不替代 Mission 或 Case。本对话已经显式 `$aipd-leader` 时，goal 模式绑当前 Mission；拆 Case、派执行层、验收仍由 Leader 做。普通执行对话说目标模式，才绑当前 Case。不要因为项目里已有 `_aipd/leader/` 或进行中的 Mission，就把一条新对话当成 Leader。
 
+Codex 上还有一条等待续跑：Leader 开出独立 Case 任务后，不能只派出去就停。要先在 `_aipd/leader/` 写清正在等哪个任务，再确保本 Leader 对话已经绑上当前 Mission 的 goal 模式，然后继续等执行层干完。这不是给 Case 任务自动开 goal，也不套到 Cursor。
+
 多个 Case 可以并发，但必须有真实并发收益、依赖清楚且代码 / 证据所有权不重叠。Codex 上一个 Case 只对应一个主 Codex 任务；同一 Case 的 phase 回跳和碰壁继续留在原任务，不因失败不断开新任务。Cursor 上才用桌面端 Leader + `cursor-agent`，那是弱宿主的组合，不是 Codex 默认。
 
 Leader 可以继续当前 Mission 内已经确认的下一个 Case，不要求用户逐 Case 验收。方向改变、需要新权限、出现破坏性动作或项目认知冲突时，必须回到用户这里澄清。

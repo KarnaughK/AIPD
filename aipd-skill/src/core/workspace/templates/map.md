@@ -28,7 +28,7 @@
 | {示例：权限 / 菜单 / 按钮显隐} | {工程规则} | `knowledge.engineering` + 局部 README | `_aipd/knowledge/engineering/{rule}/map.md` | 目标页面 README、权限工具函数 | `rg "permission|perms|auth|hasPermi"` |
 | inbox / 收件箱 / 先记一下 / 先存一下 | Inbox 临时收件箱 | capture | `_aipd/inbox.md` | `aipd-inbox` | `rg "inbox|收件箱|先记一下|先存一下" _aipd` |
 | `$aipd-leader` / AI 主导项目 / Mission / 跨 Case 调度 | AIPD Leader（显式可选） | Leader + 必要 Knowledge / Case | 首次调用后读取 `_aipd/leader/index.md` | 已安装的 `aipd-leader` Skill | `rg "Mission|跨 Case|Leader" _aipd` |
-| 目标模式 / goal 模式 / 绑目标 / `/goal` | 当前 Agent 平台的目标模式 | 先看本对话身份，再进 Leader 或 Case | `AGENTS.md`；未显式 Leader 时 `_aipd/case/index.md`，已是 Leader 时 `_aipd/leader/index.md` | `aipd-case` 或 `aipd-leader` | `rg "目标模式|goal 模式|/goal" _aipd AGENTS.md` |
+| 目标模式 / goal 模式 / 绑目标 / `/goal` | 当前 Agent 平台的目标模式 | 先看本对话身份，再进 Leader 或 Case。Codex Leader 等待独立 Case task 时给自己开绑 Mission 的 goal | `AGENTS.md`；未显式 Leader 时 `_aipd/case/index.md`，已是 Leader 时 `_aipd/leader/index.md` | `aipd-case` 或 `aipd-leader` | `rg "目标模式|goal 模式|/goal|wait_threads" _aipd AGENTS.md` |
 | SOP / AI 原生程序 / 可复用流程 | SOP 项目级 Agent 程序库 | SOP | `_aipd/sop/index.md`、`_aipd/sop/map.md` | `_aipd/sop/` | `rg "SOP|AI 原生程序|可复用流程" _aipd` |
 
 ## Core 核心概念

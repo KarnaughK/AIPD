@@ -45,6 +45,7 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 
 - 当前无 active Mission，也没有活动 Leader 对话。
 - Codex 上 Leader 直接为每个 Case 开独立 Agent 线程，不套桌面端 + CLI 组合。
+- Codex 上开出 Case task 后，先更新本目录进度，再确保本 Leader 对话已有绑 Mission 的 goal 模式，然后等待执行层；不要只派出去就停。
 - Cursor 因为对话内 Agent 不够强，才用桌面端 Leader + 已登录 `cursor-agent`；那是 Cursor 平台包的事，不是 Codex 默认路径。
 - DSH 已退出现行合同。相关实验见已归档 `c29` / `c30` / `c31`；无固定目标过夜实验见已归档 `c32`。
 - 详细规则：`aipd-skill/src/skills/aipd-leader/SKILL.md`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`。

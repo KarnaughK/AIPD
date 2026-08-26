@@ -73,6 +73,7 @@ Codex 可能在长对话中压缩上下文。压缩后的聊天摘要不能作�
 Codex Goal 是当前这条 Agent 对话的 goal 模式，不是 AIPD 的长期记忆、第二份业务目标或子 Agent。先看本对话身份：已显式 `$aipd-leader` 时，goal 写当前 Mission，不绑 Case，也不加载 `goal-mode.md`；默认执行层上的 goal 与 Case 是单向依赖，必须绑定当前这一个 Case。创建或推进 Case 不要求启动 goal。
 
 - 只有用户或宿主明确要求启动目标模式 / goal 模式时才创建；不要因为 Case 较长、work package 较多、可能跨轮次或可能压缩上下文就自动创建。
+- Codex Leader 例外：本对话已显式 `$aipd-leader`，并且已经开出独立 Codex Case task、还在等它干活时，必须先更新 `_aipd/leader/` 进度，再确保本 Leader 对话已有绑当前 Mission 的活动 goal，然后才 `wait_threads`。这不是给 Case 执行层自动开 goal。
 - 本对话已是 Leader：不要为了开 goal 先造 Case。objective 写当前 Mission 完成判据。
 - 本对话是默认执行层：创建 goal 前先读取 `_aipd/case/index.md` 定位 Case；没有合适 Case 时，先通过 `aipd-case` 创建 `case.md` 并写好 Case Contract，然后再调用 `create_goal`。
 - 执行层上一个活动 goal 只绑定一个 Case。goal objective 使用稳定文案，不重复 Case Contract 中的业务目标，也不写会变化的当前 phase 或 work package。
@@ -90,6 +91,7 @@ Codex Goal 是当前这条 Agent 对话的 goal 模式，不是 AIPD 的长期�
 3. 读取 `_aipd/case/{case目录}/case.md`，按上下文索引加载必要文档。
 4. 读取 `Current Phase`。若处于 Execute，读取 `03-execute/execute.md` 和 `03-execute/work-packages/`，找到下一个未完成 work package；如果没有 work package，回到用户讨论、Verify 或补充设计。
 5. 如果用户或宿主明确要求目标模式 / goal 模式：本对话已是 Leader 时绑当前 Mission，不要先造 Case，也不加载覆盖层；本对话是默认执行层时，检查 goal 是否绑定当前 Case，没有 Case 就先创建再绑定，绑定成立才加载 Goal Mode 覆盖层。没有活动绑定时按普通 Case 运行，不自动启用。
+   Codex Leader 等待独立 Case task 时例外：即使本轮没有用户再说「开目标模式」，也按 `leader/runtime.md` 更新进度并确保本对话有绑 Mission 的 goal。
 6. 根据上下文噪声、可并发性、主线耦合和调度成本，选择 Main 或 Child。
 7. 选择 Main 时连续完成当前内聚目标，并在里程碑写回 work package、execute.md 和 case。
 8. 选择 Child 时，再根据 work package 的 `推荐 Agent` 或任务类型选角色；为每条证据面设唯一 owner，默认传最小上下文。派发 `aipd_context_retriever` 时额外传入上述 project-state / catalog 可读路径和已判定版本状态。

@@ -67,6 +67,8 @@ Codex 上，Leader 默认由用户把当前 task 配置为 `gpt-5.6-sol / max / 
 
 当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal` / `CreateGoal`，Codex Goal）是这条对话的宿主续跑能力，不替代 Mission 或 Case。先看本对话身份：已显式 `$aipd-leader` 时写当前 Mission；默认执行层最多绑那一个 Case。Cursor 上即使挂了 `/goal`，只要不是绑当前 Case，AIPD 仍不加载 Case 覆盖层。Case 的 phase 回跳是短周期校准；Leader 只打回同一执行层，不为了推完一个 Case 再开两三个 Case。插话聊完后只分「继续当前 / 插队 / 进 Mission 排队 / 扔 Inbox」。Inbox 是项目相关的临时仓库，回头再翻，不是 To Do，也不是排队；Leader 做完当前不会自动去翻。
 
+Codex Leader 开出独立 Case task 后，必须先更新 `_aipd/leader/` 进度，再确保本 Leader 对话已有绑 Mission 的 goal 模式，然后才等待执行层。这是把自己拉起来的续跑，不是给 Case task 自动开 goal，也不套到 Cursor。
+
 ### AIPD Case
 
 AIPD Case 是新的统一 case 入口。它不再把 create / run / archive 作为用户必须记住的主流程，而是读取 case.md 的 Case Contract、`Current Phase` 和 `Phase State`，按 Think / Design / Execute / Verify / Close 渐进加载对应 phase 文档。目标、边界和验收标准不再放在独立 Goal phase，而是直接进入 `case.md` 顶部的目标契约。

@@ -73,7 +73,7 @@ Weave 回写时，Intent 只接收用户明确确认的长期方向和边界；R
 1. 本对话已经显式调用 `$aipd-leader`（或用户明确选择了该 Skill）：这条对话是 Leader。goal 模式绑当前 Mission 的完成判据，不绑某一个 Case。拆 Case、派执行层、验收仍由 Leader 做。不要加载 Case 的 `goal-mode.md`。
 2. 否则：这条对话是默认执行层。goal 模式绑当前 Case；还没有 Case 就先走 `aipd-case` 立 Case，再开 goal 模式。不要因为项目里已有 `_aipd/leader/` 或进行中的 Mission，就把自己当成 Leader。
 
-不要凭任务长、有 Case、有 Mission 或怕压缩而自动创建。`/loop` 是叫醒器，不是 goal 模式本身。
+不要凭任务长、有 Case、有 Mission 或怕压缩而自动创建。唯一例外：本对话已是 Leader，并且 Codex 上已经开出独立 Case task、还在等它干活时，必须先更新 Leader 进度，再为本对话开或确认绑 Mission 的 goal 模式，确保自己能被拉起来等到执行层干完。不要替 Case task 开 goal，也不要把这条套到 Cursor。`/loop` 是叫醒器，不是 goal 模式本身。
 
 ## Main / 子 Agent 调度
 

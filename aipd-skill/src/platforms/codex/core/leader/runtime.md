@@ -22,6 +22,7 @@
 4. Git 项目默认创建隔离 worktree；非 Git 项目默认 local。Case 依赖当前 checkout 未提交状态时，先形成可复现 checkpoint / 稳定基线；若确实必须共享 local checkout，说明冲突风险并按当前 create-task 合同取得所需用户指示。
 5. 调用任务创建能力（当前为 `codex_app__create_thread`），标题使用 `AIPD Case <case-id-or-slug> — <short goal>`，明确传入 `gpt-5.6-sol` 与 `high`。创建是非阻塞的；只有返回可用 `threadId` / `hostId` 才算 ready，排队中的 `clientThreadId` 不能冒充可协调 task id。
 6. 将 Case 与 `threadId`、`hostId`、worktree / local 环境、创建时间、状态和最后 cursor 绑定到 `_aipd/leader/`。一个 Case 只绑定一个主 task；同一 Case 的 phase 回跳继续使用该 task。该 task 上的 goal 模式若存在，只绑这一个 Case；不要为了维持 goal 再开第二个 task。
+7. 只要本 Leader 对话还在等这个 Codex task 干活，立刻按下一节完成「更新进度 + 确保本对话有绑 Mission 的 goal 模式」，然后再 `wait_threads`。派发出去不等于本轮 Leader 收工。
 
 ## 派发 prompt
 
@@ -38,10 +39,26 @@
 
 如果 Case 尚未在当前 worktree 中存在，Case task 自己通过 `$aipd-case` 建立正式 Case；Leader 先记录 provisional brief，待 task 返回后补实际 Case id / path。这样不要依赖另一个 worktree 中尚未提交的 Case 文件。
 
-## 跟进与反馈
+## 等待 Codex Case task 时必须续跑
+
+`codex_app__create_thread` 一旦返回可用 `threadId` / `hostId`，Leader 不得把“已经派出去”当成自己这轮的结束。创建是非阻塞的；Case 还在干活时，本 Leader 对话必须保持可被拉起，直到该 task 完成、需要 Leader 答复，或用户插话改了焦点。
+
+在开始 `wait_threads` 之前，必须连续做完两件事：
+
+1. **更新进度**：在 `_aipd/leader/` 写清正在等哪个 Codex task（`threadId` / `hostId`、对应 Case、当前在做什么、停止条件、返回后要验收还是答复）。`index.md` 必须能一跳回到这条等待记录。同时在本对话给出用户可见的压缩进度，让人一眼知道 Leader 没有停，只是在等执行层。不要只把状态留在聊天里。
+2. **启动或确认 goal 模式**：对本 Leader 对话调用 `get_goal`。若没有活动 goal，立即 `create_goal`，objective 写当前 Mission 的完成判据，不绑某一个 Case，不加载 `case/goal-mode.md`。若已有绑 Mission 的活动 goal，不要另建，也不要把 objective 改成某一个 Case。这是 Codex Leader 在等待 Case task 时的强制续跑，不需要用户再说一次「开目标模式」。goal 开在本 Leader 对话上，用来把自己拉起来；不要去 Case task 上替执行层开 goal。
+
+然后才进入等待：
 
 - 使用 task 列表、读取、等待和发送消息能力跟进（当前分别为 `codex_app__list_threads`、`codex_app__read_thread`、`codex_app__wait_threads`、`codex_app__send_message_to_thread`）。
-- 创建后显式等待进展；多个独立 Case 用一次有界 `wait_threads` 批量等待，并保存每个 task cursor。不要高频空轮询，也不要反复读取已经由 cursor 交付的文本。
+- 多个独立 Case 用一次有界 `wait_threads` 批量等待，并保存每个 task cursor。不要高频空轮询，也不要反复读取已经由 cursor 交付的文本。
+- `wait_threads` 超时、只拿到进度快照、或只有 commentary 更新，都不等于 Case 完成，也不等于 Leader 可以收工。先更新 `_aipd/leader/` 进度，再继续等。
+- 被 goal 拉起后，先读 `_aipd/leader/` 里的等待记录，再 `wait_threads`；不要因为本轮没有新的用户指令，就以为无事可做。
+- 只有以下情况才停止等待：目标 task 完成或需要 Leader 处理；用户新输入改了焦点；出现必须上交用户的方向 / 权限 / 破坏性问题。
+- 不要因为等了大约一分钟、本轮 wait 返回了、或暂时读不到最终文本，就结束本轮 Leader 任务。
+
+## 跟进与反馈
+
 - Case task 询问局部、可逆且不改变 Mission 的问题时，Leader 基于既定契约直接答复；涉及方向、权限、破坏性动作或项目认知冲突时再向用户澄清。
 - 任务失败先判断是同一 Case 内迭代、回跳上游 phase、调整依赖，还是 Case Contract 已失效。除非目标边界真正改变，不创建第二个 task 来掩盖失败。
 - 每次任务状态、方向或绑定变化后更新 Leader checkpoint；只保留压缩状态和链接，不复制完整任务 transcript。

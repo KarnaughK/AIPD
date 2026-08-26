@@ -105,7 +105,8 @@ Inbox 里可以夹着以后才用得上的材料或不紧急的事，条条都�
 
 配合规则：
 
-- 用户说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」，或宿主明确要求时，才创建；不因任务长、有 Case、有 Mission 或怕压缩而自动创建。
+- 用户说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」，或宿主明确要求时，才创建。不因任务长、有 Case、有 Mission 或怕压缩而自动创建。
+- Codex 例外：本对话已是 Leader，并且已经开出独立 Codex Case task、还在等它干活时，必须先在 `_aipd/leader/` 更新“正在等哪个 task”，再确保本 Leader 对话已有绑当前 Mission 的活动 goal，然后才 `wait_threads`。这是为了把自己拉起来，等到执行层干完；不要去 Case task 上替执行层开 goal，也不要把这条理解成 Cursor 也自动开 `/goal`。细节见 Codex 平台 `leader/runtime.md`。
 - 本对话已显式 `$aipd-leader`：goal 模式写当前 Mission 的完成判据，不绑某一个 Case，也不把 Mission 拆成几个并行 Goal。拆 Case、派执行层、验收仍由 Leader 做。不要加载 `case/goal-mode.md`。可在 `_aipd/leader/` 写一条「goal 模式绑当前 Mission」的恢复提示。
 - 本对话不是 Leader：goal 模式最多绑当前这一个 Case。没有 Case 时先走 `aipd-case` 立 Case，再创建。只有满足 `case/goal-mode.md` 启用条件才加载覆盖层；覆盖层只改内部 Gate 谁确认，不改 Case 本体，也不取消回跳。
 - Cursor 因为对话内 Agent 不够强，才用桌面端 Leader + `cursor-agent`；那是 Cursor 平台包的事。Codex 上不要套这套组合，直接开独立 task。Cursor 执行层即使对话挂了 `/goal`，只要 goal 写的不是这一个 Case，仍按普通 `aipd-case` 的确认与回跳推进。`/loop` 是叫醒器，不是 goal 模式本身。

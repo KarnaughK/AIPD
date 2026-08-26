@@ -13,7 +13,7 @@ Codex 上 Leader 直接开独立 Codex 任务。一个 Case 对应一个主 task
 1. 用 `codex_app__list_projects` 解析当前 saved project，不得凭目录名猜 id。
 2. 调用 `codex_app__create_thread`，标题 `AIPD Case <case-id-or-slug> — <short goal>`，传入 `gpt-5.6-sol` 与 `high`。
 3. 只有返回可用 `threadId` / `hostId` 才算 ready。
-4. 用 `codex_app__send_message_to_thread`、`codex_app__wait_threads`、`codex_app__read_thread` 跟进。
+4. 跟进前先更新 `_aipd/leader/` 进度并确保本 Leader 对话有绑 Mission 的 goal 模式，再用 `codex_app__send_message_to_thread`、`codex_app__wait_threads`、`codex_app__read_thread` 等到执行层完成或需要答复。完整续跑合同以 Codex 平台覆盖为准。
 5. 不要调用 `cursor-agent`，也不要先判断是不是 Cursor 再改走桌面端组合。
 
 没有这些能力时不要假装已经启动编排。

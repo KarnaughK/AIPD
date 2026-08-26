@@ -49,6 +49,7 @@ Case / Work Package 文件是长期状态事实源，聊天是运行缓存。两
 - 普通任务与 Case / OKR / Inbox 等流程何时分流。
 - Main / Child 调度和平台降级原则。
 - 用户说「目标模式 / goal 模式」时，先看本对话是否已显式 `$aipd-leader`：是则绑 Mission，否则绑当前 Case。
+  Codex Leader 已经开出独立 Case 任务、还在等它干活时，必须先更新 Leader 进度，再给本对话开或确认绑 Mission 的 goal；不要替 Case 任务开 goal。
 - build、install、发布、删除、远端写入等权限边界。
 - 压缩后怎样从文件 checkpoint 恢复。
 
