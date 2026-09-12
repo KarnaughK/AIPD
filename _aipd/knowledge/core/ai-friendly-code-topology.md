@@ -139,8 +139,7 @@ Agent 在设计或修改代码前，应最少检查：
 本文件是 AIPD 长期抽象认知的主事实源。安装后的外部 Agent 不依赖本仓库 `_aipd`，而是按任务条件读取：
 
 - 运行时投影 owner：`aipd-skill/src/core/ai-friendly-code-topology.md`。
-- 普通结构性开发入口：`aipd-skill/src/skills/aipd/SKILL.md`。
-- 正式 Case 入口：`aipd-skill/src/skills/aipd-case/SKILL.md`，由 Design 形成项目具体合同，Execute 执行短护栏，Verify 审计真实结果。
+- 正式 Case 入口：`aipd-skill/src/skills/aipd-case/SKILL.md`，由 Design 形成项目具体合同，Execute 执行短护栏，Verify 审计真实结果。普通任务按 `AGENTS.md` 读 map，不经过 `aipd-init`。
 
 运行时投影从本文提炼判断合同，不逐字复制案例证据和 AIPD 仓库归属说明。两者的 owner 与构建验证边界见 `_aipd/knowledge/engineering/index.md`。
 

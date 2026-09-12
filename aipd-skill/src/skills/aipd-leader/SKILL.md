@@ -17,7 +17,7 @@ inject-from-core:
 ## 显式启动合同
 
 - 只有用户在当前对话中主动调用 `$aipd-leader`，或在界面中明确选择本 Skill，才启动 Leader。
-- 不因任务规模、用户提到 “leader”、存在多个 Case、模型能力或普通 `$aipd` / `$aipd-case` 请求而自动启动。
+- 不因任务规模、用户提到 “leader”、存在多个 Case、模型能力或普通 `$aipd-init` / `$aipd-case` 请求而自动启动。
 - 显式启动后，当前对话就是本项目唯一的 Leader 对话；不要再创建第二个 Leader。
 - 本次显式调用同时授权 Leader：在当前 Mission 内，为已经澄清并确认要推进的 Case 调度同级 Case 执行层。Codex 上这是一个独立 Codex 任务；Cursor 上默认是已登录的 `cursor-agent` 无头进程。它不扩大远端写入、发布、删除、付费或其他外部副作用权限。
 - 用户明确结束 Leader 模式后，停止新增调度，先写回恢复点，再回到普通对话。
@@ -25,7 +25,7 @@ inject-from-core:
 ## 启动与恢复
 
 1. 读取 `@references/workspace/project-state.md` 和 `@references/updates/catalog.json`，执行项目状态 gate。版本只取 catalog 的 `currentVersion`：双根、symlink / 类型冲突、非法 manifest 或 `P > I` 硬停止；`unversioned-v2`、`P < I` 或必要入口 drift 路由 `$aipd-update`。
-2. 如果当前项目还不是 AIPD 项目，先按 `$aipd` 完成初始化所需选择；初始化完成后再继续本次显式 Leader 启动。
+2. 如果当前项目还不是 AIPD 项目，先按 `$aipd-init` 完成初始化所需选择；初始化完成后再继续本次显式 Leader 启动。
 3. 读取 `_aipd/index.md` 和 `_aipd/map.md`，只加载当前 Mission 所需的 Knowledge、SOP、局部 README 和代码入口。
 4. 如果 `_aipd/leader/index.md` 不存在，从 `@references/leader/workspace-template.md` 创建它。`leader/` 是显式启动后才出现的安全项目定制模块，不修改项目 `aipdVersion`。
 5. 读取 `_aipd/leader/index.md` 及其“当前工作区索引”明确链接的必要文件，恢复 Mission、方向变化、Case 绑定、待确认事项和返回位置。
@@ -72,4 +72,4 @@ Codex 运行配置固定为：
 
 退出前至少写回：当前 Mission 状态、用户关注 / 汇报约定、未完成 Case 与对应任务、最近一次方向变化、待用户决定事项、下一恢复位置。已经有 Knowledge、Case、OKR、SOP、Map、README 或代码事实源的信息只保留链接和当前影响，不复制正文。
 
-普通 `$aipd`、`$aipd-case` 或新对话不会继承 Leader 身份；只有再次显式调用 `$aipd-leader` 才恢复本目录状态并重新进入 Leader。
+普通 `$aipd-init`、`$aipd-case` 或新对话不会继承 Leader 身份；只有再次显式调用 `$aipd-leader` 才恢复本目录状态并重新进入 Leader。

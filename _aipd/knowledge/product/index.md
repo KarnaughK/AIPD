@@ -20,8 +20,8 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 
 | 产品能力 | 用户价值 | 主要入口 | 关联 Core 模型 | 状态 |
 |---|---|---|---|---|
-| AIPD 总入口与初始化 | 让 Agent 进入项目后知道如何读取 AIPD，并在新项目中创建基础结构 | `aipd`、`AGENTS.md`、`_aipd/` templates | 项目知识库维护模型、Map-first 上下文检索模型 | 已存在 |
-| Map-first 认知加载 | 让普通任务先经 `_aipd/map.md` 路由到正确上下文，而不是让 Agent 盲搜 | `aipd`、`_aipd/map.md` | Map-first 上下文检索模型 | 已存在 |
+| AIPD 初始化 | 把 AIPD 工作区装进项目：空项目走方向 / 痛点，有代码则扫仓库并补 map 与 Core / Product / Engineering 索引 | `aipd-init`、`AGENTS.md`、`_aipd/` templates | 项目知识库维护模型 | 已存在 |
+| Map-first 认知加载 | 让普通任务先经 `_aipd/map.md` 路由到正确上下文，而不是让 Agent 盲搜 | `AGENTS.md`、`_aipd/map.md` | Map-first 上下文检索模型 | 已存在 |
 | Inbox 临时收件箱 | 低承诺度接住未整理信息，避免临时想法散落在聊天里 | `aipd-inbox`、`_aipd/inbox.md` | 项目知识库维护模型 | 已存在 |
 | AIPD Leader | 让用户把项目级监督和推进责任交给一个显式启动的 AI Leader，由它探索 Mission、协调多个 Case、阶段汇报并总验收 | `aipd-leader`、`_aipd/leader/` | Leader 项目主导编排模型、任务执行模型 | 已存在 |
 | AIPD Case | 以统一入口推进短周期目标：Case Contract / Think / Design / Execute / Verify / Close | `aipd-case`、case phase 文档、case 模板 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | 已存在 |
@@ -35,11 +35,11 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 
 ## 能力边界
 
-### AIPD 总入口与初始化
+### AIPD 初始化
 
-总入口负责判断当前任务应进入普通认知加载、项目状态扫描、初始化、case 流程或其他专门 skill。
+`aipd-init` 只负责第一次把 AIPD 装进项目。空项目建壳后走方向 / 痛点；已有代码则先建壳、扫仓库，再补 map 与 Core / Product / Engineering 短索引。Intent 不是完成门槛。已接入项目不要再用它当日常总入口。
 
-初始化只创建基础 AIPD 结构、Agent Entry、Map、Case / OKR / Inbox 壳子。它不替用户完成完整的五类 Knowledge 建模，也不替代后续 Weave 和 Case 流程。
+它不替用户完成完整的五类 Knowledge 建模，也不替代后续 Weave 和 Case 流程。日常读上下文走 `AGENTS.md` → `_aipd/map.md`。
 
 用户选择 Agent MD 等级 2 时，还会安装 Interaction Protocol，约束讨论 / 分析类回复按“我理解 → 展开说说 → 结论 → 横向拓展 → 下一步”生成。“我理解”只复述目标和边界，不提前下结论；“横向拓展”只列相邻方向；“下一步”只给一个自然向下动作，不自动把建议解释成执行授权。具体协议以 `aipd-skill/src/core/agent-entry/interaction-style.md` 为准。
 

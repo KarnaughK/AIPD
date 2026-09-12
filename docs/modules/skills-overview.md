@@ -16,7 +16,7 @@ Leader 是可选的上一层，不是普通 AIPD 的默认入口。自然语言�
 
 | Skill | 触发场景 | 主要结果 |
 |---|---|---|
-| `aipd` | 进入项目、初始化、查看状态、不知道从哪里开始 | 加载最小认知并路由下一能力 |
+| `aipd-init` | 把 AIPD 装进还没有工作区的项目 | 空项目走方向 / 痛点；有代码则扫仓库并补 map 与 Core / Product / Engineering 索引 |
 | `aipd-case` | 创建、恢复、推进、验收或关闭短周期目标 | Case Contract / Think / Design / Execute / Verify / Close 闭环 |
 | `aipd-weave` | 完成事项产生了稳定新知识 | 判断并回写五类 Knowledge、map 或局部 README |
 
@@ -65,9 +65,9 @@ Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构�
 ### 第一次进入项目
 
 ```text
-/aipd
--> 初始化或读取 AGENTS.md / _aipd/index.md / _aipd/map.md
--> 继续普通任务，或进入 /aipd-case
+/aipd-init
+-> 没有 AIPD 时按有代码 / 空项目初始化
+-> 之后普通任务按 AGENTS.md 读 map，或进入 /aipd-case
 ```
 
 ### 完成一个目标

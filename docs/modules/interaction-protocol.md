@@ -6,7 +6,7 @@ Interaction Protocol 是可选的项目级对话协议，不是项目认知入�
 
 ## Agent MD 的三个等级
 
-`aipd` 初始化会先询问项目希望怎样处理根 Agent Entry：
+`aipd-init` 初始化会处理根 Agent Entry：空项目先询问等级，有代码路径默认等级 1。
 
 | 等级 | 安装内容 | 适合情况 |
 |---|---|---|
@@ -51,4 +51,4 @@ Interaction Protocol 是可选的项目级对话协议，不是项目认知入�
 当前协议事实源：
 
 - `aipd-skill/src/core/agent-entry/interaction-style.md`
-- `aipd-skill/src/skills/aipd/SKILL.md`
+- `aipd-skill/src/skills/aipd-init/SKILL.md`

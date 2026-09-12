@@ -9,7 +9,7 @@ DIST_ROOT="$PROJECT_ROOT/dist"
 DEFAULT_PLATFORM="codex"
 REPO_LEARN_SKILL="$REPO_ROOT/.agents/skills/aipd-learn"
 EXPECTED_SKILLS=(
-    aipd
+    aipd-init
     aipd-case
     aipd-git-push
     aipd-inbox
@@ -377,13 +377,13 @@ check_code_topology_projection() {
         return
     fi
 
-    for skill in aipd aipd-case; do
+    for skill in aipd-case; do
         if ! rg -q '@references/ai-friendly-code-topology.md' "$SRC_SKILLS/$skill/SKILL.md"; then
             fail "$skill 缺少代码拓扑条件读取规则"
         fi
     done
 
-    for skill in aipd aipd-case; do
+    for skill in aipd-case; do
         target_file="$DIST_ROOT/$DEFAULT_PLATFORM/skills/$skill/references/ai-friendly-code-topology.md"
         if [ ! -f "$target_file" ]; then
             fail "$DEFAULT_PLATFORM/$skill 缺少代码拓扑运行时投影"
@@ -393,7 +393,7 @@ check_code_topology_projection() {
     done
 
     for skill in "${EXPECTED_SKILLS[@]}"; do
-        if [ "$skill" = "aipd" ] || [ "$skill" = "aipd-case" ]; then
+        if [ "$skill" = "aipd-case" ]; then
             continue
         fi
         if [ -e "$DIST_ROOT/$DEFAULT_PLATFORM/skills/$skill/references/ai-friendly-code-topology.md" ]; then
@@ -465,11 +465,11 @@ check_schema_migrator() {
         fail "AIPD Schema migrator fixture 校验失败"
     fi
 
-    packaged_migrator="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd/scripts/migrate-project-schema"
+    packaged_migrator="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-init/scripts/migrate-project-schema"
     if [ ! -x "$packaged_migrator" ]; then
-        fail "$DEFAULT_PLATFORM/aipd 缺少可执行的一次性 Schema migrator"
+        fail "$DEFAULT_PLATFORM/aipd-init 缺少可执行的一次性 Schema migrator"
     elif ! cmp -s "$SCRIPT_DIR/migrate-project-schema" "$packaged_migrator"; then
-        fail "$DEFAULT_PLATFORM/aipd 的 Schema migrator 与源码不同步"
+        fail "$DEFAULT_PLATFORM/aipd-init 的 Schema migrator 与源码不同步"
     fi
 }
 
@@ -502,13 +502,13 @@ check_schema_manifest_contract() {
     if [ ! -f "$source_manifest" ] || [ -L "$source_manifest" ]; then
         fail "Schema manifest 模板必须是非 symlink 普通文件"
     fi
-    if ! rg -q '@references/workspace/templates/manifest.json' "$SRC_SKILLS/aipd/SKILL.md"; then
-        fail "aipd 初始化入口未读取 Schema manifest 模板"
+    if ! rg -q '@references/workspace/templates/manifest.json' "$SRC_SKILLS/aipd-init/SKILL.md"; then
+        fail "aipd-init 初始化入口未读取 Schema manifest 模板"
     fi
 
-    dist_manifest="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd/references/workspace/templates/manifest.json"
+    dist_manifest="$DIST_ROOT/$DEFAULT_PLATFORM/skills/aipd-init/references/workspace/templates/manifest.json"
     if ! cmp -s "$source_manifest" "$dist_manifest"; then
-        fail "$DEFAULT_PLATFORM/aipd 的 Schema manifest 模板未与源码同步"
+        fail "$DEFAULT_PLATFORM/aipd-init 的 Schema manifest 模板未与源码同步"
     fi
 }
 
@@ -516,7 +516,7 @@ check_schema_runtime_gates() {
     local file skill
     local project_state="$PROJECT_ROOT/src/core/workspace/project-state.md"
     local gate_skills=(
-        aipd
+        aipd-init
         aipd-case
         aipd-inbox
         aipd-leader
@@ -526,7 +526,7 @@ check_schema_runtime_gates() {
         aipd-weave
     )
     local projected_gate_files=(
-        "$SRC_SKILLS/aipd/references/scan-agent.md"
+        "$SRC_SKILLS/aipd-init/references/init-codebase-scan.md"
         "$PROJECT_ROOT/src/core/agent-entry/template.md"
         "$PROJECT_ROOT/src/core/agent-guides/aipd_context_retriever.md"
         "$PROJECT_ROOT/src/platforms/codex/core/agent-guide.md"
@@ -564,11 +564,11 @@ check_schema_runtime_gates() {
         fi
     done
 
-    if ! rg -Fq '`test -e _aipd || test -L _aipd`' "$SRC_SKILLS/aipd/SKILL.md"; then
-        fail "aipd 主入口未以 path-entry 语义识别当前工作区"
+    if ! rg -Fq '`test -e _aipd || test -L _aipd`' "$SRC_SKILLS/aipd-init/SKILL.md"; then
+        fail "aipd-init 未以 path-entry 语义识别当前工作区"
     fi
-    if ! rg -Fq '`test -e _adoc || test -L _adoc`' "$SRC_SKILLS/aipd/SKILL.md"; then
-        fail "aipd 主入口未以 path-entry 语义识别旧根拒绝性哨兵"
+    if ! rg -Fq '`test -e _adoc || test -L _adoc`' "$SRC_SKILLS/aipd-init/SKILL.md"; then
+        fail "aipd-init 未以 path-entry 语义识别旧根拒绝性哨兵"
     fi
 }
 

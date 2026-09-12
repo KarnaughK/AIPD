@@ -1,8 +1,8 @@
-# 初始化时定义项目方向
+# 定义项目方向
 
 **目标**: 通过对话帮助用户明确项目方向，产出 `intent.md`
 
-**触发条件**: 用户正在初始化项目方向，或 `_aipd/knowledge/intent/intent.md` 缺失/不完整
+**触发条件**: 空项目在 `aipd-init` 建好工作区壳之后；或用户明确要定义 / 修改项目方向。有代码的初始化、已接入但没有 Intent 的项目，都不要因为缺少 `intent.md` 就进入本指南。
 
 ## 执行步骤
 
@@ -117,7 +117,7 @@ AI 说："面向小团队协作场景"（不写具体人数）
 用户确认后：
 
 - 使用 `@references/knowledge/intent/template.md` 模板生成 `_aipd/knowledge/intent/intent.md`
-- 复用 `aipd` 初始化流程已经创建的 `_aipd/index.md`、`_aipd/map.md`、Inbox、SOP、Case 和 OKR 入口；不要在这里另建一套不完整壳子
+- 复用 `aipd-init` 已经创建的 `_aipd/index.md`、`_aipd/map.md`、Inbox、SOP、Case 和 OKR 入口；不要在这里另建一套不完整壳子
 
 ### 7. 回到用户当前目标
 

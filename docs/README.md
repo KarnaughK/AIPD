@@ -15,7 +15,7 @@
 这条路径只要求你有一个会持续迭代的代码项目，以及能读写仓库的 Coding Agent。
 
 1. 让 Agent 按[构建与安装](modules/build-and-install.md)安装 AIPD。
-2. 在目标项目调用 `/aipd`，完成项目状态 gate，并创建或读取最小认知入口。
+2. 在目标项目调用 `/aipd-init`，按有没有代码完成第一次初始化。
 3. 用自然语言描述一个真实目标，让 `/aipd-case` 建立 Case Contract。
 4. 完成 Think / Design / Execute / Verify / Close。
 5. 用 `/aipd-weave` 把已验证的新事实留给下一次。

@@ -113,7 +113,7 @@ function createFixture(versionCount = 9) {
   }
   write(join(coreRoot, 'overview.md'), '# Current Authority\n\nsame-topic-state: v9-final\n')
 
-  for (const skill of ['aipd', 'aipd-update']) {
+  for (const skill of ['aipd-init', 'aipd-update']) {
     const updateContract = skill === 'aipd-update'
       ? [
         '从 catalog 选择 `(P,I]` 的全部 Release Records。',
@@ -154,7 +154,7 @@ function createFixture(versionCount = 9) {
     copyFileSync(join(coreRoot, relativePath), targetPath)
   }
 
-  for (const skill of ['aipd', 'aipd-update']) {
+  for (const skill of ['aipd-init', 'aipd-update']) {
     const referencesRoot = join(distSkillsRoot, skill, 'references')
     for (const relativePath of [
       'updates/catalog.json',

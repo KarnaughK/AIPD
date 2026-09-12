@@ -8,9 +8,9 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 
 | 用户说法 / 场景 | 标准功能线 | 状态 | 主要入口 | 数据对象 | 相关 Core 模型 | 相关 Engineering / 流程入口 |
 |---|---|---|---|---|---|---|
-| AIPD / 进入项目 / 初始化 / 项目状态 | AIPD 总入口与初始化 | 已存在 | `aipd-skill/src/skills/aipd/SKILL.md` | `AGENTS.md`、`_aipd/`、index / map / inbox / case / okr 模板 | 项目知识库维护模型、Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md` |
+| AIPD / 初始化 / aipd-init | AIPD 初始化 | 已存在 | `aipd-skill/src/skills/aipd-init/SKILL.md` | `AGENTS.md`、`_aipd/`、index / map 模板；有代码时补 Core/Product/Engineering 索引 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md` |
 | Agent MD 等级 2 / Interaction Protocol / 回复模板 / 我理解 / 展开说说 / 横向拓展 / 下一步 | Interaction Protocol | 已存在 | `aipd-skill/src/core/agent-entry/interaction-style.md` | 五段讨论回复顺序、显式复述、横向方向、自然下一步 | Agent 协作思考模型 | Agent MD 等级 2、`AGENTS.md` |
-| 读 map / 加载项目认知 / 找上下文 / 开发前读文档 | Map-first 认知加载 | 已存在 | `aipd-skill/src/skills/aipd/SKILL.md`、`_aipd/map.md` | `_aipd/index.md`、`_aipd/map.md`、必要 Knowledge、SOP、局部 README、真实代码 | Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md` |
+| 读 map / 加载项目认知 / 找上下文 / 开发前读文档 | Map-first 认知加载 | 已存在 | `AGENTS.md`、`_aipd/map.md` | `_aipd/index.md`、`_aipd/map.md`、必要 Knowledge、SOP、局部 README、真实代码 | Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md` |
 | inbox / 收件箱 / 先记一下 / 先存一下 | Inbox 临时收件箱 | 已存在 | `aipd-skill/src/skills/aipd-inbox/SKILL.md` | `_aipd/inbox.md` | 项目知识库维护模型 | `aipd-skill/src/core/workspace/templates/inbox.md` |
 | `$aipd-leader` / Leader 模式 / 项目负责人 / 监督者 / 多开线 / 阶段汇报 / AI 主导项目 / Mission / 跨 Case 调度 / Codex task / cursor-agent / 等 Codex 线程 | AIPD Leader | 已存在 | `aipd-skill/src/skills/aipd-leader/SKILL.md` | `_aipd/leader/`、Mission、用户关注 / 汇报约定、Case / Codex 独立 task、等待进度；Cursor 上才是 `chatId` 绑定 | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md` |
 | 目标模式 / goal 模式 / 绑目标 / `/goal` / CreateGoal / Leader 等 Case 时开 goal | 当前 Agent 平台的目标模式 | 已存在 | `AGENTS.md`；按本对话身份进入 `aipd-leader` 或 `aipd-case` | 本对话的宿主 goal；Leader 绑 Mission，执行层绑当前 Case。Codex Leader 等待独立 Case task 时必须给自己开或确认绑 Mission 的 goal | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/src/core/leader/guide.md`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/core/case/goal-mode.md` |
@@ -18,7 +18,7 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 | 反向编织 / 更新 Knowledge / 更新 map / 更新局部 README | Weave | 已存在 | `aipd-skill/src/skills/aipd-weave/SKILL.md` | Intent / Research / Core / Product / Engineering / README / Map；未完成 case 候选先留在 Close 归档候选 | 项目知识库维护模型 | `_aipd/map.md`、局部 README |
 | learn / transcript / 回流包 / 框架自迭代 | Learn（AIPD 仓库级） | 已存在，仅源码仓库 | `.agents/skills/aipd-learn/SKILL.md` | 当前对话、外部 transcript、回流包、AIPD skill / 模板 / 规则 | 项目知识库维护模型、Agent 协作思考模型 | `.agents/skills/aipd-learn/references/learn-session-locator.md` |
 | OKR / 飞书 OKR / lark-cli / 目标 / 周期 / OKR 经验包 | AIPD OKR | 已存在 | `aipd-skill/src/skills/aipd-okr/SKILL.md` | 飞书 O/KR、周期 ID、飞书 ID、OKR 经验包 | 任务执行模型、Agent 协作思考模型 | `_aipd/okr/index.md`、`aipd-skill/src/core/okr/` |
-| 旧 `_adoc` / L1-L5 / 升级 Schema v2 | Project Schema 一次性迁移 | 已存在 | `aipd-skill/scripts/migrate-project-schema`；安装后为 `aipd` Skill 内同名脚本 | 旧项目工作区、新 manifest、五类 Knowledge 目录 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` |
+| 旧 `_adoc` / L1-L5 / 升级 Schema v2 | Project Schema 一次性迁移 | 已存在 | `aipd-skill/scripts/migrate-project-schema`；安装后为 `aipd-init` Skill 内同名脚本 | 旧项目工作区、新 manifest、五类 Knowledge 目录 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` |
 | AIPD update / 项目版本落后 / unversioned-v2 / 更新 AGENTS / 同步当前模板 / drift repair | AIPD Update | 已存在 | `aipd-skill/src/skills/aipd-update/SKILL.md` | 本机 release catalog、`_aipd/manifest.json#aipdVersion`、Release Records、current authority、`_aipd/update-log.md` | 项目知识库维护模型、Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/updates/`、`aipd-skill/src/core/workspace/templates/` |
 | Mermaid / MMD / 画图 / 预览图 / 架构图 | Mermaid / MMD | 已存在 | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | AI 原生代码架构模型、任务执行模型 | `aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md` |
 | git push / 推送当前分支 | Git Push | 已存在 | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | 任务执行模型 | git 状态 |
@@ -28,8 +28,8 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 
 | 功能线 | 主要源码 / 文档入口 | 模板 / 支撑文件 |
 |---|---|---|
-| AIPD 总入口与初始化 | `aipd-skill/src/skills/aipd/SKILL.md` | `aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/workspace/templates/index.md`、`aipd-skill/src/core/workspace/templates/map.md` |
-| Map-first 认知加载 | `aipd-skill/src/skills/aipd/SKILL.md`、`_aipd/map.md` | `aipd-skill/src/core/workspace/templates/map.md` |
+| AIPD 初始化 | `aipd-skill/src/skills/aipd-init/SKILL.md` | `aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/workspace/templates/index.md`、`aipd-skill/src/core/workspace/templates/map.md`、`aipd-skill/src/skills/aipd-init/references/init-codebase-scan.md` |
+| Map-first 认知加载 | `AGENTS.md`、`_aipd/map.md` | `aipd-skill/src/core/workspace/templates/map.md` |
 | Inbox 临时收件箱 | `aipd-skill/src/skills/aipd-inbox/SKILL.md` | `aipd-skill/src/core/workspace/templates/inbox.md` |
 | AIPD Leader | `aipd-skill/src/skills/aipd-leader/SKILL.md` | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`、`_aipd/leader/index.md` |
 | AIPD Case | `aipd-skill/src/skills/aipd-case/SKILL.md` | `aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/work-package.md` |
@@ -46,7 +46,7 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 
 | 功能线 | 做什么 | 不做什么 |
 |---|---|---|
-| AIPD 总入口与初始化 | 识别项目状态、创建基础结构、路由到合适能力 | 不替用户完成完整的五类 Knowledge 建模 |
+| AIPD 初始化 | 把 AIPD 装进项目；空项目走方向 / 痛点，有代码先扫再补 map 与 3/4/5 索引 | 不当日常总入口，不因缺 Intent 判失败，不写百科 |
 | Map-first 认知加载 | 先读 map 命中上下文，搜索兜底并回写稳定入口 | 不默认依赖 RAG、全文搜索或多层目录跳转 |
 | Inbox 临时收件箱 | 暂存未定型信息 | 不自动归类、不创建 case、不直接 weave |
 | AIPD Leader | 受托监督一个 active Mission，探索方向、调度 Case 执行层（Codex 上直接开独立 task；Cursor 上才用 `cursor-agent`）、阶段汇报并做总验收 | 不自动启动，不替代 Case 的细节执行与回跳，不并发多个 Leader / Mission，不为推完一个 Case 再开平级 Case，不把 Cursor 桌面端组合套到 Codex，不找 DSH，不扩大外部副作用权限 |

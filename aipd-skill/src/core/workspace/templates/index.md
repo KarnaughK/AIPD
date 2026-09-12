@@ -48,8 +48,8 @@
 
 ## 快速入口
 
-- 当前方向：`_aipd/knowledge/intent/intent.md`
 - 项目记忆地图：`_aipd/map.md`
+- 方向（若已确认）：`_aipd/knowledge/intent/intent.md`；没有 Intent 也是合法状态
 - 临时收件箱：`_aipd/inbox.md`
 - Case / OKR：`_aipd/case/index.md`、`_aipd/okr/index.md`
 - Leader：显式调用 `$aipd-leader` 后读取 `_aipd/leader/index.md`

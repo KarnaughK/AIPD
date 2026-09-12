@@ -8,7 +8,7 @@
 
 | 路径状态 | 结果 |
 |---|---|
-| 两者都不存在 | `absent`；只有 `aipd` 初始化入口可以创建新项目 |
+| 两者都不存在 | `absent`；只有 `aipd-init` 可以创建新项目工作区 |
 | 仅 `_adoc` 存在 | `legacy-needs-migration`；普通 Skill 停止，交给 `aipd-update` / 一次性 Schema 迁移器 |
 | 两者同时存在 | `invalid`；双根硬停止，不猜测、不合并 |
 | 仅 `_aipd` 存在 | 继续安全与 manifest 检查 |

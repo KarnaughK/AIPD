@@ -83,12 +83,12 @@ AIPD 当前是一个可构建的 Skill 源码项目，不是双击即用的应�
 在目标项目里调用：
 
 ```text
-/aipd
+/aipd-init
 ```
 
-如果项目还没有 AIPD，Agent 会创建 `_aipd/manifest.json`、index、map、五类 Knowledge，以及 Case、Inbox、OKR、SOP 等入口；验证完成后，manifest 同时记录 Schema v2 和当前已应用的 AIPD 版本。初始化不是让你一次填完所有知识，而是先建立一条能使用、能升级、以后可持续维护的路径。
+旧的 `/aipd` 仍会触发同一入口。如果项目还没有 AIPD，Agent 会创建 `_aipd/manifest.json`、index、map、五类 Knowledge，以及 Case、Inbox、OKR、SOP 等入口。空项目接着走方向 / 痛点；已有代码则先扫仓库，补 map 和 Core / Product / Engineering 索引，不先问方向。验证完成后，manifest 同时记录 Schema v2 和当前已应用的 AIPD 版本。Intent 不是初始化成功门槛。
 
-`/aipd` 还会让你选择是否安装项目 `AGENTS.md`：Level 1 添加 AIPD 项目入口；可选的 Level 2 再添加项目级 Interaction Protocol，明确讨论与执行的回复节奏。它只约束当前项目，不是全局人格设置。
+空项目路径会询问是否安装项目 `AGENTS.md`：Level 1 添加 AIPD 项目入口；可选的 Level 2 再添加项目级 Interaction Protocol。有代码路径默认 Level 1。它只约束当前项目，不是全局人格设置。
 
 ### 3. 用 `/aipd-case` 完成一个真实目标
 
@@ -171,7 +171,7 @@ Leader 绝不自动启动。普通 AIPD 仍从 Case 执行层开始；只有用�
 
 | Skill | 什么时候用 | 结果 |
 |---|---|---|
-| `/aipd` | 第一次进入项目、查看状态或不知道该从哪里开始 | 初始化或加载最小认知，并路由到下一能力 |
+| `/aipd-init` | 把 AIPD 装进还没有工作区的项目 | 空项目走方向 / 痛点；有代码则扫仓库并补 map 与 Core / Product / Engineering 索引 |
 | `/aipd-case` | 要完成一个有边界、需要验证和关闭的目标 | 推进 Case Contract / Think / Design / Execute / Verify / Close |
 | `/aipd-weave` | 已完成的工作产生了稳定新知识 | 回写 Knowledge、map 或局部 README |
 

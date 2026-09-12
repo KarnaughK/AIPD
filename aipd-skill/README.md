@@ -128,7 +128,7 @@ AIPD 当前构建九个公共 Skill：
 
 | Skill | 职责 |
 |---|---|
-| `aipd` | 项目状态扫描、初始化和 Map-first 最小认知加载 |
+| `aipd-init` | 把 AIPD 装进项目：空项目走方向 / 痛点，有代码则扫仓库并补 map 与 Core / Product / Engineering 索引 |
 | `aipd-case` | Case Contract 与 Think / Design / Execute / Verify / Close 生命周期 |
 | `aipd-weave` | 把已完成、已验收的稳定信息回写到正确 Knowledge、Map 或局部 README |
 | `aipd-inbox` | 捕获尚未整理归属的临时信息 |
@@ -189,7 +189,7 @@ AIPD 当前构建九个公共 Skill：
 
 | 目标 | 源码位置 |
 |---|---|
-| 项目识别、初始化和 Map-first 路由 | `src/skills/aipd/SKILL.md` |
+| 项目初始化 | `src/skills/aipd-init/SKILL.md` |
 | Case 生命周期 | `src/skills/aipd-case/SKILL.md`、`src/core/case/` |
 | Leader / Mission / Case 执行层调度 | `src/skills/aipd-leader/SKILL.md`、`src/core/leader/`、`src/platforms/codex/core/leader/`、`src/platforms/cursor/core/leader/` |
 | 项目目录 Schema 与初始化模板 | `src/core/aipd-project-structure.md`、`src/core/workspace/templates/` |

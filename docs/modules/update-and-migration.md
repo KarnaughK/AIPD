@@ -28,7 +28,7 @@ Schema 迁移和 AIPD Update 是两件不同的事：迁移器只改变旧工作
 
 | 项目状态 | 含义 | 普通 Skill 的行为 |
 |---|---|---|
-| 未初始化 | `_aipd` 和 `_adoc` 都不存在 | 交给 `aipd` 初始化 |
+| 未初始化 | `_aipd` 和 `_adoc` 都不存在 | 交给 `aipd-init` 初始化 |
 | legacy | 只有旧 `_adoc` | 交给 `aipd-update`，先做一次性迁移 |
 | `unversioned-v2` | v2 manifest 只有 `schema` 与 `schemaVersion` | 返回 `needs-aipd-update` |
 | stale | `P < I` | 返回 `needs-aipd-update` |
@@ -48,7 +48,7 @@ Schema 迁移和 AIPD Update 是两件不同的事：迁移器只改变旧工作
 
 它不写 `aipdVersion`，也不代表项目已经应用当前发布。迁移完成后必须继续 Update。
 
-源码仓库中的命令和完整拒绝边界见[构建与安装](build-and-install.md#旧项目一次性迁移)。安装后的 `aipd` Skill 也会随包携带同一脚本，Agent 不需要依赖 AIPD 源码 checkout。
+源码仓库中的命令和完整拒绝边界见[构建与安装](build-and-install.md#旧项目一次性迁移)。安装后的 `aipd-init` Skill 也会随包携带同一脚本，Agent 不需要依赖 AIPD 源码 checkout。
 
 ## Update 怎样工作
 

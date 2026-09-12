@@ -133,7 +133,7 @@ const ALLOWED_RESIDUAL_FRAGMENTS = new Map([
     '仍使用 `_adoc/` 与 L1-L5 目录',
   ]],
   ['docs/modules/skills-overview.md', ['旧 `_adoc` 项目']],
-  ['aipd-skill/src/skills/aipd/SKILL.md', [
+  ['aipd-skill/src/skills/aipd-init/SKILL.md', [
     '`test -e _adoc || test -L _adoc`',
     '只有 `_adoc` 时，不读取、路由或写入其中内容',
   ]],

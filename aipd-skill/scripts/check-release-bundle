@@ -436,7 +436,7 @@ function validateDistBundle(sourceBundle, distSkillsRoot) {
     )
   }
 
-  for (const skill of ['aipd', 'aipd-update']) {
+  for (const skill of ['aipd-init', 'aipd-update']) {
     const referencesRoot = join(distSkillsRoot, skill, 'references')
     for (const authority of [
       'workspace/templates/manifest.json',

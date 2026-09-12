@@ -58,7 +58,7 @@ inject-from-core:
 
 | Skill | 负责什么 | 和 Weave 的关系 |
 |---|---|---|
-| `aipd` | 入口路由和轻量上下文加载 | 用户说“回写 / 记一下 / weave / 更新 Knowledge”时进入本 Skill |
+| `aipd-init` | 把 AIPD 工作区装进项目 | 初始化不是 Weave；用户说“回写 / 记一下 / weave / 更新 Knowledge”时进入本 Skill |
 | `aipd-case` | 推进 Case / Work Package 并收集结果 | Case 未完成时只记 Close 候选；Close 后再判断是否沉淀 |
 | 仓库级 `aipd-learn` | AIPD 框架自迭代与 transcript 诊断 | 框架经验带回 AIPD 源码仓库处理；当前业务项目知识走 Weave |
 | `aipd-update` | 同步已初始化项目的 AIPD 架构 | 模板同步走 Update；项目经验沉淀走 Weave |

@@ -29,16 +29,17 @@
 在目标项目调用：
 
 ```text
-/aipd
+/aipd-init
 ```
 
-`aipd` 会先执行项目状态 gate：
+`aipd-init` 会先执行项目状态 gate：
 
-- 新项目才进入初始化。
+- 还没有 AIPD 工作区时才进入初始化，并再看仓库有没有代码。
+- 空项目走方向 / 痛点；已有代码先扫仓库，补 map 与 Core / Product / Engineering 索引。
 - 旧 `_adoc`、`unversioned-v2`、版本落后或同版本 drift 进入 `aipd-update`。
 - 双根、symlink、非法 manifest 或项目版本高于本机时停止，不猜着合并或降级。
 
-新项目初始化时，Agent 会询问 Agent MD 等级。第一次使用推荐等级 1，只安装 Project Entry；如果你还希望固定“先讨论还是直接执行”的项目级对话边界，可以选择等级 2 并查看 [Interaction Protocol](../modules/interaction-protocol.md)。
+空项目会询问 Agent MD 等级；有代码路径默认等级 1。第一次使用推荐等级 1，只安装 Project Entry；如果你还希望固定“先讨论还是直接执行”的项目级对话边界，可以选择等级 2 并查看 [Interaction Protocol](../modules/interaction-protocol.md)。
 
 初始化后检查：
 

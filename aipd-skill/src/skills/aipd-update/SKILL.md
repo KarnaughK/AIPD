@@ -69,8 +69,8 @@ inject-from-core:
 
 按状态继续：
 
-- **absent**：这是未初始化项目，交给 `aipd`，不冒充 Update 初始化。
-- **legacy-needs-migration**：定位已安装 `aipd` Skill 随包提供的 `scripts/migrate-project-schema`；在 AIPD 源码仓库可使用 `aipd-skill/scripts/migrate-project-schema`。先 dry-run，只有结果确定且安全时才执行，再把产生的两键 manifest 当作 `unversioned-v2` 继续本流程。迁移器不写 `aipdVersion`，也不代表已应用版本 `I`。
+- **absent**：这是未初始化项目，交给 `aipd-init`，不冒充 Update 初始化。
+- **legacy-needs-migration**：定位已安装 `aipd-init` Skill 随包提供的 `scripts/migrate-project-schema`；在 AIPD 源码仓库可使用 `aipd-skill/scripts/migrate-project-schema`。先 dry-run，只有结果确定且安全时才执行，再把产生的两键 manifest 当作 `unversioned-v2` 继续本流程。迁移器不写 `aipdVersion`，也不代表已应用版本 `I`。
 - **unversioned-v2**：令 `P` 为空，从第一条 bootstrap Release Record 开始读取；不要伪造 `V0`。
 - **stale**（`P < I`）：更新到 `I`。
 - **current**（`P = I`）：仍读取 current authority 并检查 drift；无差异时返回 no-op，有漂移时可做同版本修复。

@@ -84,7 +84,7 @@ Knowledge Schema v2 不提供运行时双读。仍使用 `_adoc/` 与 L1-L5 目�
 ./aipd-skill/scripts/migrate-project-schema --check /absolute/project/path
 ```
 
-构建时同一脚本也会打包进 `aipd` Skill 的 `scripts/migrate-project-schema`，因此用户级或项目级安装后，Agent 可以相对当前 Skill 目录定位它，不依赖 AIPD 源码 checkout。迁移器会整块升级带标记的 `AGENTS.md` AIPD 区块，并重命名项目级上下文检索 Agent 配置；常见旧分类组合会自动改写，无法可靠判定的裸编号语义会在 dry-run 阶段硬拒绝并给出文件位置，留给人工重新归类。它还会拒绝新旧双根、半迁移结构、非法额外目录、ignored AIPD 文件、Workspace symlink、目标碰撞和错误 manifest。`--check` 只读、允许检查尚未暂存的 v2 工作树，并以 Git `HEAD` 与 index 的并集发现迁移文件丢失。
+构建时同一脚本也会打包进 `aipd-init` Skill 的 `scripts/migrate-project-schema`，因此用户级或项目级安装后，Agent 可以相对当前 Skill 目录定位它，不依赖 AIPD 源码 checkout。迁移器会整块升级带标记的 `AGENTS.md` AIPD 区块，并重命名项目级上下文检索 Agent 配置；常见旧分类组合会自动改写，无法可靠判定的裸编号语义会在 dry-run 阶段硬拒绝并给出文件位置，留给人工重新归类。它还会拒绝新旧双根、半迁移结构、非法额外目录、ignored AIPD 文件、Workspace symlink、目标碰撞和错误 manifest。`--check` 只读、允许检查尚未暂存的 v2 工作树，并以 Git `HEAD` 与 index 的并集发现迁移文件丢失。
 
 迁移只产生 `unversioned-v2`，不代表已经应用本机发布。迁移完成后还要由 `aipd-update` 完成版本语义收敛、验证和最终版本提交。完整分工见 [Update 与 Schema 迁移](update-and-migration.md)。
 

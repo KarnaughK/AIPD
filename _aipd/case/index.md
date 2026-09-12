@@ -23,6 +23,7 @@
 
 | Case | 归档时间 | 说明 |
 |---|---|---|
+| `archive/c34-aipd-init-code-vs-empty` | 2026-09-11 | 将 `aipd` 收成 `aipd-init`；空项目走方向 / 痛点，有代码先扫再补 map 与 Core/Product/Engineering |
 | `archive/c1-role-codex-custom-agents` | 2026-06-16 | AIPD 自举接入 Codex custom agents 与推荐 Agent 派发 |
 | `archive/c2-subagent-origin-model` | 2026-06-16 | 重写分身 Agent、克隆体和结果回流模型 |
 | `archive/c3-agent-fork-role-policy` | 2026-06-16 | 分析 fork 分身、角色 Agent 和直接执行的调配策略 |

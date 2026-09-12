@@ -25,7 +25,7 @@
 
 过去把 L1-L5 同时当成推导过程、存储结构和读取顺序，容易产生混淆。现在明确区分：
 
-1. **发现 / 推导链**：一个新项目可能从痛点反推方向，再提炼 Core 和 Product；成熟项目也可能从某条 Product 或 Engineering 问题开始。顺序由问题决定。
+1. **发现 / 推导链**：空项目可以从方向 / 痛点长出来；已有代码第一次接入 AIPD 时，应从 Core / Product / Engineering 和 map 长出来。顺序由问题决定，不是固定 Intent-first。
 2. **长期存储链**：稳定信息按 Intent、Research、Core、Product、Engineering 五类并列知识域归档。
 3. **任务读取链**：Agent 先走 Map，再按当前场景选取必要 Knowledge、SOP、局部 README、流程状态和代码入口。
 
