@@ -1,0 +1,245 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+REPO_ROOT="$(dirname "$PROJECT_ROOT")"
+SKILLS_ROOT="$PROJECT_ROOT/skills"
+SHARED_ROOT="$PROJECT_ROOT/shared"
+REPO_LEARN_SKILL="$REPO_ROOT/.agents/skills/aipd-learn"
+EXPECTED_SKILLS=(
+    aipd-init
+    aipd-case
+    aipd-git-push
+    aipd-inbox
+    aipd-leader
+    aipd-mermaid
+    aipd-okr
+    aipd-update
+    aipd-weave
+)
+SHARED_COPY_SKILLS=(
+    aipd-init
+    aipd-case
+    aipd-inbox
+    aipd-leader
+    aipd-update
+    aipd-okr
+    aipd-mermaid
+    aipd-weave
+)
+EXPECTED_CODEX_AGENTS=(
+    aipd_context_retriever
+    aipd_vue_architect
+    aipd_vue_provider
+)
+CHECK_FAILED=0
+
+fail() {
+    echo "FAIL: $*" >&2
+    CHECK_FAILED=1
+}
+
+check_skill_set() {
+    local expected_file actual_file
+    expected_file=$(mktemp)
+    actual_file=$(mktemp)
+    printf '%s\n' "${EXPECTED_SKILLS[@]}" | sort > "$expected_file"
+    find "$SKILLS_ROOT" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort > "$actual_file"
+    if ! diff -u "$expected_file" "$actual_file" >/dev/null; then
+        fail "公共 Skill 集合不是预期 ${#EXPECTED_SKILLS[@]} 项"
+        diff -u "$expected_file" "$actual_file" || true
+    fi
+    if [ -e "$SKILLS_ROOT/aipd" ]; then
+        fail "公共集合仍有旧名 aipd"
+    fi
+    rm -f "$expected_file" "$actual_file"
+}
+
+check_no_inject() {
+    if rg -q '^inject-from-core:' "$SKILLS_ROOT" --glob 'SKILL.md'; then
+        fail "完整包 SKILL.md 残留 inject-from-core"
+    fi
+}
+
+check_shared_copies() {
+    local skill
+    if [ ! -f "$SHARED_ROOT/updates/catalog.json" ] || [ ! -f "$SHARED_ROOT/workspace/project-state.md" ]; then
+        fail "缺少 shared 原稿"
+        return
+    fi
+    python3 -c "import json,sys; c=json.load(open(sys.argv[1])); assert c.get('currentVersion')==2" \
+        "$SHARED_ROOT/updates/catalog.json" || fail "catalog currentVersion 不是 2"
+    for skill in "${SHARED_COPY_SKILLS[@]}"; do
+        if ! cmp -s "$SHARED_ROOT/updates/catalog.json" \
+            "$SKILLS_ROOT/$skill/references/updates/catalog.json"; then
+            fail "$skill catalog 与 shared 不一致"
+        fi
+        if ! cmp -s "$SHARED_ROOT/workspace/project-state.md" \
+            "$SKILLS_ROOT/$skill/references/workspace/project-state.md"; then
+            fail "$skill project-state 与 shared 不一致"
+        fi
+    done
+    if [ -f "$SKILLS_ROOT/aipd-git-push/references/updates/catalog.json" ] \
+        || [ -f "$SKILLS_ROOT/aipd-git-push/references/workspace/project-state.md" ]; then
+        fail "aipd-git-push 不应带 shared 副本"
+    fi
+}
+
+check_on_demand() {
+    local host
+    for host in codex cursor grok claude; do
+        if [ ! -f "$SKILLS_ROOT/aipd-leader/runtime/${host}.md" ]; then
+            fail "缺少 aipd-leader/runtime/${host}.md"
+        fi
+        if [ ! -f "$SKILLS_ROOT/aipd-case/agent-guide/${host}.md" ]; then
+            fail "缺少 aipd-case/agent-guide/${host}.md"
+        fi
+    done
+    if [ ! -f "$SKILLS_ROOT/aipd-case/agent-guide.md" ]; then
+        fail "缺少 aipd-case/agent-guide.md"
+    fi
+    if [ -f "$SKILLS_ROOT/aipd-leader/references/leader/runtime.md" ]; then
+        fail "公共 leader/runtime.md 索引还应删除"
+    fi
+    if ! rg -q 'runtime/codex.md' "$SKILLS_ROOT/aipd-leader/SKILL.md" \
+        || ! rg -q 'runtime/grok.md' "$SKILLS_ROOT/aipd-leader/SKILL.md"; then
+        fail "aipd-leader SKILL.md 缺少按需加载列表"
+    fi
+    if ! rg -q 'agent-guide/codex.md' "$SKILLS_ROOT/aipd-case/SKILL.md" \
+        || ! rg -q 'agent-guide/grok.md' "$SKILLS_ROOT/aipd-case/SKILL.md"; then
+        fail "aipd-case SKILL.md 缺少按需加载列表"
+    fi
+    if rg -q 'gpt-5.6-sol|cursor-agent|当前构建注入' "$SKILLS_ROOT/aipd-leader/SKILL.md"; then
+        fail "aipd-leader SKILL.md 常驻正文仍有别家调度细节"
+    fi
+    local skill
+    for skill in aipd-init aipd-inbox aipd-update aipd-okr aipd-mermaid aipd-weave aipd-git-push; do
+        if [ -d "$SKILLS_ROOT/$skill/runtime" ] || [ -d "$SKILLS_ROOT/$skill/agent-guide" ]; then
+            fail "$skill 不应有空的按需目录"
+        fi
+    done
+}
+
+check_static_references() {
+    local skill_root skill_file ref ref_path
+    while IFS= read -r skill_root; do
+        while IFS= read -r skill_file; do
+            while IFS= read -r ref; do
+                [ -n "$ref" ] || continue
+                if [[ "$ref" == *"{"* ]] || [[ "$ref" == *"*"* ]]; then
+                    continue
+                fi
+                ref_path="${ref#@references/}"
+                if [ ! -e "$skill_root/references/$ref_path" ]; then
+                    fail "缺少引用: ${skill_file#$SKILLS_ROOT/} -> $ref"
+                fi
+            done < <(rg -o '@references/[A-Za-z0-9_./{}*-]+' "$skill_file" | sort -u || true)
+        done < <(find "$skill_root" -name '*.md' -type f | sort)
+    done < <(find "$SKILLS_ROOT" -mindepth 1 -maxdepth 1 -type d | sort)
+}
+
+check_repo_scoped_learn() {
+    if [ ! -d "$REPO_LEARN_SKILL" ] || [ -L "$REPO_LEARN_SKILL" ]; then
+        fail "仓库级 aipd-learn 必须位于 .agents/skills/aipd-learn"
+        return
+    fi
+    if [ -e "$SKILLS_ROOT/aipd-learn" ]; then
+        fail "aipd-learn 不得进入公共 skills/"
+    fi
+}
+
+check_removed_layers() {
+    if [ -e "$PROJECT_ROOT/src" ]; then
+        fail "仍存在 aipd-skill/src/"
+    fi
+    if [ -e "$PROJECT_ROOT/dist" ]; then
+        fail "仍存在 aipd-skill/dist/"
+    fi
+    if [ -e "$SCRIPT_DIR/build" ]; then
+        fail "仍存在 scripts/build"
+    fi
+    if [ -e "$SCRIPT_DIR/check-dist" ]; then
+        fail "仍存在 scripts/check-dist"
+    fi
+    local gone
+    for gone in install install-codex install-cursor install-project install-project-codex dev dev-codex; do
+        if [ -e "$SCRIPT_DIR/$gone" ]; then
+            fail "仍存在旧安装入口 scripts/${gone}"
+        fi
+    done
+    if [ ! -x "$SCRIPT_DIR/install-agents" ] || [ ! -x "$SCRIPT_DIR/install-claude" ]; then
+        fail "缺少 install-agents 或 install-claude"
+    fi
+}
+
+check_codex_agents() {
+    local source_agents="$PROJECT_ROOT/platforms/codex/agents"
+    local expected_file actual_file agent
+    if [ ! -d "$source_agents" ]; then
+        fail "缺少 platforms/codex/agents"
+        return
+    fi
+    expected_file=$(mktemp)
+    actual_file=$(mktemp)
+    printf '%s\n' "${EXPECTED_CODEX_AGENTS[@]}" | sort > "$expected_file"
+    find "$source_agents" -mindepth 1 -maxdepth 1 -type f -name '*.toml' \
+        -exec basename {} .toml \; | sort > "$actual_file"
+    if ! diff -u "$expected_file" "$actual_file" >/dev/null; then
+        fail "Codex Agent 源码集合不是预期 3 项"
+        diff -u "$expected_file" "$actual_file" || true
+    fi
+    rm -f "$expected_file" "$actual_file"
+    for agent in "${EXPECTED_CODEX_AGENTS[@]}"; do
+        if ! rg -q "^name = \"$agent\"$" "$source_agents/$agent.toml"; then
+            fail "Codex Agent 源码名称不匹配: $agent"
+        fi
+    done
+}
+
+check_init_migrator() {
+    if [ ! -x "$SKILLS_ROOT/aipd-init/scripts/migrate-project-schema" ]; then
+        fail "aipd-init 包内缺少可执行 migrate-project-schema"
+    fi
+    if [ -e "$SCRIPT_DIR/migrate-project-schema" ]; then
+        fail "scripts/ 不应再另存 migrator 正文"
+    fi
+}
+
+check_no_delivery_dist_refs() {
+    local scan_roots=(
+        "$REPO_ROOT/AGENTS.md"
+        "$REPO_ROOT/README.md"
+        "$REPO_ROOT/docs"
+        "$REPO_ROOT/_aipd/index.md"
+        "$REPO_ROOT/_aipd/map.md"
+        "$REPO_ROOT/_aipd/knowledge"
+        "$PROJECT_ROOT/README.md"
+        "$SKILLS_ROOT"
+        "$SCRIPT_DIR"
+    )
+    if rg -n '^inject-from-core:' "${scan_roots[@]}" --glob '!**/archive/**'; then
+        fail "现行文档或完整包仍有 inject-from-core"
+    fi
+}
+
+"$SCRIPT_DIR/check-release-bundle" --project-root "$PROJECT_ROOT" --skills-root "$SKILLS_ROOT"
+"$SCRIPT_DIR/check-release-bundle-fixtures"
+"$SCRIPT_DIR/check-schema-migrator"
+
+check_skill_set
+check_no_inject
+check_shared_copies
+check_on_demand
+check_static_references
+check_repo_scoped_learn
+check_removed_layers
+check_codex_agents
+check_init_migrator
+
+if [ "$CHECK_FAILED" -ne 0 ]; then
+    echo "AIPD skills 检查失败。" >&2
+    exit 1
+fi
+
+echo "AIPD skills 检查通过：${#EXPECTED_SKILLS[@]} 个完整包、shared 两份原稿、八个副本一致、Learn 隔离、按需文件、安装入口与 release/migrator fixture 均正常。"

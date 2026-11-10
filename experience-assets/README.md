@@ -4,8 +4,8 @@
 
 ## 与 Skill 的边界
 
-- `aipd-skill/src/core/experience/` 保存语义经验，供 AIPD Skill 渐进加载。
-- `experience-assets/` 保存仓库级源码资产，接受 Git 版本控制和 GitHub 浏览，但不进入 Skill build / install 产物。
+- `aipd-skill/skills/aipd-case/references/experience/` 保存语义经验，供 AIPD Skill 渐进加载。
+- `experience-assets/` 保存仓库级源码资产，接受 Git 版本控制和 GitHub 浏览，但不进入 Skill 安装产物。
 - 正式经验正文可以引用这里的文件；不要把整套源码复制进 Skill references。
 
 ## 当前资产

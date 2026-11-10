@@ -87,7 +87,7 @@ Update 不会自动提高 Agent MD 等级，也不会顺便 install、commit、p
 
 相关入口：
 
-- `aipd-skill/src/skills/aipd-update/SKILL.md`
-- `aipd-skill/src/core/workspace/project-state.md`
-- `aipd-skill/src/core/updates/`
-- `aipd-skill/scripts/migrate-project-schema`
+- `aipd-skill/skills/aipd-update/SKILL.md`
+- `aipd-skill/shared/workspace/project-state.md`
+- `aipd-skill/skills/aipd-update/references/updates/`
+- `aipd-skill/skills/aipd-init/scripts/migrate-project-schema`

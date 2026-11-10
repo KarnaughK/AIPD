@@ -2,7 +2,7 @@
 
 AIPD 当前构建九个面向普通项目的公共 Skill。它们不是彼此孤立的对象，而是围绕“主导项目、进入项目、完成目标、维护记忆和处理专用协作”分工。另有一个只在 AIPD 源码仓库内可见的仓库级 `aipd-learn`，负责框架自迭代。
 
-九个公共 Skill 的源码位于 `aipd-skill/src/skills/`；构建后默认生成 Codex 可安装产物。仓库级 Learn 的源码位于 `.agents/skills/aipd-learn/`。平台无关能力与扩展边界仍以 `aipd-skill/src/platforms/` 和构建脚本为准。
+九个公共 Skill 的源码位于 `aipd-skill/skills/`；构建后默认生成 Codex 可安装产物。仓库级 Learn 的源码位于 `.agents/skills/aipd-learn/`。平台无关能力与扩展边界仍以 `aipd-skill/platforms/` 和构建脚本为准。
 
 ## 显式主导层
 
@@ -43,7 +43,7 @@ Weave 面向当前项目的稳定认知；Update 面向项目里的 AIPD 结构�
 |---|---|---|
 | `aipd-learn` | 已回到 AIPD 源码仓库，要从当前对话、外部 transcript、Case 或用户反馈迭代框架 | 诊断框架行为；用户确认后修改 AIPD Skill、模板、Agent 规则、项目认知或实践经验库 |
 
-`aipd-learn` 的事实源是 `.agents/skills/aipd-learn/`。它不进入 `aipd-skill/src/skills/`、公共 dist、用户级安装或业务项目级安装。外部项目中的 AIPD 框架反馈需要先带回源码仓库；项目自身知识仍使用该项目的 `aipd-weave`。
+`aipd-learn` 的事实源是 `.agents/skills/aipd-learn/`。它不进入 `aipd-skill/skills/`、公共 dist、用户级安装或业务项目级安装。外部项目中的 AIPD 框架反馈需要先带回源码仓库；项目自身知识仍使用该项目的 `aipd-weave`。
 
 因此这里共有十个用户可见入口，但公共构建集合仍是九个 Skill；Learn 是第十个、且只属于 AIPD 源码仓库。
 
@@ -126,7 +126,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 - **Interaction Protocol**：Agent MD 等级 2 可选安装的项目级讨论 / 执行回复协议；见 [Interaction Protocol](interaction-protocol.md)。
 - **AI 友好代码拓扑**：结构性开发和 Case Design 条件加载的模块边界判断；见 [AI 友好代码拓扑](ai-friendly-code-topology.md)。
 - **角色 Agent / 领域指引**：为上下文检索、requirements、Vue 架构和 provider 等稳定边界提供执行支持；不自动派发。
-- **实践经验库**：`aipd-skill/src/core/experience/` 保存真实项目跑过的具象经验。
+- **实践经验库**：`aipd-skill/skills/aipd-case/references/experience/` 保存真实项目跑过的具象经验。
 - **经验源码资产**：根级 `experience-assets/` 保存只靠文字不足以可靠复用的可验证实现，不随 Skill 打包。
 - **SOP**：`_aipd/sop/` 收纳以 Agent 为运行时的可重复项目动作；SOP 不是单纯脚本或知识条目。
 
@@ -135,11 +135,11 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 要修改 Skill 行为，先从项目认知路由到：
 
 ```text
-aipd-skill/src/skills/{skill}/SKILL.md
+aipd-skill/skills/{skill}/SKILL.md
 .agents/skills/aipd-learn/SKILL.md       # 仅 AIPD 源码仓库
-aipd-skill/src/core/
-aipd-skill/src/platforms/
+aipd-skill/skills/
+aipd-skill/platforms/
 aipd-skill/scripts/
 ```
 
-`aipd-skill/dist/` 是构建产物，不是源码事实源。修改源码后运行 build 和只读的 `check-dist`；是否 install 由用户另行确认。
+`aipd-skill/skills/` 就是安装包。修改后运行只读的 `check-skills`；是否 install 由用户另行确认。

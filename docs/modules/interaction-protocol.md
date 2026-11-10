@@ -27,10 +27,10 @@ Interaction Protocol 是可选的项目级对话协议，不是项目认知入�
 讨论 / 分析类回复使用一条稳定生成顺序：
 
 ```text
-我理解 -> 展开说说 -> 结论 -> 横向拓展 -> 下一步
+我理解 -> 结论 -> 下一步 -> 展开说说 -> 横向拓展
 ```
 
-“我理解”只复述当前目标和边界，不提前给结论；“展开说说”提供会影响结论的依据和取舍；“横向拓展”最多给少量相邻方向；“下一步”只给一个最自然的向下动作。
+“我理解”只复述当前目标和边界；“结论”直接给最终答案；“下一步”只给一个最自然的向下动作。前三段足以决定是否继续推进。后两段可以不读：“展开说说”交代结论依据，发现结论或下一步站不住时明确改口；“横向拓展”最多给少量相邻方向。
 
 执行类回复不套这五段。它按工作流自然更新：开始时说正在读什么，修改前说准备改哪里，完成后简短交付改动、验证和风险。
 
@@ -50,5 +50,5 @@ Interaction Protocol 是可选的项目级对话协议，不是项目认知入�
 
 当前协议事实源：
 
-- `aipd-skill/src/core/agent-entry/interaction-style.md`
-- `aipd-skill/src/skills/aipd-init/SKILL.md`
+- `aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md`
+- `aipd-skill/skills/aipd-update/references/agent-entry/interaction-style.md`

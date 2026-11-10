@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=install-lib
+source "$SCRIPT_DIR/install-lib"
+
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+SKILLS_SRC="$PROJECT_ROOT/skills"
+TARGET_DIR="${AIPD_SKILLS_TARGET:-$HOME/.claude/skills}"
+
+aipd_copy_skills "$SKILLS_SRC" "$TARGET_DIR"
+aipd_warn_skill_conflicts "$TARGET_DIR"
+
+echo ""
+echo "安装完成。完整包已复制到 $TARGET_DIR/"
+echo "未复制 shared/。未安装 custom agent。未删除其他位置的 AIPD Skill。"

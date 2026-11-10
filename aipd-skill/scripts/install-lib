@@ -1,0 +1,99 @@
+#!/bin/bash
+# 被 install-agents / install-claude source。复制完整包，扫描冲突，不 rm 其他位置。
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=legacy-skills
+source "$SCRIPT_DIR/legacy-skills"
+
+aipd_public_skills() {
+    printf '%s\n' \
+        aipd-init \
+        aipd-case \
+        aipd-inbox \
+        aipd-leader \
+        aipd-update \
+        aipd-okr \
+        aipd-mermaid \
+        aipd-weave \
+        aipd-git-push
+}
+
+aipd_known_skill_dirs() {
+    printf '%s\n' \
+        "$HOME/.agents/skills" \
+        "$HOME/.claude/skills" \
+        "$HOME/.codex/skills" \
+        "$HOME/.cursor/skills" \
+        "$HOME/.grok/skills"
+}
+
+aipd_copy_skills() {
+    local skills_src="$1"
+    local target_dir="$2"
+    local skill_dir name target
+
+    if [ ! -d "$skills_src" ]; then
+        echo "缺少完整包目录: $skills_src" >&2
+        echo "应存在 aipd-skill/skills/{name}/ ，安装复制这一棵树，不复制 shared/。" >&2
+        return 1
+    fi
+
+    mkdir -p "$target_dir"
+
+    while IFS= read -r skill_dir; do
+        [ -d "$skill_dir" ] || continue
+        name=$(basename "$skill_dir")
+        target="$target_dir/$name"
+        rm -rf "$target"
+        cp -R "$skill_dir" "$target"
+        echo "安装: $target"
+    done < <(find "$skills_src" -mindepth 1 -maxdepth 1 -type d | sort)
+}
+
+aipd_warn_skill_conflicts() {
+    local target_dir="$1"
+    local dir skill_name path legacy loc_file loc_count
+    local found_old=0
+    local multi=0
+
+    echo ""
+    echo "扫描已知 Skill 目录（只提示，不删除）："
+
+    for legacy in "${AIPD_LEGACY_SKILLS[@]}"; do
+        while IFS= read -r dir; do
+            path="${dir}/${legacy}"
+            if [ -e "$path" ] || [ -L "$path" ]; then
+                if [ "$legacy" = "aipd" ]; then
+                    echo "提示: ${path} 还在。公共包现在叫 aipd-init，这是改名残留，没有自动删。"
+                else
+                    echo "提示: ${path} 是旧名 Skill，没有自动删。"
+                fi
+                found_old=1
+            fi
+        done < <(aipd_known_skill_dirs)
+    done
+
+    loc_file=$(mktemp)
+    while IFS= read -r skill_name; do
+        loc_count=0
+        : > "$loc_file"
+        while IFS= read -r dir; do
+            path="${dir}/${skill_name}"
+            if [ -e "$path" ] || [ -L "$path" ]; then
+                printf '%s\n' "$path" >> "$loc_file"
+                loc_count=$((loc_count + 1))
+            fi
+        done < <(aipd_known_skill_dirs)
+        if [ "$loc_count" -gt 1 ]; then
+            echo "提示: 发现多份 ${skill_name}:"
+            sed 's/^/  - /' "$loc_file"
+            echo "  可能互相覆盖加载。未删除。"
+            multi=1
+        fi
+    done < <(aipd_public_skills)
+    rm -f "$loc_file"
+
+    if [ "$found_old" -eq 0 ] && [ "$multi" -eq 0 ]; then
+        echo "未发现旧名 aipd 或多份公共 Skill。"
+    fi
+}

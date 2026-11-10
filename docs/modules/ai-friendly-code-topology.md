@@ -79,5 +79,5 @@ AIPD 使用 `Decouple first, DRY later`：先让能力在局部上下文中独�
 当前事实源：
 
 - `_aipd/knowledge/core/ai-friendly-code-topology.md`
-- `aipd-skill/src/core/ai-friendly-code-topology.md`
-- `aipd-skill/src/skills/aipd-case/SKILL.md`
+- `aipd-skill/skills/aipd-case/references/ai-friendly-code-topology.md`
+- `aipd-skill/skills/aipd-case/SKILL.md`

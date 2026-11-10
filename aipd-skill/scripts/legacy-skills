@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 所有用户级 / 项目级、安装 / 开发入口共享旧 Skill / Agent 清理清单。
+# 旧名识别名单。安装只用来提示，禁止 rm。
 AIPD_LEGACY_SKILLS=(
     aipd
     aipd-learn

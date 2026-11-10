@@ -1,0 +1,68 @@
+# AIPD 框架总览
+
+AIPD 把软件项目从构想到交付过程中产生的经验和决策，按领域规则结构化沉淀为项目认知，让 AI 能基于这些认知持续、准确地参与项目。
+
+## 核心原则
+
+- **经验总结型框架**：边实践边迭代，框架随项目实践持续演进
+- **_aipd/ 是项目级 AIPD 工作区**：长期知识、检索地图和流程状态各有独立边界；原始数据、构建产物和真实代码仍留在各自目录
+- **五类知识域并列组织**：Intent、Research、Core、Product、Engineering 是按内容职责划分的知识域，不代表阶段、成熟度或固定读取顺序
+- **文件优先的上下文承接**：聊天只是运行缓存，文件才是长期事实源；会影响后续恢复路径的小步确认、状态变化、设计边界和下一步游标，都应及时写回 case、phase、work package、README 或 map
+- **任务上下文解耦**：在人与 AI 编写任务、设计 case、对齐目标时，优先找到复杂度爆点并做最小必要解耦，让业务上下文可以并列扩展
+- **显式项目主导**：普通模式由用户驾驶、AI 在 Case 层执行；只有用户调用 `$aipd-leader`，才增加一个负责 Mission、方向探索、跨 Case task 调度和总验收的 Leader 层
+
+## 文件优先的上下文承接
+
+AIPD 不把长期任务连续性建立在聊天上下文上。聊天负责推进讨论和执行，文件负责承接状态、边界和恢复入口。
+
+当一次确认、调研准备、设计决策、phase 跳转、work package 派发或执行结果会影响后续判断时，Agent 应先把它写成可恢复的文件 checkpoint，再进入下一步。这样上下文压缩、中断、换 Agent 或长任务续跑时，都能沿 `AGENTS.md -> _aipd/index.md -> _aipd/map.md -> _aipd/case/index.md -> case.md -> 当前 phase -> 当前游标文件 / work package` 恢复，而不是依赖聊天记忆。
+
+这不是要求每句话都落文件。只有具备恢复价值的信息才需要固化：当前问题、确认结论、open / assumed / deferred、调研边界、停止条件、返回位置、下一步游标、执行记录和受影响下游。临时闲聊、未采纳想法和可由现有文档自然推导的重复信息，不应膨胀文档。
+
+## 上下文解耦
+
+很多记忆方案关注上下文关系串联：现在说过的一句话，未来某个阶段可以被重新提取，并和新上下文建立关联。AIPD 仍然需要项目知识库来增强 AI 获取上下文的能力，但在任务执行侧，它更重视把任务上下文拆成可独立理解的小黑箱。
+
+这种解耦不是否认系统内存在关联，而是把关联上移到规则层。AIPD 通过五类知识域、map、局部 README 以及 case / work package 的流程上下文索引，把“必须共同遵守的东西”沉淀为全局约定；真实代码不作为知识域复制进 `_aipd/`。人与 AI 在编写任务前，再把输入输出、边界、必读上下文和验收口径写清楚。
+
+这样做的收益是：每个小任务范围足够小，AI 可以在黑箱内部自由实现，只要符合输入输出和验收逻辑即可。代码细节未必总是最优，但在局部模块足够小、边界足够清楚时，它通常可用；有需要再调，没需要不调。
+
+在真实代码中，这不等于全面纵向化。项目通常同时存在横向基座、横向共享能力和纵向业务上下文，并通过显式组合边界协作。新增多个独立业务模块属于并列扩展；横向共享应在多个真实使用者、稳定语义和清楚契约成立后再上移。
+
+通用判断由相关 Skill 按任务条件加载；某个项目最终采用的拓扑仍以该项目自己的 `_aipd/map.md`、Engineering 知识域、局部 README 和真实代码事实为准。
+
+## 五类并列知识域与真实代码
+
+五类长期知识统一放在 `_aipd/knowledge/` 下。它们按内容职责并列存在，由 `_aipd/map.md` 根据当前任务按需路由：
+
+| 逻辑类型 | 路径 | 解决的问题 |
+|----------|------|-----------|
+| `knowledge.intent` | `_aipd/knowledge/intent/` | 项目方向、目标和长期取舍，让 AI 不偏离目标 |
+| `knowledge.research` | `_aipd/knowledge/research/` | 方向所处的外部世界，包括用户、场景、需求、痛点、竞品、行业/玩法范式和调研结论 |
+| `knowledge.core` | `_aipd/knowledge/core/` | 项目内部靠哪些核心模型成立，包括核心对象、领域语言、核心流程、数据模型、增长模型或商业模型 |
+| `knowledge.product` | `_aipd/knowledge/product/` | 把核心模型落成产品功能、功能边界、业务规则、用户可见行为和相关实现入口 |
+| `knowledge.engineering` | `_aipd/knowledge/engineering/` | 产品功能落到代码时，跨模块、跨平台、跨页面都要遵守的业务实现逻辑和工程规则 |
+
+真实代码仍分布在前端、后端、爬虫、脚本等实际源码目录中，由 map 和局部 README 暴露入口；`_aipd/knowledge/` 不创建 code 类别。五类知识域的详细指引见 `core/knowledge/*/guide.md`。
+
+## Leader 与多 Agent 架构
+
+- **普通主 Agent / Case task = 当前目标执行者**：与用户或 Leader 对齐一个 Case，在同一 task 中推进 Think / Design / Execute / Verify / Close
+- **Leader task = 显式项目主导者**：只在用户调用 `$aipd-leader` 后出现，负责一个 active Mission、方向探索、多个同级 Case task 和总验收
+- **分身 Agent = 单个 task 内的隔离或并发执行者**：读取最小必要上下文，完成高噪声探索、独立并发工作线或独立复核
+
+**核心设计哲学：Leader 决定项目推进与 Case 拓扑，Case / Work Package 承接执行事实，Main / Child 是每个 task 内按任务形状做出的运行时选择。**
+
+Leader 不自动启动；普通 AIPD 仍由用户驾驶。显式启动后，Leader 为每个已确认 Case 创建一个同级 task，Case task 不再创建同级 task，但仍可按项目规则使用分身 Agent。AIPD 也不把分身 Agent 当成每个 task 的默认步骤：主 Agent 可以连续完成上下文规模可控、与主线高度耦合的内聚模块；分身 Agent 主要用于隔离长文档、长日志、大量页面结构等高噪声过程，或并发推进两条以上真正独立的工作线。
+
+派发是否值得，需要同时比较主线上下文节省、墙钟时间收益、启动与上下文继承成本、协调等待、结果合并和重复工作。派发后每条证据面只有一个 owner，Main 只接收压缩结果，不重复调查。
+
+详细调用方式见 `agent-guide.md`。不同平台的具体分身 Agent 调度方式由构建时的平台覆盖文件提供。
+
+## 执行体系
+
+- **Leader / Mission**：用户显式调用 `$aipd-leader` 后，由一个 Leader task 在一个 active Mission 内探索方向、协调多个 Case task 并做总验收
+- **Case**：把短周期目标写入 `case.md` 的 Case Contract，再按 Think / Design / Execute / Verify / Close 推进，由主 Agent 维护目标边界和状态
+- **Work Package**：Case 内可执行、可恢复、可验收的目标包，不是微步骤，也不等于子 Agent 派发节点
+- **OKR**：追踪飞书阶段目标与关键结果，对齐 AI 的执行方向
+- **Weave**：把已完成、已实现、已验收的稳定信息编织回 Intent / Research / Core / Product / Engineering 知识域、局部 README 或 map；Intent 只接收用户明确确认的长期方向与边界，Research 只接收带来源和时间边界的稳定外部事实，未完成 case 候选继续留在 Close

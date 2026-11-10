@@ -9,7 +9,7 @@
 - 当前 AIPD 发布：V2
 - Knowledge Schema：Intent / Research / Core / Product / Engineering 五类并列知识域
 - 项目级检索入口：`_aipd/map.md`
-- 项目版本 gate：任何 AIPD 读写前先用 `aipd-skill/src/core/workspace/project-state.md` 和 `aipd-skill/src/core/updates/catalog.json` 检查；只有路径安全、必要入口类型正确且项目版本 `P = I` 时继续普通流程
+- 项目版本 gate：任何 AIPD 读写前先用 `aipd-skill/shared/workspace/project-state.md` 和 `aipd-skill/shared/updates/catalog.json` 检查；只有路径安全、必要入口类型正确且项目版本 `P = I` 时继续普通流程
 
 ## Workspace 区域
 
@@ -55,7 +55,7 @@
 
 - 项目方向：`_aipd/knowledge/intent/intent.md`
 - AIPD 项目更新结果：`_aipd/update-log.md`
-- 本机发布与状态 gate：`aipd-skill/src/core/updates/catalog.json`、`aipd-skill/src/core/workspace/project-state.md`
+- 本机发布与状态 gate：`aipd-skill/shared/updates/catalog.json`、`aipd-skill/shared/workspace/project-state.md`
 - AIPD Leader 工作空间：`_aipd/leader/index.md`
 - Workspace 与 Knowledge 定义：`_aipd/knowledge/core/workspace-modules.md`
 - 核心认知：`_aipd/knowledge/core/index.md`
@@ -63,8 +63,8 @@
 - AI 友好代码拓扑：`_aipd/knowledge/core/ai-friendly-code-topology.md`
 - 产品功能：`_aipd/knowledge/product/index.md`
 - 工程规则：`_aipd/knowledge/engineering/index.md`
-- Agent Entry 与 Interaction Protocol：`aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/agent-entry/interaction-style.md`
-- Main / Child 运行时判定：`aipd-skill/src/platforms/codex/core/agent-guide.md`
+- Agent Entry 与 Interaction Protocol：`aipd-skill/skills/aipd-init/references/agent-entry/template.md`、`aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md`
+- Main / Child 运行时判定：`aipd-skill/skills/aipd-case/agent-guide/codex.md`
 - AIPD 仓库级 Learn：`.agents/skills/aipd-learn/SKILL.md`
 - Skill 维护者入口：`aipd-skill/README.md`
 - SOP：`_aipd/sop/index.md`

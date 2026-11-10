@@ -21,6 +21,6 @@ AIPD 里提到 OKR 时，默认就是飞书 OKR。
 
 ## Skill 与飞书 CLI 经验入口
 
-- Skill 入口：`aipd-skill/src/skills/aipd-okr/SKILL.md`
-- 飞书 CLI 指引：`aipd-skill/src/core/okr/feishu-cli.md`
+- Skill 入口：`aipd-skill/skills/aipd-okr/SKILL.md`
+- 飞书 CLI 指引：`aipd-skill/skills/aipd-okr/references/okr/feishu-cli.md`
 - 项目 SOP 记录：`_aipd/sop/feishu-okr-cli/README.md`

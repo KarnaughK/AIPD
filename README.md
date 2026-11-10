@@ -62,21 +62,20 @@ AIPD 不靠一段越来越长的提示词维持连续性，而是用几组可检
 
 ## 五分钟开始
 
-AIPD 当前是一个可构建的 Skill 源码项目，不是双击即用的应用。当前默认构建并验证 Codex 产物。
+AIPD 当前是一套完整 Skill 安装包，不是双击即用的应用。目录即产物，安装即复制。
 
-### 1. 构建并安装九个公共 Skill
+### 1. 校验并安装九个公共 Skill
 
 在本仓库运行：
 
 ```bash
-./aipd-skill/scripts/build
-./aipd-skill/scripts/check-dist
-./aipd-skill/scripts/install
+./aipd-skill/scripts/check-skills
+./aipd-skill/scripts/install-agents
 ```
 
-`build` 生成 Codex 产物，`check-dist` 只读校验，`install` 会重新构建并把公共 Skill 与 Agent 复制到用户级 Codex 目录。安装会改写 Agent 运行环境，只应在你明确确认后执行；项目级安装、开发 symlink 和显式 `*-codex` 别名见[构建与安装](docs/modules/build-and-install.md)。
+`check-skills` 只读校验完整包。`install-agents` 把同一棵树复制到 `~/.agents/skills`。安装会改写 Agent 运行环境，只应在你明确确认后执行；Claude 另拷和冲突提示见[构建与安装](docs/modules/build-and-install.md)。
 
-如果你更希望交给 Agent 完成，也可以用 Codex 打开本仓库，要求它先读 `AGENTS.md`、`_aipd/index.md` 和 `_aipd/map.md`，build 验证后再询问你是否 install。
+如果你更希望交给 Agent 完成，也可以打开本仓库，要求它先读 `AGENTS.md`、`_aipd/index.md` 和 `_aipd/map.md`，跑 `check-skills` 后再询问你是否 install。
 
 ### 2. 在目标项目初始化 Schema v2
 
@@ -200,7 +199,7 @@ Leader 绝不自动启动。普通 AIPD 仍从 Case 执行层开始；只有用�
 |---|---|---|
 | `$aipd-learn` | 仅在 AIPD 源码仓库内，让框架吸收真实协作经验 | 诊断 transcript、Case 或用户反馈；确认后回写 AIPD 自身 |
 
-`aipd-learn` 位于 `.agents/skills/aipd-learn/`，由 Codex 在这个仓库内直接发现。它是 AIPD 自身的框架迭代入口，**不是第十个公共 Skill**：不进入 `aipd-skill/src/skills/`、build、dist、用户级安装或业务项目。外部项目的框架反馈应带回 AIPD 源码仓库处理；业务项目自己的知识回写使用 `/aipd-weave`。
+`aipd-learn` 位于 `.agents/skills/aipd-learn/`，由 Codex 在这个仓库内直接发现。它是 AIPD 自身的框架迭代入口，**不是第十个公共 Skill**：不进入 `aipd-skill/skills/`、build、dist、用户级安装或业务项目。外部项目的框架反馈应带回 AIPD 源码仓库处理；业务项目自己的知识回写使用 `/aipd-weave`。
 
 ## 四个核心判断
 
@@ -273,4 +272,4 @@ AIPD/
 └── experience-assets/ # 可验证的实践经验源码；不随 Skill 安装
 ```
 
-当前 Codex 适配与通用平台扩展结构位于 `aipd-skill/src/platforms/`。`aipd-skill/dist/` 是生成产物，不是源码事实源。
+当前 Codex custom agent toml 位于 `aipd-skill/platforms/codex/agents/`。公共 Skill 完整包在 `aipd-skill/skills/`，不是按平台 dist。

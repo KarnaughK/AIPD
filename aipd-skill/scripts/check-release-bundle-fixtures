@@ -23,10 +23,21 @@ const {
 
 const fixtureRoot = mkdtempSync(join(tmpdir(), 'aipd-release-bundle-'))
 const projectRoot = join(fixtureRoot, 'aipd-skill')
-const sourceRoot = join(projectRoot, 'src')
-const coreRoot = join(sourceRoot, 'core')
+const sourceRoot = projectRoot
+const coreRoot = join(projectRoot, 'skills', 'aipd-update', 'references')
 const updatesRoot = join(coreRoot, 'updates')
-const distSkillsRoot = join(projectRoot, 'dist', 'codex', 'skills')
+const sharedUpdatesRoot = join(projectRoot, 'shared', 'updates')
+const skillsRoot = join(projectRoot, 'skills')
+const SHARED_CATALOG_SKILLS = [
+  'aipd-init',
+  'aipd-case',
+  'aipd-inbox',
+  'aipd-leader',
+  'aipd-update',
+  'aipd-okr',
+  'aipd-mermaid',
+  'aipd-weave',
+]
 const authority = [
   'overview.md',
   'aipd-project-structure.md',
@@ -54,7 +65,7 @@ function writeJson(path, value) {
 }
 
 function catalogPath() {
-  return join(updatesRoot, 'catalog.json')
+  return join(sharedUpdatesRoot, 'catalog.json')
 }
 
 function readFixtureCatalog() {
@@ -99,6 +110,8 @@ function createFixture(versionCount = 9) {
     releases,
     currentAuthority: authority,
   })
+  mkdirSync(dirname(join(updatesRoot, 'catalog.json')), { recursive: true })
+  copyFileSync(catalogPath(), join(updatesRoot, 'catalog.json'))
 
   for (const relativePath of authority) {
     if (relativePath === 'workspace/templates/manifest.json') {
@@ -127,8 +140,6 @@ function createFixture(versionCount = 9) {
       [
         '---',
         `name: ${skill}`,
-        'inject-from-core:',
-        '  - updates/catalog.json',
         '---',
         '',
         ...updateContract,
@@ -137,27 +148,16 @@ function createFixture(versionCount = 9) {
     )
   }
 
-  const updateReferences = join(distSkillsRoot, 'aipd-update', 'references')
-  for (const relativePath of [
-    'updates/catalog.json',
-    'updates/current.md',
-    ...releases.map((release) => `updates/${release.record}`),
-  ]) {
-    const sourcePath = join(coreRoot, relativePath)
-    const targetPath = join(updateReferences, relativePath)
-    mkdirSync(dirname(targetPath), { recursive: true })
-    copyFileSync(sourcePath, targetPath)
-  }
-  for (const relativePath of authority) {
-    const targetPath = join(updateReferences, relativePath)
-    mkdirSync(dirname(targetPath), { recursive: true })
-    copyFileSync(join(coreRoot, relativePath), targetPath)
+  for (const skill of SHARED_CATALOG_SKILLS) {
+    const referencesRoot = join(skillsRoot, skill, 'references')
+    const catalogTarget = join(referencesRoot, 'updates', 'catalog.json')
+    mkdirSync(dirname(catalogTarget), { recursive: true })
+    copyFileSync(catalogPath(), catalogTarget)
   }
 
   for (const skill of ['aipd-init', 'aipd-update']) {
-    const referencesRoot = join(distSkillsRoot, skill, 'references')
+    const referencesRoot = join(skillsRoot, skill, 'references')
     for (const relativePath of [
-      'updates/catalog.json',
       'workspace/templates/manifest.json',
       'workspace/templates/update-log.md',
     ]) {
@@ -177,7 +177,7 @@ function expectContractFailure(callback, pattern) {
 function verifySourceAndDistContract() {
   const sourceBundle = readCatalog(projectRoot)
   assert.equal(sourceBundle.catalog.currentVersion, 9)
-  validateDistBundle(sourceBundle, distSkillsRoot)
+  validateDistBundle(sourceBundle, skillsRoot)
 }
 
 function verifyCatalogRejections() {
@@ -240,20 +240,20 @@ function verifyCatalogRejections() {
   expectContractFailure(() => readCatalog(projectRoot), /aipdVersion 9/u)
   write(manifestPath, manifest)
 
-  const distCatalogPath = join(
-    distSkillsRoot,
+  const packageCatalogPath = join(
+    skillsRoot,
     'aipd-update',
     'references',
     'updates',
     'catalog.json',
   )
-  const distCatalog = readFileSync(distCatalogPath, 'utf8')
-  write(distCatalogPath, '{}\n')
+  const packageCatalog = readFileSync(packageCatalogPath, 'utf8')
+  write(packageCatalogPath, '{}\n')
   expectContractFailure(
-    () => validateDistBundle(readCatalog(projectRoot), distSkillsRoot),
+    () => validateDistBundle(readCatalog(projectRoot), skillsRoot),
     /catalog 与 source 不同步/u,
   )
-  write(distCatalogPath, distCatalog)
+  write(packageCatalogPath, packageCatalog)
 
   const updateSkillPath = join(sourceRoot, 'skills', 'aipd-update', 'SKILL.md')
   const updateSkill = readFileSync(updateSkillPath, 'utf8')
@@ -309,7 +309,7 @@ try {
   verifyReleaseSelection()
   verifyRepeatedTopicUsesFinalAuthority()
   console.log(
-    'AIPD release bundle fixtures 通过：catalog、source/dist、P/I selection 与 V5->V9 最终 authority 收敛均符合本机合同。',
+    'AIPD release bundle fixtures 通过：catalog、shared/skills、P/I selection 与 V5->V9 最终 authority 收敛均符合本机合同。',
   )
 } finally {
   rmSync(resolve(fixtureRoot), { recursive: true, force: true })

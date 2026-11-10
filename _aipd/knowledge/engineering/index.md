@@ -26,15 +26,14 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 ### 全局 / 公共 Skill
 
 - 它们是 AIPD 面向其他项目交付的主体产物。
-- 源码位于 `aipd-skill/src/skills/`，共享规则位于 `aipd-skill/src/core/`，平台差异位于 `aipd-skill/src/platforms/{platform}/`。
-- 统一经过 `build` 生成 `aipd-skill/dist/{platform}/`；构建架构允许同一源码装配到多个 Skill 目录，并通过平台覆盖生成多个平台的 Skill / Agent 产物。
-- `dist/` 是生成物，不是源码事实源；用户级或目标项目级 `install` 只消费构建产物。
+- 完整包位于 `aipd-skill/skills/`。`shared/` 只放 catalog 与 project-state 原稿。平台按需文件在对应 Skill 包内。
+- 安装复制 `skills/*`，不再按平台打 dist。
 
 ### 项目 / 仓库级 Skill
 
 - 它们只服务当前源码仓库，不属于 AIPD 对外安装包。
 - Skill 本体直接放在仓库 `.agents/skills/{skill}/`，该目录同时是源码事实源和 Codex 运行时加载位置。
-- 不建立 `aipd-skill/src/skills/` 镜像，不经过 build，不生成 dist，也不进入用户级或外部项目级 install。
+- 不建立公共 `skills/` 镜像，也不进入用户级或外部项目级 install。
 - 通过 Git 随仓库版本化；只有流程本身需要变化时才直接修改，没有变化时不做同步、发布或安装动作。
 - Skill 的执行结果仍按真实 owner 写回公共源码、Knowledge、Map、README、Case 或经验资产；目标 owner 若属于公共产物，继续遵守其 build / install 规则。
 
@@ -48,40 +47,38 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 - Codex 子 Agent 不是默认步骤；Main 根据上下文隔离收益、真实并发收益、主线耦合度和调度成本自然选择是否派发。平台不可用时由 Main 回退执行。
 - GPT-5.6 Sol 日常交互以 High 为基线，Ultra 只用于存在多条独立工作线且可接受更长等待的任务；Ultra 自带委派与 AIPD 主动派发不能无条件叠加。
 - work package 文件和显式上下文不是替代当前对话的任务源，而是用于校准边界、压缩恢复和沉淀长期事实。
-- `aipd-skill/src/platforms/codex/core/agent-guide.md` 是 Codex 子 Agent 上下文、调度和降级策略的主要来源。
-- `aipd-skill/src/core/agent-guides/` 存平台无关的领域执行指引。
-- `aipd-skill/src/platforms/codex/agents/` 只存 Codex custom agent 打包元数据和指引引用。
-- `.agents/skills/aipd-learn/` 是 AIPD 源码仓库专用的框架自迭代 Skill，由 Codex 按仓库级路径发现；它不属于公共 `src/skills`、dist 或安装集合。
-- 构建脚本负责把核心指引注入 Codex agent 模板，输出到 `aipd-skill/dist/codex/agents/`。
-- 构建脚本默认把一次性 `migrate-project-schema` 复制进 Codex 的 `aipd/scripts/`，让已安装 Skill 能在外部项目中定位迁移器；该脚本不进入日常读取链路。
-- 默认安装脚本负责把九个公共 Codex Skill 与 agent 安装到用户级或目标项目的 `.codex/` 目录；带 `-codex` 的脚本保留为显式别名。仓库级 `aipd-learn` 不参与复制。
-- 修改 AIPD 源码后，Agent 可以直接运行 `./aipd-skill/scripts/build` 作为低风险打包验证；不要默认执行安装脚本。
-- 无参 build 默认只生成 Codex 产物。构建系统保留通用目标装配、平台同路径覆盖、core fallback 和可选 agents 注入；其他目标可自行扩展和打包，但不进入默认交付与验证。
-- build 完成后运行 `./aipd-skill/scripts/check-dist`，统一验证 Codex 的 9 个公共 Skill、1 个仓库级 `aipd-learn` 的隔离合同、3 个 Agent、源码 / 产物同步、静态 references、Leader 显式调用合同、关键旧语义、默认入口和通用多目标构建护栏。`check-dist` 只读，不替代 build，也不执行 install。
-- `aipd-skill/src/core/updates/catalog.json` 是本机发布版本事实源。每次发布必须保持连续 Release Records、current authority、manifest 模板、默认 Codex Skill references 和 `currentVersion` 一致；`check-release-bundle`、其 fixture 与 `check-dist` 共同阻止 source / dist 版本漂移。
+- `aipd-skill/skills/aipd-case/agent-guide/codex.md` 是 Codex 子 Agent 上下文、调度和降级策略的主要来源。
+- `aipd-skill/skills/aipd-case/references/agent-guides/` 存平台无关的领域执行指引。
+- `aipd-skill/platforms/codex/agents/` 只存 Codex custom agent 打包元数据和指引引用。
+- `.agents/skills/aipd-learn/` 是 AIPD 源码仓库专用的框架自迭代 Skill；它不属于公共 `skills/` 或用户级安装集合。
+- `migrate-project-schema` 在 `aipd-skill/skills/aipd-init/scripts/`，不进入日常读取链路。
+- 默认安装复制九个公共 Skill 到 `~/.agents/skills`；Claude 另拷到 `~/.claude/skills`。仓库级 `aipd-learn` 不参与复制。custom agent toml 本树不装。
+- 修改完整包后，Agent 可以直接运行 `./aipd-skill/scripts/check-skills`；不要默认执行安装脚本。
+- `check-skills` 验证 9 个完整包、1 个仓库级 `aipd-learn` 的隔离、八个 catalog / project-state 副本与 `shared/` 一致、Leader / Case 按需文件和安装入口。只读，不执行 install。
+- `aipd-skill/shared/updates/catalog.json` 是本机发布版本原稿。每次发布必须保持连续 Release Records、current authority、manifest 模板和 `currentVersion` 一致；`check-skills` 与 `check-release-bundle` 阻止副本漂移。
 - 一次性 Schema migrator 只把旧工作区切换为精确两键的 `unversioned-v2`，不写本机当前 `aipdVersion`；只有 `aipd-update` 完成语义收敛和验证后才提交项目版本与 `_aipd/update-log.md`。
-- 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；构建和安装脚本不得把它复制进 `aipd-skill/dist` 或 Agent Skill 目录。
-- 用户级或旧项目级安装中残留的公共 `aipd-learn` 已进入共享退役清理清单；只有用户明确授权执行 install / dev 时才清理，仓库内 `.agents/skills/aipd-learn/` 不受影响。
-- install 会改写用户级或项目级 Agent 运行环境。build 完成后，必须主动问用户是否执行 install；不能只说明“可能需要 install”。只有用户明确确认后，才执行 `./aipd-skill/scripts/install`、`./aipd-skill/scripts/install-codex`、`./aipd-skill/scripts/install-cursor`、`./aipd-skill/scripts/install-project` 或 `./aipd-skill/scripts/install-project-codex`。`install-cursor` 只写入 `~/.cursor/skills/`，不写 `~/.dsh/skills/`。
+- 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；安装脚本不得把它复制进 Agent Skill 目录。
+- 用户目录里残留的公共 `aipd-learn` 或旧名 `aipd` 只提示，不自动删。仓库内 `.agents/skills/aipd-learn/` 不受影响。
+- install 会改写用户级 Agent 运行环境。`check-skills` 通过后，必须主动问用户是否执行 install。只有用户明确确认后，才执行 `./aipd-skill/scripts/install-agents` 或 `./aipd-skill/scripts/install-claude`。
 
 ## AI 友好代码拓扑运行时投影
 
-- `_aipd/knowledge/core/ai-friendly-code-topology.md` 是长期抽象认知主事实源；`aipd-skill/src/core/ai-friendly-code-topology.md` 是供外部 Agent 消费的精简运行时投影，不逐字复制研究过程。
-- `aipd` 与 `aipd-case` 通过 `inject-from-core` 获得同一 reference。普通结构性开发和 Case Design 条件加载；无关任务以及 Case Execute / Verify 默认不重复加载完整 guide。
+- `_aipd/knowledge/core/ai-friendly-code-topology.md` 是长期抽象认知主事实源；`aipd-skill/skills/aipd-case/references/ai-friendly-code-topology.md` 是供外部 Agent 消费的精简运行时投影，不逐字复制研究过程。
+- `aipd-init` 与 `aipd-case` 各自带需要的 reference。普通结构性开发和 Case Design 条件加载；无关任务以及 Case Execute / Verify 默认不重复加载完整 guide。
 - Case Design 把通用判断编译为项目具体的 `Code Topology Contract`；拓扑敏感 Work Package 在 Execute 携带短护栏；Verify 根据真实 diff、目录、依赖和文档回写反查合同。
-- `aipd-skill/scripts/check-dist` 验证 Codex 的两个目标 Skill 都包含同一投影、其他 Skill 不包含、两个入口有静态读取规则，并检查三段合同闭环与旧空间术语。
-- 默认 build 产物位于 `aipd-skill/dist/codex/skills/{aipd,aipd-case}/references/ai-friendly-code-topology.md`，只由 build 生成，不手改；通用构建器仍使用 `dist/{platform}/` 目标边界。
+- `aipd-skill/scripts/check-skills` 验证 Codex 的两个目标 Skill 都包含同一投影、其他 Skill 不包含、两个入口有静态读取规则，并检查三段合同闭环与旧空间术语。
+- 运行时投影位于 `aipd-skill/skills/aipd-case/references/ai-friendly-code-topology.md`。
 
 ## 当前 Agent 角色指引与 Codex 装配
 
-`aipd-skill/src/core/agent-guides/` 当前有 4 份平台无关角色指引；`aipd-skill/src/platforms/codex/agents/` 当前只把其中 3 个装配为 Codex custom Agent。`aipd_product_manager` 目前是 Case Design 可按需读取的领域指引，没有对应 Codex `.toml`；因此“4 份指引”与“3 个 Codex Agent”不是数量冲突。
+`aipd-skill/skills/aipd-case/references/agent-guides/` 当前有 4 份平台无关角色指引；`aipd-skill/platforms/codex/agents/` 当前只把其中 3 个装配为 Codex custom Agent。`aipd_product_manager` 目前是 Case Design 可按需读取的领域指引，没有对应 Codex `.toml`；因此“4 份指引”与“3 个 Codex Agent”不是数量冲突。
 
 | Agent | 用途 | 源码 |
 |---|---|---|
-| `aipd_context_retriever` | AIPD 上下文检索：从必要 Knowledge、SOP、流程状态、局部 README 和代码入口中检索并压缩任务上下文，保持 Main Agent 上下文干净 | 指引：`aipd-skill/src/core/agent-guides/aipd_context_retriever.md`；Codex 元数据：`aipd-skill/src/platforms/codex/agents/aipd_context_retriever.toml` |
-| `aipd_product_manager` | AIPD Case Design 需求契约角色：梳理需求、规则、边界、验收标准和 `confirmed / assumed / open`，防止未确认假设被固化为工程事实 | 指引：`aipd-skill/src/core/agent-guides/aipd_product_manager.md` |
-| `aipd_vue_architect` | Vue 页面、组件、样式、交互、状态组织和 AI 友好型 Vue 架构任务 | 指引：`aipd-skill/src/core/agent-guides/aipd_vue_architect.md`；Codex 元数据：`aipd-skill/src/platforms/codex/agents/aipd_vue_architect.toml` |
-| `aipd_vue_provider` | Vue `useXxx.ts/js`、provide/inject、页面数据源、API 字段对齐和局部 controller 边界 | 指引：`aipd-skill/src/core/agent-guides/aipd_vue_provider.md`；Codex 元数据：`aipd-skill/src/platforms/codex/agents/aipd_vue_provider.toml` |
+| `aipd_context_retriever` | AIPD 上下文检索：从必要 Knowledge、SOP、流程状态、局部 README 和代码入口中检索并压缩任务上下文，保持 Main Agent 上下文干净 | 指引：`aipd-skill/skills/aipd-case/references/agent-guides/aipd_context_retriever.md`；Codex 元数据：`aipd-skill/platforms/codex/agents/aipd_context_retriever.toml` |
+| `aipd_product_manager` | AIPD Case Design 需求契约角色：梳理需求、规则、边界、验收标准和 `confirmed / assumed / open`，防止未确认假设被固化为工程事实 | 指引：`aipd-skill/skills/aipd-case/references/agent-guides/aipd_product_manager.md` |
+| `aipd_vue_architect` | Vue 页面、组件、样式、交互、状态组织和 AI 友好型 Vue 架构任务 | 指引：`aipd-skill/skills/aipd-case/references/agent-guides/aipd_vue_architect.md`；Codex 元数据：`aipd-skill/platforms/codex/agents/aipd_vue_architect.toml` |
+| `aipd_vue_provider` | Vue `useXxx.ts/js`、provide/inject、页面数据源、API 字段对齐和局部 controller 边界 | 指引：`aipd-skill/skills/aipd-case/references/agent-guides/aipd_vue_provider.md`；Codex 元数据：`aipd-skill/platforms/codex/agents/aipd_vue_provider.toml` |
 
 ## 上下文检索 Agent 调度原则
 
@@ -110,9 +107,9 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 
 ## Vue 按需指南
 
-- `aipd-skill/src/core/knowledge/engineering/vue-case-create-guide.md`：Vue 前端 case 的前置设计、work package 粒度和 Agent 推荐。
-- `aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md`：Vue Mermaid 组件图 / 架构图画法。
-- `aipd-skill/src/core/knowledge/engineering/vue-provider-guide.md`：`useXxx.ts/js`、provide / inject、页面级 API 数据源和字段对齐规则。
+- `aipd-skill/skills/aipd-case/references/knowledge/engineering/vue-case-create-guide.md`：Vue 前端 case 的前置设计、work package 粒度和 Agent 推荐。
+- `aipd-skill/skills/aipd-mermaid/references/knowledge/engineering/vue-architecture-diagram-guide.md`：Vue Mermaid 组件图 / 架构图画法。
+- `aipd-skill/skills/aipd-mermaid/references/knowledge/engineering/vue-provider-guide.md`：`useXxx.ts/js`、provide / inject、页面级 API 数据源和字段对齐规则。
 
 ## Case Execute 约束
 

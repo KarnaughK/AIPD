@@ -41,7 +41,7 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 
 它不替用户完成完整的五类 Knowledge 建模，也不替代后续 Weave 和 Case 流程。日常读上下文走 `AGENTS.md` → `_aipd/map.md`。
 
-用户选择 Agent MD 等级 2 时，还会安装 Interaction Protocol，约束讨论 / 分析类回复按“我理解 → 展开说说 → 结论 → 横向拓展 → 下一步”生成。“我理解”只复述目标和边界，不提前下结论；“横向拓展”只列相邻方向；“下一步”只给一个自然向下动作，不自动把建议解释成执行授权。具体协议以 `aipd-skill/src/core/agent-entry/interaction-style.md` 为准。
+用户选择 Agent MD 等级 2 时，还会安装 Interaction Protocol，约束讨论 / 分析类回复按“我理解 → 结论 → 下一步 → 展开说说 → 横向拓展”生成。前三段是对齐、答案和向下动作，着急推进时可以不读后两段。“我理解”只复述目标和边界；“下一步”只给一个自然向下动作，不自动把建议解释成执行授权；“展开说说”交代结论依据，发现站不住时明确改口；“横向拓展”只列相邻方向。具体协议以 `aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md` 为准。
 
 ### Map-first 认知加载
 

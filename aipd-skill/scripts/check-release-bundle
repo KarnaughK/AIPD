@@ -36,22 +36,22 @@ function fail(message) {
 function usage() {
   return [
     '用法:',
-    '  check-release-bundle [--project-root /absolute/aipd-skill] [--dist-skills /absolute/dist/codex/skills]',
+    '  check-release-bundle [--project-root /absolute/aipd-skill] [--skills-root /absolute/aipd-skill/skills]',
     '  check-release-bundle [--project-root /absolute/aipd-skill] --select <unversioned|positive-integer>',
     '',
-    '说明：只读取本机 source / dist，不访问网络。',
+    '说明：只读取本机 shared / skills，不访问网络。',
   ].join('\n')
 }
 
 function parseArguments(argumentsList) {
   let projectRoot = defaultProjectRoot
-  let distSkillsRoot = null
+  let skillsRoot = null
   let selection = undefined
 
   for (let index = 0; index < argumentsList.length; index += 1) {
     const argument = argumentsList[index]
     if (argument === '--help' || argument === '-h') {
-      return { help: true, projectRoot, distSkillsRoot, selection }
+      return { help: true, projectRoot, skillsRoot, selection }
     }
     if (argument === '--project-root') {
       projectRoot = argumentsList[index + 1]
@@ -59,9 +59,9 @@ function parseArguments(argumentsList) {
       index += 1
       continue
     }
-    if (argument === '--dist-skills') {
-      distSkillsRoot = argumentsList[index + 1]
-      if (!distSkillsRoot) fail('--dist-skills 缺少路径。')
+    if (argument === '--skills-root' || argument === '--dist-skills') {
+      skillsRoot = argumentsList[index + 1]
+      if (!skillsRoot) fail('--skills-root 缺少路径。')
       index += 1
       continue
     }
@@ -75,14 +75,14 @@ function parseArguments(argumentsList) {
   }
 
   if (!isAbsolute(projectRoot)) fail(`AIPD Skill 根必须是绝对路径：${projectRoot}`)
-  if (distSkillsRoot !== null && !isAbsolute(distSkillsRoot)) {
-    fail(`dist skills 根必须是绝对路径：${distSkillsRoot}`)
+  if (skillsRoot !== null && !isAbsolute(skillsRoot)) {
+    fail(`skills 根必须是绝对路径：${skillsRoot}`)
   }
 
   return {
     help: false,
     projectRoot: resolve(projectRoot),
-    distSkillsRoot: distSkillsRoot === null ? null : resolve(distSkillsRoot),
+    skillsRoot: skillsRoot === null ? null : resolve(skillsRoot),
     selection,
   }
 }
@@ -208,11 +208,26 @@ function assertUpdateOrchestration(sourceRoot) {
   }
 }
 
+const SHARED_CATALOG_SKILLS = Object.freeze([
+  'aipd-init',
+  'aipd-case',
+  'aipd-inbox',
+  'aipd-leader',
+  'aipd-update',
+  'aipd-okr',
+  'aipd-mermaid',
+  'aipd-weave',
+])
+
 function readCatalog(projectRoot) {
-  const sourceRoot = join(projectRoot, 'src')
-  const coreRoot = join(sourceRoot, 'core')
+  const sourceRoot = projectRoot
+  const coreRoot = join(projectRoot, 'skills', 'aipd-update', 'references')
   const updatesRoot = join(coreRoot, 'updates')
-  const catalog = readJsonFileWithin(updatesRoot, 'catalog.json', 'release catalog')
+  const catalog = readJsonFileWithin(
+    join(projectRoot, 'shared', 'updates'),
+    'catalog.json',
+    'release catalog',
+  )
 
   assertPlainObject(catalog, 'release catalog')
   assertExactKeys(
@@ -352,105 +367,89 @@ function readCatalog(projectRoot) {
   }
 }
 
-function sourceSkillInjects(skillFile, corePath) {
-  const source = readFileSync(skillFile, 'utf8')
-  const escapedPath = corePath.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
-  return new RegExp(`^[\\t ]*-[\\t ]+${escapedPath}[\\t ]*$`, 'mu').test(source)
-}
-
-function validateDistBundle(sourceBundle, distSkillsRoot) {
-  assertDirectory(distSkillsRoot, 'dist skills 根')
-  const updateReferencesRoot = join(distSkillsRoot, 'aipd-update', 'references')
+function validateSkillPackages(sourceBundle, skillsRoot) {
+  assertDirectory(skillsRoot, 'skills 根')
+  const updateReferencesRoot = join(skillsRoot, 'aipd-update', 'references')
   assertDirectory(updateReferencesRoot, 'aipd-update references')
 
-  const distCatalogPath = assertRegularFileWithin(
+  const packageCatalogPath = assertRegularFileWithin(
     updateReferencesRoot,
     'updates/catalog.json',
-    'dist aipd-update release catalog',
+    'aipd-update release catalog',
   )
-  assertFilesEqual(sourceBundle.catalogPath, distCatalogPath, 'dist aipd-update release catalog')
+  assertFilesEqual(sourceBundle.catalogPath, packageCatalogPath, 'aipd-update release catalog')
 
-  const distCurrentGuidePath = assertRegularFileWithin(
+  const packageCurrentGuidePath = assertRegularFileWithin(
     updateReferencesRoot,
     `updates/${sourceBundle.catalog.currentGuide}`,
-    'dist aipd-update current guide',
+    'aipd-update current guide',
   )
   assertFilesEqual(
     sourceBundle.currentGuidePath,
-    distCurrentGuidePath,
-    'dist aipd-update current guide',
+    packageCurrentGuidePath,
+    'aipd-update current guide',
   )
 
   for (let index = 0; index < sourceBundle.catalog.releases.length; index += 1) {
     const release = sourceBundle.catalog.releases[index]
-    const distRecordPath = assertRegularFileWithin(
+    const packageRecordPath = assertRegularFileWithin(
       updateReferencesRoot,
       `updates/${release.record}`,
-      `dist aipd-update release V${release.version}`,
+      `aipd-update release V${release.version}`,
     )
     assertFilesEqual(
       sourceBundle.releasePaths[index],
-      distRecordPath,
-      `dist aipd-update release V${release.version}`,
+      packageRecordPath,
+      `aipd-update release V${release.version}`,
     )
   }
 
   for (const [authority, sourcePath] of sourceBundle.authorityPaths) {
-    const distAuthorityPath = assertRegularFileWithin(
+    const packageAuthorityPath = assertRegularFileWithin(
       updateReferencesRoot,
       authority,
-      `dist aipd-update currentAuthority ${authority}`,
+      `aipd-update currentAuthority ${authority}`,
     )
     assertFilesEqual(
       sourcePath,
-      distAuthorityPath,
-      `dist aipd-update currentAuthority ${authority}`,
+      packageAuthorityPath,
+      `aipd-update currentAuthority ${authority}`,
     )
   }
 
-  const sourceSkillsRoot = join(sourceBundle.sourceRoot, 'skills')
-  assertDirectory(sourceSkillsRoot, 'source skills 根')
-  for (const entry of readdirSync(sourceSkillsRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue
-    const skillFile = join(sourceSkillsRoot, entry.name, 'SKILL.md')
-    let skillStat
-    try {
-      skillStat = lstatSync(skillFile)
-    } catch (error) {
-      if (error.code === 'ENOENT') continue
-      throw error
-    }
-    if (!skillStat.isFile() || skillStat.isSymbolicLink()) continue
-    if (!sourceSkillInjects(skillFile, 'updates/catalog.json')) continue
-
-    const skillReferencesRoot = join(distSkillsRoot, entry.name, 'references')
+  for (const skill of SHARED_CATALOG_SKILLS) {
+    const skillReferencesRoot = join(skillsRoot, skill, 'references')
     const skillCatalogPath = assertRegularFileWithin(
       skillReferencesRoot,
       'updates/catalog.json',
-      `dist ${entry.name} release catalog`,
+      `${skill} release catalog`,
     )
     assertFilesEqual(
       sourceBundle.catalogPath,
       skillCatalogPath,
-      `dist ${entry.name} release catalog`,
+      `${skill} release catalog`,
     )
   }
 
   for (const skill of ['aipd-init', 'aipd-update']) {
-    const referencesRoot = join(distSkillsRoot, skill, 'references')
+    const referencesRoot = join(skillsRoot, skill, 'references')
     for (const authority of [
       'workspace/templates/manifest.json',
       'workspace/templates/update-log.md',
     ]) {
       const sourcePath = sourceBundle.authorityPaths.get(authority)
-      const distPath = assertRegularFileWithin(
+      const packagePath = assertRegularFileWithin(
         referencesRoot,
         authority,
-        `dist ${skill} ${authority}`,
+        `${skill} ${authority}`,
       )
-      assertFilesEqual(sourcePath, distPath, `dist ${skill} ${authority}`)
+      assertFilesEqual(sourcePath, packagePath, `${skill} ${authority}`)
     }
   }
+}
+
+function validateDistBundle(sourceBundle, skillsRoot) {
+  return validateSkillPackages(sourceBundle, skillsRoot)
 }
 
 function selectReleaseRecords(catalog, projectVersion) {
@@ -506,8 +505,8 @@ function main() {
   }
 
   const sourceBundle = readCatalog(options.projectRoot)
-  if (options.distSkillsRoot !== null) {
-    validateDistBundle(sourceBundle, options.distSkillsRoot)
+  if (options.skillsRoot !== null) {
+    validateSkillPackages(sourceBundle, options.skillsRoot)
   }
 
   if (options.selection !== undefined) {
@@ -519,10 +518,10 @@ function main() {
     return
   }
 
-  const distSuffix = options.distSkillsRoot === null ? '' : '、Codex dist 同步'
+  const skillsSuffix = options.skillsRoot === null ? '' : '、完整包 catalog 同步'
   console.log(
     `AIPD release bundle 校验通过：V${sourceBundle.catalog.currentVersion}`
-    + `、连续 records、currentAuthority、manifest${distSuffix}。`,
+    + `、连续 records、currentAuthority、manifest${skillsSuffix}。`,
   )
 }
 
@@ -544,4 +543,5 @@ module.exports = {
   readCatalog,
   selectReleaseRecords,
   validateDistBundle,
+  validateSkillPackages,
 }

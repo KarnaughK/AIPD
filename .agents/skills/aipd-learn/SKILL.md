@@ -18,15 +18,15 @@ description: >
 
 遵守以下边界：
 
-- 不把它放回 `aipd-skill/src/skills/`。
-- 不把它构建进 `aipd-skill/dist/`。
+- 不把它放回 `aipd-skill/skills/`。
+- 不把它放进公共 `aipd-skill/skills/` 安装集合。
 - 不把它安装到用户级 Skill 目录或外部项目。
 - 外部项目产生的反馈，返回 AIPD 仓库后通过 transcript path、会话定位卡、用户粘贴内容或补充文件输入。
 - 当前业务项目的 Knowledge、局部 README、Map 和 Case 稳定知识仍由该项目的 `aipd-weave` 处理。
 
 开始前确认当前目录确实是 AIPD 源码仓库：
 
-- 存在 `aipd-skill/src/core/overview.md`。
+- 存在 `aipd-skill/skills/aipd-init/references/overview.md`。
 - 存在 `.agents/skills/aipd-learn/SKILL.md`。
 - `_aipd/index.md` 标识当前项目为 AIPD。
 
@@ -37,8 +37,8 @@ description: >
 进入任何 AIPD 读取或写入前，先读取：
 
 ```text
-aipd-skill/src/core/workspace/project-state.md
-aipd-skill/src/core/updates/catalog.json
+aipd-skill/shared/workspace/project-state.md
+aipd-skill/shared/updates/catalog.json
 ```
 
 按项目状态合同检查新旧工作区路径项、symlink、manifest 双形态和项目版本 `P` / 本机版本 `I`。只有状态为 `current` 且本任务所需入口类型安全时继续；其他状态按合同停止或路由 `aipd-update`。项目版本不从 Agent Entry、Git tag 或远端推断。
@@ -116,10 +116,10 @@ _aipd/case/{case}/03-execute/work-packages/
 | 经验类型 | Owner |
 |---|---|
 | Learn 本身的触发、诊断和写回流程 | `.agents/skills/aipd-learn/` |
-| AIPD 通用知识、结构规则、模板 | `aipd-skill/src/core/` |
-| 对外发布的 AIPD Skill 行为 | `aipd-skill/src/skills/` |
-| Codex 或其他平台专用差异 | `aipd-skill/src/platforms/{platform}/` |
-| 已校准的真实项目实践样本 | `aipd-skill/src/core/experience/` |
+| AIPD 通用知识、结构规则、模板 | `aipd-skill/skills/` |
+| 对外发布的 AIPD Skill 行为 | `aipd-skill/skills/` |
+| Codex 或其他平台专用差异 | `aipd-skill/platforms/{platform}/` |
+| 已校准的真实项目实践样本 | `aipd-skill/skills/aipd-case/references/experience/` |
 | 文字不足以可靠复用的实现资产 | `experience-assets/{asset-name}/` |
 | AIPD 仓库当前稳定产品 / 工程事实和检索入口 | `_aipd/knowledge/`、`_aipd/map.md`、局部 README |
 | 面向使用者的当前行为说明 | 根 `README.md`、`docs/`、`aipd-skill/README.md` |
@@ -129,7 +129,7 @@ _aipd/case/{case}/03-execute/work-packages/
 实践经验需要保留具象上下文，但不要写入外部项目的本机绝对路径、私有 transcript 路径或无授权源码。涉及经验库时先读取：
 
 ```text
-aipd-skill/src/core/experience/index.md
+aipd-skill/skills/aipd-case/references/experience/index.md
 experience-assets/README.md
 ```
 
@@ -189,11 +189,11 @@ Agent 反应问题：
 2. 同步更新受影响的稳定 Product / Engineering / Map 和用户文档；历史 Release Record、Case 和 update log 保持历史真实性。
 3. 只改本次确认范围，不顺手重构无关内容。
 4. 修改 `.agents/skills/aipd-learn/` 后运行 Skill 结构校验。
-5. 修改 `aipd-skill/src/`、构建或安装边界后运行 `./aipd-skill/scripts/build` 和 `./aipd-skill/scripts/check-dist`。
+5. 修改 `aipd-skill/skills/` 或安装边界后运行 `./aipd-skill/scripts/check-skills`。
 6. 修改经验源码资产后运行 `node experience-assets/scripts/verify-assets.mjs`；发布前再运行 `--full`。
 7. 仓库级 Skill 由 Codex 从 `.agents/skills` 自动发现，不需要 install；若未刷新，提示重启 Codex。
-8. build 是低风险验证，可以直接执行；install 会改写运行环境，必须另行获得用户明确确认。
+8. `check-skills` 是低风险验证，可以直接执行；install 会改写运行环境，必须另行获得用户明确确认。
 9. 旧用户级 `aipd-learn` 副本属于退役清理目标，但当前任务没有删除授权时只报告，不直接删除。
 10. 不自动提交，除非用户明确要求。
 
-完成后报告修改文件、验证结果、公共 dist 是否排除 `aipd-learn`，以及是否仍存在待用户确认的安装或旧副本清理。
+完成后报告修改文件、验证结果、公共 `skills/` 是否排除 `aipd-learn`，以及是否仍存在待用户确认的安装或旧副本清理。

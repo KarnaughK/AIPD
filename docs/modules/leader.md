@@ -84,8 +84,8 @@ Leader 不使用“坚持还是服从”的模型。它忠于项目文档、已�
 
 Skill 源码入口：
 
-- `aipd-skill/src/skills/aipd-leader/SKILL.md`
-- `aipd-skill/src/core/leader/`
-- `aipd-skill/src/core/agent-entry/template.md`（goal 模式按本对话身份分流）
-- `aipd-skill/src/platforms/codex/core/leader/runtime.md`
-- `aipd-skill/src/platforms/cursor/core/leader/runtime.md`
+- `aipd-skill/skills/aipd-leader/SKILL.md`
+- `aipd-skill/skills/aipd-leader/references/leader/`
+- `aipd-skill/skills/aipd-init/references/agent-entry/template.md`（goal 模式按本对话身份分流）
+- `aipd-skill/skills/aipd-leader/runtime/codex.md`
+- `aipd-skill/skills/aipd-leader/runtime/cursor.md`

@@ -8,38 +8,38 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 
 | 用户说法 / 场景 | 标准功能线 | 状态 | 主要入口 | 数据对象 | 相关 Core 模型 | 相关 Engineering / 流程入口 |
 |---|---|---|---|---|---|---|
-| AIPD / 初始化 / aipd-init | AIPD 初始化 | 已存在 | `aipd-skill/src/skills/aipd-init/SKILL.md` | `AGENTS.md`、`_aipd/`、index / map 模板；有代码时补 Core/Product/Engineering 索引 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md` |
-| Agent MD 等级 2 / Interaction Protocol / 回复模板 / 我理解 / 展开说说 / 横向拓展 / 下一步 | Interaction Protocol | 已存在 | `aipd-skill/src/core/agent-entry/interaction-style.md` | 五段讨论回复顺序、显式复述、横向方向、自然下一步 | Agent 协作思考模型 | Agent MD 等级 2、`AGENTS.md` |
+| AIPD / 初始化 / aipd-init | AIPD 初始化 | 已存在 | `aipd-skill/skills/aipd-init/SKILL.md` | `AGENTS.md`、`_aipd/`、index / map 模板；有代码时补 Core/Product/Engineering 索引 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md` |
+| Agent MD 等级 2 / Interaction Protocol / 回复模板 / 我理解 / 结论 / 下一步 / 展开说说 / 横向拓展 | Interaction Protocol | 已存在 | `aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md` | 我理解、结论、下一步在前；展开说说与横向拓展在后 | Agent 协作思考模型 | Agent MD 等级 2、`AGENTS.md` |
 | 读 map / 加载项目认知 / 找上下文 / 开发前读文档 | Map-first 认知加载 | 已存在 | `AGENTS.md`、`_aipd/map.md` | `_aipd/index.md`、`_aipd/map.md`、必要 Knowledge、SOP、局部 README、真实代码 | Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md` |
-| inbox / 收件箱 / 先记一下 / 先存一下 | Inbox 临时收件箱 | 已存在 | `aipd-skill/src/skills/aipd-inbox/SKILL.md` | `_aipd/inbox.md` | 项目知识库维护模型 | `aipd-skill/src/core/workspace/templates/inbox.md` |
-| `$aipd-leader` / Leader 模式 / 项目负责人 / 监督者 / 多开线 / 阶段汇报 / AI 主导项目 / Mission / 跨 Case 调度 / Codex task / cursor-agent / 等 Codex 线程 | AIPD Leader | 已存在 | `aipd-skill/src/skills/aipd-leader/SKILL.md` | `_aipd/leader/`、Mission、用户关注 / 汇报约定、Case / Codex 独立 task、等待进度；Cursor 上才是 `chatId` 绑定 | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md` |
-| 目标模式 / goal 模式 / 绑目标 / `/goal` / CreateGoal / Leader 等 Case 时开 goal | 当前 Agent 平台的目标模式 | 已存在 | `AGENTS.md`；按本对话身份进入 `aipd-leader` 或 `aipd-case` | 本对话的宿主 goal；Leader 绑 Mission，执行层绑当前 Case。Codex Leader 等待独立 Case task 时必须给自己开或确认绑 Mission 的 goal | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/src/core/leader/guide.md`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/core/case/goal-mode.md` |
-| case / 创建 case / Case Contract / 目标边界 / 执行 case / case design / case think / work package / 验收 / 归档 / 推进到结束 / 回跳 | AIPD Case | 已存在 | `aipd-skill/src/skills/aipd-case/SKILL.md` | case.md、Case Contract、phase-first 目录、phase state、Think、Design、Work Package、执行记录、Close 归档候选 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | `_aipd/case/index.md`、`aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/`、`aipd-skill/src/core/case/goal-mode.md` |
-| 反向编织 / 更新 Knowledge / 更新 map / 更新局部 README | Weave | 已存在 | `aipd-skill/src/skills/aipd-weave/SKILL.md` | Intent / Research / Core / Product / Engineering / README / Map；未完成 case 候选先留在 Close 归档候选 | 项目知识库维护模型 | `_aipd/map.md`、局部 README |
+| inbox / 收件箱 / 先记一下 / 先存一下 | Inbox 临时收件箱 | 已存在 | `aipd-skill/skills/aipd-inbox/SKILL.md` | `_aipd/inbox.md` | 项目知识库维护模型 | `aipd-skill/skills/aipd-init/references/workspace/templates/inbox.md` |
+| `$aipd-leader` / Leader 模式 / 项目负责人 / 监督者 / 多开线 / 阶段汇报 / AI 主导项目 / Mission / 跨 Case 调度 / Codex task / cursor-agent / 等 Codex 线程 | AIPD Leader | 已存在 | `aipd-skill/skills/aipd-leader/SKILL.md` | `_aipd/leader/`、Mission、用户关注 / 汇报约定、Case / Codex 独立 task、等待进度；Cursor 上才是 `chatId` 绑定 | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/skills/aipd-leader/references/leader/`、`aipd-skill/skills/aipd-leader/runtime/codex.md`、`aipd-skill/skills/aipd-leader/runtime/cursor.md` |
+| 目标模式 / goal 模式 / 绑目标 / `/goal` / CreateGoal / Leader 等 Case 时开 goal | 当前 Agent 平台的目标模式 | 已存在 | `AGENTS.md`；按本对话身份进入 `aipd-leader` 或 `aipd-case` | 本对话的宿主 goal；Leader 绑 Mission，执行层绑当前 Case。Codex Leader 等待独立 Case task 时必须给自己开或确认绑 Mission 的 goal | Leader 项目主导编排模型、任务执行模型 | `aipd-skill/skills/aipd-leader/references/leader/guide.md`、`aipd-skill/skills/aipd-leader/runtime/codex.md`、`aipd-skill/skills/aipd-case/references/case/goal-mode.md` |
+| case / 创建 case / Case Contract / 目标边界 / 执行 case / case design / case think / work package / 验收 / 归档 / 推进到结束 / 回跳 | AIPD Case | 已存在 | `aipd-skill/skills/aipd-case/SKILL.md` | case.md、Case Contract、phase-first 目录、phase state、Think、Design、Work Package、执行记录、Close 归档候选 | 任务执行模型、Think / 任务澄清决策模型、AI 原生代码架构模型 | `_aipd/case/index.md`、`aipd-skill/skills/aipd-case/references/case/phases/`、`aipd-skill/skills/aipd-case/references/case/templates/`、`aipd-skill/skills/aipd-case/references/case/goal-mode.md` |
+| 反向编织 / 更新 Knowledge / 更新 map / 更新局部 README | Weave | 已存在 | `aipd-skill/skills/aipd-weave/SKILL.md` | Intent / Research / Core / Product / Engineering / README / Map；未完成 case 候选先留在 Close 归档候选 | 项目知识库维护模型 | `_aipd/map.md`、局部 README |
 | learn / transcript / 回流包 / 框架自迭代 | Learn（AIPD 仓库级） | 已存在，仅源码仓库 | `.agents/skills/aipd-learn/SKILL.md` | 当前对话、外部 transcript、回流包、AIPD skill / 模板 / 规则 | 项目知识库维护模型、Agent 协作思考模型 | `.agents/skills/aipd-learn/references/learn-session-locator.md` |
-| OKR / 飞书 OKR / lark-cli / 目标 / 周期 / OKR 经验包 | AIPD OKR | 已存在 | `aipd-skill/src/skills/aipd-okr/SKILL.md` | 飞书 O/KR、周期 ID、飞书 ID、OKR 经验包 | 任务执行模型、Agent 协作思考模型 | `_aipd/okr/index.md`、`aipd-skill/src/core/okr/` |
-| 旧 `_adoc` / L1-L5 / 升级 Schema v2 | Project Schema 一次性迁移 | 已存在 | `aipd-skill/scripts/migrate-project-schema`；安装后为 `aipd-init` Skill 内同名脚本 | 旧项目工作区、新 manifest、五类 Knowledge 目录 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` |
-| AIPD update / 项目版本落后 / unversioned-v2 / 更新 AGENTS / 同步当前模板 / drift repair | AIPD Update | 已存在 | `aipd-skill/src/skills/aipd-update/SKILL.md` | 本机 release catalog、`_aipd/manifest.json#aipdVersion`、Release Records、current authority、`_aipd/update-log.md` | 项目知识库维护模型、Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md`、`aipd-skill/src/core/updates/`、`aipd-skill/src/core/workspace/templates/` |
-| Mermaid / MMD / 画图 / 预览图 / 架构图 | Mermaid / MMD | 已存在 | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | AI 原生代码架构模型、任务执行模型 | `aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md` |
-| git push / 推送当前分支 | Git Push | 已存在 | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | 任务执行模型 | git 状态 |
+| OKR / 飞书 OKR / lark-cli / 目标 / 周期 / OKR 经验包 | AIPD OKR | 已存在 | `aipd-skill/skills/aipd-okr/SKILL.md` | 飞书 O/KR、周期 ID、飞书 ID、OKR 经验包 | 任务执行模型、Agent 协作思考模型 | `_aipd/okr/index.md`、`aipd-skill/skills/aipd-okr/references/okr/` |
+| 旧 `_adoc` / L1-L5 / 升级 Schema v2 | Project Schema 一次性迁移 | 已存在 | `aipd-skill/skills/aipd-init/scripts/migrate-project-schema`；安装后为 `aipd-init` Skill 内同名脚本 | 旧项目工作区、新 manifest、五类 Knowledge 目录 | 项目知识库维护模型 | `_aipd/knowledge/engineering/index.md`、`docs/modules/build-and-install.md` |
+| AIPD update / 项目版本落后 / unversioned-v2 / 更新 AGENTS / 同步当前模板 / drift repair | AIPD Update | 已存在 | `aipd-skill/skills/aipd-update/SKILL.md` | 本机 release catalog、`_aipd/manifest.json#aipdVersion`、Release Records、current authority、`_aipd/update-log.md` | 项目知识库维护模型、Map-first 上下文检索模型 | `_aipd/knowledge/engineering/index.md`、`aipd-skill/skills/aipd-update/references/updates/`、`aipd-skill/skills/aipd-init/references/workspace/templates/` |
+| Mermaid / MMD / 画图 / 预览图 / 架构图 | Mermaid / MMD | 已存在 | `aipd-skill/skills/aipd-mermaid/SKILL.md` | `.mmd`、Mermaid 源码、按需 PNG | AI 原生代码架构模型、任务执行模型 | `aipd-skill/skills/aipd-mermaid/references/knowledge/engineering/vue-architecture-diagram-guide.md` |
+| git push / 推送当前分支 | Git Push | 已存在 | `aipd-skill/skills/aipd-git-push/SKILL.md` | 当前分支、提交状态、远端 | 任务执行模型 | git 状态 |
 | SOP / AI 程序 / 可复用流程 / 查关键词 / 日报 | SOP 库 | 壳子 | `_aipd/sop/index.md`、`_aipd/sop/map.md` | SOP 目录、目标、输入、步骤、工具、输出、收尾 | SOP / AI 程序模型 | `_aipd/sop/` |
 
 ## 源码与文档入口
 
 | 功能线 | 主要源码 / 文档入口 | 模板 / 支撑文件 |
 |---|---|---|
-| AIPD 初始化 | `aipd-skill/src/skills/aipd-init/SKILL.md` | `aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/workspace/templates/index.md`、`aipd-skill/src/core/workspace/templates/map.md`、`aipd-skill/src/skills/aipd-init/references/init-codebase-scan.md` |
-| Map-first 认知加载 | `AGENTS.md`、`_aipd/map.md` | `aipd-skill/src/core/workspace/templates/map.md` |
-| Inbox 临时收件箱 | `aipd-skill/src/skills/aipd-inbox/SKILL.md` | `aipd-skill/src/core/workspace/templates/inbox.md` |
-| AIPD Leader | `aipd-skill/src/skills/aipd-leader/SKILL.md` | `aipd-skill/src/core/leader/`、`aipd-skill/src/platforms/codex/core/leader/runtime.md`、`aipd-skill/src/platforms/cursor/core/leader/runtime.md`、`_aipd/leader/index.md` |
-| AIPD Case | `aipd-skill/src/skills/aipd-case/SKILL.md` | `aipd-skill/src/core/case/phases/`、`aipd-skill/src/core/case/templates/case.md`、`aipd-skill/src/core/case/templates/work-package.md` |
-| Weave | `aipd-skill/src/skills/aipd-weave/SKILL.md` | `_aipd/map.md`、五类 Knowledge、局部 README |
+| AIPD 初始化 | `aipd-skill/skills/aipd-init/SKILL.md` | `aipd-skill/skills/aipd-init/references/agent-entry/template.md`、`aipd-skill/skills/aipd-init/references/workspace/templates/index.md`、`aipd-skill/skills/aipd-init/references/workspace/templates/map.md`、`aipd-skill/skills/aipd-init/references/init-codebase-scan.md` |
+| Map-first 认知加载 | `AGENTS.md`、`_aipd/map.md` | `aipd-skill/skills/aipd-init/references/workspace/templates/map.md` |
+| Inbox 临时收件箱 | `aipd-skill/skills/aipd-inbox/SKILL.md` | `aipd-skill/skills/aipd-init/references/workspace/templates/inbox.md` |
+| AIPD Leader | `aipd-skill/skills/aipd-leader/SKILL.md` | `aipd-skill/skills/aipd-leader/references/leader/`、`aipd-skill/skills/aipd-leader/runtime/codex.md`、`aipd-skill/skills/aipd-leader/runtime/cursor.md`、`_aipd/leader/index.md` |
+| AIPD Case | `aipd-skill/skills/aipd-case/SKILL.md` | `aipd-skill/skills/aipd-case/references/case/phases/`、`aipd-skill/skills/aipd-case/references/case/templates/case.md`、`aipd-skill/skills/aipd-case/references/case/templates/work-package.md` |
+| Weave | `aipd-skill/skills/aipd-weave/SKILL.md` | `_aipd/map.md`、五类 Knowledge、局部 README |
 | Learn | `.agents/skills/aipd-learn/SKILL.md` | Codex transcript、AIPD 源码、观察锚点；不进入公共 dist / install |
-| AIPD OKR | `aipd-skill/src/skills/aipd-okr/SKILL.md` | `aipd-skill/src/core/okr/guide.md`、`aipd-skill/src/core/okr/feishu-cli.md`、`_aipd/okr/index.md` |
-| Project Schema 一次性迁移 | `aipd-skill/scripts/migrate-project-schema` | `aipd-skill/scripts/check-schema-migrator`、`docs/modules/build-and-install.md` |
-| AIPD Update | `aipd-skill/src/skills/aipd-update/SKILL.md` | `aipd-skill/src/core/updates/`、`aipd-skill/src/core/workspace/project-state.md`、`aipd-skill/src/core/agent-entry/template.md`、`aipd-skill/src/core/workspace/templates/`、`aipd-skill/src/core/case/templates/` |
-| Mermaid / MMD | `aipd-skill/src/skills/aipd-mermaid/SKILL.md` | `aipd-skill/src/core/knowledge/engineering/vue-architecture-diagram-guide.md`、`aipd-skill/src/core/knowledge/engineering/vue-provider-guide.md` |
-| Git Push | `aipd-skill/src/skills/aipd-git-push/SKILL.md` | git 当前状态 |
+| AIPD OKR | `aipd-skill/skills/aipd-okr/SKILL.md` | `aipd-skill/skills/aipd-okr/references/okr/guide.md`、`aipd-skill/skills/aipd-okr/references/okr/feishu-cli.md`、`_aipd/okr/index.md` |
+| Project Schema 一次性迁移 | `aipd-skill/skills/aipd-init/scripts/migrate-project-schema` | `aipd-skill/scripts/check-schema-migrator`、`docs/modules/build-and-install.md` |
+| AIPD Update | `aipd-skill/skills/aipd-update/SKILL.md` | `aipd-skill/skills/aipd-update/references/updates/`、`aipd-skill/shared/workspace/project-state.md`、`aipd-skill/skills/aipd-init/references/agent-entry/template.md`、`aipd-skill/skills/aipd-init/references/workspace/templates/`、`aipd-skill/skills/aipd-case/references/case/templates/` |
+| Mermaid / MMD | `aipd-skill/skills/aipd-mermaid/SKILL.md` | `aipd-skill/skills/aipd-mermaid/references/knowledge/engineering/vue-architecture-diagram-guide.md`、`aipd-skill/skills/aipd-mermaid/references/knowledge/engineering/vue-provider-guide.md` |
+| Git Push | `aipd-skill/skills/aipd-git-push/SKILL.md` | git 当前状态 |
 | SOP 库 | `_aipd/sop/index.md`、`_aipd/sop/map.md` | `_aipd/sop/{sop-name}/README.md` |
 
 ## 产品边界索引
@@ -62,5 +62,5 @@ Product 只回答“用户可见 / 可调用的产品能力是什么、边界是
 
 ## 兜底搜索
 
-- `rg "aipd-leader|aipd-case|case-create|case-run|case-archive|aipd-weave|aipd-learn|aipd-okr|aipd-update|aipd-inbox|aipd-mermaid|aipdVersion|currentAuthority" .agents aipd-skill/src _aipd`
-- `rg "AIPD Leader|Mission|Codex task|AIPD Case|Case Design|Work Package|复杂度爆点|Case Create|Case Run|Weave|Learn|OKR|Update|Inbox|Mermaid|SOP|初始化|归档" README.md docs _aipd aipd-skill/src`
+- `rg "aipd-leader|aipd-case|case-create|case-run|case-archive|aipd-weave|aipd-learn|aipd-okr|aipd-update|aipd-inbox|aipd-mermaid|aipdVersion|currentAuthority" .agents aipd-skill/skills _aipd`
+- `rg "AIPD Leader|Mission|Codex task|AIPD Case|Case Design|Work Package|复杂度爆点|Case Create|Case Run|Weave|Learn|OKR|Update|Inbox|Mermaid|SOP|初始化|归档" README.md docs _aipd aipd-skill/skills`

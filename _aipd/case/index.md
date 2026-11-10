@@ -23,6 +23,7 @@
 
 | Case | 归档时间 | 说明 |
 |---|---|---|
+| `archive/c33-agents-on-demand-install` | 2026-11-10 | 公共 Skill 目录即产物，安装即复制；废掉按平台 dist。用户确认已在使用后关闭 |
 | `archive/c34-aipd-init-code-vs-empty` | 2026-09-11 | 将 `aipd` 收成 `aipd-init`；空项目走方向 / 痛点，有代码先扫再补 map 与 Core/Product/Engineering |
 | `archive/c1-role-codex-custom-agents` | 2026-06-16 | AIPD 自举接入 Codex custom agents 与推荐 Agent 派发 |
 | `archive/c2-subagent-origin-model` | 2026-06-16 | 重写分身 Agent、克隆体和结果回流模型 |

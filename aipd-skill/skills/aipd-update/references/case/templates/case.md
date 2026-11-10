@@ -1,0 +1,365 @@
+# Case: c{N}-{case-name}
+
+> **本次事项目标**：{一句话描述这次要处理什么}
+> **当前 Phase**：Think / Design / Execute / Verify / Close
+
+## 目录结构
+
+新建 case 使用 contract + phase-first 结构。目标、边界、验收标准和上下文索引直接写在 `case.md` 的 Case Contract；case 内部不再生成 `01-goal/goal.md`，也不再按 `doc/`、`steps/`、`code/` 这类材料类型分层。
+
+```text
+_aipd/case/c{N}-{case-name}/
+├── case.md
+├── 01-think/
+│   ├── think.md
+│   └── {research-or-decision-branch}/
+│       ├── summary.md
+│       ├── evidence.md
+│       ├── data/              # 可选：数据采样、临时数据集、评测结果
+│       └── code/              # 可选：只放本 Think 分支需要的实验代码
+├── 02-design/
+│   ├── design.md
+│   ├── requirements-contract.md # 可选：复杂 case 的需求契约
+│   ├── edge-cases.md           # 可选：领域规则 / 边缘场景
+│   ├── brownfield-delta.md     # 可选：现有系统事实和改动差异
+│   ├── backend-design.md       # 可选：后端 / 数据 / API 设计
+│   ├── frontend-design.md      # 可选：前端 / UX / 状态设计
+│   ├── context-boundary.md     # 可选：上下文解耦和文件边界
+│   ├── readiness-gate.md       # 可选：进入 Execute 前的 gate
+│   └── decision-log.md
+├── 03-execute/
+│   ├── execute.md
+│   └── work-packages/
+│       └── wp-01-{工作包名}.md
+├── 04-verify/
+│   └── verify.md
+└── 05-close/
+    └── close.md
+```
+
+旧结构说明：旧 case 可能仍有 `doc/`、`steps/` 或 `01-goal/`。新 AIPD Case 不再兼容这些旧结构运行；继续推进前应先迁移为当前 contract + phase-first case。新建 case 不生成这些顶层目录。
+
+## Case Contract
+
+> 本区是整个 case 的目标契约，每次恢复 case 都必须读取。后续所有 Think / Design / Execute / Verify / Close 都以这里为边界。
+
+### 目标
+
+- **目标**：{本 case 要完成什么}
+- **方向 / OKR / 项目阶段关联**：{为什么现在做}
+
+### 要做
+
+- {明确本次要完成的事项}
+
+### 不做
+
+- {明确不在本次范围内的事项}
+
+### 完成标准
+
+- [ ] {这个 case 结束时必须完成什么}
+- [ ] {用户或系统如何判断完成}
+
+### 上下文索引
+
+> 这里列出本次 case 最强相关的上下文。执行时优先读这些，不全量扫描项目。
+
+#### 知识域判断
+
+- **Intent 知识域**：{是否涉及用户已确认的长期方向 / 目标 / 边界}
+- **Research 知识域**：{是否涉及用户 / 场景 / 需求 / 痛点 / 竞品 / 行业或玩法范式 / 调研资料}
+- **Core 知识域**：{是否涉及核心概念 / 领域语言 / 核心对象关系 / 项目成立模型}
+- **Product 知识域**：{是否涉及产品功能 / 业务边界 / 交互规则}
+- **Engineering 知识域**：{是否涉及跨模块工程实现规则 / 前后端约定 / 调试 SOP}
+- **局部 README**：{是否涉及页面 / 弹窗 / 组件内部实现地图}
+- **Case / 历史 Work Package**：{是否需要读取历史 case 或 work package 执行记录}
+
+#### 项目认知
+
+- `_aipd/map.md` - {本次任务如何命中项目记忆地图；若缺失，说明兜底方式}
+- `_aipd/knowledge/intent/intent.md` - {为什么需要读取}
+- `_aipd/knowledge/research/index.md` - {为什么需要读取}
+- `_aipd/knowledge/core/index.md` - {为什么需要读取}
+- `_aipd/knowledge/product/{module}/index.md` - {为什么需要读取}
+- `_aipd/knowledge/engineering/{module}/README.md` - {为什么需要读取}
+
+#### 页面 / 模块 README
+
+- `src/{feature-or-page}/README.md` - {页面或模块局部认知}
+
+#### 代码入口
+
+- `src/{feature-or-page}/index.{ext}` - {入口职责}
+- `src/{feature-or-page}/components/{component}.{ext}` - {相关组件}
+
+#### Phase 材料入口
+
+- `01-think/think.md` - {调研 / 实验 / 数据采样 / 比较 / 抉择}
+- `01-think/{branch}/summary.md` - {可选：某个调研 / 实验 / 比较分支的目标、证据、结论和回流位置}
+- `02-design/design.md` - {需求契约、后端 / 前端设计、上下文边界、复杂度爆点、文件 / 文件夹级架构和设计护栏}
+- `02-design/requirements-contract.md` - {可选：复杂 case 的需求契约}
+- `02-design/backend-design.md` - {可选：后端 / 数据 / API 设计}
+- `02-design/frontend-design.md` - {可选：前端 / UX / 状态设计}
+- `02-design/context-boundary.md` - {可选：上下文解耦和文件边界}
+- `02-design/readiness-gate.md` - {可选：进入 Execute 前的 gate}
+- `03-execute/execute.md` - {执行总状态}
+- `04-verify/verify.md` - {验收记录}
+- `05-close/close.md` - {关闭记录}
+
+#### 兜底搜索
+
+- `rg "{关键词 1}|{关键词 2}" {搜索范围}` - {什么时候使用}
+
+### 边界变更记录
+
+> 执行中迭代出的“暂时做 / 暂时不做 / 完成标准变化 / 目标边界变化”写在这里。不要把边界变化混进 Design 或 Execute 过程。
+
+- {YYYY-MM-DD：变更内容 / 触发原因 / 是否已获用户确认}
+
+## Case Runtime
+
+## Current Phase
+
+Think / Design / Execute / Verify / Close
+
+## Phase State
+
+- Think: pending / in_progress / completed / skipped -> `01-think/think.md`
+- Design: pending / in_progress / completed / skipped -> `02-design/design.md`
+- Execute: pending / in_progress / completed / skipped -> `03-execute/execute.md`
+- Verify: pending / in_progress / completed / skipped -> `04-verify/verify.md`
+- Close: pending / in_progress / completed / skipped -> `05-close/close.md`
+
+## 当前焦点
+
+- **当前要解决的问题**：{一句话}
+- **当前游标**：{case.md / 01-think/{branch}/summary.md / 02-design/{artifact}.md / 03-execute/work-packages/{wp}.md / 04-verify/verify.md / 05-close/close.md}
+- **最近 checkpoint**：{最近一次会影响恢复路径的确认、状态变化或写回}
+- **下一步建议**：{继续 Think / 进入 Design / 等用户确认 / 执行某 work package / 验收 / Close}
+- **压缩后恢复入口**：{下一位 Agent 应从哪些文件、哪一节恢复}
+- **待确认项**：
+  - [ ] {需要用户确认的问题}
+- **阻塞项**：{无 / 描述}
+
+## 状态卡记录
+
+> 恢复 case 或关键 phase 跳转前，先记录状态卡，不要直接跨 phase 写回。
+
+- **文件事实**：{case.md / phase 文件显示的状态}
+- **用户认知**：{用户刚刚表达的状态或意图}
+- **冲突点**：{无 / 描述}
+- **当前 phase 条件**：{是否满足进入下一 phase}
+- **建议下一步**：{需要用户确认的动作}
+
+## Checkpoint 记录
+
+> 聊天只是运行缓存，文件才是恢复事实源。每次完成会影响后续恢复路径的小步，都在这里或对应 phase artifact 记录 checkpoint。
+
+| 时间 | 位置 | 触发 | 已确认 / 已变化 | open / assumed | 下一步 | 恢复入口 |
+|---|---|---|---|---|---|---|
+| {YYYY-MM-DD} | Case / Think / Design / Execute / Verify / Close | 用户确认 / 调研前 / phase 跳转 / work package 派发 / 执行完成 / 回跳 | {结论或状态变化} | {仍未确认事项} | {下一步} | `{path#section}` |
+
+## 回跳 / 重开记录
+
+> Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时，可以回到对应 phase 或 artifact。这里记录原因和影响，避免把新需求偷偷混进下游实现。
+
+| 时间 | 从哪里回跳 | 回到哪里 | 触发原因 | 更新内容 | 受影响下游 | 是否需用户确认 |
+|---|---|---|---|---|---|---|
+| {YYYY-MM-DD} | Design / Execute / Verify | Think / Requirements / Backend / Frontend / Context | {原因} | {更新 artifact} | {受影响设计 / work package} | 是 / 否 |
+
+## Think 摘要
+
+> 详细内容写入 `01-think/think.md`。调研、实验、数据采样或方案比较分支，放在 `01-think/{branch}/` 下。
+
+- **状态**：pending / in_progress / completed / skipped
+- **关键问题**：{当前卡点}
+- **调研 / 比较分支**：
+  - `01-think/{branch}/summary.md` - {分支目标、触发来源、证据、结论、回流位置、是否使下游失效}
+- **决策结论**：{结论如何影响 Case Contract / Design / Execute / Verify / Close 归档候选}
+
+## Design 摘要
+
+> 详细内容写入 `02-design/design.md`。Design 是从需求契约到可执行方案的流程：先固定需求和规则，再设计后端 / 前端，最后做 AIPD 特有的上下文解耦和文件 / 文件夹级边界，让后续执行可以并列扩展，而不是纵向堆版本。
+
+### Design 模式
+
+- **模式**：full / backend-first / frontend-first / bugfix / quick
+- **理由**：{为什么选择这个模式}
+
+### 当前 Design 节点
+
+> Design 默认逐节点协作推进。用户说“一步一步走 / 继续吧 / 按你说的步骤来”时，只确认当前建议的下一节点，不授权一次性跑完整个 Design 清单。
+
+- **当前节点**：intake / requirements / domain-rules / brownfield / backend / frontend / context-boundary / work-package-draft / readiness-gate
+- **节点状态**：pending / in_progress / waiting_user / completed
+- **本节点要回答的问题**：{一句话}
+- **本节点停止点**：{需要用户确认的取舍 / open item / 是否可进入下一节点}
+- **下一节点建议**：{用户确认后进入哪个节点}
+- **节点 checkpoint**：{最近一次已写回的确认、停止点和恢复入口}
+
+### 需求契约
+
+- **入口**：`02-design/requirements-contract.md` / 内嵌摘要 / skipped
+- **状态**：ready / concerns / blocked
+- **confirmed**：{已确认需求 / 规则}
+- **assumed**：{暂定假设}
+- **open**：{未确认且可能阻塞下游的问题}
+- **不允许固化的假设**：
+  - {仍是 assumed/open 的事项，执行时不能写成字段、接口、状态机或 UI 事实}
+
+### 领域规则 / 边缘场景
+
+- **入口**：`02-design/edge-cases.md` / 内嵌摘要 / skipped
+- {状态、权限、异常、重试、取消、并发、历史数据等规则摘要}
+
+### Brownfield Delta
+
+- **入口**：`02-design/brownfield-delta.md` / 内嵌摘要 / skipped
+- **ADDED / MODIFIED / REMOVED**：{本 case 改变什么}
+- **不能破坏的旧行为**：{...}
+
+### 后端 / 数据 / API 设计
+
+- **入口**：`02-design/backend-design.md` / skipped
+- **底层事实源**：database / file / external API / event / domain object / UI state / docs / mixed
+- **摘要**：{data model / API contract / cache / auth / error boundary}
+
+### 前端 / UX / 状态设计
+
+- **入口**：`02-design/frontend-design.md` / skipped
+- **摘要**：{information architecture / user flow / interaction states / state model / component boundary / visual QA}
+
+### 复杂度爆点
+
+- {这个 case 最容易膨胀、耦合或返工的节点是什么}
+
+### 最小必要解耦
+
+- {从爆点切开复杂度的设计}
+
+### 文件 / 文件夹计划
+
+- `{folder}/` - {职责}
+  - `{file}` - {职责}
+
+### 架构边界 / 护栏
+
+- {主干职责}
+- {纵向业务上下文如何使用横向能力，并通过什么显式边界组合}
+- {特殊节点}
+- {允许的局部重复}
+- {禁止把复杂度堆回哪里}
+
+### Code Topology Contract（条件命中）
+
+- **拓扑敏感**：是 / 否
+- **纵向业务上下文**：{本次新增或修改的业务上下文及目录 / 文件 owner}
+- **允许的横向依赖**：{现有横向基座与横向共享能力}
+- **显式组合边界**：{输入输出、事件或协议}
+- **禁止事项**：{跨边界引用、内部穿透、主干回流}
+- **共享变化权限**：{允许新增 / 上移哪些 shared；未明确时默认不允许}
+- **独立验收边界**：{如何独立理解、修改和验证}
+- **认知回写**：{稳定后更新哪些 Intent / Research / Core / Product / Engineering 知识域、局部 README 或 map}
+
+### 设计文档
+
+- `02-design/design.md`
+- `02-design/requirements-contract.md`（可选）
+- `02-design/edge-cases.md`（可选）
+- `02-design/brownfield-delta.md`（可选）
+- `02-design/backend-design.md`（可选）
+- `02-design/frontend-design.md`（可选）
+- `02-design/context-boundary.md`（可选）
+- `02-design/readiness-gate.md`（可选）
+- `02-design/decision-log.md`
+
+### Readiness Gate
+
+- **入口**：`02-design/readiness-gate.md` / 内嵌摘要
+- **状态**：passed / concerns / failed / pending
+- **阻塞项**：{无 / 描述}
+- **可带入 Execute 的风险**：{无 / 描述}
+
+## Execute 摘要
+
+> Execute 详细状态写入 `03-execute/execute.md`。Work Package 只放在 `03-execute/work-packages/`，不是 case 顶层结构。
+
+Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标包。一个 work package 可以包含多个并列工作项。
+
+- **当前执行游标**：{无 / work package path}
+- **最近执行 checkpoint**：{执行前目标 / 执行后结果 / 阻塞 / 回跳}
+
+- [ ] `03-execute/work-packages/wp-01-{工作包名}.md` - {一句话描述}（推荐 Agent：{agent 或留空}）
+
+## 后续候选事项
+
+> 未经用户确认的后续调整点只放这里，不创建 work package 文件，避免增加审核成本。
+> 候选事项不是承诺要做的 work package，只是后续对话中值得继续判断的线索。
+
+- {候选事项 1：触发条件 / 待确认问题}
+- {候选事项 2：触发条件 / 待确认问题}
+
+## Verify 摘要
+
+> 详细验收记录写入 `04-verify/verify.md`。
+
+- [ ] {验收标准 1}
+- [ ] {验收标准 2}
+- [ ] {验收标准 3}
+
+### 验收结果
+
+- **状态**：pending / passed / failed
+- **残留风险**：{无 / 描述}
+
+## Close 归档候选 / 反向编织候选
+
+> 本区只记录 Close 阶段要复核的候选，不是长期知识库内容。进行中 case 里出现“以后可能要回写”的内容，先记在这里；case 未完成前不写入五类知识域、局部 README 或 map。真正回写长期知识、局部 README 或 map 时，必须等 case Close 后使用 `aipd-weave` 判断。
+
+| 候选内容 | 触发来源 | 当前状态 | 候选归属 | Close 判断 |
+|---|---|---|---|---|
+| {判断、规则、入口或经验} | 用户讨论 / Think / Design / Execute / Verify / work package | 未完成 / 待验证 / 已实现待验收 / 已完成可评估 | 五类知识域 / README / map / SOP / 仅留 case | 待判断 |
+
+默认规则：
+
+- 未完成 case 中的候选不反编织到长期知识库。
+- 未实现设计、未来计划、临时讨论和未完成 work package 继续留在 case。
+- 已完成、已实现、已验收并能描述现有项目事实的候选，Close 时再交给 `aipd-weave` 判断是否回写。
+- Intent 只接收用户明确确认的长期方向、目标和边界；Research 只接收带来源、采集时间和有效性边界的稳定外部事实或调研结论。
+
+## 自我察觉迭代
+
+> 可选文件：`自我察觉迭代.md`。用于记录本 case 执行中暴露出来的 AIPD Case 机制问题、协作摩擦和可回流到 skill / 模板 / Agent Entry / SOP 的改进线索。该文件不参与普通项目认知 map，只在 case Close 或 AIPD 框架迭代时读取。
+
+- [ ] Close phase 是否检查了 `自我察觉迭代.md`。
+- [ ] 是否整理了“原判断 -> 用户纠偏 -> 修正产物 -> 可回流规则”。
+
+## 自迭代观察锚点
+
+> 后续回到 AIPD 源码仓库，用仓库级 `aipd-learn` 审计 transcript / session / 执行记录时，检查 Agent 是否按这些锚点执行。
+
+- [ ] Agent 是否读取 `_aipd/map.md`，或说明其缺失并使用 `rg` / README 兜底。
+- [ ] Agent 是否按上下文索引读取必要的 Intent / Research / Core / Product / Engineering 知识域与局部 README。
+- [ ] Case 是否使用 contract + phase-first 目录结构，而不是回到顶层 `doc/` / `steps/` / `01-goal/`。
+- [ ] 恢复 case 后是否先输出状态卡，没有直接跨 phase 推进。
+- [ ] Think 阶段是否以分支目标推进，并明确结论回流位置。
+- [ ] Design 阶段是否找到了复杂度爆点，并产出文件 / 文件夹级架构边界。
+- [ ] Design 阶段是否先处理需求契约、confirmed / assumed / open、后端 / 前端设计，再做上下文解耦。
+- [ ] 命中代码拓扑条件时，Design 是否形成项目具体合同，拓扑敏感 Work Package 是否携带短护栏。
+- [ ] Design / Execute / Verify 发现上游缺口时，是否记录了回跳原因、更新 artifact 和受影响下游。
+- [ ] Design 产物是否经用户确认后才创建正式 Execute work package。
+- [ ] 大调研、长执行、子 Agent 派发、phase 跳转和用户确认后，是否写了 checkpoint，而不是只留在聊天里。
+- [ ] 压缩后恢复入口是否足以让新 Agent 判断当前游标、已确认结论、open / assumed 和下一步。
+- [ ] Work Package 是否只放在 `03-execute/work-packages/`，并按架构边界组织并列工作项。
+- [ ] Verify 是否检查了设计护栏和代码拓扑合同，没有只看代码是否运行。
+- [ ] 如果执行偏离 SOP，能否判断偏离原因：提示词未执行 / map 缺失 / map 命中不清 / skill 流程不够硬 / 文档结构问题。
+
+## Close 摘要
+
+> 详细关闭记录写入 `05-close/close.md`。
+
+- **状态**：待开始 / 执行中 / 待验收 / 完成待归档 / 已归档 / 已停止
+- **创建时间**：{YYYY-MM-DD}
+- **归档时间**：{YYYY-MM-DD 或留空}
+- **归档位置**：{archive path 或留空}

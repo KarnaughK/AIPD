@@ -252,7 +252,7 @@ if (fullVerification) {
     run('npm', ['run', 'verify:full'], assetDirectory)
     run('npm', ['audit', '--audit-level=high'], assetDirectory)
   }
-  run('bash', ['aipd-skill/scripts/build'], repositoryRoot)
+  run('bash', ['aipd-skill/scripts/check-skills'], repositoryRoot)
 }
 
 validateDistIsolation(assetDirectories)

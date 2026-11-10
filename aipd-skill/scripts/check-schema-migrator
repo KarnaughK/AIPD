@@ -16,7 +16,7 @@ const { dirname, join, resolve } = require('node:path')
 const { tmpdir } = require('node:os')
 
 const scriptDirectory = __dirname
-const migratorPath = join(scriptDirectory, 'migrate-project-schema')
+const migratorPath = join(dirname(scriptDirectory), 'skills', 'aipd-init', 'scripts', 'migrate-project-schema')
 const fixtureRoot = mkdtempSync(join(tmpdir(), 'aipd-schema-migrator-'))
 const expectedUnversionedManifest = {
   schema: 'aipd-project',
