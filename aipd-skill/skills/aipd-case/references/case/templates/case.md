@@ -1,5 +1,7 @@
 # Case: c{N}-{case-name}
 
+> **Case 类型**：产品 `c{N}-{case-name}` / 开发 `c{N}_dev-{case-name}` / 通用 `c{N}-{case-name}`
+> **关联 Case**：{产品 Case 填同号 `c{N}_dev-...` 或“尚未派出”；开发 Case 填上游 `c{N}-...` 或“独立”；通用 Case 删除本行}
 > **本次事项目标**：{一句话描述这次要处理什么}
 > **当前 Phase**：Think / Design / Execute / Verify / Close
 

@@ -2,7 +2,9 @@
 
 ## 进行中 Case
 
-无。
+| Case | 状态 | 说明 |
+|---|---|---|
+| `c35-product-dev-case-split` | Verify / 待真实项目试跑 | 把 Case 分成产品 Case `cN` 与开发 Case `cN_dev`，并按类型分层可执行验收；源码规则已写入 |
 
 ## 暂停 Case
 
@@ -57,7 +59,7 @@
 ## 使用原则
 
 - 新事项先创建 contract + phase-first case：目标、边界和验收标准写入 `case.md`，再按 Design 结果拆 work package。
-- 新 Case 创建在 `_aipd/case/cN-{name}/`，入口文件固定为 `case.md`。
+- 新 Case 创建在 `_aipd/case/cN-{name}/`（产品 / 通用）或 `_aipd/case/cN_dev-{name}/`（开发），入口文件固定为 `case.md`；同一个 `N` 最多一个 `cN_dev`，一对 Case 相邻列出。
 - 展开材料按 `01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/` 组织；Think 分支放在 `01-think/{branch}/`，Design 决策放在 `02-design/`。
 - work package 必须列出显式上下文文档、横向模块和验收标准。
 - Work Package 只放在 `03-execute/work-packages/`，文件语义是可恢复、可验收的目标包，不是微步骤。

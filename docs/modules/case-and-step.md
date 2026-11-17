@@ -47,9 +47,20 @@ _aipd/case/cN-name/
 └── 05-close/
 ```
 
-Case ID 使用项目内单调递增的 `cN-slug`；Work Package 使用 Case 内局部编号 `wp-NN-slug`，跨 Case 引用写成 `cN/wp-NN`。
+Case ID 使用项目内单调递增的 `cN-slug`，开发 Case 使用 `cN_dev-slug`；Work Package 使用 Case 内局部编号 `wp-NN-slug`，跨 Case 引用写成 `cN/wp-NN`。
 
 旧 `doc/`、`steps/` 或独立 `01-goal/` 结构不再兼容运行。遇到旧 Case 时先迁移，不从旧 `steps/` 继续执行。
+
+## 产品 Case 与开发 Case
+
+Case 按职责分两类，共用同一套骨架：
+
+- **产品 Case `cN-slug`**：你主要在这里和 AI 对话。Think 负责调研，并用一次性 demo 验证猜想；Design 把结论收成需求文档；Execute 派出开发 Case；Verify 在测试或本地环境按需求实际走一遍用户动作。
+- **开发 Case `cN_dev-slug`**：审核收到的需求，评估对现有项目的影响面。新功能大迭代或波及面大的改动走重设计，其余走轻设计；然后执行，并用可运行、会失败的检查验收。
+
+同一个 `N` 最多一个 `cN_dev`。一个开发 Case 装不下时，说明产品 Case 该拆。量大或风险高的技术任务可以单独开 `cN_dev`；小改动不开 Case。文档、流程、调研等不涉及代码落地的事项，以及规则生效前的旧 Case，是通用 Case，沿用原有流程。
+
+需求文档建议写清：做什么 / 不做什么、用户路径和关键规则、验收动作、已确认常量和暂定值、已用 demo 验证的结论。开发 Case 不按格式校验它，而是做审核分析，有疑问再问你。开发中发现需求不成立时，交回产品 Case 修改，开发 Case 不自行改产品目标。
 
 ## 文件 checkpoint
 

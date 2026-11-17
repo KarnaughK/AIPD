@@ -9,6 +9,7 @@ Case 类似 OKR，都会定目标并连接大方向上下文；但 OKR 面向长
 Case 和 Work Package 的标识只用于定位，不表达产品版本、框架代际或大 / 小版本：
 
 - Case 使用 `cN-slug`。`N` 是当前项目内单调递增的 Case 流水号，例如 `c14-case-identifier-simplification`。
+- 开发 Case 使用 `cN_dev-slug`。它与同号产品 Case 共用 `N`；没有上游产品 Case 的独立开发 Case 取下一个新 `N`。`_dev` 是唯一允许的后缀，见「产品 Case 与开发 Case」。
 - Work Package 使用 `wp-NN-slug`。`NN` 是所属 Case 内从 `01` 开始的局部排序号，例如 `wp-01-update-case-naming-contract`。
 - Case 外引用 Work Package 时使用 `cN/wp-NN`，例如 `c14/wp-01`。
 - 产品发布版本独立管理；不能用 Case ID 表达 `major.minor.patch`，也不能因产品升版重置或增加 Case 编号层级。
@@ -56,6 +57,47 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 这条回跳就是 Case 的校准逻辑。用户说「把这个 Case 推进到结束」时，走的是同一个 Case 的完整生命周期，包括回跳；不要为了推完当前 Case 再开平级 Case。Leader 若在监督，也只打回同一条执行对话，不另建 Case 来代替回跳。
 
 当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal` / `CreateGoal`，Codex Goal）不是 Case 的新 phase，也不替代 Case Contract。只有本对话是默认执行层、且 goal 模式明确绑定**当前**这个 Case 时，才加载 `goal-mode.md`；Leader 对话上绑 Mission 的 goal 不进入本 Case 覆盖层。有无 goal 模式，回跳、checkpoint 和验收都必须做。Cursor 上即使对话挂了 `/goal`，只要没有上述绑定，仍按普通 Case 的确认与回跳推进。
+
+## 产品 Case 与开发 Case
+
+Case 按职责分类型。所有类型共用 `Case Contract -> Think -> Design -> Execute -> Verify -> Close` 骨架；类型只决定每个 phase 的重心，不另造流程。
+
+| | 产品 Case `cN-slug` | 开发 Case `cN_dev-slug` |
+|---|---|---|
+| 负责 | 把用户想法准备成详尽需求，并对最终结果做产品验收 | 把收到的需求落进真实项目 |
+| Contract | 想做什么、边界、要交出什么 | 收到的需求，加上落在哪个项目、哪些地方不能碰 |
+| Think | 主体：调研、比较、用一次性 demo 验证猜想 | 默认 skipped；技术选型或代码实验时才进入 |
+| Design | 收成产品需求文档（交接物）；不做后端、前端实现和文件边界设计 | 需求审核 -> 影响面评估 -> 重 / 轻设计 -> work package |
+| Execute | 派出同号开发 Case，等待结果 | 执行 work package |
+| Verify | 在测试或本地环境按需求文档实际走用户动作 | 命令层可执行检查：类型、测试、构建、接口、越界引用、独立审查 |
+| Close | 用户确认、Weave、归档 | 技术收尾，结果交回产品 Case |
+
+用户主要在产品 Case 里和 AI 对话。开发 Case 不必每一步都暴露给用户。
+
+### 编号与对应关系
+
+- 一对一：同一个 `N` 最多一个 `cN_dev`。一个开发 Case 装不下需求时，说明产品 Case 该拆成多个产品 Case，不新增 `cN_dev2`、`cN_dev-a` 或 `cA.B`。
+- 用户只说 `cN` 时默认指产品 Case；需要开发进度时从产品 Case 的 Execute 摘要跳到 `cN_dev`。
+- 独立开发 Case：量大、风险高、需要独立验收的技术任务，例如批量修改、重构、高风险修复，可以直接开 `cN_dev-slug`，Contract 直接写需求。页面上改个按钮这类小改动不开 Case。
+- 通用 Case：不需要把需求落进项目代码的事项，例如文档、流程、调研、运营，以及本规则生效前创建的 Case，使用 `cN-slug` 并按原有完整流程运行。`case.md` 的「Case 类型」字段区分产品 Case 与通用 Case；没有该字段的旧 Case 视为通用 Case，不改名。
+
+### 交接物：需求文档
+
+产品 Case 的 Design 产出需求文档，作为开发 Case 的 Contract 输入。建议覆盖：
+
+1. 做什么、不做什么。
+2. 用户路径和关键规则。
+3. 验收动作：页面或接口上做什么、看到什么算通过。
+4. 已确认的常量和暂定值。
+5. 已经用 demo 验证、开发阶段不再推翻的结论。
+
+这是产品 Case 的准备清单，不是开发 Case 的格式门禁。开发 Case 不按格式校验交接物，而是做需求审核分析：能否落地、和现有项目哪里冲突、哪里有遗漏或歧义。有疑问就问用户，或交回产品 Case 补充。产品 Case 准备得越充分，开发 Case 的疑问越少。
+
+### 回路与边界
+
+- 开发中发现需求与项目事实冲突、需求不成立或需要改变产品目标：停止相关变化，在两个 Case 的回跳记录里写明冲突，交回产品 Case 修改需求后再继续。开发 Case 不自行修改产品目标。
+- 需求边界内的技术细节，开发 Case 按最简单的做法处理，并记录偏离。
+- 产品 Case 的 demo 放在 `01-think/{branch}/code/`，用完即弃，不合入项目源码。开发 Case 采用 demo 的结论，不直接继承 demo 代码。
 
 ## Phase-first 目录结构
 
@@ -253,3 +295,4 @@ Close 归档候选是 case 内部的待复核清单，不是长期知识库内�
 10. Close 前必须保证 case 是完整闭环；没完成就回到对应 phase。
 11. 可复用知识先进入 Close 归档候选；只有 case 完成、实现落地并验收后，才由 `aipd-weave` 判断是否进入长期知识库。
 12. 旧 `aipd-case-create`、`aipd-case-run`、`aipd-case-archive` 已合并进 `aipd-case`，不再作为独立 skill 暴露。
+13. 产品 Case `cN-slug` 准备需求并做产品验收，开发 Case `cN_dev-slug` 负责落地，二者一对一；交接物由开发 Case 审核分析，不做格式校验。

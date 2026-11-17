@@ -81,9 +81,27 @@ Design 节点完成时，回复应包含：
 
 ## Design Intake
 
-进入 Design 时先判断本 case 适合哪种模式。
+进入 Design 时先按 Case 类型分流，再判断模式。
 
-### Case 类型
+### 按 Case 类型分流
+
+**产品 Case**：Design 只把 Think 的结论收成需求文档（交接物）。它只经过 Product / Requirement Contract、Domain Rules & Edge Cases，以及 Frontend / UX 里的用户路径和产品注意力契约；不进入 Backend、Context Boundary、Work Package 节点。Readiness Gate 改为交接检查：对照 `overview.md`「交接物：需求文档」的五项建议，确认没有遗漏的重要信息，open 项都已标明。通过后进入 Execute，由 Execute 派出开发 Case。
+
+**开发 Case**：
+
+1. 需求审核：读取交接物或 Contract 里的需求，分析能否落地、和现有项目哪里冲突、哪里有遗漏或歧义。不按格式校验交接物；有疑问就问用户，或交回产品 Case。
+2. 影响面评估：核对会让设计出错的项目事实，例如运行环境能力、配置缺口、类型检查和测试基线、不能碰的现有改动；不先把功能实现一遍。只有需要做技术选型或代码实验时，才回到 Think 开分支。
+3. 重设计门槛：下列条件命中任一项就走重设计（`full` 或对应的 `*-first` 模式）。
+   - 新功能大迭代。
+   - 改动波及多个模块、数据结构、接口或状态。
+   - 要交给较弱的执行模型批量执行。
+
+   重设计要细到执行模型照着做、不用自己想：函数签名和步骤、错误码、每个工作包允许改动的文件、可直接运行的验收命令，以及停止规则。高级模型设计、执行模型写代码的分工，可参考实践经验索引里对应的条目。
+4. 都不命中就走轻设计（`quick` 或 `bugfix`）：一份短 `design.md`，写清做法要点、允许改动的文件和验收命令即可。
+
+**通用 Case**：按下文原有 Intake 判断。
+
+### 改动类型
 
 - new feature。
 - bugfix。

@@ -25,6 +25,7 @@ AI 运行仍按 case 流程推进：Think -> Design -> Execute -> Verify -> Clos
 | Vue3 复杂页面局部认知入口与架构图 | Design / Execute / Verify | 代码认知经验 | Vue3 / Nuxt 前端 / README / Mermaid / 真实代码 | 复杂页面、弹框、Tab、Step 或多组件区块需要用局部入口和架构图承接设计与代码理解时 | `experience/vue3-page-local-cognition-map.md` |
 | 教学文档产品化与用户旅程组织 | Think / Design / Execute / Verify | 文档产品经验 | 开源项目 / README / 教程 / 信息架构 | 重写项目首页、学习路径、教程与参考文档，尤其是当项目能力演进已造成叙事漂移时 | `experience/teaching-docs-as-product.md` |
 | 产品设计注意力编排与触发式减法 | Design / Execute / Verify | 产品设计经验 | 产品文档 / PRD / 原型 / UI / 信息架构 / 简化 | 产品类 Case 需要 AI 自主设计与迭代，或用户反馈“太多、太复杂、重点不清”，需要让简化判断跨页面传播时 | `experience/product-design-attention-reduction.md` |
+| 高级模型设计 + 执行模型写代码 | Design / Execute / Verify | 协作流程经验 | Opus 设计 / Grok CLI 执行 / 省高级模型额度 | 用户要求“你设计、让 Grok（或其它执行模型）写代码”、要省高级模型 token，或 Case 代码量大到不该由高级模型自己写时；整篇通读后照做 | `experience/premium-design-cheap-execution-workflow.md` |
 | 部署型 SEO 网站 Close 检查 | Verify / Close | 部署验收经验 | SEO 网站 / 上线部署 / 域名切换 | case 涉及上线部署，且目标是 SEO 网站、内容站、工具站或游戏站时 | `experience/deployment-seo-site-close-checklist.md` |
 
 ## 经验分类

@@ -21,6 +21,17 @@ Execute phase 按 Design phase 产出的 work package 推进。
 - Design Summary 和 Design Guardrails。
 - work package 列出的上下文文档。
 
+## 产品 Case 的 Execute
+
+产品 Case 进入 Execute 时不直接改项目代码：
+
+- 创建同号开发 Case `cN_dev-slug`，把需求文档作为它的 Contract 输入，并在两个 `case.md` 里互相登记关联 Case。
+- 产品 Case 的 `03-execute/execute.md` 只记录开发 Case 的链接、当前状态和交回的问题，不创建自己的 work package。
+- 开发 Case 交回需求问题时，回到产品 Case 的 Design 或 Think 修改需求文档，再通知开发 Case 继续。
+- 开发 Case 完成技术收尾、结果已经放到测试或本地环境后，产品 Case 进入 Verify。
+
+下文的工作包执行规则适用于开发 Case 和通用 Case。
+
 ## 代码拓扑护栏 preflight（条件命中）
 
 Work Package 标记 `拓扑敏感: 是` 时，Execute 在修改代码前必须检查：
