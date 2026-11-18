@@ -89,10 +89,10 @@ Main Agent 先按 `_aipd/map.md` 做最小路由。已知入口少、上下文�
 
 Main Agent 负责用户沟通、意图判断、边界确认、调度、验收和状态写回。派发后每条证据面只有一个 owner，Main 不重复调查，只吸收压缩结论、依据、风险、建议和必要文件路径。
 
-Build / Install 边界：
+校验 / 发布边界：
 
-- 修改 AIPD 源码后可以直接运行 build 做低风险打包验证。
-- build 完成后必须主动询问用户是否 install；install 只能在用户明确确认后执行。
+- 修改 AIPD 源码后可以直接运行只读校验（如 `check-skills`）。
+- 发布方式以项目 Engineering 知识为准（如推送远端后由用户更新 Skill 库，或运行 install 脚本）；推送远端或改写用户级 Agent 环境前，必须获得用户明确确认。
 
 ## Case 锚定执行
 

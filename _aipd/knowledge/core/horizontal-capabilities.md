@@ -120,6 +120,10 @@ Case 系统是一组重功能，现在推荐通过 `aipd-case` 统一入口和 p
 
 Case Contract 会横向读取必要 Knowledge、真实代码、Map、局部 README 和必要的 OKR 约束，把一次事项压缩成可恢复的 Case。
 
+Case 按职责分两类，共用同一骨架：产品 Case `cN-slug` 回答「能不能做、做什么」，负责澄清需求、调研、demo 小测和可行性分析，并做最终产品验收；开发 Case `cN_dev-slug` 回答「怎么在本项目里落地」，分析项目与代码架构后按规范实现，设计流程更固定。同一个 N 最多一个 `cN_dev`；不涉及代码落地的事项和规则生效前的旧 Case 是通用 Case。
+
+Case 用「知识基线」绑定项目知识库：产品 / 通用 Case 在 Think 前、开发 Case 在 Design 第 2 步，用业务词经 Map 定位命中模块并只读这些模块，在 `case.md` 写出相关原文结论和影响；依赖项目既有事实的结论标出处；Close 回写时对照基线原文。它解决的是已否决方案、运营数据和跨文件业务线在代码里翻不到的问题，同时避免全量扫描。完整规则见 `aipd-skill/skills/aipd-case/references/case/overview.md`。
+
 Case Execute 会按 case / work package 恢复任务状态，再读取 work package 指定的上下文。Work Package 是状态、恢复和验收边界，不等于 Child 派发节点；运行时选择 Child 后，分身或角色 Agent 才接管唯一证据面，执行后只回流结论、依据、风险、建议、改动文件和验证结果。
 
 ## SOP 系统

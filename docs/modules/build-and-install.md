@@ -36,6 +36,8 @@ AIPD 仓库本身不是打开即用的应用，而是一套完整 Skill 安装�
 
 Agent 修改完整包后可以直接运行 `check-skills`。不要默认执行 install；只有用户明确确认后才运行 `install-agents` 或 `install-claude`。
 
+用 magpie 管理 Skill 时，不走 install。magpie Library 把 9 个 Skill 的来源指向 GitHub `KarnaughK/AIPD` 的 `aipd-skill/skills/<name>`：改完并通过 `check-skills` 后 commit、push，再运行 `magpie library skill update`。
+
 ## 旧项目一次性迁移
 
 Knowledge Schema v2 不提供运行时双读。仍使用 `_adoc/` 与 L1-L5 目录的项目，需要先用一次性迁移器原子切换。

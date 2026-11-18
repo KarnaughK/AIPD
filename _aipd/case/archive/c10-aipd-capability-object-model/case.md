@@ -1,5 +1,7 @@
 # Case: c10-aipd-capability-object-model
 
+> **归档（2026-11-17）**：`stopped / killed`。方向已被 contract + phase-first Case 生命周期取代，项目清扫时由用户确认结束。本目录是旧 `steps/` / `doc/` 结构的历史快照，不可执行。
+
 > **本次事项目标**：讨论并设计 AIPD 的原子能力层和统一中间对象模型，让 Think / Case Create / Case Run / Weave / SOP 能复用同一组底层能力，而不是各自在 skill 内重复实现上下文扫描、调研、方案比较、决策检查和交接逻辑。
 >
 > **收口结论（2026-06-27）**：本 case 不再继续推进为独立的能力层重构事项。后续 AIPD 已收敛到 contract + phase-first case 生命周期：`Case Contract -> Think -> Design -> Execute -> Verify -> Close`。Think 不再作为独立 `_aipd/think/` 系统或独立 `aipd-think` skill 推进，而是作为 Case 内 phase 承接当前目标下的信息同步、调研、比较和抉择。本文保留为原子能力和中间对象模型的参考材料，不作为待执行 case。

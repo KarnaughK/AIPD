@@ -37,6 +37,7 @@ Case 有默认主线，但不是单向瀑布。后续节点发现上游缺口时
 - `case.md` 是事实源，包含 `Case Contract` 和 `Case Runtime`：前者记录目标、边界、验收标准和上下文索引；后者记录 `Current Phase`、phase 状态、当前焦点、待确认项、设计摘要、工作包摘要、执行记录和关闭状态。
 - `case.md` 每次进入 case 都必须读取；phase 目录只承载展开材料，不重复承载目标契约。
 - Case 分产品 Case 与开发 Case：产品 Case `cN-slug` 把想法准备成详尽需求并做产品验收，开发 Case `cN_dev-slug` 把需求落进真实项目，同一个 `N` 最多一个 `cN_dev`。量大或风险高的技术任务可以单独开 `cN_dev-slug`；小改动不开 Case。不涉及代码落地的事项和规则生效前的旧 Case 是通用 Case，用 `cN-slug`、按原有完整流程。完整规则见 `@references/case/overview.md` 的「产品 Case 与开发 Case」。
+- 知识基线：产品 / 通用 Case 在进入 Think 前、开发 Case 在 Design 第 2 步，用业务词查 `_aipd/map.md`，只读命中模块，并在 `case.md` 写出相关原文结论；不全量扫知识库。依赖项目既有事实的结论要标出处，Close 回写时对照基线原文。规则见 overview「知识基线」。
 - Case ID 使用项目内单调递增的 `cN-slug`，开发 Case 用 `cN_dev-slug`，都不是版本号；Work Package 使用 Case 内局部的 `wp-NN-slug`，跨 Case 引用写作 `cN/wp-NN`。不要新建 `cA.B` 或 `cA.B.N` 形态。
 - 新建 case 必须使用 contract + phase-first 目录结构，不再生成顶层 `doc/` / `steps/`，也不再生成 `01-goal/`：`01-think/`、`02-design/`、`03-execute/`、`04-verify/`、`05-close/`。
 - Work Package 只放在 `03-execute/work-packages/`。遇到旧 `steps/` 或旧 Goal phase 结构时，不做兼容运行，只提示用户是否迁移为当前结构。

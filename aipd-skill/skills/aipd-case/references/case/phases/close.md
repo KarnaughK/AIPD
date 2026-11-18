@@ -25,6 +25,7 @@ Case 完成后不应留下“其实还没做完，只是推进了一部分”的
 - Verify Result。
 - 用户验收结论。
 - 相关 Intent / Research / Core / Product / Engineering 知识域、README 和 map 入口。
+- `case.md` 的「知识基线」：回写时比对的原文。
 - case 路径引用搜索结果。
 
 ## 输出
@@ -50,6 +51,7 @@ Close 不替代 `aipd-weave`。如果 case 产生稳定知识，Close 只整理�
 - 当前状态：未完成 / 待验证 / 已实现待验收 / 已完成可评估。
 - 候选归属：Intent / Research / Core / Product / Engineering 知识域、README、map、SOP 或仅留 case。
 - Close 判断：回写 / 不回写 / 延后判断，以及原因。
+- 对照：按「基线原文 -> 本 Case 已验证的新事实 -> 建议改法」来写。目标文档不在基线里时，先读原文并补进基线，再交给 `aipd-weave`；不凭印象改写长期文档。
 
 Close 阶段只把已经完成、已实现、已验收并能描述现有项目事实的候选交给 `aipd-weave`。未实现设计、未来计划、临时讨论和未完成 work package 继续留在 case，不进入长期知识库。
 

@@ -77,14 +77,14 @@ _aipd/case/c{N}-{case-name}/
 - **局部 README**：{是否涉及页面 / 弹窗 / 组件内部实现地图}
 - **Case / 历史 Work Package**：{是否需要读取历史 case 或 work package 执行记录}
 
-#### 项目认知
+#### 知识基线
 
-- `_aipd/map.md` - {本次任务如何命中项目记忆地图；若缺失，说明兜底方式}
-- `_aipd/knowledge/intent/intent.md` - {为什么需要读取}
-- `_aipd/knowledge/research/index.md` - {为什么需要读取}
-- `_aipd/knowledge/core/index.md` - {为什么需要读取}
-- `_aipd/knowledge/product/{module}/index.md` - {为什么需要读取}
-- `_aipd/knowledge/engineering/{module}/README.md` - {为什么需要读取}
+> 先用业务词查 `_aipd/map.md`，只读命中模块；不全量扫描。产品 / 通用 Case 在进入 Think 前写，开发 Case 在 Design 第 2 步写；后续发现新命中时追加。规则见 `overview.md`「知识基线」。
+
+| 文档 | 命中方式 | 相关原文结论 | 对本 Case 的影响 |
+|---|---|---|---|
+| `_aipd/knowledge/{domain}/{module}/...` | map：「{业务词}」 / rg：`{词}` | {一两句，写读到了什么} | 约束 / 已否决 / 冲突 / 无影响 |
+| 未找到 | rg：`{词1\|词2}` | - | {按什么兜底} |
 
 #### 页面 / 模块 README
 
@@ -342,7 +342,8 @@ Work Package 不是“先做 A 再叠 B”的微步骤，而是可验收目标�
 > 后续回到 AIPD 源码仓库，用仓库级 `aipd-learn` 审计 transcript / session / 执行记录时，检查 Agent 是否按这些锚点执行。
 
 - [ ] Agent 是否读取 `_aipd/map.md`，或说明其缺失并使用 `rg` / README 兜底。
-- [ ] Agent 是否按上下文索引读取必要的 Intent / Research / Core / Product / Engineering 知识域与局部 README。
+- [ ] Agent 是否经 map 路由定向读取命中模块，并在「知识基线」写出相关原文结论，而不是只列文件名或全量扫描。
+- [ ] Think 结论 / Design 关键决策是否标注了出处；Close 回写候选是否对照了基线原文。
 - [ ] Case 是否使用 contract + phase-first 目录结构，而不是回到顶层 `doc/` / `steps/` / `01-goal/`。
 - [ ] 恢复 case 后是否先输出状态卡，没有直接跨 phase 推进。
 - [ ] Think 阶段是否以分支目标推进，并明确结论回流位置。

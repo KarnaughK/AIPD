@@ -54,7 +54,7 @@ aipd-skill/
 ./aipd-skill/scripts/check-skills
 ```
 
-不要默认运行 install。install 会改写用户级 Agent 环境，必须获得用户明确确认。
+不要默认运行 install。install 会改写用户级 Agent 环境，必须获得用户明确确认。维护者本机用 magpie 分发：commit、push 后运行 `magpie library skill update`，见 `docs/modules/build-and-install.md`。
 
 ## 常用修改入口
 

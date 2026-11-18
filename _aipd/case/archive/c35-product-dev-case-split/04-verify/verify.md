@@ -9,11 +9,11 @@
 
 ## 待完成
 
-- [ ] 用户确认“通用 Case”类型。
-- [ ] 在真实项目跑通一对 `cN` + `cN_dev`（或独立 `cN_dev`），记录试跑反馈。
-- [ ] 用户验收。
+- [x] 通用 Case：用户未提异议，按现规则保留。
+- [ ] 在真实项目跑通一对 `cN` + `cN_dev`：用户选择先结束，转为后续使用反馈。
+- [x] 用户验收（2026-11-17）。
 
 ## 残留风险
 
-- 已安装到本机 / 其他宿主的 Skill 尚未更新，实际试跑前需要 install 或经 magpie 发布。
+- 本机 Skill 已更新（2026-11-17）：已推送 `53058c4`；magpie Library 中 9 个 AIPD Skill 的来源改为 GitHub `KarnaughK/AIPD` / `aipd-skill/skills/<name>`，内容与源码一致。以后的更新流程是：push，然后运行 `magpie library skill update`。
 - README 与 docs/guide 仍只描述单一生命周期，已列为 Close 候选。

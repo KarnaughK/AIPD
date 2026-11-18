@@ -4,13 +4,7 @@
 
 | Case | 状态 | 说明 |
 |---|---|---|
-| `c35-product-dev-case-split` | Verify / 待真实项目试跑 | 把 Case 分成产品 Case `cN` 与开发 Case `cN_dev`，并按类型分层可执行验收；源码规则已写入 |
-
-## 暂停 Case
-
-| Case | 状态 | 说明 |
-|---|---|---|
-| `c10-aipd-capability-object-model` | 已暂停 | 原子能力和中间对象模型方向暂不推进；保留 Context Pack、Research Pack、Decision Record、Handoff 等参考材料 |
+| （无） | - | - |
 
 ## 编号占位
 
@@ -25,6 +19,8 @@
 
 | Case | 归档时间 | 说明 |
 |---|---|---|
+| `archive/c35-product-dev-case-split` | 2026-11-17 | Case 分产品 `cN` / 开发 `cN_dev`，开发 Case 强制项目架构分析；新增知识基线（map 路由定向读、标出处、Close 对照回写）；发布改为 push + magpie。真实项目试跑留给后续使用 |
+| `archive/c10-aipd-capability-object-model` | 2026-11-17 | `stopped / killed`：原子能力与中间对象模型方向已被 phase-first Case 取代；旧结构快照，不可执行 |
 | `archive/c33-agents-on-demand-install` | 2026-11-10 | 公共 Skill 目录即产物，安装即复制；废掉按平台 dist。用户确认已在使用后关闭 |
 | `archive/c34-aipd-init-code-vs-empty` | 2026-09-11 | 将 `aipd` 收成 `aipd-init`；空项目走方向 / 痛点，有代码先扫再补 map 与 Core/Product/Engineering |
 | `archive/c1-role-codex-custom-agents` | 2026-06-16 | AIPD 自举接入 Codex custom agents 与推荐 Agent 派发 |

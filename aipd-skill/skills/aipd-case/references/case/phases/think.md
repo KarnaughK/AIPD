@@ -6,6 +6,12 @@ Think phase 是 case 内的信息同步、调研、实验、证据收集和抉�
 
 Think 是 case 的探索工作台。主流程可以从 Design / Execute / Verify 回跳到 Think：只要后续阶段发现需要外部资料、代码实验、数据采样、竞品参考或方案比较，就回到 Think 创建分支，收口后再回到触发回跳的 phase。
 
+## 进入讨论前：知识基线
+
+产品 Case 和通用 Case 首次进入 Think，要先确认 `case.md` 的「知识基线」已经写好，再展开讨论或调研：用需求里的业务词查 `_aipd/map.md`，只读命中的业务模块。重点看三类内容：已否决的方向、既有规则、收集到的痛点。规则见 `overview.md`「知识基线」。
+
+Think 里依赖项目既有事实的结论要标出处。用户提出的想法和基线里已否决的点重合时，先指出当时否决的依据，再讨论这次是否有新条件。
+
 ## 调研前 checkpoint
 
 Think 最容易把上下文冲散。进入大调研、代码实验、数据采样、竞品比较或长日志分析前，必须先写一个 checkpoint 到 `01-think/think.md` 或对应 `01-think/{branch}/summary.md`：
@@ -30,7 +36,7 @@ Think 最容易把上下文冲散。进入大调研、代码实验、数据采�
 
 ## 输入
 
-- case.md 的 Case Contract：目标、边界、验收标准、上下文索引和不做范围。
+- case.md 的 Case Contract：目标、边界、验收标准、上下文索引（含知识基线）和不做范围。
 - 必要的外部资料、实验脚本、历史 case 或用户补充。
 
 ## 输出
@@ -40,7 +46,7 @@ Think 最容易把上下文冲散。进入大调研、代码实验、数据采�
 - 关键问题。
 - 调研范围。
 - 选项比较。
-- 决策结论。
+- 决策结论，依赖项目既有事实的要标出处。
 - 未解决风险。
 - 结论回流位置：Case Contract / Design / Execute / Verify / Close 归档候选。
 - 回跳来源和返回位置：from Design / Execute / Verify；return to 哪个 artifact 或 phase。

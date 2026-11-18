@@ -1,7 +1,7 @@
 # Case: c35-product-dev-case-split
 
 > **本次事项目标**：把 Case 分成产品 Case `cN-slug` 与开发 Case `cN_dev-slug`，并把可执行验收按两类 Case 分层写进 AIPD Case 规则
-> **当前 Phase**：Verify
+> **当前 Phase**：Close（completed）
 
 ## Case Contract
 
@@ -35,8 +35,8 @@
 - [x] `aipd-case` SKILL、Case overview（三份副本一致）、design / execute / verify phase、case / work-package / index 模板（各副本一致）写入新规则。
 - [x] `docs/modules/case-and-step.md` 投影当前命名与两类 Case。
 - [x] `./aipd-skill/scripts/check-skills` 通过；`rg` 不再出现“只允许 `cN-slug`”的旧表述。
-- [ ] 在一个真实项目里跑通一对 `cN` + `cN_dev`（或一个独立 `cN_dev`），确认规则可用。
-- [ ] 用户验收后 Close，并用 Weave 判断 `_aipd/knowledge` / `_aipd/map.md` 回写。
+- [ ] 在一个真实项目里跑通一对 `cN` + `cN_dev`（或一个独立 `cN_dev`），确认规则可用。——用户选择不等试跑先结束，转为后续使用反馈。
+- [x] 用户验收后 Close，并用 Weave 判断 `_aipd/knowledge` / `_aipd/map.md` 回写。
 
 ### 上下文索引
 
@@ -71,21 +71,23 @@
 
 ### 边界变更记录
 
+- 补充：用户要求 Case 强绑定项目 AIPD 知识库，但不能一听 Case 就全量读。已新增「知识基线」：经 map 路由，只定向读命中模块；产品 / 通用 Case 在 Think 前写，开发 Case 在 Design 第 2 步写；每行必须写出相关原文结论，未找到也要记录；Think 结论和 Design 关键决策标出处；Close 回写时对照基线原文。改动：overview（含关键原则 14）、case 模板（「项目认知」清单改为基线表、观察锚点）、think / design / close、SKILL、docs；副本已同步，check-skills 通过。
+- 补充：用户重申拆分理由——产品 Case 澄清需求 / 调研 / demo 小测 / 可行性分析，确认能做且边界清楚；开发 Case 分析项目与代码架构，按架构规范落地。已补入 overview「为什么分两类」、design.md 开发 Case 第 2 步（强制项目架构分析）、docs/modules/case-and-step.md；check-skills 通过。
 - 2026-11-16：用户确认拆两类 Case、`cN` / `cN_dev` 命名、一对一、交接物五项（作为准备清单，开发 Case 做审核分析而非格式校验）；不升版，直接改源码；本 Case 自身按传统 Case 运行。
 
 ## Case Runtime
 
 ## Current Phase
 
-Verify
+Close
 
 ## Phase State
 
 - Think: skipped（结论在本对话与 grok 会话中已形成，直接写入 Contract）
 - Design: completed -> `02-design/design.md`
 - Execute: completed -> `03-execute/execute.md`
-- Verify: in_progress -> `04-verify/verify.md`
-- Close: pending
+- Verify: completed -> `04-verify/verify.md`（真实项目试跑未做，用户确认先结束）
+- Close: completed -> `05-close/close.md`
 
 ## 当前焦点
 
@@ -120,10 +122,11 @@ Verify
 | 候选内容 | 触发来源 | 当前状态 | 候选归属 | Close 判断 |
 |---|---|---|---|---|
 | Case 分产品 / 开发两类、`cN_dev` 命名、一对一、交接物审核 | 本 Case | 已实现待验收 | Core `horizontal-capabilities.md`、Product、`_aipd/map.md` | 待判断 |
+| 知识基线：map 路由定向读、标出处、Close 对照回写 | 本 Case | 已实现待验收 | Core `horizontal-capabilities.md`、Product | 待判断 |
 | 可执行验收分层：开发 Case 命令层、产品 Case 用户动作层 | 本 Case | 已实现待验收 | Core / Product | 待判断 |
 | README、docs/guide 中的生命周期叙事是否需要补两类 Case | 本 Case | 未处理 | 用户文档 | 待判断 |
 
 ## Close 摘要
 
-- **状态**：待验收
+- **状态**：completed，2026-11-17 用户确认结束并归档
 - **创建时间**：2026-11-16

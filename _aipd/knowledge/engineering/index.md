@@ -59,7 +59,8 @@ AIPD 按 Skill 的服务范围区分两条工程链路。判断依据是“谁�
 - 一次性 Schema migrator 只把旧工作区切换为精确两键的 `unversioned-v2`，不写本机当前 `aipdVersion`；只有 `aipd-update` 完成语义收敛和验证后才提交项目版本与 `_aipd/update-log.md`。
 - 根级 `experience-assets/` 保存实现型经验附带源码，不属于 Skill 源码；安装脚本不得把它复制进 Agent Skill 目录。
 - 用户目录里残留的公共 `aipd-learn` 或旧名 `aipd` 只提示，不自动删。仓库内 `.agents/skills/aipd-learn/` 不受影响。
-- install 会改写用户级 Agent 运行环境。`check-skills` 通过后，必须主动问用户是否执行 install。只有用户明确确认后，才执行 `./aipd-skill/scripts/install-agents` 或 `./aipd-skill/scripts/install-claude`。
+- 维护者本机分发（2026-11-17 起）：magpie Library 中 9 个 AIPD Skill 的来源是 GitHub `KarnaughK/AIPD` / `aipd-skill/skills/<name>`。发布流程是：`check-skills` 通过 -> commit -> push 到 `origin/main` -> 用户运行 `magpie library skill update`。Agent 不运行 install 脚本来更新维护者本机 Skill；push 是外部副作用，需用户确认或明确指示。
+- `install-agents` / `install-claude` 保留给不用 magpie 的安装场景；它们改写用户级 Agent 环境，只有用户明确确认后才执行。
 
 ## AI 友好代码拓扑运行时投影
 
