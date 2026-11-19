@@ -4,21 +4,13 @@ Leader 是 AIPD 在 Case 执行层之上的可选项目主导层。它是你显�
 
 ## 怎样启动
 
-Leader 不会自动启动。先把当前 Codex 任务设为：
-
-```text
-model: gpt-5.6-sol
-reasoning: max
-speed: Fast
-```
-
-然后由用户显式调用：
+Leader 不会自动启动。按当前宿主做好配置（例如 Codex 可配 `gpt-5.6-sol / max / Fast`；Antigravity 或其他宿主可把 Leader 与执行层的模型 / 思考档位约定记在 `_aipd/leader/`），然后由用户显式调用：
 
 ```text
 $aipd-leader
 ```
 
-调用后，当前对话成为这个项目唯一的 Leader。该调用也授权 Leader 在当前 Mission 内，为已澄清并确认的 Case 创建同级执行层：Codex 上直接开独立任务，不套桌面端组合。它不授权发布、删除、远端写入、付费等额外副作用。
+调用后，当前对话成为这个项目唯一的 Leader。该调用也授权 Leader 在当前 Mission 内，为已澄清并确认的 Case 按当前宿主 `runtime/{host}.md`（未单列宿主按 `runtime/generic.md`）创建同级执行层（如 Codex 独立任务、Antigravity `agy` 无头会话、Cursor `cursor-agent`）。它不授权发布、删除、远端写入、付费等额外副作用。
 
 普通 `$aipd` 和 `$aipd-case` 仍是执行级入口。任务复杂、存在多个 Case 或自然语言提到 “Leader” 都不会触发这一层。
 
@@ -44,7 +36,7 @@ Leader <-> Case：契约、上下文、详细设计、执行、验证和局部�
           -> Child Agent / tool：Case 内的隔离、并发或具体执行
 ```
 
-Case task 固定使用 `gpt-5.6-sol / high / Fast`。创建任务时 Leader 能明确指定模型和推理等级；Fast 若不是创建接口字段，就继承用户已开启的 Codex Fast 配置。无法核验时，Leader 必须写“Fast 未核验”，不能假装开启成功。
+各宿主的执行层模型与运行配置写在对应 `runtime/{host}.md`：例如 Codex 上 Case task 默认使用 `gpt-5.6-sol / high / Fast`（无法核验 Fast 时必须写“Fast 未核验”）；Antigravity 或其他宿主不写死具体模型名，优先按 `_aipd/leader/` 记录的模型 / 思考档位约定传入，未约定时沿用本机默认。
 
 ## Mission 和 Case
 
@@ -54,7 +46,7 @@ Case task 固定使用 `gpt-5.6-sol / high / Fast`。创建任务时 Leader 能�
 
 Codex 上还有一条等待续跑：Leader 开出独立 Case 任务后，不能只派出去就停。要先在 `_aipd/leader/` 写清正在等哪个任务，再确保本 Leader 对话已经绑上当前 Mission 的 goal 模式，然后继续等执行层干完。这不是给 Case 任务自动开 goal，也不套到 Cursor。
 
-多个 Case 可以并发，但必须有真实并发收益、依赖清楚且代码 / 证据所有权不重叠。Codex 上一个 Case 只对应一个主 Codex 任务；同一 Case 的 phase 回跳和碰壁继续留在原任务，不因失败不断开新任务。Cursor 上才用桌面端 Leader + `cursor-agent`，那是弱宿主的组合，不是 Codex 默认。
+多个 Case 可以并发，但必须有真实并发收益、依赖清楚且代码 / 证据所有权不重叠。每个 Case 只对应一个主执行会话（Codex 上是主 Codex 任务、Antigravity 上是同一 `conversation_id`、Cursor 上是同一 `chatId`）；同一 Case 的 phase 回跳和碰壁继续留在原会话，不因失败不断开新任务。
 
 Leader 可以继续当前 Mission 内已经确认的下一个 Case，不要求用户逐 Case 验收。方向改变、需要新权限、出现破坏性动作或项目认知冲突时，必须回到用户这里澄清。
 
@@ -87,5 +79,7 @@ Skill 源码入口：
 - `aipd-skill/skills/aipd-leader/SKILL.md`
 - `aipd-skill/skills/aipd-leader/references/leader/`
 - `aipd-skill/skills/aipd-init/references/agent-entry/template.md`（goal 模式按本对话身份分流）
+- `aipd-skill/skills/aipd-leader/runtime/antigravity.md`
 - `aipd-skill/skills/aipd-leader/runtime/codex.md`
 - `aipd-skill/skills/aipd-leader/runtime/cursor.md`
+- `aipd-skill/skills/aipd-leader/runtime/generic.md`

@@ -13,7 +13,7 @@ description: >
 - 只有用户在当前对话中主动调用 `$aipd-leader`，或在界面中明确选择本 Skill，才启动 Leader。
 - 不因任务规模、用户提到 “leader”、存在多个 Case、模型能力或普通 `$aipd-init` / `$aipd-case` 请求而自动启动。
 - 显式启动后，当前对话就是本项目唯一的 Leader 对话；不要再创建第二个 Leader。
-- 本次显式调用同时授权 Leader：在当前 Mission 内，为已经澄清并确认要推进的 Case 调度同级 Case 执行层。具体调度只读当前宿主 `runtime/{host}.md`。它不扩大远端写入、发布、删除、付费或其他外部副作用权限。
+- 本次显式调用同时授权 Leader：在当前 Mission 内，为已经澄清并确认要推进的 Case 调度同级 Case 执行层。具体调度只读当前宿主 `runtime/{host}.md`（未单列宿主读 `runtime/generic.md`）。它不扩大远端写入、发布、删除、付费或其他外部副作用权限。
 - 用户明确结束 Leader 模式后，停止新增调度，先写回恢复点，再回到普通对话。
 
 ## 启动与恢复
@@ -35,7 +35,7 @@ description: >
 3. 按 `@references/leader/guide.md` 的影响测试区分方向问题和 Case 内局部问题。方向问题必须由 Leader 与用户澄清；局部可逆问题交给 Case owner 判断。
 4. 在 `_aipd/leader/` 持久化当前 Mission、用户关注 / 汇报约定、方向变更依据、Case 队列 / 依赖、任务绑定和下一恢复点。只要求这些信息可恢复，不强制固定文件名；新文件必须回链到 `index.md`。
 5. 把 Mission 拆成边界清楚、可独立验收的 Case brief。只并发真正独立且代码所有权不重叠的 Case。不要为了推完某一个 Case 再拆两三个平级 Case。
-6. 按末尾按需加载列表，只读当前对话所属宿主的 `runtime/{host}.md`，再按该文件调度 Case 执行层。不要看 PATH。不在列表中的宿主不要调度。不要把一个 Work Package 当成一个新的同级 Case，也不要让多个执行层共同拥有同一证据面或代码面。同一 Case 的 phase 回跳留在同一执行层；Leader 没有第二套 phase 机。goal 模式与 Mission / Case 的配合、以及插话分流（继续当前 / 插队 / Mission 排队 / 扔 Inbox 仓库）见 `@references/leader/guide.md`。
+6. 按末尾按需加载列表，只读当前对话所属宿主对应的 `runtime/{host}.md`（未单列宿主读 `runtime/generic.md`），再按该文件调度同级 Case 执行层。不要跨宿主嗅探 PATH。不要把一个 Work Package 当成一个新的同级 Case，也不要让多个执行层共同拥有同一证据面或代码面。同一 Case 的 phase 回跳留在同一执行层；Leader 没有第二套 phase 机。goal 模式与 Mission / Case 的配合、以及插话分流（继续当前 / 插队 / Mission 排队 / 扔 Inbox 仓库）见 `@references/leader/guide.md`。
 7. 用户在本 Leader 对话说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」时，为**当前 Mission** 创建当前 Agent 平台的目标模式，objective 写 Mission 完成判据。不要绑某一个 Case，不要加载 `case/goal-mode.md`。各宿主的强制续跑写在对应 runtime 文件里。其他情况仍不要凭任务长、有 Case、有 Mission 或怕压缩而自动创建。
 8. Case 完成后核对 Case 文件、真实改动、验证和集成状态。任务自报完成不等于 Leader 验收通过。
 9. 到达汇报节点时，向用户压缩说明阶段结果与证据、Mission / Case 状态、偏差、风险、待决定事项和下一阶段；不转发完整 Case transcript，也不把阶段汇报变成逐 Case 审批。
@@ -44,7 +44,7 @@ description: >
 
 ## Case 任务
 
-需要创建、跟进或验收 Case 任务时，按末尾列表只读当前对话所属宿主的 `runtime/{host}.md`。不要看 PATH，不要猜宿主，不要用子 Agent 冒充 Case task。
+需要创建、跟进或验收 Case 任务时，按末尾列表只读当前对话所属宿主对应的 `runtime/{host}.md`（未单列宿主读 `runtime/generic.md`）。不要跨宿主嗅探 PATH，不要猜宿主，不要用子 Agent 冒充 Case task。
 
 ## 完成与退出
 
@@ -54,11 +54,11 @@ description: >
 
 ## 按需加载
 
-看本对话所属宿主，只读对应文件。不要看 PATH。
+看本对话所属宿主，只读对应文件。不要跨宿主嗅探 PATH。
 
+- Antigravity：`runtime/antigravity.md`
 - Codex：`runtime/codex.md`
 - Cursor：`runtime/cursor.md`
 - Grok：`runtime/grok.md`
 - Claude：`runtime/claude.md`
-
-不在上列：不要调度 Case 执行层。
+- 其他宿主：`runtime/generic.md`（按同类宿主独立执行层安全契约调度）

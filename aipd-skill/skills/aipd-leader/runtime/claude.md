@@ -4,4 +4,4 @@
 
 不要用子 Agent 冒充 Case task。不要看 PATH 上有没有 `cursor-agent` 或 Codex CLI 再改走别家组合。
 
-需要 Leader 调度独立 Case 执行层时，换 Codex 或 Cursor。本文件存在是为了按需加载有正文，不是缺文件。
+需要 Leader 调度独立 Case 执行层时，换已适配宿主（如 Codex、Antigravity 或 Cursor）。本文件存在是为了按需加载有正文，不是缺文件。

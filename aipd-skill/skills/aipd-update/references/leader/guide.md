@@ -118,7 +118,7 @@ Case 的 Think → Design → Execute → Verify 可以带原因回跳。这是�
 
 Leader 没有第二套 phase 机。Leader 的校准是：
 
-- 局部、可逆、仍在该 Case 边界内：打回**同一个** Case 执行层（Codex 上同一 task，Cursor 上同一 `chatId`），由执行层按 `aipd-case` 回跳。
+- 局部、可逆、仍在该 Case 边界内：打回**同一个** Case 执行层（如 Codex 同一 task、Antigravity 同一 `conversation_id`、Cursor 同一 `chatId`，或其他宿主同一执行会话），由执行层按 `aipd-case` 回跳。
 - 改变 Mission 结果、跨 Case 前提或项目方向：停在 Leader，与用户澄清后再改 Case 队列。
 - 一次碰壁、一次回跳、一次验收失败，都不是创建新 Case 或新执行层的理由。
 

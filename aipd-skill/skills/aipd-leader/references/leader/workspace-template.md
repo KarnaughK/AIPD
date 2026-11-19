@@ -34,10 +34,11 @@
 文件如何拆分由 Leader 自主决定，但当前工作区应能恢复：
 
 - active Mission、边界、成功判据和状态。
-- 用户关注方式、希望校验的阶段效果和汇报节点。
+- 用户关注方式、希望校验的阶段效果、沟通节奏和汇报节点。
+- 运行与模型约定（可选：如当前宿主下 Leader 与 Case 执行层的模型 / 思考档位分工、升档止损规则）。
 - 最近方向变化及其依据、证据和影响。
-- Case 队列、依赖、owner、执行层绑定（Codex 上是独立 task；Cursor 上才是 `chatId`）和状态。
-- 正在等待的 Codex Case task：`threadId` / `hostId`、对应 Case、停止条件和返回后动作。
+- Case 队列、依赖、owner、执行层绑定（按当前宿主记录独立任务或会话 ID，如 Codex `threadId` / `hostId`、Antigravity `conversation_id`、Cursor `chatId`）和状态。
+- 正在等待的独立 Case 执行层：会话 / 任务 ID、对应 Case、停止条件和返回后动作。
 - 待用户澄清 / 授权的事项。
 - 下一恢复位置。
 

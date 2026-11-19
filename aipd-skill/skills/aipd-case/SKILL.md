@@ -207,6 +207,7 @@ Main 或 Child 的执行入口都是 `03-execute/work-packages/` 下的 work pac
 
 看本对话所属宿主，只读对应文件。不要看 PATH。先读包内 `agent-guide.md`，再读下面这一份。
 
+- Antigravity：`agent-guide/antigravity.md`
 - Codex：`agent-guide/codex.md`
 - Cursor：`agent-guide/cursor.md`
 - Grok：`agent-guide/grok.md`

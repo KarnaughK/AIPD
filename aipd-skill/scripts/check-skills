@@ -88,7 +88,7 @@ check_shared_copies() {
 
 check_on_demand() {
     local host
-    for host in codex cursor grok claude; do
+    for host in antigravity codex cursor grok claude; do
         if [ ! -f "$SKILLS_ROOT/aipd-leader/runtime/${host}.md" ]; then
             fail "缺少 aipd-leader/runtime/${host}.md"
         fi
@@ -96,21 +96,27 @@ check_on_demand() {
             fail "缺少 aipd-case/agent-guide/${host}.md"
         fi
     done
+    if [ ! -f "$SKILLS_ROOT/aipd-leader/runtime/generic.md" ]; then
+        fail "缺少 aipd-leader/runtime/generic.md"
+    fi
     if [ ! -f "$SKILLS_ROOT/aipd-case/agent-guide.md" ]; then
         fail "缺少 aipd-case/agent-guide.md"
     fi
     if [ -f "$SKILLS_ROOT/aipd-leader/references/leader/runtime.md" ]; then
         fail "公共 leader/runtime.md 索引还应删除"
     fi
-    if ! rg -q 'runtime/codex.md' "$SKILLS_ROOT/aipd-leader/SKILL.md" \
-        || ! rg -q 'runtime/grok.md' "$SKILLS_ROOT/aipd-leader/SKILL.md"; then
+    if ! rg -q 'runtime/antigravity.md' "$SKILLS_ROOT/aipd-leader/SKILL.md" \
+        || ! rg -q 'runtime/codex.md' "$SKILLS_ROOT/aipd-leader/SKILL.md" \
+        || ! rg -q 'runtime/grok.md' "$SKILLS_ROOT/aipd-leader/SKILL.md" \
+        || ! rg -q 'runtime/generic.md' "$SKILLS_ROOT/aipd-leader/SKILL.md"; then
         fail "aipd-leader SKILL.md 缺少按需加载列表"
     fi
-    if ! rg -q 'agent-guide/codex.md' "$SKILLS_ROOT/aipd-case/SKILL.md" \
+    if ! rg -q 'agent-guide/antigravity.md' "$SKILLS_ROOT/aipd-case/SKILL.md" \
+        || ! rg -q 'agent-guide/codex.md' "$SKILLS_ROOT/aipd-case/SKILL.md" \
         || ! rg -q 'agent-guide/grok.md' "$SKILLS_ROOT/aipd-case/SKILL.md"; then
         fail "aipd-case SKILL.md 缺少按需加载列表"
     fi
-    if rg -q 'gpt-5.6-sol|cursor-agent|当前构建注入' "$SKILLS_ROOT/aipd-leader/SKILL.md"; then
+    if rg -q 'gpt-5.6-sol|cursor-agent|agy -p|--conversation|当前构建注入' "$SKILLS_ROOT/aipd-leader/SKILL.md"; then
         fail "aipd-leader SKILL.md 常驻正文仍有别家调度细节"
     fi
     local skill
