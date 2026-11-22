@@ -29,9 +29,20 @@ Antigravity 的 `/goal` 是当前这条对话的宿主续跑能力，不替代 M
 
 ## 职责
 
-- **Leader**（当前 Antigravity 对话）：澄清方向与 Mission、拆 Case brief、维护 `_aipd/leader/`、按序或按清晰代码边界派发 `agy -p` 执行层、做阶段汇报和总验收；不代做 Case 内 Think / Design / Execute / Verify。
-- **Case 执行层**（无头 `agy -p` 会话）：把一个 Case 从当前 phase 推进到目标状态或 Close，含验证。执行层内部可按 `aipd-case` 与 `agent-guide/antigravity.md` 使用子 Agent；不得另建同级 Case 执行层，不得再开一个 Leader。
+- **Leader**（当前 Antigravity 对话）：澄清方向与 Mission、按 `aipd-case` 规则拆 Case brief、维护 `_aipd/leader/`、按序或按清晰代码边界派发 `agy -p` 执行层、做阶段汇报和总验收；不代做 Case 内部执行。
+- **Case 执行层**（无头 `agy -p` 会话）：按 `aipd-case` 推进本 Case 至目标状态或 Close，含本 Case 对应验证。执行层内部可按 `aipd-case` 与 `agent-guide/antigravity.md` 使用子 Agent；不得自行另建同级执行会话，不得再开一个 Leader（若按 `aipd-case` 需要衔接下一类 Case，回报 Leader 调度）。
 - 同一时刻一个 Case 只绑定一个主 `conversation_id`。并发多个 Case 时，必须先确认代码所有权不重叠，并优先用独立 git worktree 隔离工作区。
+
+## 无头权限模式与派发前存档门禁
+
+`agy -p` 是非交互无头模式，执行层触发命令或工具授权请求时无法弹窗人工确认；若用 `--mode accept-edits` 或默认受限模式，执行层会在需要授权时直接卡死或中断。
+
+因此 Antigravity 下派发无头 Case 执行层**默认开启完全权限模式**（`--dangerously-skip-permissions`），但必须先过两步安全门禁：
+
+1. **提前告知并确认**：在当前 Mission 首次派发无头执行层前，主动向用户说明将开启 `--dangerously-skip-permissions` 拉起 `agy -p` 执行层并取得确认；不得跳过说明静默启动，也不要因为回避该参数而降级成会卡死的受限模式。
+2. **先清理并提交推送存档**：派发前检查当前工作区，提醒并协助用户把已有改动清理、归档、commit 并 push 到远端，确保远端已有稳定可恢复基线后再启动执行层。
+
+放开无头工具授权只用于保证本地开发、测试、构建不被卡住；发布、删除远端数据、强推、付费等外部副作用仍在 prompt 与 AIPD 权限边界内禁止擅自执行。
 
 ## 会话绑定（`conversation_id`）
 
@@ -56,15 +67,15 @@ Antigravity 的 `/goal` 是当前这条对话的宿主续跑能力，不替代 M
 首次派发（新建会话并获取 `conversation_id`）：
 
 ```bash
-agy -p --output-format json --mode accept-edits \
+agy -p --output-format json --dangerously-skip-permissions \
   [--model <model-id>] [--effort <level>] \
-  "你是当前 Mission 下一个 Case 的 owner，不是 Project Leader。先执行项目 AIPD gate，再显式使用 aipd-case 读取或建立 Case：{绝对路径}（有当前 work package 时附绝对路径）。按该 Case 当前 phase 推进，允许在同一 Case 内回跳，不得另建同级 Case 或再开一个 Leader；内部可按项目规则使用子 Agent。完成后返回压缩结果：Case id / path、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
+  "你是当前 Mission 下一个 Case 的 owner，不是 Project Leader。先执行项目 AIPD gate，再显式使用 aipd-case 读取或建立本 Case：{绝对路径}（有当前 work package 时附绝对路径）。按 aipd-case 规则推进本 Case，允许在同一 Case 内回跳，不得自行另建同级执行会话或再开一个 Leader（若按 aipd-case 需要衔接下一类 Case，回报 Leader 调度）；内部可按项目规则使用子 Agent；严禁擅自执行发布、删库、远端强推或付费等外部副作用。完成后返回压缩结果：Case id / path、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
 ```
 
 同 Case 返工 / 续跑（复用已绑定会话）：
 
 ```bash
-agy -p --output-format json --mode accept-edits \
+agy -p --output-format json --dangerously-skip-permissions \
   --conversation <conversation_id> \
   [--model <model-id>] [--effort <level>] \
   "<针对同一 Case 的明确反馈、验收缺口或继续推进指令>"
@@ -73,8 +84,8 @@ agy -p --output-format json --mode accept-edits \
 约束：
 
 - 必须传 Case 绝对路径（以及当前 work package 绝对路径），不要把长正文复制进 prompt。
-- 默认使用 `--mode accept-edits` 让执行层可在 Case 边界内改写工作区文件；仅在用户明确同意时使用 `--mode auto`；除非用户明确授权，**不要**传 `--dangerously-skip-permissions`。
-- 发布、删除、远端推送、付费等外部副作用仍受原有权限边界约束，不因无头派发扩大。
+- 默认传 `--dangerously-skip-permissions` 避免无头模式因无法交互授权而卡死；但必须在派发前先告知用户并完成当前代码清理、提交与推送远端存档。
+- 发布、删除远端数据、远端强推、付费等外部副作用仍受原有权限边界约束，不因放开本地执行授权而扩大。
 - `--print-timeout 0`（默认）会等待本轮完成；长任务通过终端后台运行并等待完成通知，不要高频空轮询。
 - `exit 0` 只表示这一轮 CLI 跑完，不等于 Case 验收通过。
 

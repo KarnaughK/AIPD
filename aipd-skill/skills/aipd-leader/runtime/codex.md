@@ -31,7 +31,7 @@
 - “你是当前 Mission 下一个 Case 的 owner，不是 Project Leader。”
 - 当前项目、Mission 摘要、Case brief、边界、成功判据、停止条件和代码 / 证据所有权。
 - 先执行项目 AIPD gate，再显式使用 `$aipd-case` 创建或恢复这一个 Case。
-- 允许在同一 Case 内 Think / Design / Execute / Verify / Close 回跳；不得另建同级 Codex task。
+- 按 `aipd-case` 规则允许在同一 Case 内回跳；不得自行另建同级 Codex task（若按 `aipd-case` 需要衔接下一类 Case，回报 Leader 调度）。
 - 可按项目 AGENTS 规则使用 Child Agent，但不得扩大写入、发布、删除、付费或其他外部副作用权限。
 - 不回退其他 task / 用户的改动；发现共享前提或所有权冲突时停止并回报 Leader。
 - 每次改变项目状态的 Work Package 后写回 Case 文件；长调查、长执行和等待前写 checkpoint。

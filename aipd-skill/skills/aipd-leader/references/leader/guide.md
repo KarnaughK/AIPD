@@ -5,17 +5,17 @@
 ```text
 用户
   -> Leader：方向、探索、Mission、调度、总验收
-      -> Case task：一个短周期目标的 Think / Design / Execute / Verify / Close
+      -> Case task：按 aipd-case 推进一个具体 Case
           -> Child Agent / tool：Case 内的上下文隔离、并发调查或具体执行
 ```
 
-这四层是执行关系，不代表每层都必须出现。Leader 是用户显式增加的项目主导层；普通 AIPD 仍从 Case 执行层开始。只有 Leader 创建同级 Case task，Case task 不再创建同级 task，但可按项目规则使用 Child Agent 和工具。
+这四层是执行关系，不代表每层都必须出现。Leader 是用户显式增加的项目主导层；普通 AIPD 仍从 Case 执行层开始。是否开 Case、开哪类 Case 以及不同 Case 之间的标准衔接，唯一事实源在 `aipd-case` Skill；Leader 不重复定义 Case 形态，只负责跨 Case 编排与调度。只有 Leader 创建同级 Case 执行会话，Case 执行层不自行另建同级执行会话，但可按项目规则使用 Child Agent 和工具。
 
 ## 受托责任与对话层级
 
 Leader 是用户显式委托的项目负责人和监督者，不只是任务分发器。它在已授权 Mission 内持续掌控项目状态、协调 Case、发现偏差、验收阶段结果，并把用户真正需要判断的信息压缩后向用户汇报。用户仍拥有最终方向和授权边界；Leader 的负责不扩大发布、删除、付费或其他外部副作用权限。
 
-Case 是执行者。为了把一个短周期目标真正关闭，它必须进入目标契约、上下文、设计、实现、验证和局部取舍等细节。这样的上下文密度是 Case 的职责所需，不应要求 Case 同时承担跨 Case 的高层讨论、项目监督和面向用户的综合汇报。
+Case 是执行层。单个 Case 的类型、边界、phase 推进和细节取舍由 `aipd-case` 定义并由 Case 执行层承担；不应要求单个 Case 同时承担跨 Case 的高层讨论、项目监督和面向用户的综合汇报。
 
 默认对话边界是：
 
@@ -45,7 +45,7 @@ Mission 启动时记录用户的关注方式、希望校验的阶段效果和汇
 
 ## Leader 与 Case 的本质差异
 
-Case 负责把一件边界明确的事情澄清、执行、验证并关闭，体现执行者能力。Leader 对整个项目推进负责，允许在用户给定的探索范围内调查、比较、碰壁和改变局部路径，直到形成双方都理解且有事实支撑的方向。
+Case 的定义、类型与内部闭环归 `aipd-case` 管；Leader 对整个项目推进负责，允许在用户给定的探索范围内调查、比较、碰壁和改变局部路径，直到形成双方都理解且有事实支撑的方向。
 
 Leader 不以“坚持还是服从”为判断模型：
 
@@ -110,17 +110,17 @@ Inbox 里可以夹着以后才用得上的材料或不紧急的事，条条都�
 - 本对话已显式 `$aipd-leader`：goal 模式写当前 Mission 的完成判据，不绑某一个 Case，也不把 Mission 拆成几个并行 Goal。拆 Case、派执行层、验收仍由 Leader 做。不要加载 `case/goal-mode.md`。可在 `_aipd/leader/` 写一条「goal 模式绑当前 Mission」的恢复提示。
 - 本对话不是 Leader：goal 模式最多绑当前这一个 Case。没有 Case 时先走 `aipd-case` 立 Case，再创建。只有满足 `case/goal-mode.md` 启用条件才加载覆盖层；覆盖层只改内部 Gate 谁确认，不改 Case 本体，也不取消回跳。
 - Cursor 因为对话内 Agent 不够强，才用桌面端 Leader + `cursor-agent`；那是 Cursor 平台包的事。Codex 上不要套这套组合，直接开独立 task。Cursor 执行层即使对话挂了 `/goal`，只要 goal 写的不是这一个 Case，仍按普通 `aipd-case` 的确认与回跳推进。`/loop` 是叫醒器，不是 goal 模式本身。
-- 「把这个 Case 推进到结束」走同一个 Case 的完整生命周期，包括回跳。不要为了推完它再开两三个平级 Case，也不要用「已经开了 goal 模式」掩盖拆分失控。
+- 「把这个 Case 推进到结束」走该 Case 在 `aipd-case` 下的完整生命周期（包括回跳）；不要把同一 Case 的回跳拆成额外平级 Case，也不要用「已经开了 goal 模式」掩盖拆分失控（按 `aipd-case` 规则合法区分并衔接的不同类型 Case 除外）。
 
 ## 校准逻辑在 Case，不在 Leader
 
-Case 的 Think → Design → Execute → Verify 可以带原因回跳。这是短周期目标的校准：推到后面发现 Think / Design 不对，就回到上游改，再往下走。
+Case 内部的 phase 推进与带原因回跳由 `aipd-case` 定义；这是单个 Case 内的短周期校准。
 
 Leader 没有第二套 phase 机。Leader 的校准是：
 
 - 局部、可逆、仍在该 Case 边界内：打回**同一个** Case 执行层（如 Codex 同一 task、Antigravity 同一 `conversation_id`、Cursor 同一 `chatId`，或其他宿主同一执行会话），由执行层按 `aipd-case` 回跳。
 - 改变 Mission 结果、跨 Case 前提或项目方向：停在 Leader，与用户澄清后再改 Case 队列。
-- 一次碰壁、一次回跳、一次验收失败，都不是创建新 Case 或新执行层的理由。
+- 一次碰壁、一次回跳、一次验收失败，都不是另开重复 Case 或新执行层的理由（若按 `aipd-case` 规则需要衔接另一类 Case，由 Leader 按队列调度）。
 
 ## 方向影响测试
 
@@ -139,7 +139,7 @@ Leader 没有第二套 phase 机。Leader 的校准是：
 ## 探索与调度
 
 - Leader 可以先做低风险只读探索，以便理解问题和形成 Case brief。
-- 探索本身如果规模大、需要长期恢复或应独立验收，就把它变成一个 Research / Spike Case task。
+- 探索本身如果规模大、需要长期恢复或应独立验收，就按 `aipd-case` 的 Case 规则立一个独立 Case 推进。
 - 一项工作从模糊探索变成明确承诺后，应进入 Case，不继续堆在 Leader 工作记忆里。
 - 同一 Case 的 phase 回跳、试错和修正继续留在同一 Case task，见上一节「校准逻辑在 Case，不在 Leader」；不要因为一次碰壁就创建新 task。
 - 每个证据面和代码面只有一个 owner。并发前明确共享前提、依赖、集成次序和停止条件。

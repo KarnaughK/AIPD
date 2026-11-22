@@ -32,7 +32,7 @@ Leader <-> Case：契约、上下文、详细设计、执行、验证和局部�
 ```text
 用户
   -> Leader task：方向、探索、Mission、调度、总验收
-      -> Case task：一个 Case 的 Think / Design / Execute / Verify / Close
+      -> Case task：按 aipd-case 推进一个具体 Case
           -> Child Agent / tool：Case 内的隔离、并发或具体执行
 ```
 
@@ -40,7 +40,7 @@ Leader <-> Case：契约、上下文、详细设计、执行、验证和局部�
 
 ## Mission 和 Case
 
-一个项目同一时间只有一个 active Mission。Mission 是 Leader 当前负责推进的项目级结果，可以包含探索和多个 Case；Case 是边界清楚、需要执行、验证和关闭的短周期目标。
+一个项目同一时间只有一个 active Mission。Mission 是 Leader 当前负责推进的项目级结果，可以包含探索和多个 Case；具体是否开 Case、开哪类 Case 以及 Case 间的标准衔接，一律以 `aipd-case` 为准，Leader 不另造第二套 Case 说明。
 
 当前 Agent 平台的目标模式 / goal 模式（Cursor `/goal`、Codex Goal）是这条对话的宿主续跑能力，不替代 Mission 或 Case。本对话已经显式 `$aipd-leader` 时，goal 模式绑当前 Mission；拆 Case、派执行层、验收仍由 Leader 做。普通执行对话说目标模式，才绑当前 Case。不要因为项目里已有 `_aipd/leader/` 或进行中的 Mission，就把一条新对话当成 Leader。
 

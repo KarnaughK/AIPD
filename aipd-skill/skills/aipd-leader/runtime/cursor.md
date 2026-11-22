@@ -30,8 +30,8 @@ Cursor `/goal` / `CreateGoal` 是当前这条对话的 goal 模式：让同一�
 
 ## 职责
 
-- **Leader**（当前桌面对话）：规划 Mission 的 Case 路线，按序派一个执行 Agent 做一个 Case，最后收口。不代做 Case 内 Think / Design / Execute / Verify。
-- **执行 Agent**（无头 `cursor-agent`）：把一个 Case 从当前 phase 做到 Close，含验证。可按项目规则使用 Child Agent；不得另建同级 Case 执行层，不得再开一个 Leader。
+- **Leader**（当前桌面对话）：规划 Mission 的 Case 路线（怎么开 Case、开哪类 Case 以 `aipd-case` 为准），按序派执行 Agent 推进各 Case，最后收口。不代做 Case 内部执行。
+- **执行 Agent**（无头 `cursor-agent`）：按 `aipd-case` 把本 Case 推进到目标状态或 Close，含本 Case 对应验证。可按项目规则使用 Child Agent；不得自行另建同级执行会话，不得再开一个 Leader（若按 `aipd-case` 需要衔接下一类 Case，回报 Leader 调度）。
 - 同一时刻一个 Case 只有一个执行 Agent。基础版不扇出多个无头进程。
 
 ## 对象绑定（chatId）
@@ -55,7 +55,7 @@ Cursor `/goal` / `CreateGoal` 是当前这条对话的 goal 模式：让同一�
 在**项目根目录**执行。`--print` 这一轮阻塞到执行 Agent 退出。中间状态只靠 `_aipd/case/`。
 
 ```bash
-cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId> "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再显式使用 aipd-case 读取 Case：{绝对路径}。按该 Case 当前 phase 推进；有 work package 时读取其绝对路径和上下文文档。允许在同一 Case 内回跳，不得另建同级 Case 或再开一个 Leader。完成后返回压缩结果：Case id / path、chatId、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
+cursor-agent -p --force --trust --workspace /项目路径 --resume <chatId> "你是 AIPD Case 执行 Agent，不是 Project Leader。先执行项目 AIPD gate，再显式使用 aipd-case 读取本 Case：{绝对路径}。按 aipd-case 规则推进；有 work package 时读取其绝对路径和上下文文档。允许在同一 Case 内回跳，不得自行另建同级执行会话或再开一个 Leader（若按 aipd-case 需要衔接下一类 Case，回报 Leader 调度）。完成后返回压缩结果：Case id / path、chatId、当前 phase、完成项、改动文件、验证结果、风险、阻塞、建议和恢复位置。"
 ```
 
 - 必须带 Case 绝对路径；有当前 work package 时也带。不要把长正文复制进 prompt。

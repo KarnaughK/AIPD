@@ -6,7 +6,7 @@ description: >
 
 # AIPD Leader
 
-`aipd-leader` 在默认 Case 执行层之上增加一个项目主导层。Leader 是用户显式委托的项目负责人和监督者，负责方向澄清、探索、Mission、Case 拆分、同级任务调度、阶段汇报和总验收；每个 Case 仍由独立执行层通过 `aipd-case` 深入细节并完成执行闭环。
+`aipd-leader` 在默认 Case 执行层之上增加一个项目主导层。Leader 是用户显式委托的项目负责人和监督者，负责方向澄清、探索、Mission、事项拆解、同级 Case 执行层调度、阶段汇报和总验收；具体怎么开 Case、开哪类 Case 及 Case 内部推进，一律以 `aipd-case` Skill 为准。
 
 ## 显式启动合同
 
@@ -34,7 +34,7 @@ description: >
 2. 在方向仍含冲突或关键未知项时先探索和澄清，不急着把模糊目标伪装成 Case。
 3. 按 `@references/leader/guide.md` 的影响测试区分方向问题和 Case 内局部问题。方向问题必须由 Leader 与用户澄清；局部可逆问题交给 Case owner 判断。
 4. 在 `_aipd/leader/` 持久化当前 Mission、用户关注 / 汇报约定、方向变更依据、Case 队列 / 依赖、任务绑定和下一恢复点。只要求这些信息可恢复，不强制固定文件名；新文件必须回链到 `index.md`。
-5. 把 Mission 拆成边界清楚、可独立验收的 Case brief。只并发真正独立且代码所有权不重叠的 Case。不要为了推完某一个 Case 再拆两三个平级 Case。
+5. 按 `aipd-case` Skill 的规则决定是否开 Case、开哪类 Case 及标准衔接（Leader 不另造 Case 类型或“单 Case 一条龙”假设），把 Mission 拆成边界清楚、可独立验收的 Case brief。只并发真正独立且代码所有权不重叠的 Case；不要把同一 Case 的回跳或单个 Work Package 拆成额外平级 Case。
 6. 按末尾按需加载列表，只读当前对话所属宿主对应的 `runtime/{host}.md`（未单列宿主读 `runtime/generic.md`），再按该文件调度同级 Case 执行层。不要跨宿主嗅探 PATH。不要把一个 Work Package 当成一个新的同级 Case，也不要让多个执行层共同拥有同一证据面或代码面。同一 Case 的 phase 回跳留在同一执行层；Leader 没有第二套 phase 机。goal 模式与 Mission / Case 的配合、以及插话分流（继续当前 / 插队 / Mission 排队 / 扔 Inbox 仓库）见 `@references/leader/guide.md`。
 7. 用户在本 Leader 对话说「目标模式 / goal 模式 / 绑目标 / 自己定义目标」时，为**当前 Mission** 创建当前 Agent 平台的目标模式，objective 写 Mission 完成判据。不要绑某一个 Case，不要加载 `case/goal-mode.md`。各宿主的强制续跑写在对应 runtime 文件里。其他情况仍不要凭任务长、有 Case、有 Mission 或怕压缩而自动创建。
 8. Case 完成后核对 Case 文件、真实改动、验证和集成状态。任务自报完成不等于 Leader 验收通过。
@@ -44,7 +44,7 @@ description: >
 
 ## Case 任务
 
-需要创建、跟进或验收 Case 任务时，按末尾列表只读当前对话所属宿主对应的 `runtime/{host}.md`（未单列宿主读 `runtime/generic.md`）。不要跨宿主嗅探 PATH，不要猜宿主，不要用子 Agent 冒充 Case task。
+决定怎么建 Case、归类及交接时，以项目已安装的 `aipd-case` Skill 为唯一规则来源；需要创建、跟进或验收同级执行会话时，按末尾列表只读当前对话所属宿主对应的 `runtime/{host}.md`（未单列宿主读 `runtime/generic.md`）。不要跨宿主嗅探 PATH，不要猜宿主，不要用子 Agent 冒充 Case task。
 
 ## 完成与退出
 
