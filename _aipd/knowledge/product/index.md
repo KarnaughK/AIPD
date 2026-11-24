@@ -41,7 +41,7 @@ Product 负责把 Core 的核心成立模型落成用户可见、Agent 可调用
 
 它不替用户完成完整的五类 Knowledge 建模，也不替代后续 Weave 和 Case 流程。日常读上下文走 `AGENTS.md` → `_aipd/map.md`。
 
-用户选择 Agent MD 等级 2 时，还会安装 Interaction Protocol，约束讨论 / 分析类回复按“我理解 → 结论 → 下一步 → 展开说说 → 横向拓展”生成。前三段是对齐、答案和向下动作，着急推进时可以不读后两段。“我理解”只复述目标和边界；“下一步”只给一个自然向下动作，不自动把建议解释成执行授权；“展开说说”交代结论依据，发现站不住时明确改口；“横向拓展”只列相邻方向。具体协议以 `aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md` 为准。
+Agent MD 提供四种模板：不修改、`纯 AIPD`（有代码项目默认）、`AIPD + 五段式回复` 与 `AIPD + 四段式回复`。五段式按「我理解 → 结论 → 下一步 → 展开说说 → 横向拓展」生成（`interaction-style.md`）；四段式按「我理解 → 结论 → 下一步 → 可继续聊」生成，简单问答也保留「我理解」做语音纠偏，「结论」高密度直出决策依据，其余以 `[深挖]/[延伸]/[术语]` 索引收拢在「可继续聊」（`interaction-style-4part.md`）。具体协议分别以 `aipd-skill/skills/aipd-init/references/agent-entry/{interaction-style,interaction-style-4part}.md` 为准。
 
 ### Map-first 认知加载
 
@@ -101,7 +101,7 @@ Update 用来把项目收敛到当前电脑已安装的完整 AIPD 发布快照�
 
 旧 `_adoc` / L1-L5 项目可以先由 Update 调用独立的 `migrate-project-schema` 完成确定性结构迁移，再以 `unversioned-v2` 身份继续语义收敛。迁移器只改变 Schema，不写当前 AIPD 版本。验证全部通过后，Update 才把 `aipdVersion=I` 写入 manifest，并在 `_aipd/update-log.md` 留下一条项目级更新记录。
 
-项目版本等于本机版本时，Update 仍可检查 drift；没有差异就 no-op。项目版本高于本机版本时必须停止，不能用旧安装包降级项目。
+项目版本等于本机版本时，Update 仍可检查 drift，并支持按用户明确要求在「纯 AIPD / AIPD + 五段式回复 / AIPD + 四段式回复」之间原子互切 `AGENTS.md` 模板；无差异且未要求切换时返回 no-op，可顺带问一句是否需要切换模板。项目版本高于本机版本时必须停止，不能用旧安装包降级项目。
 
 ### Mermaid / MMD
 

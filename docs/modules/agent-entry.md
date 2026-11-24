@@ -55,15 +55,16 @@ Case / Work Package 文件是长期状态事实源，聊天是运行缓存。两
 
 它不应该塞进完整业务知识、具体 Case 过程或每个 Skill 的全部规则；这些内容应由 map 路由到 owner。
 
-## Agent MD 等级
+## Agent MD 模板
 
-初始化时可以选择三个等级：
+初始化时可以选择四种模板：
 
-- **0**：不修改 `AGENTS.md`。
-- **1**：安装 AIPD Project Entry，默认推荐。
-- **2**：在 Entry 之外，再安装独立的 [Interaction Protocol](interaction-protocol.md)。
+- **不修改 `AGENTS.md`**：不写入。
+- **纯 AIPD**：安装 AIPD Project Entry，有代码项目默认推荐。
+- **AIPD + 五段式回复**：在 Entry 之外，再安装五段式 [Interaction Protocol](interaction-protocol.md)。
+- **AIPD + 四段式回复**：在 Entry 之外，再安装四段式 [Interaction Protocol](interaction-protocol.md)。
 
-Interaction Protocol 只约束讨论 / 执行切换和回复结构，不改变本页的项目读取链路。Update 会保留已有等级，不会自动升级。
+Interaction Protocol 只约束讨论 / 执行切换和回复结构，不改变本页的项目读取链路。Update 默认保留已有模板，不会擅自切换；需要换模板时可直接通过 `/aipd-update` 显式切换。
 
 ## README、docs、_aipd 与源码
 

@@ -123,7 +123,7 @@ Case Contract -> Think -> Design -> Execute -> Verify -> Close
 ## Skill 之外的支撑能力
 
 - **Agent Entry**：`AGENTS.md` 规定进入项目和恢复任务的第一跳。
-- **Interaction Protocol**：Agent MD 等级 2 可选安装的项目级讨论 / 执行回复协议；见 [Interaction Protocol](interaction-protocol.md)。
+- **Interaction Protocol**：Agent MD 可选安装的项目级讨论 / 执行回复协议（提供「五段式回复」与「四段式回复」两套模板，并支持通过 `aipd-update` 随时互切）；见 [Interaction Protocol](interaction-protocol.md)。
 - **AI 友好代码拓扑**：结构性开发和 Case Design 条件加载的模块边界判断；见 [AI 友好代码拓扑](ai-friendly-code-topology.md)。
 - **角色 Agent / 领域指引**：为上下文检索、requirements、Vue 架构和 provider 等稳定边界提供执行支持；不自动派发。
 - **实践经验库**：`aipd-skill/skills/aipd-case/references/experience/` 保存真实项目跑过的具象经验。

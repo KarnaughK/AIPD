@@ -87,7 +87,7 @@ AIPD 当前是一套完整 Skill 安装包，不是双击即用的应用。目�
 
 旧的 `/aipd` 仍会触发同一入口。如果项目还没有 AIPD，Agent 会创建 `_aipd/manifest.json`、index、map、五类 Knowledge，以及 Case、Inbox、OKR、SOP 等入口。空项目接着走方向 / 痛点；已有代码则先扫仓库，补 map 和 Core / Product / Engineering 索引，不先问方向。验证完成后，manifest 同时记录 Schema v2 和当前已应用的 AIPD 版本。Intent 不是初始化成功门槛。
 
-空项目路径会询问是否安装项目 `AGENTS.md`：Level 1 添加 AIPD 项目入口；可选的 Level 2 再添加项目级 Interaction Protocol。有代码路径默认 Level 1。它只约束当前项目，不是全局人格设置。
+空项目路径会询问选用哪种项目 `AGENTS.md` 模板：不修改、`纯 AIPD`（仅 AIPD 项目入口），或附加项目级 Interaction Protocol 的 `AIPD + 五段式回复` / `AIPD + 四段式回复`。有代码路径默认 `纯 AIPD`。它只约束当前项目，不是全局人格设置；之后也可随时通过 `/aipd-update` 切换模板。
 
 ### 3. 用 `/aipd-case` 完成一个真实目标
 

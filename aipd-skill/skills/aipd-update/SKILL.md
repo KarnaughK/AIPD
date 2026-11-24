@@ -1,8 +1,8 @@
 ---
 name: aipd-update
 description: >
-  把已接入项目更新到本机已安装的 AIPD 发布快照。读取项目版本、完整版本记录、当前权威文档和项目定制后，一次语义收敛并记录结果；也可承接 unversioned-v2 或先路由 legacy Schema 迁移。
-  关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、补 map、同步新模板、项目版本、版本日志、unversioned-v2、Knowledge Schema
+  把已接入项目更新到本机已安装的 AIPD 发布快照，或按用户要求切换 AGENTS.md 模板（纯 AIPD / 五段式回复 / 四段式回复）。读取项目版本、完整版本记录、当前权威文档和项目定制后，一次语义收敛并记录结果；也可承接 unversioned-v2 或先路由 legacy Schema 迁移。
+  关键词：AIPD update、aipd update、升级 AIPD、更新 AGENTS、切换模板、五段式回复、四段式回复、补 map、同步新模板、项目版本、版本日志、unversioned-v2、Knowledge Schema
 allowed-tools:
   - Read
   - Write
@@ -31,7 +31,7 @@ allowed-tools:
 - **project-owned**：五类 Knowledge 正文、代码就近 README、`AGENTS.md` 标记区块外内容和项目业务事实，默认保留。
 - **mixed**：项目 index / map、流程索引和正在运行的 Case，按语义合并；模板只是当前合同，不是整文件覆盖指令。
 - Intent 只接收用户明确确认的长期方向；Research 不伪造来源或时间边界；未验收 Case 结论不得趁更新写入长期 Knowledge。
-- 保留当前 Agent MD 安装状态和已有等级证据；不得自动升级等级。既有项目缺少 Entry 时默认保持缺失，只有项目中的明确证据或用户当前要求补装时才新增 Entry。
+- 保留当前 Agent MD 安装状态和已有模板选择（未安装 / 纯 AIPD / AIPD + 五段式回复 / AIPD + 四段式回复）；不得在未要求时自动切换模板或新增对话协议。既有项目缺少 Entry 时默认保持缺失，只有项目中的明确证据或用户当前要求补装或切换模板时才改动。
 
 ## 1. 读取本机发布快照
 
@@ -54,7 +54,7 @@ allowed-tools:
 - **legacy-needs-migration**：定位已安装 `aipd-init` Skill 随包提供的 `scripts/migrate-project-schema`；在 AIPD 源码仓库可使用 `aipd-skill/skills/aipd-init/scripts/migrate-project-schema`。先 dry-run，只有结果确定且安全时才执行，再把产生的两键 manifest 当作 `unversioned-v2` 继续本流程。迁移器不写 `aipdVersion`，也不代表已应用版本 `I`。
 - **unversioned-v2**：令 `P` 为空，从第一条 bootstrap Release Record 开始读取；不要伪造 `V0`。
 - **stale**（`P < I`）：更新到 `I`。
-- **current**（`P = I`）：仍读取 current authority 并检查 drift；无差异时返回 no-op，有漂移时可做同版本修复。
+- **current**（`P = I`）：仍读取 current authority 并检查 drift。若用户明确要求切换 Agent MD 模板，直接按目标模板执行切换；若无差异且用户未要求切换，返回 no-op，并顺带说明当前使用的 `AGENTS.md` 模板、问一句是否需要切换为其他可选模板（纯 AIPD / AIPD + 五段式回复 / AIPD + 四段式回复），用户确认前不修改文件；有漂移时可做同版本修复。
 - **future-project**（`P > I`）：本机包过旧，硬停止；不得降级项目。
 - **invalid**：硬停止并报告精确原因。
 
@@ -80,20 +80,25 @@ allowed-tools:
 
 确定性的底层结构迁移可以按依赖排序，但不得把任一中间发布版本写成项目状态。用户未要求时，不执行 install、commit、push 或其他远端写入。
 
+Agent MD 模板识别与切换（保留标记区块外所有项目自有内容）：
+
+- **识别当前模板**：无 `<!-- AIPD:START -->` 为未安装；仅有 `AIPD` 区块为「纯 AIPD」；含 `<!-- AIPD-INTERACTION-STYLE:START -->` 时，按标题或结构区分「AIPD + 五段式回复」（`@references/agent-entry/interaction-style.md`）与「AIPD + 四段式回复」（`@references/agent-entry/interaction-style-4part.md`）。常规更新只同步当前已选模板的权威版本，绝不跨模板覆盖。
+- **显式切换模板**：用户明确提出切换 `AGENTS.md` 模板时（无论 `P < I` 还是 `P = I`），均支持在「纯 AIPD / AIPD + 五段式回复 / AIPD + 四段式回复」之间原子互切：切到「纯 AIPD」时保留并同步 `AIPD` 区块、移除 `AIPD-INTERACTION-STYLE` 区块；切到「AIPD + 五段式回复」或「AIPD + 四段式回复」时确保 `AIPD` 区块最新，并将 `AIPD-INTERACTION-STYLE` 区块替换（或追加）为对应模板。
+
 ## 5. 验证并最后提交版本
 
 在 manifest 仍保持原 `P` 的情况下先验证：
 
 - 结构安全 gate 仍通过，current authority 要求的入口和静态引用可定位。
-- Agent MD 标记成对，标记区块外内容未变化，等级没有被无授权提升。
+- Agent MD 标记成对，标记区块外内容未变化，未在用户未要求时擅自变更模板。
 - 五类 Knowledge 与 SOP / Case / OKR / Inbox 职责未混杂；项目正文和进行中状态可恢复。
 - 没有中间版本残留、未解决冲突或本机包以外的规则来源。
 
 验证通过后，准备一条项目更新记录，包含原版本、目标版本、读取的 Release Records、实际合并、验证结果、保留差异和用户决策。把 `_aipd/update-log.md` 与精确三键 manifest 作为同一提交边界，最后以 manifest 的 `aipdVersion=I` 作为成功标记。
 
 - `P < I` 或 `unversioned-v2`：记录一次 `P -> I` 更新。
-- `P = I` 且修复 drift：记录一次 `I -> I` drift repair。
-- `P = I` 且没有任何差异：返回 no-op，不为制造日志而修改项目。
+- `P = I` 且修复 drift 或按用户要求切换 Agent MD 模板：记录一次 `I -> I` 更新（标明 drift repair 或模板切换）。
+- `P = I` 且没有任何差异、用户也未要求切换模板：返回 no-op，不为制造日志而修改项目（可顺带问一句是否需要切换 `AGENTS.md` 模板）。
 
 若最终写入任一步失败，报告未完成状态，不声称项目已更新到 `I`。
 

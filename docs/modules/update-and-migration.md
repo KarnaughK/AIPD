@@ -74,7 +74,7 @@ Release Records 只解释“发生过什么、什么被替代、什么要保护�
 
 安全的 additive 与明确语义更新默认执行。删除、移动、覆盖项目内容或无法判断的项目定制冲突会暂停，只询问解决冲突所需的最小问题。
 
-Update 不会自动提高 Agent MD 等级，也不会顺便 install、commit、push 或写远端。
+Update 默认保留当前 Agent MD 模板，不会擅自切换；若用户明确要求切换模板，支持在「纯 AIPD / AIPD + 五段式回复 / AIPD + 四段式回复」之间随时互切。Update 不会顺便 install、commit、push 或写远端。
 
 ## 怎样判断更新完成
 
@@ -83,7 +83,7 @@ Update 不会自动提高 Agent MD 等级，也不会顺便 install、commit、p
 1. 在 `_aipd/update-log.md` 记录原版本、目标版本、已读记录、实际合并、验证和保留差异。
 2. 把 manifest 的 `aipdVersion` 写为 `I`，作为最终成功标记。
 
-同版本没有 drift 时返回 no-op，不为制造日志而修改项目。任一步失败时都不能声称项目已经更新完成。
+同版本没有 drift 且未要求切换模板时返回 no-op，不为制造日志而修改项目（可顺带提示当前 `AGENTS.md` 模板并询问是否需要切换）。任一步失败时都不能声称项目已经更新完成。
 
 相关入口：
 

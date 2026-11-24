@@ -42,13 +42,14 @@ _aipd/
 
 ## 初始化先完成版本闭环
 
-初始化不是“看到 `_aipd` 目录就算成功”。AIPD 会先写无版本 v2 的安全 bootstrap，创建必要入口并让你选择 Agent MD 等级，全部验证通过后才把 manifest 标成当前本机版本。
+初始化不是“看到 `_aipd` 目录就算成功”。AIPD 会先写无版本 v2 的安全 bootstrap，创建必要入口并让你选择 Agent MD 模板，全部验证通过后才把 manifest 标成当前本机版本。
 
-Agent MD 有三个等级：
+Agent MD 有四种模板可选：
 
-- 0：不修改 `AGENTS.md`。
-- 1：安装 AIPD Project Entry，默认推荐。
-- 2：在 Entry 之外，再安装项目级 [Interaction Protocol](../modules/interaction-protocol.md)。
+- 不修改 `AGENTS.md`。
+- **纯 AIPD**：安装 AIPD Project Entry，有代码项目默认推荐。
+- **AIPD + 五段式回复**：在 Entry 之外，安装五段式 [Interaction Protocol](../modules/interaction-protocol.md)（我理解 → 结论 → 下一步 → 展开说说 → 横向拓展）。
+- **AIPD + 四段式回复**：在 Entry 之外，安装四段式 [Interaction Protocol](../modules/interaction-protocol.md)（我理解 → 结论 → 下一步 → 可继续聊）。
 
 如果初始化中断，项目会保留 `unversioned-v2`，普通 Skill 不会假装它已经完成；下次通过 [Update 与 Schema 迁移](../modules/update-and-migration.md)继续收敛。
 

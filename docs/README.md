@@ -53,7 +53,7 @@
 - [Knowledge 知识域](modules/knowledge-domains.md)：五类长期认知、真实代码和流程状态如何分工。
 - [Map 与检索](modules/maps-and-retrieval.md)：为什么先走 map，再用搜索兜底。
 - [Agent Entry](modules/agent-entry.md)：项目 gate、普通任务和恢复 Case 时的第一跳规则。
-- [Interaction Protocol](modules/interaction-protocol.md)：Agent MD 等级 2 怎样区分讨论与执行。
+- [Interaction Protocol](modules/interaction-protocol.md)：可选回复模板（五段式 / 四段式）怎样区分讨论与执行。
 
 ### 一个目标怎么完成并恢复
 

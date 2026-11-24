@@ -23,7 +23,7 @@ Release Record 不是迁移脚本、待办清单或中间版本回放。若历�
 | `workspace/project-state.md` | Schema 安全门、manifest 双形态和项目版本状态机 |
 | `workspace/templates/*` | manifest、index、map、inbox、SOP 与 update log 的当前入口模板 |
 | `knowledge/{intent,research,core,product,engineering}/guide.md` | 五类并列 Knowledge 的当前分类边界 |
-| `agent-entry/{template,interaction-style}.md` | 项目 Agent Entry 与可选交互协议 |
+| `agent-entry/{template,interaction-style,interaction-style-4part}.md` | 项目 Agent Entry 与可选交互协议模板（五段式回复 / 四段式回复） |
 | `agent-guides/aipd_context_retriever.md` | 上下文检索 Agent 当前职责 |
 | `leader/{guide,workspace-template}.md` | 显式 Leader、Mission 与可选工作记忆；具体 task runtime 由平台覆盖 |
 | `case/overview.md`、`case/templates/*` | 当前 Case / Work Package 结构与模板 |

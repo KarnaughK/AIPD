@@ -47,7 +47,7 @@
 ```text
 【aipd-init 有代码】
 仓库类型：已有代码
-Agent MD：等级 1（或用户当场指定）
+Agent MD 模板：纯 AIPD（或用户当场指定的模板）
 已写入：map / core / product / engineering
 未写：intent.md
 看见的模块：...

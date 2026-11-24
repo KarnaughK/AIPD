@@ -70,18 +70,19 @@ mkdir -p _aipd/sop _aipd/case/archive _aipd/okr
 
 目标文件已存在时不覆盖，先提示用户并基于现有内容继续。默认壳只是入口索引，不代表对应知识已完成。
 
-### Agent MD
+### Agent MD 模板
 
-| 等级 | 名称 | 内容 |
-|---|---|---|
-| 0 | 不修改 Agent MD | 不写入 `AGENTS.md` |
-| 1 | AIPD Project Entry | 写入 AIPD 项目入口区块；默认推荐 |
-| 2 | Entry + Interaction Protocol | 额外写入 AIPD 项目级对话协议 |
+| 模板 | 内容 |
+|---|---|
+| 不修改 `AGENTS.md` | 不写入 `AGENTS.md` |
+| 纯 AIPD | 写入 AIPD Project Entry 区块；有代码项目默认推荐 |
+| AIPD + 五段式回复 | 在 Entry 外，写入五段式 Interaction Protocol（我理解 → 结论 → 下一步 → 展开说说 → 横向拓展） |
+| AIPD + 四段式回复 | 在 Entry 外，写入四段式 Interaction Protocol（我理解 → 结论 → 下一步 → 可继续聊） |
 
-等级 1 或 2 时，用 `@references/agent-entry/template.md` 更新 `<!-- AIPD:START -->` / `<!-- AIPD:END -->` 区块；没有标记时追加，不覆盖用户原有内容。等级 2 再读取 `@references/agent-entry/interaction-style.md`，用独立标记区块安装。
+选择后三种模板时，用 `@references/agent-entry/template.md` 更新 `<!-- AIPD:START -->` / `<!-- AIPD:END -->` 区块；没有标记时追加，不覆盖用户原有内容。选择「AIPD + 五段式回复」时再读取 `@references/agent-entry/interaction-style.md`，选择「AIPD + 四段式回复」时再读取 `@references/agent-entry/interaction-style-4part.md`，用独立标记区块 `<!-- AIPD-INTERACTION-STYLE:START -->` / `<!-- AIPD-INTERACTION-STYLE:END -->` 安装。
 
-- **空项目**：先询问等级，再写入。
-- **有代码**：默认等级 1，写入后在摘要里说明；用户当场要求 0 或 2 时按用户选择。
+- **空项目**：先询问选用哪种模板，再写入。
+- **有代码**：默认「纯 AIPD」，写入后在摘要里说明；用户当场指定其他模板时按用户选择。
 
 完成结构、必要入口、标记区块验证，并确认 manifest 模板的 `aipdVersion` 等于 catalog 的 `currentVersion=I` 后，最后将 `@references/workspace/templates/manifest.json` 写入 `_aipd/manifest.json`，以其中的 `aipdVersion=I` 作为初始化成功标记。任一步失败时保留 `unversioned-v2`，不得声称已完成当前版本。`intent.md` 存在与否不影响成功。
 
