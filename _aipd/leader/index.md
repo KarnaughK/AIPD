@@ -39,7 +39,7 @@ Project Leader 可以按实际需要自行创建、合并、重命名和删除�
 - 新建、删除或重命名本目录内文件后，应在本文件的“当前工作区索引”中更新入口。
 - 不再影响当前判断的信息可以删除，不要求永久归档所有思考过程。
 
-无论文件怎样拆分，都必须能够恢复：active Mission 与成功判据、最近方向变化及依据、Case 队列 / 依赖 / owner、Case runtime 绑定（Codex 上是独立 task；Cursor 上才是 `chatId`）、待确认事项和下一恢复位置。
+无论文件怎样拆分，都必须能够恢复：active Mission 与边界 / 成功判据 / 状态、用户关注方式与阶段汇报节点、运行与模型约定（可选）、最近方向变化及依据、Case 队列 / 依赖 / owner 与执行层绑定（按当前宿主记录，如 Codex `threadId` / `hostId`、Antigravity `conversation_id`、Cursor `chatId`）、正在等待的独立 Case 执行层（ID、对应 Case、停止条件和返回后动作）、待用户澄清 / 授权事项和下一恢复位置。
 
 ## 运行合同
 

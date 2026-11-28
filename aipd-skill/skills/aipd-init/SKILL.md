@@ -76,10 +76,9 @@ mkdir -p _aipd/sop _aipd/case/archive _aipd/okr
 |---|---|
 | 不修改 `AGENTS.md` | 不写入 `AGENTS.md` |
 | 纯 AIPD | 写入 AIPD Project Entry 区块；有代码项目默认推荐 |
-| AIPD + 五段式回复 | 在 Entry 外，写入五段式 Interaction Protocol（我理解 → 结论 → 下一步 → 展开说说 → 横向拓展） |
-| AIPD + 四段式回复 | 在 Entry 外，写入四段式 Interaction Protocol（我理解 → 结论 → 下一步 → 可继续聊） |
+| AIPD + 四段式回复 | 在 Entry 外，写入四段式 Interaction Protocol（我理解 → 结论 → 下一步 → 可继续聊，讨论与执行交付统一适用） |
 
-选择后三种模板时，用 `@references/agent-entry/template.md` 更新 `<!-- AIPD:START -->` / `<!-- AIPD:END -->` 区块；没有标记时追加，不覆盖用户原有内容。选择「AIPD + 五段式回复」时再读取 `@references/agent-entry/interaction-style.md`，选择「AIPD + 四段式回复」时再读取 `@references/agent-entry/interaction-style-4part.md`，用独立标记区块 `<!-- AIPD-INTERACTION-STYLE:START -->` / `<!-- AIPD-INTERACTION-STYLE:END -->` 安装。
+选择后两种模板时，用 `@references/agent-entry/template.md` 更新 `<!-- AIPD:START -->` / `<!-- AIPD:END -->` 区块；没有标记时追加，不覆盖用户原有内容。选择「AIPD + 四段式回复」时再读取 `@references/agent-entry/interaction-style.md`，用独立标记区块 `<!-- AIPD-INTERACTION-STYLE:START -->` / `<!-- AIPD-INTERACTION-STYLE:END -->` 安装。
 
 - **空项目**：先询问选用哪种模板，再写入。
 - **有代码**：默认「纯 AIPD」，写入后在摘要里说明；用户当场指定其他模板时按用户选择。

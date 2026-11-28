@@ -101,7 +101,7 @@ AIPD 仍然可以从架构上看成三个问题域：
 - Goal Mode 让已绑定 Case 在内部 Gate 通过后自主推进，不改变 Case 本体。
 - Child Agent 在上下文隔离、真实并发或独立复核有净收益时接入 Execute。
 - `$aipd-leader` 只在用户显式调用后，才在 Case 之上增加一个 active Mission 和同级 Case task 调度。
-- Agent MD 可选「AIPD + 五段式回复」或「AIPD + 四段式回复」模板安装 Interaction Protocol，约束讨论 / 执行切换，不改变项目认知链路。
+- Agent MD 可选「AIPD + 四段式回复」模板安装 Interaction Protocol，约束讨论 / 执行切换与统一回复结构，不改变项目认知链路。
 - Learn 只在 AIPD 源码仓库把真实协作经验回流到框架自身，和业务项目的 Weave 分工不同。
 - Update 处理旧 Schema、项目版本和 drift；Mermaid、Git Push 分别处理图示和低风险推送。
 

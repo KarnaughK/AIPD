@@ -15,7 +15,7 @@
 - `okr/` 保存飞书阶段目标入口与对齐信息。
 - `inbox.md` 接住尚未整理归属的临时信息。
 - 真实代码继续留在项目源码目录，由 Map 和局部 README 建立入口。
-- `AGENTS.md` 是 Agent 进入项目和恢复任务时的第一跳规则。它位于 `_aipd/` 外；选择「AIPD + 五段式回复」或「AIPD + 四段式回复」模板时，还会在其中安装对应 Interaction Protocol。
+- `AGENTS.md` 是 Agent 进入项目和恢复任务时的第一跳规则。它位于 `_aipd/` 外；选择「AIPD + 四段式回复」模板时，还会在其中安装对应 Interaction Protocol。
 
 任何 AIPD 读写前，Agent 先用本机 release catalog 与 project-state 合同检查路径安全、manifest 形态和项目版本 `P` / 本机版本 `I`。只有 `P = I` 且必要入口类型安全时进入普通检索；stale、unversioned、drift、future-project 或 invalid 状态按 Update / 停止规则处理。
 

@@ -27,7 +27,7 @@
 | Inbox | `_aipd/inbox.md` | 暂存尚未归类的材料、想法和候选认知 |
 | 真实代码 | 项目代码目录 | 承载实际实现；由 Map、Engineering 和局部 README 提供入口 |
 
-`AGENTS.md` 位于 `_aipd/` 外，是项目级 Agent Entry；用户选择「AIPD + 五段式回复」或「AIPD + 四段式回复」模板时，它还承载对应 Interaction Protocol。仓库级 `.agents/skills/aipd-learn/` 也位于 `_aipd/` 外，只用于 AIPD 源码仓库自迭代，不属于 Workspace 或公共安装集合。
+`AGENTS.md` 位于 `_aipd/` 外，是项目级 Agent Entry；用户选择「AIPD + 四段式回复」模板时，它还承载对应 Interaction Protocol。仓库级 `.agents/skills/aipd-learn/` 也位于 `_aipd/` 外，只用于 AIPD 源码仓库自迭代，不属于 Workspace 或公共安装集合。
 
 ## 五类 Knowledge
 
@@ -63,7 +63,7 @@
 - AI 友好代码拓扑：`_aipd/knowledge/core/ai-friendly-code-topology.md`
 - 产品功能：`_aipd/knowledge/product/index.md`
 - 工程规则：`_aipd/knowledge/engineering/index.md`
-- Agent Entry 与 Interaction Protocol：`aipd-skill/skills/aipd-init/references/agent-entry/template.md`、`aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md`、`aipd-skill/skills/aipd-init/references/agent-entry/interaction-style-4part.md`
+- Agent Entry 与 Interaction Protocol：`aipd-skill/skills/aipd-init/references/agent-entry/template.md`、`aipd-skill/skills/aipd-init/references/agent-entry/interaction-style.md`
 - Main / Child 运行时判定：`aipd-skill/skills/aipd-case/agent-guide/codex.md`
 - AIPD 仓库级 Learn：`.agents/skills/aipd-learn/SKILL.md`
 - Skill 维护者入口：`aipd-skill/README.md`

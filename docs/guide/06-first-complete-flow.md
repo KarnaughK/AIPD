@@ -39,7 +39,7 @@
 - 旧 `_adoc`、`unversioned-v2`、版本落后或同版本 drift 进入 `aipd-update`。
 - 双根、symlink、非法 manifest 或项目版本高于本机时停止，不猜着合并或降级。
 
-空项目会询问 Agent MD 模板；有代码路径默认「纯 AIPD」。第一次使用推荐「纯 AIPD」，只安装 Project Entry；如果你还希望固定“先讨论还是直接执行”的项目级对话边界，可以选择「AIPD + 五段式回复」或「AIPD + 四段式回复」并查看 [Interaction Protocol](../modules/interaction-protocol.md)，之后也能通过 `/aipd-update` 随时切换。
+空项目会询问 Agent MD 模板；有代码路径默认「纯 AIPD」。第一次使用推荐「纯 AIPD」，只安装 Project Entry；如果你还希望固定“先讨论还是直接执行”的项目级对话边界和四段式回复，可以选择「AIPD + 四段式回复」并查看 [Interaction Protocol](../modules/interaction-protocol.md)，之后也能通过 `/aipd-update` 随时切换。
 
 初始化后检查：
 

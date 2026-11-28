@@ -23,3 +23,15 @@
 - 验证：项目安全 gate、V2 current authority、Agent Entry 精确比对、Interaction Protocol 字节级保留、标记成对、Leader 静态入口、Git 冲突与空白检查均通过；默认 Codex build 与 `check-dist` 通过，10 个 Skill、3 个 Codex Agent、release bundle、Schema migrator 和 Leader 显式调用合同正常；用户级已安装套件与本次 dist 逐项一致。
 - 安装状态：本次项目 Update 未再次执行 install；当前电脑的用户级 AIPD Skill 套件在 Update 前已经安装为 V2。
 - 未处理：未检查远端版本，未提交 Git，未推送远端。
+
+### 2026-11-25 · V2 -> V2（模板切换 + drift repair）
+
+- 本机发布：V2（只使用本机已安装 `aipd-update` 发布快照 `catalog.json#currentVersion=2`，未检查远端版本）。
+- 已读记录：`(V2, V2]` 无新增版本跨度 Release Record；完整校验本机 `catalog.json`、`current.md` 与全部 26 份 V2 `currentAuthority` 文档作为最终态基准。
+- 用户决策：用户明确要求更新本项目 AIPD 架构，并将 `AGENTS.md` 回复格式切换为「AIPD + 四段式回复」。
+- 实际合并：
+  - 将 `AGENTS.md` 中的 `AIPD-INTERACTION-STYLE` 标记区块从「AIPD + 五段式回复」原子切换为本机 V2 权威模板 `agent-entry/interaction-style-4part.md`（「AIPD + 四段式回复」）；`AIPD` 标记区块校验已与 V2 `agent-entry/template.md` 字节级一致，保持不变。
+  - 修复 `_aipd/leader/index.md` 中“必须可恢复语义”一段与 V2 `leader/workspace-template.md` 的同版本漂移，补齐用户关注方式与汇报节点、可选运行与模型约定、多宿主执行层绑定（Codex / Antigravity / Cursor）及等待中执行层恢复项。
+- 保留的项目定制：完整保留五类 Knowledge 正文、`_aipd/index.md`、`_aipd/map.md`、`_aipd/inbox.md`、`_aipd/sop/`、`_aipd/okr/`、`_aipd/case/`、`_aipd/development-log.md`、`_aipd/leader/index.md` 中的项目运行合同与历史归档索引，以及 `AGENTS.md` 标记外状态。
+- 验证：结构安全 gate（无 `_adoc`、无 symlink、保留路径类型正确、精确三键 `manifest.json#aipdVersion=2`）、`AGENTS.md` 双标记成对且与本机 `template.md` / `interaction-style-4part.md` 字节级一致、核心入口静态路径引用校验与 `git diff --check` 全部通过。
+- 未处理 / 后续观察：未执行 install、Git commit 或 push。
